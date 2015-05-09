@@ -162,14 +162,20 @@ public:
 	//=================================================
 	static void DrawChoice(int priority);
 
-	// 全て更新
+	// 全てリリース
 	static void ReleaseAll(void);
 
 private:
+	// Zソート
+	static void ZSort(void);
+
 	static CScene		*m_apTop[TYPE_PRIORITY_MAX];	// リストの先頭アドレス
 	static CScene		*m_apCur[TYPE_PRIORITY_MAX];	// リストの終端アドレス
+	static int			m_nNumInList[TYPE_PRIORITY_MAX];// リストの中身の個数
 	CScene				*m_pPrev;						// 前のオブジェクトへのポインタ
 	CScene				*m_pNext;						// 次のオブジェクトへのポインタ
+	CScene				*m_pDrawPrev;					// 前のオブジェクトへのポインタ
+	CScene				*m_pDrawNext;					// 次のオブジェクトへのポインタ
 	int					m_nPriority;					// プライオリティ
 	bool				m_bDelete;						// 消去フラグ
 	OBJTYPE				m_objType;						// タイプ
