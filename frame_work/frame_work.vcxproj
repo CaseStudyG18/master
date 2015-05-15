@@ -110,6 +110,8 @@
     <ClCompile Include="sources\SCENE\EFFECT\CEffect.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CGame.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CNowLoading.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayer.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayerManager.cpp" />
     <ClCompile Include="sources\SCENE\PAUSE\CPause.cpp" />
     <ClCompile Include="sources\SCENE\RESULT\CResult.cpp" />
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp" />
@@ -151,6 +153,8 @@
     <ClInclude Include="sources\SCENE\EFFECT\CEffect.h" />
     <ClInclude Include="sources\SCENE\GAME\CGame.h" />
     <ClInclude Include="sources\SCENE\GAME\CNowLoading.h" />
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayer.h" />
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayerManager.h" />
     <ClInclude Include="sources\SCENE\PAUSE\CPause.h" />
     <ClInclude Include="sources\SCENE\RESULT\CResult.h" />
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h" />

@@ -11,6 +11,7 @@
 #include "../../CAMERA/CCamera.h"
 #include "../../MANAGER/CManager.h"
 #include "../CSCENE/CScene2D.h"
+#include "PLAYER\CPlayerManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -60,6 +61,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 
 	// 音再生
 	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+
+	// プレイヤーマネージャー
+	m_pPlayerManager = new CPlayerManager();
+	m_pPlayerManager->Init(2);
 }
 
 //*****************************************************************************
@@ -67,6 +72,8 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
+	m_pPlayerManager->Uninit();
+	SAFE_DELETE(m_pPlayerManager);
 	CManager::StopSound();
 	CPhase::Uninit();
 }
@@ -76,6 +83,8 @@ void CGame::Uninit(void)
 //*****************************************************************************
 void CGame::Update(void)
 {
+
+	m_pPlayerManager->Update();
 
 	// Ｐが押されたら
 	if(CInputKeyboard::GetKeyboardTrigger(DIK_P))

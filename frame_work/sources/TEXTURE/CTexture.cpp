@@ -19,12 +19,6 @@ static const char *TEXTURE_PATH[ TEXTURE_MAX ] =
 	"data/TEXTURE/witch3.tga",
 	"data/TEXTURE/fire0.png",
 	"data/TEXTURE/fire1.png",
-	"data/TEXTURE/fire2.png",
-	"data/TEXTURE/fire3.png",
-	"data/TEXTURE/fire4.png",
-	"data/TEXTURE/fire5.png",
-	"data/TEXTURE/fire6.png",
-	"data/TEXTURE/fire7.png",
 };
 
 //*****************************************************************************

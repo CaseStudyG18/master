@@ -45,8 +45,8 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade = new CFade(pDevice);
 	m_pFade->Init(DEFFAULT_FADE_POS, DEFFAULT_FADE_WIDTH, DEFFAULT_FADE_HEIGHT, TEXTURE_NULL);
 
-	m_p2D = m_p2D->Create(m_pD3DDevice, D3DXVECTOR3(0,0,0), 100, 100, TEXTURE_WITCH);
-	m_p3D = m_p3D->Create(m_pD3DDevice, D3DXVECTOR3(0,0,0), 100, 100, TEXTURE_WITCH);
+	m_p2D = m_p2D->Create(m_pD3DDevice, D3DXVECTOR3(0,0,0), 100, 100, TEXTURE_PLAYER);
+	m_p3D = m_p3D->Create(m_pD3DDevice, D3DXVECTOR3(0,0,0), 100, 100, TEXTURE_PLAYER);
 
 	// ƒJƒƒ‰‰Šú‰»
 	m_pManager->InitCamera();
