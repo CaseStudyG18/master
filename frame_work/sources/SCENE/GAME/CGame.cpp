@@ -11,6 +11,7 @@
 #include "../../CAMERA/CCamera.h"
 #include "../../MANAGER/CManager.h"
 #include "../CSCENE/CScene2D.h"
+#include "../../PLAYER/CPlayerManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -60,6 +61,9 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 
 	// 音再生
 	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+
+	player = new CPlayerManager();
+	player->Init(1);
 }
 
 //*****************************************************************************
@@ -69,6 +73,7 @@ void CGame::Uninit(void)
 {
 	CManager::StopSound();
 	CPhase::Uninit();
+	player->Uninit();
 }
 
 //*****************************************************************************
@@ -122,6 +127,9 @@ void CGame::Update(void)
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 	}
+
+	player->Update();
+
 }
 
 //*****************************************************************************
