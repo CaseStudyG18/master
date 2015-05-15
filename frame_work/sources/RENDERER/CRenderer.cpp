@@ -24,7 +24,7 @@
 static const float		POLYGON_WIDTH = 200.0f;
 static const float		POLYGON_HEIGHT = 200.0f;
 static const int		NUM_BACK_BUFFER = 1;									// バックバッファの数
-static const D3DXCOLOR	CLEAR_SCREEN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);	// 画面クリアカラー
+static const D3DXCOLOR	CLEAR_SCREEN_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 画面クリアカラー
 
 //*****************************************************************************
 // staticメンバ変数

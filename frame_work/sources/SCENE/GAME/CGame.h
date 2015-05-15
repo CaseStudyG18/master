@@ -22,7 +22,6 @@ class CScene2D;
 class CSceneScore;
 class CSceneTime;
 class CSceneNumber;
-class CPlayerManager;
 
 //*****************************************************************************
 // クラス定義
@@ -59,7 +58,6 @@ public:
 	// 非公開メンバ
 private:
 	CPause			*m_pPause;						// ポーズ
-	CPlayerManager *player;
 };
 
 #endif
