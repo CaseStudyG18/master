@@ -7,11 +7,11 @@
 #include "CPlayerManager.h"
 
 #include "CPlayer.h"
-#include "../../../RENDERER/CRenderer.h"
-#include "../../../TEXTURE/CTexture.h"
+#include "../RENDERER/CRenderer.h"
+#include "../TEXTURE/CTexture.h"
 
 #ifdef _DEBUG
-#define PLAYER_TEXTURE TEXTURE_PLAYER	// デバッグ時のプレイヤーのテクスチャ
+#define PLAYER_TEXTURE TEXTURE_PLAYER		// デバッグ時のプレイヤーのテクスチャ
 #else
 #define PLAYER_TEXTURE TEXTURE_NULL		// 
 #endif
@@ -25,6 +25,7 @@ CPlayerManager::CPlayerManager()
 	{
 		m_apPlayer[i] = NULL;
 	}
+	m_nTimer = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -35,13 +36,37 @@ CPlayerManager::~CPlayerManager()
 }
 
 //-----------------------------------------------------------------------------
+// クリエイト関数
+//-----------------------------------------------------------------------------
+CPlayerManager* CPlayerManager::Create(int nPlayerNum, int nManualPlayer)
+{
+	// プレイヤーのマネージャを作成
+	CPlayerManager* temp = new CPlayerManager();
+
+	// プレイヤーマネージャの初期化
+	temp->Init(nPlayerNum, nManualPlayer);
+
+	// プレイヤーマネージャのポインタを返す
+	return temp;
+}
+
+//-----------------------------------------------------------------------------
 // 初期化
 //-----------------------------------------------------------------------------
-void CPlayerManager::Init(int nNumPlayer)
+void CPlayerManager::Init(int nNumPlayer, int nManualPlayer)
 {
-	for (int i = 0; i < nNumPlayer; i++)
+	int nManual = 0;
+	int nCPU = 0;
+
+	// マニュアル操作のプレイヤーの作成
+	for (nManual = 0; nManual < nManualPlayer; nManual++)
 	{
-		m_apPlayer[i] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, TEXTURE_PLAYER_0);
+		m_apPlayer[nManual] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_MANUAL);
+	}
+	// CPUの作成
+	for (nCPU = nManual; nCPU < nNumPlayer; nCPU++)
+	{
+		m_apPlayer[nCPU] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_COMPUTER);
 	}
 }
 
@@ -50,6 +75,15 @@ void CPlayerManager::Init(int nNumPlayer)
 //-----------------------------------------------------------------------------
 void CPlayerManager::Update(void)
 {
+	m_nTimer++;
+
+	if (m_nTimer > 500)
+	{
+		m_apPlayer[0]->Uninit();
+		m_apPlayer[0] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(100.0f, 100.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_COMPUTER);
+
+		m_nTimer = 0;
+	}
 }
 
 //-----------------------------------------------------------------------------
