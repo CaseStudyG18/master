@@ -1,8 +1,92 @@
-﻿2015/05/19 10:43:30 にビルドを開始しました。
-     1>ノード 2 上のプロジェクト "C:\Users\雄太\Documents\CaseStudy\frame_work\frame_work.vcxproj" (build ターゲット)。
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Platforms\Win32\Microsoft.Cpp.Win32.Targets(511,5): error MSB8008: 指定したプラットフォーム ツールセット (v120) はインストールされていないか無効です。サポートされている PlatformToolset 値が選択されていることを確認してください。
-     1>プロジェクト "C:\Users\雄太\Documents\CaseStudy\frame_work\frame_work.vcxproj" (build ターゲット) のビルドが終了しました -- 失敗。
+﻿Build started 2015/05/19 13:15:30.
+     1>Project "C:\Users\雄太\Documents\CaseStudy\frame_work\frame_work.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt sources\CAMERA\CameraManager.cpp sources\CAMERA\CCamera.cpp sources\DEBUG_PROC\CDebugProc.cpp sources\FADE\CFade.cpp sources\INPUT\CInput.cpp sources\INPUT\CInputGamePad.cpp sources\INPUT\CInputKeyboard.cpp sources\INPUT\CInputMouse.cpp sources\JUDGE\CJudge.cpp sources\LIGHT\CLight.cpp sources\MAIN\main.cpp sources\MANAGER\CManager.cpp sources\MATH\math.cpp sources\MODEL\CModel.cpp sources\PHASE\CPhase.cpp sources\RENDERER\CRenderer.cpp sources\SCENE\CSCENE\CScene.cpp sources\SCENE\CSCENE\CScene2D.cpp sources\SCENE\CSCENE\CScene3D.cpp sources\SCENE\CSCENE\CSceneBillBoard.cpp sources\SCENE\CSCENE\CSceneCrinder.cpp sources\SCENE\CSCENE\CSceneMeshField.cpp sources\SCENE\CSCENE\CSceneMeshSky.cpp sources\SCENE\CSCENE\CSceneMeshWall.cpp sources\SCENE\CSCENE\CSceneNumber.cpp sources\SCENE\CSCENE\CSceneScore.cpp sources\SCENE\CSCENE\CSceneTime.cpp sources\SCENE\CSCENE\CSceneX.cpp sources\SCENE\EFFECT\CEffect.cpp sources\SCENE\GAME\CGame.cpp sources\SCENE\GAME\CNowLoading.cpp sources\SCENE\PAUSE\CPause.cpp sources\SCENE\RESULT\CResult.cpp sources\SCENE\TITLE\CTitle.cpp sources\SCENE\UI\CCursol.cpp sources\SCENE\UI\CNumber.cpp sources\SOUND\CSound.cpp sources\TEXTURE\CTexture.cpp
+         CTexture.cpp
+         CSound.cpp
+         CNumber.cpp
+         CCursol.cpp
+         CTitle.cpp
+         CResult.cpp
+     1>c:\users\雄太\documents\casestudy\frame_work\sources\scene\result\cresult.cpp(63): warning C4244: 'argument' : conversion from 'int' to 'FLOAT', possible loss of data
+     1>c:\users\雄太\documents\casestudy\frame_work\sources\scene\result\cresult.cpp(64): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+         CPause.cpp
+         CNowLoading.cpp
+         CGame.cpp
+         CEffect.cpp
+         CSceneX.cpp
+         CSceneTime.cpp
+         CSceneScore.cpp
+         CSceneNumber.cpp
+         CSceneMeshWall.cpp
+         CSceneMeshSky.cpp
+         CSceneMeshField.cpp
+         CSceneCrinder.cpp
+         CSceneBillBoard.cpp
+         CScene3D.cpp
+         Generating Code...
+         Compiling...
+         CScene2D.cpp
+         CScene.cpp
+         CRenderer.cpp
+         CPhase.cpp
+         CModel.cpp
+         math.cpp
+         CManager.cpp
+         main.cpp
+         CLight.cpp
+         CJudge.cpp
+         CInputMouse.cpp
+         CInputKeyboard.cpp
+         CInputGamePad.cpp
+         CInput.cpp
+         CFade.cpp
+         CDebugProc.cpp
+         CCamera.cpp
+         CameraManager.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\雄太\Documents\CaseStudy\frame_work\Debug\frame_work.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\雄太\Documents\CaseStudy\frame_work\Debug\frame_work.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\雄太\Documents\CaseStudy\frame_work\Debug\frame_work.lib" /MACHINE:X86 Debug\CameraManager.obj
+         Debug\CCamera.obj
+         Debug\CDebugProc.obj
+         Debug\CFade.obj
+         Debug\CInput.obj
+         Debug\CInputGamePad.obj
+         Debug\CInputKeyboard.obj
+         Debug\CInputMouse.obj
+         Debug\CJudge.obj
+         Debug\CLight.obj
+         Debug\main.obj
+         Debug\CManager.obj
+         Debug\math.obj
+         Debug\CModel.obj
+         Debug\CPhase.obj
+         Debug\CRenderer.obj
+         Debug\CScene.obj
+         Debug\CScene2D.obj
+         Debug\CScene3D.obj
+         Debug\CSceneBillBoard.obj
+         Debug\CSceneCrinder.obj
+         Debug\CSceneMeshField.obj
+         Debug\CSceneMeshSky.obj
+         Debug\CSceneMeshWall.obj
+         Debug\CSceneNumber.obj
+         Debug\CSceneScore.obj
+         Debug\CSceneTime.obj
+         Debug\CSceneX.obj
+         Debug\CEffect.obj
+         Debug\CGame.obj
+         Debug\CNowLoading.obj
+         Debug\CPause.obj
+         Debug\CResult.obj
+         Debug\CTitle.obj
+         Debug\CCursol.obj
+         Debug\CNumber.obj
+         Debug\CSound.obj
+         Debug\CTexture.obj
+         frame_work.vcxproj -> C:\Users\雄太\Documents\CaseStudy\frame_work\Debug\frame_work.exe
+     1>Done Building Project "C:\Users\雄太\Documents\CaseStudy\frame_work\frame_work.vcxproj" (Build target(s)).
 
-ビルドに失敗しました。
+Build succeeded.
 
-経過時間 00:00:02.94
+Time Elapsed 00:00:31.63
