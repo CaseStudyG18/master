@@ -92,6 +92,8 @@
     <ClCompile Include="sources\MAIN\main.cpp" />
     <ClCompile Include="sources\MANAGER\CManager.cpp" />
     <ClCompile Include="sources\MATH\math.cpp" />
+    <ClCompile Include="sources\MATH\matrix.cpp" />
+    <ClCompile Include="sources\MATH\vector.cpp" />
     <ClCompile Include="sources\MODEL\CModel.cpp" />
     <ClCompile Include="sources\PHASE\CPhase.cpp" />
     <ClCompile Include="sources\RENDERER\CRenderer.cpp" />
@@ -143,6 +145,8 @@
     <ClInclude Include="sources\MAIN\main.h" />
     <ClInclude Include="sources\MANAGER\CManager.h" />
     <ClInclude Include="sources\MATH\math.h" />
+    <ClInclude Include="sources\MATH\matrix.h" />
+    <ClInclude Include="sources\MATH\vector.h" />
     <ClInclude Include="sources\MODEL\CModel.h" />
     <ClInclude Include="sources\PHASE\CPhase.h" />
     <ClInclude Include="sources\RENDERER\CRenderer.h" />
