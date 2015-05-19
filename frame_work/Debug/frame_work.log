@@ -1,0 +1,8 @@
+﻿2015/05/19 10:43:30 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "C:\Users\雄太\Documents\CaseStudy\frame_work\frame_work.vcxproj" (build ターゲット)。
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Platforms\Win32\Microsoft.Cpp.Win32.Targets(511,5): error MSB8008: 指定したプラットフォーム ツールセット (v120) はインストールされていないか無効です。サポートされている PlatformToolset 値が選択されていることを確認してください。
+     1>プロジェクト "C:\Users\雄太\Documents\CaseStudy\frame_work\frame_work.vcxproj" (build ターゲット) のビルドが終了しました -- 失敗。
+
+ビルドに失敗しました。
+
+経過時間 00:00:02.94
