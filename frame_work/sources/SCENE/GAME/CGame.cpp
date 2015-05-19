@@ -120,6 +120,9 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
+	m_pAttackManager->Uninit();
+	SAFE_DELETE(m_pAttackManager);
+
 	m_pPlayerManager->Uninit();
 	SAFE_DELETE(m_pPlayerManager);
 
