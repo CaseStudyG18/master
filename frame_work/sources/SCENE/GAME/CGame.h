@@ -23,6 +23,7 @@ class CTimeManager;
 class CTreasureManager;
 class CGoalManager;
 class CPlayerManager;
+class CAttackManager;
 
 //*****************************************************************************
 // クラス定義
@@ -68,6 +69,8 @@ private:
 	CGoalManager *m_pGoalManager;
 	// プレイヤマネージャ
 	CPlayerManager *m_pPlayerManager;
+	// 攻撃マネージャ
+	CAttackManager * m_pAttackManager;
 };
 
 #endif

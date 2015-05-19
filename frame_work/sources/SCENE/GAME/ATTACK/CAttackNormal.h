@@ -26,7 +26,7 @@ public:
 	CAttackNormal(LPDIRECT3DDEVICE9 *pDevice);
 	~CAttackNormal(void);
 
-	void Init(void);
+	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 

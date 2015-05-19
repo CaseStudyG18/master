@@ -7,7 +7,7 @@
 #ifndef __CPLAYER_H__
 #define __CPLAYER_H__
 
-#include "../SCENE/CSCENE/CScene2D.h"
+#include "../../CSCENE/CScene2D.h"
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -40,8 +40,9 @@ typedef enum
 }PLAYER_ACTION;
 
 //-----------------------------------------------------------------------------
-// 構造体定義
+// 前方宣言
 //-----------------------------------------------------------------------------
+class CAttackManager;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -70,8 +71,8 @@ public:
 	void Draw(void);
 
 	// クリエイト
-	// 引数　デバイス、番号、座標、幅、高さ、テクスチャ
-	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation);
+	// 引数　デバイス、番号、座標、幅、高さ、テクスチャ,プレイヤー操作,攻撃マネージャー
+	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation, CAttackManager *pAttackManager);
 
 	// 現在の変形状態の取得
 	// 戻り値　プレイヤーの現在の状態
@@ -112,6 +113,8 @@ private:
 	PLAYER_ACTION			m_Action;			// プレイヤーが現在行っている行動
 
 	int						m_nAnimTime;		// 変形時のアニメーションの時間
+
+	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 };
 
 #endif // __CPLAYER_H__

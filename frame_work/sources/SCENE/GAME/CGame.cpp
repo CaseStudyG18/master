@@ -15,6 +15,7 @@
 #include "PLAYER\CPlayerManager.h"
 #include "TREASURE/CTreasureManager.h"
 #include "GOAL/CGoalManager.h"
+#include "ATTACK\CAttackManager.h"
 #include "CGame.h"
 
 //*****************************************************************************
@@ -40,7 +41,8 @@ const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 };
 
 // プレイヤ人数
-const short PLAYER_NUM = 4;
+const short MANUAL_PLAYER_NUM = 1;
+const short CPU_PLAYER_NUM = 3;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -88,9 +90,13 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pTimeManager = new CTimeManager(pDevice, GAME_TIME);
 	m_pTimeManager->Init();
 
+	// 攻撃マネージャ生成
+	m_pAttackManager = new CAttackManager(pDevice);
+	m_pAttackManager->Init();
+
 	// プレイヤ生成
-	m_pPlayerManager = new CPlayerManager();
-	m_pPlayerManager->Init(PLAYER_NUM);
+	m_pPlayerManager = new CPlayerManager(m_pAttackManager);
+	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM);
 
 	// 宝物生成
 	m_pTreasureManager = new CTreasureManager(pDevice);

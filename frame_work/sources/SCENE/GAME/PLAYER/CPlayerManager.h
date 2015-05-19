@@ -11,6 +11,7 @@
 // 前方宣言
 //-----------------------------------------------------------------------------
 class CPlayer;
+class CAttackManager;
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -25,16 +26,17 @@ class CPlayerManager
 {
 public:
 	// コンストラクタ
-	CPlayerManager();
+	CPlayerManager(CAttackManager *pAttackManager);
 
 	// デストラクタ
 	~CPlayerManager();
 
 	// クリエイト関数
-	//	引数　　制作するプレイヤーの数、マニュアル操作するプレイヤーの数、CPUの数
-	static CPlayerManager* Create(int nPlayerNum , int nManualPlayer);
+	//	引数　　制作するプレイヤーの数、マニュアル操作するプレイヤーの数、CPUの数、攻撃マネージャー
+	static CPlayerManager* Create(int nPlayerNum , int nManualPlayer, CAttackManager *pAttackPlayer);
 
 	// 初期化
+	// CPU人数、プレイヤー人数
 	void Init(int nNumPlayer, int nManualPlayer);
 
 	// 終了
@@ -57,6 +59,9 @@ private:
 	CPlayer* m_apPlayer[MAXIMUM_NUMBER_OF_PLAYER];
 	// テスト用のタイマー
 	int	m_nTimer;
+
+	// 攻撃時に必要なマネージャー
+	CAttackManager *m_pAttackManager;
 };
 
 #endif //__CPLAYERMANAGER_H__

@@ -6,8 +6,9 @@
 //=============================================================================
 #include "CPlayer.h"
 
-#include "../INPUT/CInputKeyboard.h"
-#include "../TEXTURE/CTexture.h"
+#include "../../../INPUT/CInputKeyboard.h"
+#include "../../../TEXTURE/CTexture.h"
+#include "../ATTACK/CAttackManager.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -45,16 +46,19 @@ CPlayer::~CPlayer()
 
 //-----------------------------------------------------------------------------
 // クリエイト
-//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）
+//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）,攻撃マネージャー
 //	戻り値　作成したプレイヤーのポインタ
 //-----------------------------------------------------------------------------
-CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation)
+CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation, CAttackManager *pAttackManager)
 {
 	// プレイヤーポインタの作成
 	CPlayer *temp = new CPlayer(pDevice);
 
 	// 作成したプレイヤー情報の初期化
 	temp->Init(pos, fWidth, fHeight, texture, operation);
+
+	// 攻撃マネージャの保持
+	temp->m_pAttackManager = pAttackManager;
 
 	// 作成したプレイヤーのポインタを返す
 	return temp;
@@ -268,6 +272,19 @@ void CPlayer::Move(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Attack(void)
 {
+	/*
+		2015_05_19 塚本
+		・CreateAttackの第２引数のプレイヤ番号について
+			PlayerManagerがPlayerをCreateするときに割り振って、
+			各プレイヤが自分の番号を保持しといてください。
+			その番号を第２引数に入れてください。(short型)
+	*/
+
+	// 普通攻撃
+	m_pAttackManager->CreateAttack(
+		ATTACK_TYPE_NORMAL,
+		0,
+		m_vPos);
 }
 
 //-----------------------------------------------------------------------------
