@@ -10,6 +10,15 @@
 #include "../SCENE/CSCENE/CScene2D.h"
 
 //-----------------------------------------------------------------------------
+// マクロ定義
+//-----------------------------------------------------------------------------
+#define PLAYER_DEFAULT_HP	500			// プレイヤーのデフォルトの体力
+#define PLAYER_DEFAULT_MP	300.0f		// プレイヤーのデフォルトの変形用ポイント
+#define PLAYER_OPERATION	BOOL		// プレイヤーの操作フラグ
+#define PLAYER_MANUAL		TRUE		// プレイヤー操作マニュアル
+#define PLAYER_COMPUTER		FALSE		// プレイヤー操作AUTO
+
+//-----------------------------------------------------------------------------
 // 列挙体定義
 //-----------------------------------------------------------------------------
 // プレイヤーの形態
@@ -26,8 +35,13 @@ typedef enum
 	PLAYER_ACTION_WALK,				// 歩行
 	PLAYER_ACTION_ATTACK,			// 攻撃
 	PLAYER_ACTION_METAMORPHOSE,		// 変形
+	PLAYER_ACTION_THREAD,			// 糸を出す
 	PLAYER_ACTION_MAX
 }PLAYER_ACTION;
+
+//-----------------------------------------------------------------------------
+// 構造体定義
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -44,7 +58,7 @@ public:
 
 	// 初期化
 	// 引数　座標、幅、高さ、テクスチャ
-	void Init(D3DXVECTOR3 pos , float fWidth , float fHeight , TEXTURE_TYPE texture);
+	void Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation);
 
 	// 終了
 	void Uninit(void);
@@ -57,18 +71,47 @@ public:
 
 	// クリエイト
 	// 引数　デバイス、番号、座標、幅、高さ、テクスチャ
-	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice , D3DXVECTOR3 pos , float fWidth , float fHeight , TEXTURE_TYPE texture);
+	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation);
+
+	// 現在の変形状態の取得
+	// 戻り値　プレイヤーの現在の状態
+	PLAYER_MODE GetPlayerMode(void);
 
 private:
-	float			m_fMoveSpeedX;		// プレイヤーのX方向の移動量
-	float			m_fMoveSpeedY;		// プレイヤーのX方向の移動量
-	bool			m_bMove;			// 動かしているのか
-	D3DXVECTOR3		m_vPos;				// 座標
-	D3DXVECTOR3		m_vPosOld;			// １フレーム前の座標
-	D3DXVECTOR3		m_vRot;				// 角度
-	D3DXVECTOR3		m_vRotOld;			// １フレーム前の角度
-	PLAYER_MODE		m_Mode;				// 現在のプレイヤーの形態
-	PLAYER_ACTION	m_Action;			// プレイヤーが現在行っている行動
+	// 移動する
+	void Move(void);
+
+	// 攻撃
+	void Attack(void);
+
+	// 変形
+	// 引数　変形するタイプ
+	void Metamorphose(PLAYER_MODE mode);
+
+	// 糸発射
+	void SpidersThread(void);
+
+	// 変形アニメーション
+	void MetamorphoseAnimation(void);
+
+	//---------------------------------
+	// 変数
+	//---------------------------------
+	float					m_fMoveSpeedY;		// プレイヤーのX方向の移動量
+	int						m_nHP;				// プレイヤーの体力
+	float					m_fMoveSpeedX;		// プレイヤーのX方向の移動量
+	float					m_fMP;				// プレイヤーの変形用のポイント
+	PLAYER_OPERATION		m_bOperation;		// プレイヤーの操作フラグ
+	D3DXVECTOR3				m_vPos;				// 座標
+	D3DXVECTOR3				m_vPosOld;			// １フレーム前の座標
+	D3DXVECTOR3				m_vPosDest;			// １フレーム前の座標
+	D3DXVECTOR3				m_vRot;				// 角度
+	D3DXVECTOR3				m_vRotDest;			// 目的の角度
+	PLAYER_MODE				m_Mode;				// 現在のプレイヤーの形態
+	PLAYER_MODE				m_ModeDest;			// 目的のプレイヤーの形態
+	PLAYER_ACTION			m_Action;			// プレイヤーが現在行っている行動
+
+	int						m_nAnimTime;		// 変形時のアニメーションの時間
 };
 
 #endif // __CPLAYER_H__

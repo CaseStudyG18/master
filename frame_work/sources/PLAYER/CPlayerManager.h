@@ -30,8 +30,12 @@ public:
 	// デストラクタ
 	~CPlayerManager();
 
+	// クリエイト関数
+	//	引数　　制作するプレイヤーの数、マニュアル操作するプレイヤーの数、CPUの数
+	static CPlayerManager* Create(int nPlayerNum , int nManualPlayer);
+
 	// 初期化
-	void Init(int nNumPlayer);
+	void Init(int nNumPlayer, int nManualPlayer);
 
 	// 終了
 	void Uninit(void);
@@ -39,9 +43,20 @@ public:
 	// 更新
 	void Update(void);
 
+	// プレイヤーポインタのゲッター
+	//	引数　　呼び出すプレイヤーをセットしている配列番号
+	//	戻り値　プレイヤーのポインタ
+	CPlayer* GetPlayer(int nNumber){ return m_apPlayer[nNumber]; }
+
+	// プレイヤーポインタのセッター
+	//	引数　　プレイヤーポインタ、セットする先の配列番号
+	void SetPlayer(CPlayer* pPlayer, int nNumber){ m_apPlayer[nNumber] = pPlayer; }
+
 private:
 	// プレイヤーのポインタ格納用配列
 	CPlayer* m_apPlayer[MAXIMUM_NUMBER_OF_PLAYER];
+	// テスト用のタイマー
+	int	m_nTimer;
 };
 
 #endif //__CPLAYERMANAGER_H__
