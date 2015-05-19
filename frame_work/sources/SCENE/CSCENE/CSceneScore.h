@@ -21,8 +21,8 @@ class CNumber;
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-static const int MAX_SCORE_NUM = 8;		// 桁数
-static const int MAX_SCORE = 99999999;	// 最大値
+static const int MAX_SCORE_NUM = 3;		// 桁数
+static const int MAX_SCORE = 999;	// 最大値
 
 //*****************************************************************************
 // クラス定義
@@ -41,9 +41,9 @@ public:
 
 	//======================================================
 	// 初期化
-	// 引数: 座標、幅、高さ、テクスチャータイプ、桁数
+	// 引数: 座標、幅、高さ、テクスチャータイプ
 	//======================================================
-	void Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int numberNum);
+	void Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
 	
 	// 終了
 	void Uninit(void);
@@ -83,7 +83,6 @@ private:
 	LPDIRECT3DDEVICE9	*m_pD3DDevice;				// デバイスオブジェクト(描画に必要)
 	static float		m_fWidth;					// 幅
 	static float		m_fHeight;					// 高さ
-	static int			m_nNumberNum;				// 桁数
 	static int			m_nScore;					// スコア
 	static CNumber		*m_Number[MAX_SCORE_NUM];	// 数字(桁数分)
 };

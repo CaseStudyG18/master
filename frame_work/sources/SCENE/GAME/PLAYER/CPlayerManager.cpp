@@ -41,7 +41,7 @@ void CPlayerManager::Init(int nNumPlayer)
 {
 	for (int i = 0; i < nNumPlayer; i++)
 	{
-		m_apPlayer[i] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, TEXTURE_PLAYER);
+		m_apPlayer[i] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, TEXTURE_PLAYER_0);
 	}
 }
 

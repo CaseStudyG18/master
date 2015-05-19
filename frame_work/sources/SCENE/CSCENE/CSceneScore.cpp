@@ -16,7 +16,6 @@
 LPDIRECT3DDEVICE9	CSceneScore:: *m_pD3DDevice = NULL;
 float				CSceneScore:: m_fWidth = 0.f;
 float				CSceneScore:: m_fHeight = 0.f;
-int					CSceneScore:: m_nNumberNum = 0;
 int					CSceneScore:: m_nScore = 0;
 CNumber*			CSceneScore:: m_Number[MAX_SCORE_NUM] = {NULL};
 //*****************************************************************************
@@ -37,7 +36,7 @@ CSceneScore ::~CSceneScore(void)
 //*****************************************************************************
 // ‰Šú‰»ŠÖ”
 //*****************************************************************************
-void CSceneScore :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int numberNum)
+void CSceneScore :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType)
 {
 	// Œ´“_‚ÌˆÊ’u
 	SetPos(pos);
@@ -45,9 +44,6 @@ void CSceneScore :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYP
 	// •‚Æ‚‚³‚ÌÝ’è
 	m_fWidth = width;
 	m_fHeight = height;
-
-	// Œ…”
-	m_nNumberNum = numberNum;
 
 	m_nScore = 0;
 
@@ -106,7 +102,7 @@ CSceneScore* CSceneScore::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, fl
 	CSceneScore* p = new CSceneScore(pDevice);
 
 	// ‰Šú‰»
-	p->Init(pos, width, height, texType, numberNum);
+	p->Init(pos, width, height, texType);
 
 	return p;
 }

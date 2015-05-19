@@ -53,9 +53,6 @@
     <Filter Include="PHASE">
       <UniqueIdentifier>{dc0fa4a0-2f64-4e92-9afa-cbac0051438a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LIGHT">
-      <UniqueIdentifier>{cea930a1-8623-4d97-9988-d5913af66db4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SCENE\TITLE">
       <UniqueIdentifier>{ae433024-07fc-4458-a5d8-86177922a688}</UniqueIdentifier>
     </Filter>
@@ -77,8 +74,20 @@
     <Filter Include="SHADER">
       <UniqueIdentifier>{f7eca0cc-d99c-40fd-9414-e5efac76994e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\GAME\TREASURE">
+      <UniqueIdentifier>{742a757d-ffa6-492e-a860-c91876c6dacf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE\GAME\GOAL">
+      <UniqueIdentifier>{eccee3e0-2b95-4a2f-8b98-4ccdf461bae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MAIN\LIGHT">
+      <UniqueIdentifier>{cea930a1-8623-4d97-9988-d5913af66db4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE\GAME\ATTACK">
+      <UniqueIdentifier>{df22901e-e922-4223-b830-d8cbae31e656}</UniqueIdentifier>
+    </Filter>
     <Filter Include="SCENE\GAME\PLAYER">
-      <UniqueIdentifier>{afb5f3b4-c255-4ecb-94f2-e59ac6edabcd}</UniqueIdentifier>
+      <UniqueIdentifier>{0ff2f590-ba1e-49d4-be13-3cc28502f9b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +176,7 @@
       <Filter>PHASE</Filter>
     </ClCompile>
     <ClCompile Include="sources\LIGHT\CLight.cpp">
-      <Filter>LIGHT</Filter>
+      <Filter>MAIN\LIGHT</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp">
       <Filter>SCENE\TITLE</Filter>
@@ -196,10 +205,34 @@
     <ClCompile Include="sources\CAMERA\CameraManager.cpp">
       <Filter>CAMERA</Filter>
     </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayerManager.cpp">
-      <Filter>SCENE\GAME\PLAYER</Filter>
+    <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp">
+      <Filter>SCENE\GAME</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\GOAL\CGoal.cpp">
+      <Filter>SCENE\GAME\GOAL</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\GOAL\CGoalManager.cpp">
+      <Filter>SCENE\GAME\GOAL</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasure.cpp">
+      <Filter>SCENE\GAME\TREASURE</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasureManager.cpp">
+      <Filter>SCENE\GAME\TREASURE</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackManager.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackBase.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackNormal.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayer.cpp">
+      <Filter>SCENE\GAME\PLAYER</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayerManager.cpp">
       <Filter>SCENE\GAME\PLAYER</Filter>
     </ClCompile>
   </ItemGroup>
@@ -292,7 +325,7 @@
       <Filter>PHASE</Filter>
     </ClInclude>
     <ClInclude Include="sources\LIGHT\CLight.h">
-      <Filter>LIGHT</Filter>
+      <Filter>MAIN\LIGHT</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h">
       <Filter>SCENE\TITLE</Filter>
@@ -321,10 +354,34 @@
     <ClInclude Include="sources\CAMERA\CameraManager.h">
       <Filter>CAMERA</Filter>
     </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayerManager.h">
-      <Filter>SCENE\GAME\PLAYER</Filter>
+    <ClInclude Include="sources\SCENE\GAME\CTimeManager.h">
+      <Filter>SCENE\GAME</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\GOAL\CGoal.h">
+      <Filter>SCENE\GAME\GOAL</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\GOAL\CGoalManager.h">
+      <Filter>SCENE\GAME\GOAL</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasure.h">
+      <Filter>SCENE\GAME\TREASURE</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasureManager.h">
+      <Filter>SCENE\GAME\TREASURE</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackManager.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackBase.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackNormal.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayer.h">
+      <Filter>SCENE\GAME\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayerManager.h">
       <Filter>SCENE\GAME\PLAYER</Filter>
     </ClInclude>
   </ItemGroup>
