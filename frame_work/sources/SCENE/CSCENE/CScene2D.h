@@ -100,14 +100,12 @@ public:
 private:
 	D3DXVECTOR3	m_vPos;					// ポリゴンの中央の位置
 	D3DXVECTOR3	m_vRot;					// ポリゴンの回転
-	float		m_fLength;				// ポリゴンの対角線の長さ
-	float		m_fAngle;				// ポリゴンの対角線の角度
 	float		m_fWidth;				// 幅
 	float		m_fHeight;				// 高さ
 	bool		m_AutoDraw;				// 自動で描画するか
 
 protected:
-	// 頂点情報セット関数
+	// 頂点情報セットワールド変換関数
 	void SetVertexPolygon(void);
 
 	LPDIRECT3DDEVICE9		*m_pD3DDevice;			// デバイスオブジェクト(描画に必要)
