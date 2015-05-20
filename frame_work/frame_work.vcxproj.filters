@@ -235,6 +235,12 @@
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayerManager.cpp">
       <Filter>SCENE\GAME\PLAYER</Filter>
     </ClCompile>
+    <ClCompile Include="sources\MATH\matrix.cpp">
+      <Filter>MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\MATH\vector.cpp">
+      <Filter>MATH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\MAIN\main.h">
@@ -383,6 +389,12 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayerManager.h">
       <Filter>SCENE\GAME\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\MATH\matrix.h">
+      <Filter>MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\MATH\vector.h">
+      <Filter>MATH</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
