@@ -89,6 +89,9 @@
     <Filter Include="SCENE\GAME\PLAYER">
       <UniqueIdentifier>{0ff2f590-ba1e-49d4-be13-3cc28502f9b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\GAME\THREAD">
+      <UniqueIdentifier>{5093671e-43d8-490d-bdd4-87e48309e6a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -240,6 +243,15 @@
     </ClCompile>
     <ClCompile Include="sources\MATH\vector.cpp">
       <Filter>MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadBase.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadManager.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadNormal.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,6 +407,15 @@
     </ClInclude>
     <ClInclude Include="sources\MATH\vector.h">
       <Filter>MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadNormal.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadManager.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

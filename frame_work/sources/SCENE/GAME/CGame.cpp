@@ -16,6 +16,7 @@
 #include "TREASURE/CTreasureManager.h"
 #include "GOAL/CGoalManager.h"
 #include "ATTACK\CAttackManager.h"
+#include "THREAD\CThreadManager.h"
 #include "CGame.h"
 
 //*****************************************************************************
@@ -94,8 +95,12 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pAttackManager = new CAttackManager(pDevice);
 	m_pAttackManager->Init();
 
+	// 糸マネージャ生成
+	m_pThreadManager = new CThreadManager(pDevice);
+	m_pThreadManager->Init();
+
 	// プレイヤ生成
-	m_pPlayerManager = new CPlayerManager(m_pAttackManager);
+	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager);
 	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM);
 
 	// 宝物生成
@@ -120,6 +125,9 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
+	m_pThreadManager->Uninit();
+	SAFE_DELETE(m_pThreadManager);
+
 	m_pAttackManager->Uninit();
 	SAFE_DELETE(m_pAttackManager);
 

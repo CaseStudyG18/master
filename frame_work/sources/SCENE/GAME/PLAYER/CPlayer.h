@@ -43,6 +43,7 @@ typedef enum
 // 前方宣言
 //-----------------------------------------------------------------------------
 class CAttackManager;
+class CThreadManager;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -72,7 +73,7 @@ public:
 
 	// クリエイト
 	// 引数　デバイス、番号、座標、幅、高さ、テクスチャ,プレイヤー操作,攻撃マネージャー
-	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation, CAttackManager *pAttackManager);
+	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation, CAttackManager *pAttackManager, CThreadManager *pThreadManager);
 
 	// 現在の変形状態の取得
 	// 戻り値　プレイヤーの現在の状態
@@ -115,6 +116,7 @@ private:
 	int						m_nAnimTime;		// 変形時のアニメーションの時間
 
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
+	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 };
 
 #endif // __CPLAYER_H__
