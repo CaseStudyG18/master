@@ -16,8 +16,9 @@
 #include "TREASURE/CTreasureManager.h"
 #include "GOAL/CGoalManager.h"
 #include "ATTACK\CAttackManager.h"
-#include "THREAD\CThreadManager.h"
 #include "CGame.h"
+#include "../../JUDGE/CJudgeManager.h"
+#include "FIELD/CFieldManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -56,6 +57,8 @@ CGame ::CGame(void)
 {
 	m_pPause = NULL;
 	m_pTimeManager = NULL;
+	m_pJudgeManager = NULL;
+	m_pFieldManager = NULL;
 }
 
 //*****************************************************************************
@@ -95,12 +98,8 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pAttackManager = new CAttackManager(pDevice);
 	m_pAttackManager->Init();
 
-	// 糸マネージャ生成
-	m_pThreadManager = new CThreadManager(pDevice);
-	m_pThreadManager->Init();
-
 	// プレイヤ生成
-	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager);
+	m_pPlayerManager = new CPlayerManager(m_pAttackManager);
 	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM);
 
 	// 宝物生成
@@ -117,7 +116,17 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		GOAL_MAX);
 
 	// 音再生
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	//CManager::PlaySoundA(SOUND_LABEL_BGM000);
+
+	// ジャッジ作成
+	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
+
+	// フィールド作成
+	CScene2D* p;
+	m_pFieldManager = new CFieldManager;
+	p = (CScene2D*)m_pFieldManager->CreateField(m_pD3DDevice, D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, -1), 600, 600, TEXTURE_NULL);
+	
+	p->SetColorPolygon(D3DXCOLOR(0.2, 0.5, 0.5, 1));
 }
 
 //*****************************************************************************
@@ -125,8 +134,18 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
-	m_pThreadManager->Uninit();
-	SAFE_DELETE(m_pThreadManager);
+	if (m_pJudgeManager)
+	{
+		m_pJudgeManager->Uninit();
+		delete m_pJudgeManager;
+		m_pJudgeManager = NULL;
+	}
+	if (m_pFieldManager)
+	{
+		m_pFieldManager->Uninit();
+		delete m_pFieldManager;
+		m_pFieldManager = NULL;
+	}
 
 	m_pAttackManager->Uninit();
 	SAFE_DELETE(m_pAttackManager);
@@ -175,6 +194,8 @@ void CGame::Update(void)
 	if(!m_pPause->GetPauseFlag())
 	{
 		CPhase::Update();
+		m_pFieldManager->Update();
+		m_pJudgeManager->Update();
 
 		if(CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 		{

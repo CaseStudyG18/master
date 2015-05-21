@@ -24,7 +24,8 @@ class CTreasureManager;
 class CGoalManager;
 class CPlayerManager;
 class CAttackManager;
-class CThreadManager;
+class CJudgeManager;
+class CFieldManager;
 
 //*****************************************************************************
 // クラス定義
@@ -72,8 +73,10 @@ private:
 	CPlayerManager *m_pPlayerManager;
 	// 攻撃マネージャ
 	CAttackManager * m_pAttackManager;
-	// 糸マネージャ
-	CThreadManager * m_pThreadManager;
+	// ジャッジマネージャー
+	CJudgeManager* m_pJudgeManager;
+	// フィールドマネージャー
+	CFieldManager* m_pFieldManager;
 };
 
 #endif

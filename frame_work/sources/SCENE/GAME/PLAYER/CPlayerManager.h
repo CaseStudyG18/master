@@ -12,7 +12,6 @@
 //-----------------------------------------------------------------------------
 class CPlayer;
 class CAttackManager;
-class CThreadManager;
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -27,20 +26,14 @@ class CPlayerManager
 {
 public:
 	// コンストラクタ
-	CPlayerManager(
-		CAttackManager *pAttackManager, 
-		CThreadManager *pThreadManager);
+	CPlayerManager(CAttackManager *pAttackManager);
 
 	// デストラクタ
 	~CPlayerManager();
 
 	// クリエイト関数
-	//	引数　　制作するプレイヤーの数、マニュアル操作するプレイヤーの数、CPUの数、攻撃マネージャー 糸マネージャー
-	static CPlayerManager* Create(
-		int nPlayerNum,
-		int nManualPlayer,
-		CAttackManager *pAttackPlayer,
-		CThreadManager *pThreadPlayer);
+	//	引数　　制作するプレイヤーの数、マニュアル操作するプレイヤーの数、CPUの数、攻撃マネージャー
+	static CPlayerManager* Create(int nPlayerNum , int nManualPlayer, CAttackManager *pAttackPlayer);
 
 	// 初期化
 	// CPU人数、プレイヤー人数
@@ -69,8 +62,6 @@ private:
 
 	// 攻撃時に必要なマネージャー
 	CAttackManager *m_pAttackManager;
-	// 糸出す時に必要なマネージャー
-	CThreadManager *m_pThreadManager;
 };
 
 #endif //__CPLAYERMANAGER_H__

@@ -11,10 +11,13 @@
 // インクルード
 //*****************************************************************************
 #include "../MAIN/main.h"
+#include "../SCENE/GAME/PLAYER/CPlayerManager.h"
 
 //*****************************************************************************
 // 前方宣言
 //*****************************************************************************
+class CJudgeManager;
+class CScene2D;
 
 //*****************************************************************************
 // クラス定義
@@ -33,15 +36,20 @@ public:
 	}OBB_INFO;
 
 	// コンストラクタ
-	CJudge(void){};
+	CJudge(CJudgeManager* pJudgeManager);
 
 	// デストラクタ
-	~CJudge(void){};
+	~CJudge(void);
 
 	// フィールドとプレイヤーのあたり判定
 	void ColiFieldxPlayer(void);
 
 private:
+	// 線分構造体
+	struct Segment {
+		D3DXVECTOR2 s; // 始点
+		D3DXVECTOR2 v; // 方向ベクトル（線分の長さも担うので正規化しないように！）
+	};
 	//=========================================================================
 	// 矩形と矩形のあたり判定
 	// 引数:判定したいもののOBB情報
@@ -55,6 +63,15 @@ private:
 	//=========================================================================
 	void CreateOBBInfo(OBB_INFO* outOBB, D3DXVECTOR2* pos, float* rot, float* width, float* height);
 
+	//=========================================================================
+	// 線分と線分のあたり判定
+	// 引数:線分1、線分2、(out)交点の座標
+	// 戻り値：真偽
+	//=========================================================================
+	bool ColiRayxRay(Segment &seg1, Segment &seg2, D3DXVECTOR2* outPos);
+
+	CJudgeManager*	m_pJudgeManager;
+	CScene2D*		m_LastFieldColiPlayer[MAXIMUM_NUMBER_OF_PLAYER];	// プレイヤーが最後に当たってたフィールドポインタ
 };
 
 #endif

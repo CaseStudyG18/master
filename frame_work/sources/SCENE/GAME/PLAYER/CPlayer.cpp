@@ -9,7 +9,6 @@
 #include "../../../INPUT/CInputKeyboard.h"
 #include "../../../TEXTURE/CTexture.h"
 #include "../ATTACK/CAttackManager.h"
-#include "../THREAD/CThreadManager.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -47,17 +46,10 @@ CPlayer::~CPlayer()
 
 //-----------------------------------------------------------------------------
 // クリエイト
-//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）,攻撃マネージャー、糸マネージャー
+//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）,攻撃マネージャー
 //	戻り値　作成したプレイヤーのポインタ
 //-----------------------------------------------------------------------------
-CPlayer* CPlayer::Create(
-	LPDIRECT3DDEVICE9 *pDevice,
-	D3DXVECTOR3 pos,
-	float fWidth, float fHeight,
-	TEXTURE_TYPE texture,
-	PLAYER_OPERATION operation,
-	CAttackManager *pAttackManager,
-	CThreadManager *pThreadManager)
+CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation, CAttackManager *pAttackManager)
 {
 	// プレイヤーポインタの作成
 	CPlayer *temp = new CPlayer(pDevice);
@@ -67,9 +59,6 @@ CPlayer* CPlayer::Create(
 
 	// 攻撃マネージャの保持
 	temp->m_pAttackManager = pAttackManager;
-
-	// 糸マネージャの保持
-	temp->m_pThreadManager = pThreadManager;
 
 	// 作成したプレイヤーのポインタを返す
 	return temp;
@@ -240,8 +229,8 @@ void CPlayer::Update(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Draw(void)
 {
-	CScene2D::SetPos(m_vPos);
-	CScene2D::SetRot(m_vRot);
+	//CScene2D::SetPos(m_vPos);
+	//CScene2D::SetRot(m_vRot);
 	CScene2D::Draw();
 }
 
@@ -318,11 +307,6 @@ void CPlayer::Metamorphose(PLAYER_MODE mode)
 //-----------------------------------------------------------------------------
 void CPlayer::SpidersThread(void)
 {
-	// 普通攻撃
-	m_pThreadManager->CreateThread(
-		THREAD_TYPE_NORMAL,
-		0,
-		m_vPos);
 }
 
 //-----------------------------------------------------------------------------

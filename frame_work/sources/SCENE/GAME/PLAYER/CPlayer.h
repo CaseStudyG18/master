@@ -43,7 +43,6 @@ typedef enum
 // 前方宣言
 //-----------------------------------------------------------------------------
 class CAttackManager;
-class CThreadManager;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -73,7 +72,7 @@ public:
 
 	// クリエイト
 	// 引数　デバイス、番号、座標、幅、高さ、テクスチャ,プレイヤー操作,攻撃マネージャー
-	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation, CAttackManager *pAttackManager, CThreadManager *pThreadManager);
+	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation, CAttackManager *pAttackManager);
 
 	// 現在の変形状態の取得
 	// 戻り値　プレイヤーの現在の状態
@@ -104,10 +103,8 @@ private:
 	float					m_fMoveSpeedX;		// プレイヤーのX方向の移動量
 	float					m_fMP;				// プレイヤーの変形用のポイント
 	PLAYER_OPERATION		m_bOperation;		// プレイヤーの操作フラグ
-	D3DXVECTOR3				m_vPos;				// 座標
 	D3DXVECTOR3				m_vPosOld;			// １フレーム前の座標
 	D3DXVECTOR3				m_vPosDest;			// １フレーム前の座標
-	D3DXVECTOR3				m_vRot;				// 角度
 	D3DXVECTOR3				m_vRotDest;			// 目的の角度
 	PLAYER_MODE				m_Mode;				// 現在のプレイヤーの形態
 	PLAYER_MODE				m_ModeDest;			// 目的のプレイヤーの形態
@@ -116,7 +113,6 @@ private:
 	int						m_nAnimTime;		// 変形時のアニメーションの時間
 
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
-	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 };
 
 #endif // __CPLAYER_H__

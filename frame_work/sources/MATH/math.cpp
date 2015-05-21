@@ -68,4 +68,10 @@ void NormalizeRotation(D3DXVECTOR3 *rot)
 		rot->z -= D3DX_PI * 2.f;	// 360度をにしたいため2倍している
 	}
 }
+
+// 2Dベクトルの外積
+float D3DXVec2Cross(D3DXVECTOR2* v1, D3DXVECTOR2* v2)
+{
+	return v1->x * v2->y - v1->y * v2->x;
+}
 //----EOF----

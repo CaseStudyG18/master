@@ -8,10 +8,40 @@
 // インクルード
 //=============================================================================
 #include "CJudge.h"
+#include "CJudgeManager.h"
 #include "../MATH/matrix.h"
 #include "../MATH/vector.h"
+#include "../MATH/math.h"
 #include "../SCENE/CSCENE/CScene.h"
 #include "../SCENE/CSCENE/CScene2D.h"
+#include "../SCENE/GAME/PLAYER/CPlayer.h"
+#include "../SCENE/CSCENE/CScene2D.h"
+
+//=========================================================================
+// コンストラクタ
+//=========================================================================
+CJudge::CJudge(CJudgeManager* pJudgeManager)
+{
+	m_pJudgeManager = pJudgeManager;
+
+	for (int idx = 0; idx < MAXIMUM_NUMBER_OF_PLAYER; ++idx)
+	{
+		m_LastFieldColiPlayer[idx] = NULL;
+	}
+}
+
+//=========================================================================
+// デストラクタ
+//=========================================================================
+CJudge::~CJudge()
+{
+	m_pJudgeManager = NULL;
+
+	for (int idx = 0; idx < MAXIMUM_NUMBER_OF_PLAYER; ++idx)
+	{
+		m_LastFieldColiPlayer[idx] = NULL;
+	}
+}
 
 //=========================================================================
 // フィールドとプレイヤーのあたり判定
@@ -20,49 +50,31 @@ void CJudge::ColiFieldxPlayer(void)
 {
 	CScene *pScene;
 	CScene *pSceneNext;
-	CScene2D *pPlayer[4] = {NULL};	// プレイヤーの最大人数分用意
+	CPlayer *pPlayer[MAXIMUM_NUMBER_OF_PLAYER] = { NULL };	// プレイヤーの最大人数分用意
 	CScene2D *pField;
-	CJudge::OBB_INFO playerOBB[4];
+	CJudge::OBB_INFO playerOBB[MAXIMUM_NUMBER_OF_PLAYER];
+	int playerNum = 0;
+	bool coli[MAXIMUM_NUMBER_OF_PLAYER] = { false };
 
-	// プレイヤー情報取得のループ
-	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+	// プレイヤー情報入れる
+	CPlayerManager* playerManager = m_pJudgeManager->GetPlayerManager();
+
+	for (int playerCount = 0; playerCount < MAXIMUM_NUMBER_OF_PLAYER; ++playerCount)
 	{
-		int playerCount = 0;
-
-		// 先頭を指定
-		pScene = CScene::GetTopAddress(priority);
-
-		// ポインタがNULLでなければ
-		while (pScene)
+		pPlayer[playerCount] = playerManager->GetPlayer(playerCount);
+		if (!pPlayer[playerCount])
 		{
-			// 現在対象としているインスタンスの次のインスタンスを保存
-			pSceneNext = pScene->GetNextAddress();
-
-			if (pScene->GetObjType() != CScene::OBJTYPE_PLAYER)
-			{
-				// 次のインスタンスを対象のインスタンスにする
-				pScene = pSceneNext;
-				continue;
-			}
-
-			// プレイヤー情報入れる
-			if (playerCount < 4)
-			{
-				pPlayer[playerCount] = (CScene2D*)pScene;
-				D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
-				float rot = pPlayer[playerCount]->GetRot().z;
-				float width = pPlayer[playerCount]->GetWidth();
-				float height = pPlayer[playerCount]->GetHeight();
-
-				// OBB情報作成
-				CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
-
-				playerCount++;
-			}
-
-			// 次のインスタンスを対象のインスタンスにする
-			pScene = pSceneNext;
+			continue;
 		}
+		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
+		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
+		float rot = pPlayer[playerCount]->GetRot().z;
+		float width = pPlayer[playerCount]->GetWidth() * 0.5f;
+		float height = pPlayer[playerCount]->GetHeight() * 0.25f;
+
+		// OBB情報作成
+		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
+		playerNum++;
 	}
 
 	// フィールドとの当たり判定ループ
@@ -95,10 +107,22 @@ void CJudge::ColiFieldxPlayer(void)
 			CreateOBBInfo(&fieldOBB, &pos, &rot, &width, &height);
 			
 			// 当たり判定
-			for (int idx = 0; idx < 4; ++idx)
+			for (int idx = 0; idx < playerNum; ++idx)
 			{
+				// すでにあたってるなら判定しない
+				if (coli[idx])
+				{
+					continue;
+				}
+
 				if (IsOBB(playerOBB[idx], fieldOBB))
 				{
+					// ヒットフラグオン
+					coli[idx] = true;
+
+					// 最後に当たった場所更新
+					m_LastFieldColiPlayer[idx] = pField;
+
 					// 当たった時の処理
 					#ifdef _DEBUG
 					CDebugProc::Print("HIT!!\n");
@@ -110,6 +134,65 @@ void CJudge::ColiFieldxPlayer(void)
 			pScene = pSceneNext;
 		}
 	}
+
+	// フィールド外に居るやつの座標変更
+	for (int idx = 0; idx < playerNum; ++idx)
+	{
+		// 当たってるやつは乗ってるので無視
+		if (coli[idx])
+		{
+			continue;
+		}
+
+		// NULLチェック
+		if (!pPlayer[idx])
+		{
+			continue;
+		}
+		if (!m_LastFieldColiPlayer[idx])
+		{
+			continue;
+		}
+
+		D3DXVECTOR2 playerPos, fieldPos, vertexPosA, vertexPosB, vertexPosC, vertexPosD, hitPos;
+		playerPos = (D3DXVECTOR2)pPlayer[idx]->GetPos();
+		playerPos.y += pPlayer[idx]->GetHeight() * 0.25f;
+		fieldPos = (D3DXVECTOR2)m_LastFieldColiPlayer[idx]->GetPos();
+
+		// コの字なので順番注意
+		vertexPosA = *m_LastFieldColiPlayer[idx]->GetVertexPos(0);
+		vertexPosB = *m_LastFieldColiPlayer[idx]->GetVertexPos(1);
+		vertexPosC = *m_LastFieldColiPlayer[idx]->GetVertexPos(3);
+		vertexPosD = *m_LastFieldColiPlayer[idx]->GetVertexPos(2);
+		
+		Segment playerSegment, vertexSegment;
+		playerSegment.s = fieldPos;
+		playerSegment.v = playerPos - fieldPos;
+		vertexSegment.s = vertexPosA;
+		vertexSegment.v = vertexPosB - vertexPosA;
+
+		if (!ColiRayxRay(playerSegment, vertexSegment, &hitPos))
+		{
+			vertexSegment.s = vertexPosB;
+			vertexSegment.v = vertexPosC - vertexPosB;
+			if (!ColiRayxRay(playerSegment, vertexSegment, &hitPos))
+			{
+				vertexSegment.s = vertexPosC;
+				vertexSegment.v = vertexPosD - vertexPosC;
+				if (!ColiRayxRay(playerSegment, vertexSegment, &hitPos))
+				{
+					vertexSegment.s = vertexPosD;
+					vertexSegment.v = vertexPosA - vertexPosD;
+					if (!ColiRayxRay(playerSegment, vertexSegment, &hitPos))
+					{
+						return;
+					}
+				}
+			}
+		}
+		pPlayer[idx]->SetPos(D3DXVECTOR3(hitPos.x, hitPos.y - pPlayer[idx]->GetHeight() * 0.25f, 0.f));
+	}
+
 }
 
 //=========================================================================
@@ -219,5 +302,44 @@ void CJudge::CreateOBBInfo(CJudge::OBB_INFO* outOBB, D3DXVECTOR2* pos, float* ro
 	outOBB->axisY.x = wMatrix.m21;
 	outOBB->axisY.y = wMatrix.m22;
 }
+
+//=========================================================================
+// 線分と線分のあたり判定
+//=========================================================================
+bool CJudge::ColiRayxRay(Segment &seg1, Segment &seg2, D3DXVECTOR2* outPos)
+{
+	D3DXVECTOR2 v = seg2.s - seg1.s;
+	float Crs_v1_v2 = D3DXVec2Cross(&seg1.v, &seg2.v);
+	if (Crs_v1_v2 == 0.0f)
+	{
+		// 平行状態
+		return false;
+	}
+
+	float Crs_v_v1 = D3DXVec2Cross(&v, &seg1.v);
+	float Crs_v_v2 = D3DXVec2Cross(&v, &seg2.v);
+
+	float t1 = Crs_v_v2 / Crs_v1_v2;
+	float t2 = Crs_v_v1 / Crs_v1_v2;
+
+	// 容認誤差
+	const float eps = 0.00001f;
+	if (t1 + eps < 0 || t1 - eps > 1 || t2 + eps < 0 || t2 - eps > 1)
+	{
+		// 交差していない
+		return false;
+	}
+
+	if (outPos)
+	{
+		*outPos = seg1.s + seg1.v * t1;
+#ifdef _DEBUG
+		CDebugProc::Print("X:%f\nY:%f\n", outPos->x, outPos->y);
+#endif
+	}
+
+	return true;
+}
+
 
 //----EOF----

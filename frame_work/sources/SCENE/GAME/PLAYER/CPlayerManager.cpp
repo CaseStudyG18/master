@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CPlayerManager::CPlayerManager(CAttackManager *pAttackManager, CThreadManager *pThreadManager)
+CPlayerManager::CPlayerManager(CAttackManager *pAttackManager)
 {
 	for (int i = 0; i < MAXIMUM_NUMBER_OF_PLAYER; i++)
 	{
@@ -27,7 +27,6 @@ CPlayerManager::CPlayerManager(CAttackManager *pAttackManager, CThreadManager *p
 	}
 	m_nTimer = 0;
 	m_pAttackManager = pAttackManager;
-	m_pThreadManager = pThreadManager;
 }
 
 //-----------------------------------------------------------------------------
@@ -40,14 +39,10 @@ CPlayerManager::~CPlayerManager()
 //-----------------------------------------------------------------------------
 // クリエイト関数
 //-----------------------------------------------------------------------------
-CPlayerManager* CPlayerManager::Create(
-	int nPlayerNum,
-	int nManualPlayer,
-	CAttackManager *pAtatckManager,
-	CThreadManager *pThreadManager)
+CPlayerManager* CPlayerManager::Create(int nPlayerNum, int nManualPlayer, CAttackManager *pAtatckManager)
 {
 	// プレイヤーのマネージャを作成
-	CPlayerManager* temp = new CPlayerManager(pAtatckManager, pThreadManager);
+	CPlayerManager* temp = new CPlayerManager(pAtatckManager);
 
 	// プレイヤーマネージャの初期化
 	temp->Init(nPlayerNum, nManualPlayer);
@@ -67,12 +62,12 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer)
 	// マニュアル操作のプレイヤーの作成
 	for (nManual = 0; nManual < nManualPlayer; nManual++)
 	{
-		m_apPlayer[nManual] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_MANUAL, m_pAttackManager, m_pThreadManager);
+		m_apPlayer[nManual] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_MANUAL, m_pAttackManager);
 	}
 	// CPUの作成
 	for (nCPU = nManual; nCPU < nNumPlayer; nCPU++)
 	{
-		m_apPlayer[nCPU] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_COMPUTER, m_pAttackManager, m_pThreadManager);
+		m_apPlayer[nCPU] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(50.0f, 20.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_COMPUTER, m_pAttackManager);
 	}
 }
 
@@ -85,8 +80,8 @@ void CPlayerManager::Update(void)
 
 	if (m_nTimer > 500)
 	{
-		m_apPlayer[0]->Uninit();
-		m_apPlayer[0] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(100.0f, 100.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_COMPUTER, m_pAttackManager, m_pThreadManager);
+		//m_apPlayer[0]->Uninit();
+		//m_apPlayer[0] = CPlayer::Create(CRenderer::GetDevice(), D3DXVECTOR3(100.0f, 100.0f, 0), 50.0f, 50.0f, PLAYER_TEXTURE, PLAYER_COMPUTER, m_pAttackManager);
 
 		m_nTimer = 0;
 	}
