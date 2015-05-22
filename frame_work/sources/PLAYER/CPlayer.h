@@ -12,10 +12,11 @@
 //-----------------------------------------------------------------------------
 // マクロ定義
 //-----------------------------------------------------------------------------
-static const int	PLAYER_DEFAULT_HP = 500;		// プレイヤーのデフォルトの体力
-static const float	PLAYER_DEFAULT_MP = 300.0f;		// プレイヤーのデフォルトの変形用ポイント
-static const BOOL	PLAYER_MANUAL     = TRUE;		// プレイヤー操作マニュアル
-static const BOOL	PLAYER_COMPUTER   = FALSE;		// プレイヤー操作AUTO
+#define PLAYER_DEFAULT_HP	500			// プレイヤーのデフォルトの体力
+#define PLAYER_DEFAULT_MP	300.0f		// プレイヤーのデフォルトの変形用ポイント
+#define PLAYER_OPERATION	BOOL		// プレイヤーの操作フラグ
+#define PLAYER_MANUAL		TRUE		// プレイヤー操作マニュアル
+#define PLAYER_COMPUTER		FALSE		// プレイヤー操作AUTO
 
 //-----------------------------------------------------------------------------
 // 列挙体定義
@@ -89,15 +90,15 @@ public:
 
 	// クリエイト
 	// 引数　デバイス、番号、座標、幅、高さ、テクスチャ,プレイヤー操作フラグ,攻撃マネージャー,プレイヤー番号
-	static CPlayer* Create(	LPDIRECT3DDEVICE9 *pDevice,
-							D3DXVECTOR3 pos,
-							float fWidth,
-							float fHeight,
-							TEXTURE_TYPE texture,
-							BOOL playerOperation,
-							CAttackManager *pAttackManager,
-							CThreadManager *pThreadManager,
-							short sPlayerNumber);
+	static CPlayer* Create(LPDIRECT3DDEVICE9 *pDevice,
+		D3DXVECTOR3 pos,
+		float fWidth,
+		float fHeight,
+		TEXTURE_TYPE texture,
+		BOOL playerOperation,
+		CAttackManager *pAttackManager,
+		CThreadManager *pThreadManager,
+		short sPlayerNumber);
 
 	// 現在の変形状態の取得
 	// 戻り値　プレイヤーの現在の状態
@@ -136,6 +137,9 @@ private:
 	// ダウン状態の処理
 	void PlayerDown(void);
 
+	// プレイヤーのテクスチャのUV値の切り替え(Uの切り替え)
+	void ChangeTextureFaceU(void);
+
 	//---------------------------------
 	// 変数
 	//---------------------------------
@@ -144,16 +148,15 @@ private:
 	float					m_fMoveSpeedX;		// プレイヤーのX方向の移動量
 	float					m_fMP;				// プレイヤーの変形用のポイント
 	BOOL					m_bOperation;		// プレイヤーの操作フラグ
-	D3DXVECTOR3				m_vPos;				// 座標
 	D3DXVECTOR3				m_vPosOld;			// １フレーム前の座標
 	D3DXVECTOR3				m_vPosDest;			// １フレーム前の座標
-	D3DXVECTOR3				m_vRot;				// 角度
 	D3DXVECTOR3				m_vRotDest;			// 目的の角度
 	PLAYER_MODE				m_Mode;				// 現在のプレイヤーの形態
 	PLAYER_MODE				m_ModeDest;			// 目的のプレイヤーの形態
 	PLAYER_ACTION			m_Action;			// プレイヤーが現在行っている行動
 	short					m_sNumber;			// マネージャに割り振られたプレイヤー番号
 	DIRECTION_PLAYER_FACING	m_PlayerFacing;		// プレイヤーの向いている方向
+	DIRECTION_PLAYER_FACING	m_PlayerFacingOld;	// プレイヤーの向いている方向
 
 	int						m_nAnimTime;		// 変形時のアニメーションの時間
 	int						m_nKnockBackTime;	// ノックバック時の時間
