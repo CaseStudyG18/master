@@ -97,12 +97,17 @@ public:
 	//=======================================================================
 	static CScene2D* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
 
+	//=======================================================================
+	// 頂点座標取得関数
+	// 引数:頂点番号
+	// 戻り値:座標
+	//=======================================================================
+	D3DXVECTOR2* GetVertexPos(int idx){ return &m_vtxPos[idx]; };
+
 private:
-	D3DXVECTOR3	m_vPos;					// ポリゴンの中央の位置
-	D3DXVECTOR3	m_vRot;					// ポリゴンの回転
-	float		m_fWidth;				// 幅
-	float		m_fHeight;				// 高さ
+	static const int VERTEX_NUM = 4;	// 頂点の数
 	bool		m_AutoDraw;				// 自動で描画するか
+	D3DXVECTOR2	m_vtxPos[VERTEX_NUM];	// 頂点の座標
 
 protected:
 	// 頂点情報セットワールド変換関数
@@ -111,6 +116,10 @@ protected:
 	LPDIRECT3DDEVICE9		*m_pD3DDevice;			// デバイスオブジェクト(描画に必要)
 	LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;			// 頂点座標情報を格納する場所のアドレスを確保する場所
 	LPDIRECT3DTEXTURE9		m_pD3DTexBuff;			// テクスチャ情報を格納する場所のアドレスを確保する場所
+	D3DXVECTOR3	m_vPos;								// ポリゴンの中央の位置
+	D3DXVECTOR3	m_vRot;								// ポリゴンの回転
+	float		m_fWidth;							// 幅
+	float		m_fHeight;							// 高さ
 };
 #endif
 //----EOF----

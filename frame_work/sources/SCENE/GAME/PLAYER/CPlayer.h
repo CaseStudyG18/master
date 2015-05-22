@@ -104,10 +104,8 @@ private:
 	float					m_fMoveSpeedX;		// プレイヤーのX方向の移動量
 	float					m_fMP;				// プレイヤーの変形用のポイント
 	PLAYER_OPERATION		m_bOperation;		// プレイヤーの操作フラグ
-	D3DXVECTOR3				m_vPos;				// 座標
 	D3DXVECTOR3				m_vPosOld;			// １フレーム前の座標
 	D3DXVECTOR3				m_vPosDest;			// １フレーム前の座標
-	D3DXVECTOR3				m_vRot;				// 角度
 	D3DXVECTOR3				m_vRotDest;			// 目的の角度
 	PLAYER_MODE				m_Mode;				// 現在のプレイヤーの形態
 	PLAYER_MODE				m_ModeDest;			// 目的のプレイヤーの形態

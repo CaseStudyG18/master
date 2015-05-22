@@ -18,32 +18,35 @@
 #include "ATTACK\CAttackManager.h"
 #include "THREAD\CThreadManager.h"
 #include "CGame.h"
+#include "../../JUDGE/CJudgeManager.h"
+#include "FIELD/CFieldManager.h"
+
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
 
 // ゲームの制限時間
-const short GAME_TIME = 300;
+static const short GAME_TIME = 300;
 
 // 宝物の場所
-const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(200, 100, 0);
+static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(200, 100, 0);
 
 // ゴール
-const short GOAL_MAX = 4;
-const D3DXVECTOR3 GOAL_POS[GOAL_MAX] = {
+static const short GOAL_MAX = 4;
+static const D3DXVECTOR3 GOAL_POS[GOAL_MAX] = {
 	D3DXVECTOR3(100, 100, 0),
 	D3DXVECTOR3(700, 100, 0),
 	D3DXVECTOR3(100, 500, 0),
 	D3DXVECTOR3(700, 500, 0),
 };
-const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
+static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 	0,1,2,3
 };
 
 // プレイヤ人数
-const short MANUAL_PLAYER_NUM = 1;
-const short CPU_PLAYER_NUM = 3;
+static const short MANUAL_PLAYER_NUM = 1;
+static const short CPU_PLAYER_NUM = 3;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -56,6 +59,13 @@ CGame ::CGame(void)
 {
 	m_pPause = NULL;
 	m_pTimeManager = NULL;
+	m_pPlayerManager = NULL;
+	m_pAttackManager = NULL;
+	m_pThreadManager = NULL;
+	m_pGoalManager = NULL;
+	m_pJudgeManager = NULL;
+	m_pFieldManager = NULL;
+
 }
 
 //*****************************************************************************
@@ -118,6 +128,17 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 
 	// 音再生
 	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+
+	// ジャッジ作成
+	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
+
+	// フィールド作成
+	CScene2D* p;
+	m_pFieldManager = new CFieldManager;
+	p = (CScene2D*)m_pFieldManager->CreateField(m_pD3DDevice, D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, -1), 600, 600, TEXTURE_NULL);
+
+	p->SetColorPolygon(D3DXCOLOR(0.2f, 0.5f, 0.5f, 1.0f));
+
 }
 
 //*****************************************************************************
@@ -125,24 +146,45 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
-	m_pThreadManager->Uninit();
-	SAFE_DELETE(m_pThreadManager);
+	if (m_pJudgeManager){
+		m_pJudgeManager->Uninit();
+		SAFE_DELETE(m_pJudgeManager);
+	}
+	if (m_pFieldManager){
+		m_pFieldManager->Uninit();
+		SAFE_DELETE(m_pFieldManager);
+	}
 
-	m_pAttackManager->Uninit();
-	SAFE_DELETE(m_pAttackManager);
+	if (m_pThreadManager){
+		m_pThreadManager->Uninit();
+		SAFE_DELETE(m_pThreadManager);
+	}
 
-	m_pPlayerManager->Uninit();
-	SAFE_DELETE(m_pPlayerManager);
+	if (m_pAttackManager){
+		m_pAttackManager->Uninit();
+		SAFE_DELETE(m_pAttackManager);
+	}
 
-	m_pGoalManager->Uninit();
-	SAFE_DELETE(m_pGoalManager);
+	if (m_pPlayerManager){
+		m_pPlayerManager->Uninit();
+		SAFE_DELETE(m_pPlayerManager);
+	}
 
-	m_pTreasureManager->Uninit();
-	SAFE_DELETE(m_pTreasureManager);
+	if (m_pGoalManager){
+		m_pGoalManager->Uninit();
+		SAFE_DELETE(m_pGoalManager);
+	}
 
-	m_pTimeManager->Uninit();
-	SAFE_DELETE(m_pTimeManager);
+	if (m_pTreasureManager){
+		m_pTreasureManager->Uninit();
+		SAFE_DELETE(m_pTreasureManager);
+	}
 
+	if (m_pTimeManager){
+		m_pTimeManager->Uninit();
+		SAFE_DELETE(m_pTimeManager);
+	}
+	
 	CManager::StopSound();
 	CPhase::Uninit();
 }
@@ -152,11 +194,6 @@ void CGame::Uninit(void)
 //*****************************************************************************
 void CGame::Update(void)
 {
-	// マネージャー更新
-	m_pPlayerManager->Update();
-	m_pTimeManager->Update();
-	m_pTreasureManager->Update();
-
 	// Ｐが押されたら
 	if(CInputKeyboard::GetKeyboardTrigger(DIK_P))
 	{
@@ -175,6 +212,13 @@ void CGame::Update(void)
 	if(!m_pPause->GetPauseFlag())
 	{
 		CPhase::Update();
+
+		// マネージャー更新
+		m_pPlayerManager->Update();
+		m_pTimeManager->Update();
+		m_pTreasureManager->Update();
+		m_pJudgeManager->Update();
+		m_pFieldManager->Update();
 
 		if(CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 		{

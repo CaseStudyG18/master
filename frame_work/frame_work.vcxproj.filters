@@ -92,6 +92,9 @@
     <Filter Include="SCENE\GAME\THREAD">
       <UniqueIdentifier>{5093671e-43d8-490d-bdd4-87e48309e6a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\GAME\FIELD">
+      <UniqueIdentifier>{af1964e7-a03a-445e-8b63-f6ed73675098}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -252,6 +255,15 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadNormal.cpp">
       <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\FIELD\CFieldManager.cpp">
+      <Filter>SCENE\GAME\FIELD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\FIELD\CField.cpp">
+      <Filter>SCENE\GAME\FIELD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\JUDGE\CJudgeManager.cpp">
+      <Filter>JUDGE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,6 +428,15 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadManager.h">
       <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\FIELD\CField.h">
+      <Filter>SCENE\GAME\FIELD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\FIELD\CFieldManager.h">
+      <Filter>SCENE\GAME\FIELD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\JUDGE\CJudgeManager.h">
+      <Filter>JUDGE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

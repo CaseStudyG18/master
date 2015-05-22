@@ -22,6 +22,10 @@ CScene2D::CScene2D(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :
 	m_vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					// ポリゴンの中央の位置
 	m_vRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					// ポリゴンの回転
 	m_AutoDraw = true;
+	for (int idx = 0; idx < VERTEX_NUM; ++idx)
+	{
+		m_vtxPos[idx] = D3DXVECTOR2(0.0f, 0.0f);
+	}
 }
 
 //*****************************************************************************
@@ -99,6 +103,9 @@ HRESULT CScene2D::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE 
 	m_pD3DVtxBuff->Unlock();																	// ロックしたら必ずアンロック！！
 	//********************************************************************************************************************
 
+	// 座標変換
+	SetVertexPolygon();
+
 	return S_OK;
 }
 
@@ -175,6 +182,9 @@ void CScene2D::SetVertexPolygon(void)
 		pVtx[i].vtx = D3DXVECTOR3(v.x
 								, v.y
 								, 0.0f);
+
+		m_vtxPos[i].x = pVtx[i].vtx.x;
+		m_vtxPos[i].y = pVtx[i].vtx.y;
 	}
 	m_pD3DVtxBuff->Unlock();		// ロックしたら必ずアンロック！！
 }

@@ -20,5 +20,8 @@ float PowVector(D3DXVECTOR3 v);			// ベクトルを長さの二乗に変換
 void	NormalizeRotation(float *rot);
 void	NormalizeRotation(D3DXVECTOR3 *rot);
 
+// ２Ｄベクトルの外積
+float D3DXVec2Cross(D3DXVECTOR2* v1, D3DXVECTOR2* v2);
+
 #endif
 //----EOF----

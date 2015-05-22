@@ -240,8 +240,9 @@ void CPlayer::Update(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Draw(void)
 {
-	CScene2D::SetPos(m_vPos);
-	CScene2D::SetRot(m_vRot);
+// CScene2Dのm_vPos,m_vRotをprotectedにしたためこれはコメントアウト！
+//	CScene2D::SetPos(m_vPos);
+//	CScene2D::SetRot(m_vRot);
 	CScene2D::Draw();
 }
 

@@ -88,6 +88,7 @@
     <ClCompile Include="sources\INPUT\CInputKeyboard.cpp" />
     <ClCompile Include="sources\INPUT\CInputMouse.cpp" />
     <ClCompile Include="sources\JUDGE\CJudge.cpp" />
+    <ClCompile Include="sources\JUDGE\CJudgeManager.cpp" />
     <ClCompile Include="sources\LIGHT\CLight.cpp" />
     <ClCompile Include="sources\MAIN\main.cpp" />
     <ClCompile Include="sources\MANAGER\CManager.cpp" />
@@ -116,6 +117,8 @@
     <ClCompile Include="sources\SCENE\GAME\CGame.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CNowLoading.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\FIELD\CField.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\FIELD\CFieldManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoal.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoalManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayer.cpp" />
@@ -144,6 +147,7 @@
     <ClInclude Include="sources\INPUT\CInputKeyboard.h" />
     <ClInclude Include="sources\INPUT\CInputMouse.h" />
     <ClInclude Include="sources\JUDGE\CJudge.h" />
+    <ClInclude Include="sources\JUDGE\CJudgeManager.h" />
     <ClInclude Include="sources\LIGHT\CLight.h" />
     <ClInclude Include="sources\MAIN\main.h" />
     <ClInclude Include="sources\MANAGER\CManager.h" />
@@ -172,6 +176,8 @@
     <ClInclude Include="sources\SCENE\GAME\CGame.h" />
     <ClInclude Include="sources\SCENE\GAME\CNowLoading.h" />
     <ClInclude Include="sources\SCENE\GAME\CTimeManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\FIELD\CField.h" />
+    <ClInclude Include="sources\SCENE\GAME\FIELD\CFieldManager.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoal.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoalManager.h" />
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayer.h" />
