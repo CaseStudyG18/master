@@ -35,6 +35,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_bOperation = PLAYER_COMPUTER;							// プレイヤーの操作フラグ
 	m_sNumber = 0;											// マネージャーに割り振られるプレイヤー番号
 	m_PlayerFacing = PLAYER_DIRECTION_UP;					// プレイヤーの初期向き
+	m_PlayerFacingOld = PLAYER_DIRECTION_UP;				// プレイヤーの過去の向き
 
 	m_nAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
 	m_nKnockBackTime = 0;									// ノックバック時間
@@ -289,6 +290,7 @@ void CPlayer::Move(void)
 	m_vPos.x += fDiffPosX * 0.5f;
 	m_vPos.y += fDiffPosY * 0.5f;
 
+	/*
 	// 上と下の移動以外の移動では向きを変える
 	if (m_PlayerFacing == PLAYER_DIRECTION_UP || m_PlayerFacing == PLAYER_DIRECTION_DOWN)
 	{
@@ -306,8 +308,17 @@ void CPlayer::Move(void)
 		// 角度の正規化
 		NormalizeRotation(&m_vRot.z);
 	}
+	*/
 
-	m_PlayerFacing = PLAYER_DIRECTION_UP;
+	// プレイヤーの移動方向が変わったらテクスチャのU値を変える
+	if ((m_PlayerFacing == PLAYER_DIRECTION_LEFT || m_PlayerFacing == PLAYER_DIRECTION_RIGHT) &&
+		m_PlayerFacing != m_PlayerFacingOld)
+	{
+		ChangeTextureFaceU();
+
+		m_PlayerFacingOld = m_PlayerFacing;
+	}
+	//m_PlayerFacing = PLAYER_DIRECTION_UP;
 }
 
 //-----------------------------------------------------------------------------
@@ -403,6 +414,33 @@ void CPlayer::PlayerDown(void)
 
 		m_nDownTime = 0;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// テクスチャのUV切り替えの処理(U値の切り替え)
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::ChangeTextureFaceU(void)
+{
+	VERTEX_2D *pVtx;
+	float fTemp;			// 仮変数
+
+	// ポリゴンの設定
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	// テクスチャの上部分のU値の入れ替え
+	fTemp = pVtx[0].tex.x;
+	pVtx[0].tex.x = pVtx[1].tex.x;
+	pVtx[1].tex.x = fTemp;
+
+	// テクスチャの下部分のU値の入れ替え
+	fTemp = pVtx[2].tex.x;
+	pVtx[2].tex.x = pVtx[3].tex.x;
+	pVtx[3].tex.x = fTemp;
+
+	m_pD3DVtxBuff->Unlock();
+
 }
 
 // EOF

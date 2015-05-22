@@ -12,11 +12,12 @@
 //-----------------------------------------------------------------------------
 // マクロ定義
 //-----------------------------------------------------------------------------
-#define PLAYER_DEFAULT_HP	500			// プレイヤーのデフォルトの体力
-#define PLAYER_DEFAULT_MP	300.0f		// プレイヤーのデフォルトの変形用ポイント
-#define PLAYER_OPERATION	BOOL		// プレイヤーの操作フラグ
-#define PLAYER_MANUAL		TRUE		// プレイヤー操作マニュアル
-#define PLAYER_COMPUTER		FALSE		// プレイヤー操作AUTO
+static const float PLAYER_DEFAULT_HP = 500;	  	// プレイヤーのデフォルトの体力
+static const float PLAYER_DEFAULT_MP = 300.0f;	// プレイヤーのデフォルトの変形用ポイント
+static const bool PLAYER_MANUAL = TRUE;		  	// プレイヤー操作マニュアル
+static const bool PLAYER_COMPUTER = FALSE;	  	// プレイヤー操作AUTO
+
+#define PLAYER_OPERATION	BOOL				// プレイヤーの操作フラグ
 
 //-----------------------------------------------------------------------------
 // 列挙体定義
@@ -137,6 +138,9 @@ private:
 	// ダウン状態の処理
 	void PlayerDown(void);
 
+	// プレイヤーのテクスチャのUV値の切り替え(Uの切り替え)
+	void ChangeTextureFaceU(void);
+
 	//---------------------------------
 	// 変数
 	//---------------------------------
@@ -153,6 +157,7 @@ private:
 	PLAYER_ACTION			m_Action;			// プレイヤーが現在行っている行動
 	short					m_sNumber;			// マネージャに割り振られたプレイヤー番号
 	DIRECTION_PLAYER_FACING	m_PlayerFacing;		// プレイヤーの向いている方向
+	DIRECTION_PLAYER_FACING	m_PlayerFacingOld;	// プレイヤーの向いている方向
 
 	int						m_nAnimTime;		// 変形時のアニメーションの時間
 	int						m_nKnockBackTime;	// ノックバック時の時間
