@@ -33,8 +33,12 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_nHP = PLAYER_DEFAULT_HP;								// プレイヤーの体力
 	m_fMP = PLAYER_DEFAULT_MP;								// プレイヤーの変形用のポイント
 	m_bOperation = PLAYER_COMPUTER;							// プレイヤーの操作フラグ
+	m_sNumber = 0;											// マネージャーに割り振られるプレイヤー番号
+	m_PlayerFacing = PLAYER_DIRECTION_UP;					// プレイヤーの初期向き
 
 	m_nAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
+	m_nKnockBackTime = 0;									// ノックバック時間
+	m_nDownTime = 0;										// ダウン時間
 }
 
 //-----------------------------------------------------------------------------
@@ -47,23 +51,30 @@ CPlayer::~CPlayer()
 
 //-----------------------------------------------------------------------------
 // クリエイト
-//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）,攻撃マネージャー、糸マネージャー
+//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）,攻撃マネージャー , プレイヤー番号
 //	戻り値　作成したプレイヤーのポインタ
 //-----------------------------------------------------------------------------
-CPlayer* CPlayer::Create(
-	LPDIRECT3DDEVICE9 *pDevice,
+CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	D3DXVECTOR3 pos,
-	float fWidth, float fHeight,
+	float fWidth,
+	float fHeight,
 	TEXTURE_TYPE texture,
-	PLAYER_OPERATION operation,
+	BOOL playerOperation,
 	CAttackManager *pAttackManager,
-	CThreadManager *pThreadManager)
+	CThreadManager *pThreadManager,
+	short sPlayerNumber)
 {
 	// プレイヤーポインタの作成
 	CPlayer *temp = new CPlayer(pDevice);
 
 	// 作成したプレイヤー情報の初期化
-	temp->Init(pos, fWidth, fHeight, texture, operation);
+	temp->Init(pos, fWidth, fHeight, texture);
+
+	// 操作フラグを変更
+	temp->m_bOperation = playerOperation;
+
+	// プレイヤー番号のセット
+	temp->m_sNumber = sPlayerNumber;
 
 	// 攻撃マネージャの保持
 	temp->m_pAttackManager = pAttackManager;
@@ -80,12 +91,9 @@ CPlayer* CPlayer::Create(
 //	引数　　座標、幅、高さ、テクスチャの種類
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture, PLAYER_OPERATION operation)
+void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture)
 {
 	CScene2D::Init(pos, fWidth, fHeight, texture);
-
-	// 操作フラグを変更
-	m_bOperation = operation;
 }
 
 //-----------------------------------------------------------------------------
@@ -122,7 +130,7 @@ void CPlayer::Update(void)
 	/*プレイヤーのアクションが変形中で無かった場合のみ他の行動を*/
 	/*行うことができる											*/
 	/*----------------------------------------------------------*/
-	if (m_Action != PLAYER_ACTION_METAMORPHOSE)
+	if (m_Action != PLAYER_ACTION_METAMORPHOSE && m_Action != PLAYER_ACTION_KNOCK_BACK && m_Action != PLAYER_ACTION_DOWN)
 	{
 
 		/*----------------------------------------------------------*/
@@ -140,24 +148,28 @@ void CPlayer::Update(void)
 		{
 			m_fMoveSpeedY = -5.0f;
 			m_Action = PLAYER_ACTION_WALK;
+			m_PlayerFacing = PLAYER_DIRECTION_UP;
 		}
 		// Sで画面下方向への移動
 		else if (CInputKeyboard::GetKeyboardPress(DIK_S))
 		{
 			m_fMoveSpeedY = 5.0f;
 			m_Action = PLAYER_ACTION_WALK;
+			m_PlayerFacing = PLAYER_DIRECTION_DOWN;
 		}
 		// Aで画面左方向への移動
 		if (CInputKeyboard::GetKeyboardPress(DIK_A))
 		{
 			m_fMoveSpeedX = -5.0f;
 			m_Action = PLAYER_ACTION_WALK;
+			m_PlayerFacing = PLAYER_DIRECTION_LEFT;
 		}
 		// Dで画面右方向への移動
 		else if (CInputKeyboard::GetKeyboardPress(DIK_D))
 		{
 			m_fMoveSpeedX = 5.0f;
 			m_Action = PLAYER_ACTION_WALK;
+			m_PlayerFacing = PLAYER_DIRECTION_RIGHT;
 		}
 
 		/*----------------------------------------------------------*/
@@ -228,6 +240,16 @@ void CPlayer::Update(void)
 		SpidersThread();
 		break;
 
+		// プレイヤーのアクションがやられだった際
+	case PLAYER_ACTION_KNOCK_BACK:
+		KnockBack();
+		break;
+
+		// プレイヤーの状態がダウンだった際
+	case PLAYER_ACTION_DOWN:
+		PlayerDown();
+		break;
+
 	default:
 		break;
 	}
@@ -240,7 +262,6 @@ void CPlayer::Update(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Draw(void)
 {
-// CScene2Dのm_vPos,m_vRotをprotectedにしたためこれはコメントアウト！
 //	CScene2D::SetPos(m_vPos);
 //	CScene2D::SetRot(m_vRot);
 	CScene2D::Draw();
@@ -268,13 +289,25 @@ void CPlayer::Move(void)
 	m_vPos.x += fDiffPosX * 0.5f;
 	m_vPos.y += fDiffPosY * 0.5f;
 
-	// 向き設定
-	m_vRotDest.z = atan2f(fDiffPosY, fDiffPosX) + ((D3DX_PI * 90.0f)/180.0f);
+	// 上と下の移動以外の移動では向きを変える
+	if (m_PlayerFacing == PLAYER_DIRECTION_UP || m_PlayerFacing == PLAYER_DIRECTION_DOWN)
+	{
+		// 向き設定
+		m_vRot.z = DEGREE_TO_RADIAN(0.0f);
 
-	// 角度の正規化
-	NormalizeRotation(&m_vRotDest.z);
+		// 角度の正規化
+		NormalizeRotation(&m_vRot.z);
+	}
+	else
+	{
+		// 向き設定
+		m_vRot.z = atan2f(fDiffPosY, fDiffPosX) + DEGREE_TO_RADIAN(90.0f);
 
-	m_vRot.z = m_vRotDest.z;
+		// 角度の正規化
+		NormalizeRotation(&m_vRot.z);
+	}
+
+	m_PlayerFacing = PLAYER_DIRECTION_UP;
 }
 
 //-----------------------------------------------------------------------------
@@ -284,18 +317,10 @@ void CPlayer::Move(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Attack(void)
 {
-	/*
-		2015_05_19 塚本
-		・CreateAttackの第２引数のプレイヤ番号について
-			PlayerManagerがPlayerをCreateするときに割り振って、
-			各プレイヤが自分の番号を保持しといてください。
-			その番号を第２引数に入れてください。(short型)
-	*/
-
 	// 普通攻撃
 	m_pAttackManager->CreateAttack(
 		ATTACK_TYPE_NORMAL,
-		0,
+		m_sNumber,
 		m_vPos);
 }
 
@@ -322,7 +347,7 @@ void CPlayer::SpidersThread(void)
 	// 普通攻撃
 	m_pThreadManager->CreateThread(
 		THREAD_TYPE_NORMAL,
-		0,
+		m_sNumber,
 		m_vPos);
 }
 
@@ -343,6 +368,40 @@ void CPlayer::MetamorphoseAnimation(void)
 		m_Action = PLAYER_ACTION_NONE;
 
 		m_nAnimTime = 0;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// やられ状態での処理
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::KnockBack(void)
+{
+	m_nKnockBackTime++;
+
+	if (m_nKnockBackTime > 100)
+	{
+		m_Action = PLAYER_ACTION_NONE;
+
+		m_nKnockBackTime = 0;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// ダウン状態での処理
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::PlayerDown(void)
+{
+	m_nDownTime++;
+
+	if (m_nDownTime > 500)
+	{
+		m_Action = PLAYER_ACTION_NONE;
+
+		m_nDownTime = 0;
 	}
 }
 
