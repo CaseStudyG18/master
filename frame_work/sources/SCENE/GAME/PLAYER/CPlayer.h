@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------------
 // マクロ定義
 //-----------------------------------------------------------------------------
-static const float PLAYER_DEFAULT_HP = 500;	  	// プレイヤーのデフォルトの体力
+static const int PLAYER_DEFAULT_HP = 500;	  	// プレイヤーのデフォルトの体力
 static const float PLAYER_DEFAULT_MP = 300.0f;	// プレイヤーのデフォルトの変形用ポイント
 static const bool PLAYER_MANUAL = TRUE;		  	// プレイヤー操作マニュアル
 static const bool PLAYER_COMPUTER = FALSE;	  	// プレイヤー操作AUTO
@@ -62,6 +62,7 @@ typedef enum
 //-----------------------------------------------------------------------------
 class CAttackManager;
 class CThreadManager;
+class CTreasure;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -115,6 +116,12 @@ public:
 	//  プレイヤーの行動状態をダウンに変更するだけ
 	void SetPlayerDown(void){ if (m_Action != PLAYER_ACTION_KNOCK_BACK && m_Action != PLAYER_ACTION_METAMORPHOSE){ m_Action = PLAYER_ACTION_DOWN; } }
 
+	// 宝物を拾うときの処理 宝物をアイコンに変更
+	void SetTreasure(CTreasure *pTreasure);
+
+	// 宝物を捨てる時の処理 アイコンを宝物に変更
+	void FallTreasure();
+
 private:
 	// 移動する
 	void Move(void);
@@ -165,6 +172,8 @@ private:
 
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
+
+	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
 };
 
 #endif // __CPLAYER_H__

@@ -60,6 +60,7 @@ public:
 		OBJTYPE_ENEMY,				// 敵
 		OBJTYPE_PLAYER,				// プレイヤー
 		OBJTYPE_FIELD,				// フィールド
+		OBJTYPE_TREASURE,			// 宝箱
 		OBJTYPE_SCORE,				// スコア
 		OBJTYPE_MAX					// オブジェタイプ総数
 	}OBJTYPE;

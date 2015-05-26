@@ -44,6 +44,9 @@ public:
 	// フィールドとプレイヤーのあたり判定
 	void ColiFieldxPlayer(void);
 
+	// 宝とプレイヤーのあたり判定 by 塚本
+	void ColiTreasurexPlayer(void);
+
 private:
 	// 線分構造体
 	struct Segment {

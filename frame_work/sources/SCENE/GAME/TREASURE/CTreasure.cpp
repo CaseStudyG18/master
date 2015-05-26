@@ -28,10 +28,8 @@ const short OWNER_NONE = -1;
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CTreasure::CTreasure(LPDIRECT3DDEVICE9 *pDevice) : CScene2D(pDevice)
+CTreasure::CTreasure(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE m_objType) :CScene2D(pDevice, nPriority, m_objType)
 {
-	// お宝の所持番号を初期化
-	m_nOwnerNum = OWNER_NONE;
 	// お宝の状態初期化
 	m_TreasureState = TREASURE_STATE_OWNER_NONE;
 }
@@ -78,5 +76,21 @@ CTreasure* CTreasure::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos)
 	p->CScene2D::Init(pos, TREASURE_WIDTH, TREASURE_HEIGHT, TREASURE_TEXTURE);
 
 	return p;
+}
+
+//*****************************************************************************
+// 大きさやテクスチャを最初の状態に戻す
+// 宝物をプレイヤが落とした際に呼ばれる
+//*****************************************************************************
+void CTreasure::Reset(D3DXVECTOR3 pos){
+
+	// テクスチャ
+	CScene2D::ChangeTexture(TREASURE_TEXTURE);
+	// 大きさ
+	CScene2D::SetWidth(TREASURE_WIDTH);
+	CScene2D::SetHeight(TREASURE_HEIGHT);
+	// 座標(仮)
+	// これはアニメーションしたい
+	CScene2D::SetPos(pos + D3DXVECTOR3(100, 100, 0));
 }
 //----EOF-------

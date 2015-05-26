@@ -34,7 +34,7 @@ class CTreasure : public CScene2D
 	// 公開メンバ
 public:
 
-	CTreasure(LPDIRECT3DDEVICE9 *pDevice);
+	CTreasure(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_4, OBJTYPE m_objType = OBJTYPE_TREASURE);
 	~CTreasure(void);
 
 	void Init(void);
@@ -50,10 +50,12 @@ public:
 		LPDIRECT3DDEVICE9 *pDevice,
 		D3DXVECTOR3 pos);
 
+	// プレイヤが宝物を落とすときの処理
+	// テクスチャと大きさをリセットする
+	void Reset(D3DXVECTOR3 pos);
+
 	// 非公開メンバ
 private:
-	// 所持しているプレイヤ番号(誰も持っていないなら-1)
-	short m_nOwnerNum;
 	// お宝の状態
 	TreasureState m_TreasureState;
 

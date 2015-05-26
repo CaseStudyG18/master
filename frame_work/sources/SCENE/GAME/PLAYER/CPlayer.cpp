@@ -10,6 +10,18 @@
 #include "../../../TEXTURE/CTexture.h"
 #include "../ATTACK/CAttackManager.h"
 #include "../THREAD/CThreadManager.h"
+#include "../TREASURE/CTreasure.h"
+
+//-----------------------------------------------------------------------------
+// 定数定義
+//-----------------------------------------------------------------------------
+// 宝物アイコンの大きさ
+static const float TREASURE_ICON_WIDTH = 40;
+static const float TREASURE_ICON_HEIGHT = 30;
+
+// 宝物アイコンの表示位置
+static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
+
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -40,6 +52,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_nAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
 	m_nKnockBackTime = 0;									// ノックバック時間
 	m_nDownTime = 0;										// ダウン時間
+
+	m_pTreasure = NULL;										// 宝物ポインタ
 }
 
 //-----------------------------------------------------------------------------
@@ -114,6 +128,11 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
+	// 宝物を持っていたらアイコンの場所更新
+	if (m_pTreasure){
+		m_pTreasure->SetPos(m_vPos + TREASURE_ICON_POS_BUFF);
+	}
+
 	CScene2D::Update();
 
 	// 動いてるか判定するためのフラグをfalseに変更
@@ -199,6 +218,13 @@ void CPlayer::Update(void)
 			// アクションの状態を変形に変える
 			m_Action = PLAYER_ACTION_METAMORPHOSE;
 		}
+
+		// debug
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
+			// 宝物を落とす
+			FallTreasure();
+		}
+
 
 		/*----------------------------------------------------------*/
 		/*ここまでのものを最終的にはコントローラーで操作			*/
@@ -443,4 +469,33 @@ void CPlayer::ChangeTextureFaceU(void)
 
 }
 
+//-----------------------------------------------------------------------------
+// プレイヤに宝物を入れて、アイコンにする
+// プレイヤが宝物を取った時によばれる
+//-----------------------------------------------------------------------------
+void CPlayer::SetTreasure(CTreasure *pTreasure){
+	// ポインタ保存
+	m_pTreasure = pTreasure;
+
+	// テクスチャと大きさを変更
+	m_pTreasure->SetWidth(TREASURE_ICON_WIDTH);
+	m_pTreasure->SetHeight(TREASURE_ICON_HEIGHT);
+	m_pTreasure->ChangeTexture(TEXTURE_TREASURE_ICON);
+}
+
+//-----------------------------------------------------------------------------
+// 宝物の表示を戻して、宝物の保持ポインタをNULL
+// プレイヤが宝物を落としたときに呼ばれる
+//-----------------------------------------------------------------------------
+void CPlayer::FallTreasure(){
+	
+	if (m_pTreasure){
+		// 宝物のテクスチャや大きさをセット
+		m_pTreasure->Reset(m_vPos);
+
+		// ポインタ削除
+		m_pTreasure = NULL;
+	}
+
+}
 // EOF

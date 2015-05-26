@@ -58,7 +58,11 @@ void CJudgeManager::Uninit(void)
 //=========================================================================
 void CJudgeManager::Update(void)
 {
+	// プレイヤとフィールドの当たり判定
 	m_pJudge->ColiFieldxPlayer();
+
+	// プレイヤとお宝の当たり判定
+	m_pJudge->ColiTreasurexPlayer();
 }
 
 //=========================================================================
