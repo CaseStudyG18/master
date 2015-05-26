@@ -12,11 +12,12 @@
 //-----------------------------------------------------------------------------
 // マクロ定義
 //-----------------------------------------------------------------------------
-#define PLAYER_DEFAULT_HP	500			// プレイヤーのデフォルトの体力
-#define PLAYER_DEFAULT_MP	300.0f		// プレイヤーのデフォルトの変形用ポイント
-#define PLAYER_OPERATION	BOOL		// プレイヤーの操作フラグ
-#define PLAYER_MANUAL		TRUE		// プレイヤー操作マニュアル
-#define PLAYER_COMPUTER		FALSE		// プレイヤー操作AUTO
+static const int PLAYER_DEFAULT_HP = 500;	  	// プレイヤーのデフォルトの体力
+static const float PLAYER_DEFAULT_MP = 300.0f;	// プレイヤーのデフォルトの変形用ポイント
+static const bool PLAYER_MANUAL = TRUE;		  	// プレイヤー操作マニュアル
+static const bool PLAYER_COMPUTER = FALSE;	  	// プレイヤー操作AUTO
+
+#define PLAYER_OPERATION	BOOL				// プレイヤーの操作フラグ
 
 //-----------------------------------------------------------------------------
 // 列挙体定義
@@ -61,6 +62,7 @@ typedef enum
 //-----------------------------------------------------------------------------
 class CAttackManager;
 class CThreadManager;
+class CTreasure;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -107,12 +109,18 @@ public:
 	// やられ状態へ移行
 	//  引数、戻り値　無し
 	//  プレイヤーの行動状態をやられに変更するだけ
-	void SetPlyerKnockBack(void){ if (m_Action != PLAYER_ACTION_DOWN && m_Action != PLAYER_ACTION_METAMORPHOSE){ m_Action = PLAYER_ACTION_KNOCK_BACK; } }
+	void SetPlyerKnockBack(void);
 
 	// ダウン状態へ移行
 	//  引数、戻り値　無し
 	//  プレイヤーの行動状態をダウンに変更するだけ
-	void SetPlayerDown(void){ if (m_Action != PLAYER_ACTION_KNOCK_BACK && m_Action != PLAYER_ACTION_METAMORPHOSE){ m_Action = PLAYER_ACTION_DOWN; } }
+	void SetPlayerDown(void);
+
+	// 宝物を拾うときの処理 宝物をアイコンに変更
+	void SetTreasure(CTreasure *pTreasure);
+
+	// 宝物を捨てる時の処理 アイコンを宝物に変更
+	void FallTreasure();
 
 private:
 	// 移動する
@@ -136,6 +144,9 @@ private:
 
 	// ダウン状態の処理
 	void PlayerDown(void);
+
+	// 無敵状態での処理
+	void Matchless(void);
 
 	// プレイヤーのテクスチャのUV値の切り替え(Uの切り替え)
 	void ChangeTextureFaceU(void);
@@ -161,9 +172,16 @@ private:
 	int						m_nAnimTime;		// 変形時のアニメーションの時間
 	int						m_nKnockBackTime;	// ノックバック時の時間
 	int						m_nDownTime;		// ダウン時の時間
+	int						m_nMatchlessTime;	// 無敵状態の時間
+
+	int						m_nKnockBackCount;	// やられ状態になった回数
+
+	bool					m_bMatchless;		// 無敵状態かどうかの判定
 
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
+
+	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
 };
 
 #endif // __CPLAYER_H__
