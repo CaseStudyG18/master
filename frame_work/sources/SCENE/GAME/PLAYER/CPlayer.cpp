@@ -386,6 +386,8 @@ void CPlayer::SpidersThread(void)
 		THREAD_TYPE_NORMAL,
 		m_sNumber,
 		m_vPos);
+
+	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------

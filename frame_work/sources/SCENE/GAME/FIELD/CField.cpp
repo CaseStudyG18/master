@@ -57,6 +57,22 @@ void CField::Update(void)
 		NormalizeRotation(&rot);
 		SetRot(rot);
 	}
+	if (CInputKeyboard::GetKeyboardPress(DIK_L))
+	{
+		AddWidth_BaseLeft(1.f);
+	}
+	if (CInputKeyboard::GetKeyboardPress(DIK_J))
+	{
+		AddWidth_BaseLeft(-1.f);
+	}
+	if (CInputKeyboard::GetKeyboardPress(DIK_I))
+	{
+		AddHeight_BaseBottom(1.f);
+	}
+	if (CInputKeyboard::GetKeyboardPress(DIK_K))
+	{
+		AddHeight_BaseBottom(-1.f);
+	}
 #endif
 }
 

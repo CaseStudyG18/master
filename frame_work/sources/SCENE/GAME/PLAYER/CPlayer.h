@@ -72,7 +72,7 @@ class CPlayer : public CScene2D
 public:
 	// コンストラクタ
 	// 引数　デバイス、番号、オブジェタイプ
-	CPlayer(LPDIRECT3DDEVICE9 *pDevice , int nPriority = TYPE_PRIORITY_5 , OBJTYPE objType = OBJTYPE_PLAYER);
+	CPlayer(LPDIRECT3DDEVICE9 *pDevice , int nPriority = TYPE_PRIORITY_PLAYER , OBJTYPE objType = OBJTYPE_PLAYER);
 
 	// デストラクタ
 	~CPlayer();

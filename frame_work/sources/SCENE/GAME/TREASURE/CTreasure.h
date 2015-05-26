@@ -34,7 +34,7 @@ class CTreasure : public CScene2D
 	// åˆäJÉÅÉìÉo
 public:
 
-	CTreasure(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_4, OBJTYPE m_objType = OBJTYPE_TREASURE);
+	CTreasure(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_TRESURE, OBJTYPE m_objType = OBJTYPE_TREASURE);
 	~CTreasure(void);
 
 	void Init(void);

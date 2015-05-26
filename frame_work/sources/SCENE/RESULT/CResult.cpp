@@ -8,7 +8,6 @@
 // インクルード
 //*****************************************************************************
 #include "CResult.h"
-#include "../../CAMERA/CCamera.h"
 #include "../../MANAGER/CManager.h"
 #include "../EFFECT/CEffect.h"
 
@@ -39,9 +38,6 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 {
 	// フェーズの初期化
 	CPhase::Init(pDevice, mode);
-
-	// カメラ初期化
-	m_pManager->InitCamera();
 
 	// フェード作成
 	m_pFade = new CFade(pDevice);

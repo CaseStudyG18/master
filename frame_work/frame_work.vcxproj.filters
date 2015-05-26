@@ -29,14 +29,8 @@
     <Filter Include="RENDERER">
       <UniqueIdentifier>{fcd15478-4c4c-4828-a644-d8781eb7bd72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CAMERA">
-      <UniqueIdentifier>{c8369b40-e458-4336-aa8f-d817ab46db43}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FADE">
       <UniqueIdentifier>{388465db-7011-4031-8efc-94ebf203fa2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MODEL">
-      <UniqueIdentifier>{e60ca241-ecec-4e76-8bf3-26097bb221a5}</UniqueIdentifier>
     </Filter>
     <Filter Include="TEXTURE">
       <UniqueIdentifier>{623f1cc2-813c-4106-9cc7-580f5e7af6bc}</UniqueIdentifier>
@@ -80,9 +74,6 @@
     <Filter Include="SCENE\GAME\GOAL">
       <UniqueIdentifier>{eccee3e0-2b95-4a2f-8b98-4ccdf461bae9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MAIN\LIGHT">
-      <UniqueIdentifier>{cea930a1-8623-4d97-9988-d5913af66db4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SCENE\GAME\ATTACK">
       <UniqueIdentifier>{df22901e-e922-4223-b830-d8cbae31e656}</UniqueIdentifier>
     </Filter>
@@ -115,24 +106,6 @@
     <ClCompile Include="sources\SCENE\CSCENE\CScene2D.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CScene3D.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneBillBoard.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneCrinder.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneMeshField.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneMeshSky.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneMeshWall.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
     <ClCompile Include="sources\SCENE\CSCENE\CSceneNumber.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
@@ -140,9 +113,6 @@
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\CSCENE\CSceneTime.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneX.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
     <ClCompile Include="sources\INPUT\CInput.cpp">
@@ -157,9 +127,6 @@
     <ClCompile Include="sources\INPUT\CInputMouse.cpp">
       <Filter>INPUT</Filter>
     </ClCompile>
-    <ClCompile Include="sources\CAMERA\CCamera.cpp">
-      <Filter>CAMERA</Filter>
-    </ClCompile>
     <ClCompile Include="sources\FADE\CFade.cpp">
       <Filter>FADE</Filter>
     </ClCompile>
@@ -169,9 +136,6 @@
     <ClCompile Include="sources\SOUND\CSound.cpp">
       <Filter>SOUND</Filter>
     </ClCompile>
-    <ClCompile Include="sources\MODEL\CModel.cpp">
-      <Filter>MODEL</Filter>
-    </ClCompile>
     <ClCompile Include="sources\JUDGE\CJudge.cpp">
       <Filter>JUDGE</Filter>
     </ClCompile>
@@ -180,9 +144,6 @@
     </ClCompile>
     <ClCompile Include="sources\PHASE\CPhase.cpp">
       <Filter>PHASE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\LIGHT\CLight.cpp">
-      <Filter>MAIN\LIGHT</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp">
       <Filter>SCENE\TITLE</Filter>
@@ -207,9 +168,6 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\EFFECT\CEffect.cpp">
       <Filter>SCENE\EFFECT</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\CAMERA\CameraManager.cpp">
-      <Filter>CAMERA</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp">
       <Filter>SCENE\GAME</Filter>
@@ -288,24 +246,6 @@
     <ClInclude Include="sources\SCENE\CSCENE\CScene2D.h">
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CScene3D.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneBillBoard.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneCrinder.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneMeshField.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneMeshSky.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneMeshWall.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
     <ClInclude Include="sources\SCENE\CSCENE\CSceneNumber.h">
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
@@ -313,9 +253,6 @@
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\CSCENE\CSceneTime.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneX.h">
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
     <ClInclude Include="sources\INPUT\CInput.h">
@@ -330,9 +267,6 @@
     <ClInclude Include="sources\INPUT\CInputMouse.h">
       <Filter>INPUT</Filter>
     </ClInclude>
-    <ClInclude Include="sources\CAMERA\CCamera.h">
-      <Filter>CAMERA</Filter>
-    </ClInclude>
     <ClInclude Include="sources\FADE\CFade.h">
       <Filter>FADE</Filter>
     </ClInclude>
@@ -342,9 +276,6 @@
     <ClInclude Include="sources\SOUND\CSound.h">
       <Filter>SOUND</Filter>
     </ClInclude>
-    <ClInclude Include="sources\MODEL\CModel.h">
-      <Filter>MODEL</Filter>
-    </ClInclude>
     <ClInclude Include="sources\JUDGE\CJudge.h">
       <Filter>JUDGE</Filter>
     </ClInclude>
@@ -353,9 +284,6 @@
     </ClInclude>
     <ClInclude Include="sources\PHASE\CPhase.h">
       <Filter>PHASE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\LIGHT\CLight.h">
-      <Filter>MAIN\LIGHT</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h">
       <Filter>SCENE\TITLE</Filter>
@@ -380,9 +308,6 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\EFFECT\CEffect.h">
       <Filter>SCENE\EFFECT</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\CAMERA\CameraManager.h">
-      <Filter>CAMERA</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\CTimeManager.h">
       <Filter>SCENE\GAME</Filter>
