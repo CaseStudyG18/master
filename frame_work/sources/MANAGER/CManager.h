@@ -13,7 +13,6 @@
 #include "../RENDERER/CRenderer.h"
 #include "../PHASE/CPhase.h"
 #include "../SOUND/CSound.h"
-#include "../LIGHT/CLight.h"
 #include "../INPUT/CInputGamePad.h"
 
 //*****************************************************************************
@@ -23,7 +22,6 @@ class CRenderer;
 class CNowLoading;
 class CInputKeyboard;
 class CInputGamePad;
-class CCameraManager;
 #ifdef _DEBUG
 class CDebugProc;
 #endif
@@ -89,13 +87,6 @@ public:
 	// 次のフェーズセット
 	void SetNextPhase(MODE_PHASE phase){m_NextPhase = phase;};
 
-	//=======================================================
-	// カメラの初期化 各シーンの初期化で呼ぶ
-	// 引数:視点、注視点
-	//=======================================================
-	void InitCamera(void);
-	void InitCamera(D3DXVECTOR3 pos, D3DXVECTOR3 posR);
-
 private:
 	// NOW LOADINGのスレッドに渡す情報構造体
 	typedef struct
@@ -118,10 +109,8 @@ private:
 	static MODE_PHASE		m_NextPhase;				// 次のフェーズ
 	static volatile bool	m_bEndload;					// ロード終了フラグ
 	static CSound			*m_pSound;					// サウンド
-	CCameraManager			*m_pCameraManager;			// カメラマネージャー
 	CInputKeyboard			*m_pInputKeyboard;			// キーボード
 	CInputGamePad			*m_pInputGamePad;			// ゲームパッド
-	CLight					*m_pLight[NUM_MAX_LIGHT];	// ライト
 	SEND_LOAD_THRED_PARAM	m_sendParam;				// ロードスレッドに渡す情報
 	HANDLE					m_ThreadHandle;				// スレッドのハンドル
 	CNowLoading				*m_pNowLoading;				// NowLoading

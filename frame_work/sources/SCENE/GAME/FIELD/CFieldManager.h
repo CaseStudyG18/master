@@ -1,33 +1,50 @@
 //=============================================================================
 //
-// 汎用計算式用 [math.h]
+// CFieldManagerクラス [CFieldManager.h]
 // Author : 野尻　尚希
 //
 //=============================================================================
-#ifndef _MATH_H_
-#define _MATH_H_
+#ifndef _CFIELDMANAGER_H_
+#define _CFIELDMANAGER_H_
+
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
-#include "../MAIN/main.h"
+#include "../../../MAIN/main.h"
+#include "../../../TEXTURE/CTexture.h"
 
 //*****************************************************************************
-// マクロ
+// 前方宣言
 //*****************************************************************************
-#define DEGREE_TO_RADIAN(dig)	(float)((D3DX_PI * dig) / 180.0f)		// ディグリー角度からラジアン角度へ変更
-#define RADIAN_TO_DEGREE(dig)	(float)((180.0f * dig) / D3DX_PI)		// ラジアン角度からディグリー角度へ変更
+class CField;
 
 //*****************************************************************************
-// プロトタイプ宣言
+// クラス定義
 //*****************************************************************************
-float MagnitudeVector(D3DXVECTOR3 v);	// ベクトルを長さに変換
-float PowVector(D3DXVECTOR3 v);			// ベクトルを長さの二乗に変換
-// 角度正規化関数
-void	NormalizeRotation(float *rot);
-void	NormalizeRotation(D3DXVECTOR3 *rot);
+class CFieldManager
+{
+public:
+	// コンストラクタ
+	CFieldManager(void);
 
-// ２Ｄベクトルの外積
-float D3DXVec2Cross(D3DXVECTOR2* v1, D3DXVECTOR2* v2);
+	// デストラクタ
+	~CFieldManager(void);
+
+	// フィールドクリエイト
+	CField* CreateField(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
+
+	// 初期化
+	void Init(void);
+
+	// 終了
+	void Uninit(void);
+
+	// 更新
+	void Update(void);
+
+private:
+
+};
 
 #endif
 //----EOF----

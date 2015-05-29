@@ -89,6 +89,9 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	// 作成したプレイヤー情報の初期化
 	temp->Init(pos, fWidth, fHeight, texture);
 
+	// 初期座標セット
+	temp->m_vPos = pos;
+
 	// 操作フラグを変更
 	temp->m_bOperation = playerOperation;
 
@@ -160,6 +163,7 @@ void CPlayer::Update(void)
 		/*----------------------------------------------------------*/
 		/*暫定的にプレイヤーの操作方法はキーボードでの操作としておく*/
 		/*移動量も暫定的な数値										*/
+		/*プレイヤーNo.で移動のキーを変える							*/
 		/*----------------------------------------------------------*/
 
 		/*----------------------------------------------------------*/
@@ -167,66 +171,109 @@ void CPlayer::Update(void)
 		/*WSADキーでそれぞれ上下左右への移動						*/
 		/*アクションの状態を全て歩行状態に変える					*/
 		/*----------------------------------------------------------*/
-		// Wで画面上方向への移動
-		if (CInputKeyboard::GetKeyboardPress(DIK_W))
+		if (m_sNumber == 0)
 		{
-			m_fMoveSpeedY = -5.0f;
-			m_Action = PLAYER_ACTION_WALK;
-			m_PlayerFacing = PLAYER_DIRECTION_UP;
-		}
-		// Sで画面下方向への移動
-		else if (CInputKeyboard::GetKeyboardPress(DIK_S))
-		{
-			m_fMoveSpeedY = 5.0f;
-			m_Action = PLAYER_ACTION_WALK;
-			m_PlayerFacing = PLAYER_DIRECTION_DOWN;
-		}
-		// Aで画面左方向への移動
-		if (CInputKeyboard::GetKeyboardPress(DIK_A))
-		{
-			m_fMoveSpeedX = -5.0f;
-			m_Action = PLAYER_ACTION_WALK;
-			m_PlayerFacing = PLAYER_DIRECTION_LEFT;
-		}
-		// Dで画面右方向への移動
-		else if (CInputKeyboard::GetKeyboardPress(DIK_D))
-		{
-			m_fMoveSpeedX = 5.0f;
-			m_Action = PLAYER_ACTION_WALK;
-			m_PlayerFacing = PLAYER_DIRECTION_RIGHT;
-		}
+			// Wで画面上方向への移動
+			if (CInputKeyboard::GetKeyboardPress(DIK_W))
+			{
+				m_fMoveSpeedY = -5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_UP;
+			}
+			// Sで画面下方向への移動
+			else if (CInputKeyboard::GetKeyboardPress(DIK_S))
+			{
+				m_fMoveSpeedY = 5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_DOWN;
+			}
+			// Aで画面左方向への移動
+			if (CInputKeyboard::GetKeyboardPress(DIK_A))
+			{
+				m_fMoveSpeedX = -5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_LEFT;
+			}
+			// Dで画面右方向への移動
+			else if (CInputKeyboard::GetKeyboardPress(DIK_D))
+			{
+				m_fMoveSpeedX = 5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_RIGHT;
+			}
 
-		/*----------------------------------------------------------*/
-		/*Kキーでプレイヤーの攻撃									*/
-		/*----------------------------------------------------------*/
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_K))
-		{
-			// アクションの状態を攻撃に変える
-			m_Action = PLAYER_ACTION_ATTACK;
-		}
+			/*----------------------------------------------------------*/
+			/*4キーでプレイヤーの攻撃									*/
+			/*----------------------------------------------------------*/
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_4))
+			{
+				// アクションの状態を攻撃に変える
+				m_Action = PLAYER_ACTION_ATTACK;
+			}
 
-		/*----------------------------------------------------------*/
-		/*Lキーで糸を出す											*/
-		/*----------------------------------------------------------*/
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_L))
-		{
-			// アクションの状態を糸発射状態に変える
-			m_Action = PLAYER_ACTION_THREAD;
-		}
+			/*----------------------------------------------------------*/
+			/*5キーで糸を出す											*/
+			/*----------------------------------------------------------*/
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_5))
+			{
+				// アクションの状態を糸発射状態に変える
+				m_Action = PLAYER_ACTION_THREAD;
+			}
 
-		/*----------------------------------------------------------*/
-		/*Mキーでプレイヤー変形開始									*/
-		/*----------------------------------------------------------*/
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_M))
-		{
-			// アクションの状態を変形に変える
-			m_Action = PLAYER_ACTION_METAMORPHOSE;
-		}
+			/*----------------------------------------------------------*/
+			/*Mキーでプレイヤー変形開始									*/
+			/*----------------------------------------------------------*/
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_M))
+			{
+				// アクションの状態を変形に変える
+				m_Action = PLAYER_ACTION_METAMORPHOSE;
+			}
 
-		// debug
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
-			// 宝物を落とす
-			FallTreasure();
+			// debug
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
+				// 宝物を落とす
+				FallTreasure();
+			}
+		}
+		else if (m_sNumber == 1)
+		{
+			// Iで画面上方向への移動
+			if (CInputKeyboard::GetKeyboardPress(DIK_I))
+			{
+				m_fMoveSpeedY = -5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_UP;
+			}
+			// Kで画面下方向への移動
+			else if (CInputKeyboard::GetKeyboardPress(DIK_K))
+			{
+				m_fMoveSpeedY = 5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_DOWN;
+			}
+			// Jで画面左方向への移動
+			if (CInputKeyboard::GetKeyboardPress(DIK_J))
+			{
+				m_fMoveSpeedX = -5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_LEFT;
+			}
+			// Lで画面右方向への移動
+			else if (CInputKeyboard::GetKeyboardPress(DIK_L))
+			{
+				m_fMoveSpeedX = 5.0f;
+				m_Action = PLAYER_ACTION_WALK;
+				m_PlayerFacing = PLAYER_DIRECTION_RIGHT;
+			}
+
+			/*----------------------------------------------------------*/
+			/*0キーでプレイヤーの攻撃									*/
+			/*----------------------------------------------------------*/
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_0))
+			{
+				// アクションの状態を攻撃に変える
+				m_Action = PLAYER_ACTION_ATTACK;
+			}
 		}
 
 
@@ -285,8 +332,8 @@ void CPlayer::Update(void)
 		break;
 	}
 
-	// 無敵状態だった場合は無敵状態時の処理を行う
-	if (m_bMatchless == true)
+	// 無敵状態での処理
+	if (m_bMatchless)
 	{
 		Matchless();
 	}
@@ -368,7 +415,11 @@ void CPlayer::Attack(void)
 	m_pAttackManager->CreateAttack(
 		ATTACK_TYPE_NORMAL,
 		m_sNumber,
-		m_vPos);
+		m_vPos,
+		PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+
+	// アクションの状態を戻す
+	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------
@@ -396,6 +447,8 @@ void CPlayer::SpidersThread(void)
 		THREAD_TYPE_NORMAL,
 		m_sNumber,
 		m_vPos);
+
+	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------
@@ -445,6 +498,9 @@ void CPlayer::KnockBack(void)
 
 		// やられ時間の初期化
 		m_nKnockBackTime = 0;
+
+		// 色変更
+		CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -457,10 +513,11 @@ void CPlayer::PlayerDown(void)
 {
 	m_nDownTime++;
 
-	// 一定時間経過したら無敵状態へ移行
-	if (m_nDownTime > 500)
+	if (m_nDownTime > 300)
 	{
 		m_Action = PLAYER_ACTION_NONE;
+
+		CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 		m_bMatchless = true;
 
@@ -478,7 +535,7 @@ void CPlayer::Matchless(void)
 	m_nMatchlessTime++;
 
 	// 色変更
-	CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, (float)(m_nMatchlessTime%10)/10.0f));
+	CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, (float)(m_nMatchlessTime % 10) / 10.0f));
 
 	// 一定時間経過したら初期状態へ移行
 	if (m_nMatchlessTime > 500)
@@ -513,6 +570,15 @@ void CPlayer::SetPlyerKnockBack(void)
 		else if (m_Action != PLAYER_ACTION_DOWN && m_Action != PLAYER_ACTION_METAMORPHOSE)
 		{
 			m_Action = PLAYER_ACTION_KNOCK_BACK;
+
+			// 色変更
+			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 0.6f, 0.6f, 1.0f));
+
+			// 宝を持っていたら落とす
+			if (m_pTreasure)
+			{
+				FallTreasure();
+			}
 		}
 	}
 }
@@ -530,6 +596,14 @@ void CPlayer::SetPlayerDown(void)
 		if (m_Action != PLAYER_ACTION_METAMORPHOSE)
 		{
 			m_Action = PLAYER_ACTION_DOWN;
+
+			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f,0.2f,0.2f,1.0f));
+
+			// 宝を持っていたら落とす
+			if (m_pTreasure)
+			{
+				FallTreasure();
+			}
 		}
 	}
 }

@@ -57,6 +57,19 @@ typedef enum
 	PLAYER_DIRECTION_MAX
 }DIRECTION_PLAYER_FACING;
 
+// プレイヤの向いてる方向に対してのベクトル
+static const D3DXVECTOR3 PLAYER_DIRECTION_VECTOR[] = {
+	D3DXVECTOR3(0, 0, 0),
+	D3DXVECTOR3(0, -1, 0),
+	D3DXVECTOR3(0, +1, 0),
+	D3DXVECTOR3(+1, 0, 0),
+	D3DXVECTOR3(-1, 0, 0),
+	D3DXVECTOR3(+0.5f, -0.5f, 0),
+	D3DXVECTOR3(-0.5f, -0.5f, 0),
+	D3DXVECTOR3(+0.5f, +0.5f, 0),
+	D3DXVECTOR3(-0.5f, +0.5f, 0)
+};
+
 //-----------------------------------------------------------------------------
 // 前方宣言
 //-----------------------------------------------------------------------------
@@ -72,7 +85,7 @@ class CPlayer : public CScene2D
 public:
 	// コンストラクタ
 	// 引数　デバイス、番号、オブジェタイプ
-	CPlayer(LPDIRECT3DDEVICE9 *pDevice , int nPriority = TYPE_PRIORITY_5 , OBJTYPE objType = OBJTYPE_PLAYER);
+	CPlayer(LPDIRECT3DDEVICE9 *pDevice , int nPriority = TYPE_PRIORITY_PLAYER , OBJTYPE objType = OBJTYPE_PLAYER);
 
 	// デストラクタ
 	~CPlayer();
@@ -115,6 +128,9 @@ public:
 	//  引数、戻り値　無し
 	//  プレイヤーの行動状態をダウンに変更するだけ
 	void SetPlayerDown(void);
+
+	// プレイヤーのIDの取得
+	short GetPlayerNumber(void){ return m_sNumber; }
 
 	// 宝物を拾うときの処理 宝物をアイコンに変更
 	void SetTreasure(CTreasure *pTreasure);
@@ -173,9 +189,7 @@ private:
 	int						m_nKnockBackTime;	// ノックバック時の時間
 	int						m_nDownTime;		// ダウン時の時間
 	int						m_nMatchlessTime;	// 無敵状態の時間
-
 	int						m_nKnockBackCount;	// やられ状態になった回数
-
 	bool					m_bMatchless;		// 無敵状態かどうかの判定
 
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー

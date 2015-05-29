@@ -1,100 +1,73 @@
 //=============================================================================
 //
-// CTitleクラス [CTitle.cpp]
-// Author : 野尻　尚希
+// CThreadManagerクラス [CThreadManager.cpp]
+// Author : 塚本　俊彦
 //
 //=============================================================================
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
-#include "CTitle.h"
-#include "../../MANAGER/CManager.h"
-#include "../CSCENE/CScene2D.h"
+#include <Windows.h>
+#include "CThreadManager.h"
+#include "CThreadNormal.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
 
+
+//*****************************************************************************
+// 静的メンバ変数
+//*****************************************************************************
+
+
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CTitle ::CTitle(void)
+CThreadManager::CThreadManager(LPDIRECT3DDEVICE9 *pDevice)
 {
-	m_p2D = NULL;
+	m_pDevice = pDevice;
 }
 
 //*****************************************************************************
 // デストラクタ
 //*****************************************************************************
-CTitle ::~CTitle(void)
+CThreadManager ::~CThreadManager(void)
 {
 }
 
 //*****************************************************************************
 // 初期化
 //*****************************************************************************
-void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
+void CThreadManager::Init()
 {
-	// フェーズの初期化
-	CPhase::Init(pDevice, mode);
-
-	// フェード作成
-	m_pFade = new CFade(pDevice);
-	m_pFade->Init(DEFFAULT_FADE_POS, DEFFAULT_FADE_WIDTH, DEFFAULT_FADE_HEIGHT, TEXTURE_NULL);
-
-	m_p2D = m_p2D->Create(m_pD3DDevice, D3DXVECTOR3(0,0,0), 100, 100, TEXTURE_WITCH);
-
-	// フェードイン開始
-	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
-
-	// ＢＧＭ再生
-	//CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************
 // 終了
 //*****************************************************************************
-void CTitle::Uninit(void)
+void CThreadManager::Uninit(void)
 {
-	// 音停止
-	CManager::StopSound();
-
-	// フェイズの終了
-	CPhase::Uninit();
 }
 
 //*****************************************************************************
 // 更新
 //*****************************************************************************
-void CTitle::Update(void)
+void CThreadManager::Update(void)
 {
-	// フェイズの更新
-	CPhase::Update();
+}
 
-	if(CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
-	{
-		// フェードアウト開始
-		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+//*****************************************************************************
+// 糸を生成する
+//*****************************************************************************
+void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos)
+{
+	// 普通の糸
+	if (type == THREAD_TYPE_NORMAL){
+		CThreadNormal::Create(m_pDevice, nPlayerNum, pos);
+	}
+	else if(type == THREAD_TYPE_NORMAL){
 
-		// ゲームヘ
-		m_pManager->SetNextPhase(MODE_PHASE_GAME);
 	}
 }
-
-//*****************************************************************************
-// クリエイト
-//*****************************************************************************
-CTitle* CTitle::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
-{
-	CTitle* pTitle = NULL;
-
-	// 作成
-	pTitle = new CTitle;
-
-	// 初期化
-	pTitle->Init(mode, pDevice);
-
-	return pTitle;
-}
-
-//----EOF----
+//----EOF-------

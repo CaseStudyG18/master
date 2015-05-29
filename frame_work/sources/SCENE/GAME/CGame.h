@@ -14,14 +14,19 @@
 #include "../../PHASE/CPhase.h"
 #include "../../TEXTURE/CTexture.h"
 #include "../PAUSE/CPause.h"
+#include "CTimeManager.h"
 
 //=============================================================================
 // 前方宣言
 //=============================================================================
-class CScene2D;
-class CSceneScore;
-class CSceneTime;
-class CSceneNumber;
+class CTimeManager;
+class CTreasureManager;
+class CGoalManager;
+class CPlayerManager;
+class CAttackManager;
+class CThreadManager;
+class CJudgeManager;
+class CFieldManager;
 
 //*****************************************************************************
 // クラス定義
@@ -57,7 +62,24 @@ public:
 
 	// 非公開メンバ
 private:
-	CPause			*m_pPause;						// ポーズ
+	// ポーズ
+	CPause *m_pPause;
+	// ゲームのタイム管理者
+	CTimeManager *m_pTimeManager;
+	// 宝物管理者
+	CTreasureManager *m_pTreasureManager;
+	// ゴール管理者
+	CGoalManager *m_pGoalManager;
+	// プレイヤマネージャ
+	CPlayerManager *m_pPlayerManager;
+	// 攻撃マネージャ
+	CAttackManager * m_pAttackManager;
+	// 糸マネージャ
+	CThreadManager * m_pThreadManager;
+	// ジャッジマネージャー
+	CJudgeManager* m_pJudgeManager;
+	// フィールドマネージャー
+	CFieldManager* m_pFieldManager;
 };
 
 #endif

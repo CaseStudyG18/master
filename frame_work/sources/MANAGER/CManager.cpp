@@ -10,16 +10,14 @@
 #include "CManager.h"
 #include "../SCENE/CSCENE/CScene.h"
 #include "../SCENE/PAUSE/CPause.h"
-#include "../MODEL/CModel.h"
 #include "../SCENE/GAME/CNowLoading.h"
 #include "../INPUT/CInputKeyboard.h"
-#include "../CAMERA/CameraManager.h"
 #include <process.h>
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-static const MODE_PHASE INIT_MODE = MODE_PHASE_TITLE;	// 最初のフェイズ
+static const MODE_PHASE INIT_MODE = MODE_PHASE_GAME;	// 最初のフェイズ
 
 //*****************************************************************************
 // スタティックメンバ変数
@@ -39,16 +37,11 @@ CManager ::CManager(void)
 	m_pInputGamePad = NULL;
 	m_pSound = NULL;
 
-	for(int i = 0; i < NUM_MAX_LIGHT; i++)
-	{
-		m_pLight[i] = NULL;
-	}
 	#ifdef _DEBUG
 	m_pDebugProc = NULL;
 	#endif
 	m_pNowLoading = NULL;
 	m_bEndload = false;
-	m_pCameraManager = NULL;
 }
 
 //=============================================================================
@@ -88,34 +81,11 @@ HRESULT CManager ::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 		return E_FAIL;
 	}
 
-	// カメラマネージャーの作成
-	m_pCameraManager = new CCameraManager;
-	m_pCameraManager->InitCamera();
-
 	#ifdef _DEBUG
 	// デバッグプロック作成
 	m_pDebugProc = new CDebugProc;
 	m_pDebugProc->Init();
 	#endif
-
-	// ライト作成
-	D3DXVECTOR3 vecDir[NUM_MAX_LIGHT];
-	vecDir[0] = D3DXVECTOR3(1.0f,-0.5f,0.0f);
-	vecDir[1] = D3DXVECTOR3(-1.0f,0.1f,0.0f);
-	vecDir[2] = D3DXVECTOR3(0.0f,-1.0f,-1.0f);
-	vecDir[3] = D3DXVECTOR3(0.0f,0.0f,1.0f);
-
-	D3DXCOLOR color[NUM_MAX_LIGHT];
-	color[0] = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
-	color[1] = D3DXCOLOR(0.6f,0.6f,0.6f,0.6f);
-	color[2] = D3DXCOLOR(0.3f,0.3f,0.3f,0.3f);
-	color[3] = D3DXCOLOR(0.8f,0.8f,0.8f,0.8f);
-	for(int i = 0; i < NUM_MAX_LIGHT; i++)
-	{
-		m_pLight[i] = new CLight;
-
-		m_pLight[i]->Init(vecDir[i], color[i], D3DLIGHT_DIRECTIONAL, TRUE);
-	}
 
 	// 音の初期化
 	m_pSound = new CSound;
@@ -170,22 +140,8 @@ void CManager ::Uninit(void)
 		m_pInputGamePad = NULL;
 	}
 
-	// ライトの終了
-	for(int i = 0; i < NUM_MAX_LIGHT; i++)
-	{
-		if(m_pLight[i])
-		{
-			m_pLight[i]->Uninit();
-			delete m_pLight[i];
-			m_pLight[i] = NULL;
-		}
-	}
-
 	// テクスチャの終了
 	CTexture::Uninit();
-
-	// モデル作成
-	CModel::Uninit();
 
 	// すべて開放
 	CScene::ReleaseAll();
@@ -219,14 +175,6 @@ void CManager ::Uninit(void)
 		m_pNowLoading->Uninit();
 		delete m_pNowLoading;
 		m_pNowLoading = NULL;
-	}
-
-	// カメラマネージャーの終了
-	if(m_pCameraManager)
-	{
-		m_pCameraManager->Uninit();
-		delete m_pCameraManager;
-		m_pCameraManager = NULL;
 	}
 }
 
@@ -283,7 +231,6 @@ void CManager ::Update(void)
 		if(CPause::GetPauseFlag() == false)
 		{
 			// ポーズ以外更新
-			m_pCameraManager->Update();
 			m_pRenderer->Update();
 		}
 
@@ -328,9 +275,6 @@ void CManager ::Draw(void)
 	// ポーズ中じゃなければ
 	if(CPause::GetPauseFlag() == false)
 	{
-		// カメラセット
-		m_pCameraManager->SetCamera(m_pRenderer->GetDevice());
-
 		// ポーズ以外描画
 		m_pRenderer->Draw();
 	}
@@ -395,23 +339,6 @@ void CManager ::RetryPhase(void)
 	m_CurPhase = m_NextPhase;
 }
 
-
-//=============================================================================
-// カメラ初期化関数
-//=============================================================================
-void CManager ::InitCamera(void)
-{
-	m_pCameraManager->InitCamera();
-}
-
-//=============================================================================
-// カメラ初期化関数
-//=============================================================================
-void CManager ::InitCamera(D3DXVECTOR3 pos, D3DXVECTOR3 posR)
-{
-	m_pCameraManager->InitCamera(pos, posR);
-}
-
 //=============================================================================
 // 初期化関数
 //=============================================================================
@@ -421,9 +348,6 @@ unsigned __stdcall CManager :: LoadThred(LPVOID Param)
 
 	// テクスチャの作成
 	CTexture::CreateTexture(p->pMyAddr->m_pRenderer->GetDevice());
-
-	// モデル作成
-	CModel::CreateModel(p->pMyAddr->m_pRenderer->GetDevice());
 
 	// フェイズの作成
 	p->pMyAddr->m_pPhase = p->pMyAddr->m_pPhase->Create(INIT_MODE, p->pMyAddr->m_pRenderer->GetDevice(), p->pMyAddr);

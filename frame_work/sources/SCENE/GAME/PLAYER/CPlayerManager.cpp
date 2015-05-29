@@ -9,7 +9,6 @@
 #include "CPlayer.h"
 #include "../../../RENDERER/CRenderer.h"
 #include "../../../TEXTURE/CTexture.h"
-
 #include "../../../INPUT/CInputKeyboard.h"
 
 #ifdef _DEBUG

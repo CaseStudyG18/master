@@ -1,33 +1,52 @@
 //=============================================================================
 //
-// 汎用計算式用 [math.h]
+// CJudgeManagerクラス [CJudgeManager.h]
 // Author : 野尻　尚希
 //
 //=============================================================================
-#ifndef _MATH_H_
-#define _MATH_H_
+#ifndef _CJUDGEMANAGER_H_
+#define _CJUDGEMANAGER_H_
+
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
-#include "../MAIN/main.h"
 
 //*****************************************************************************
-// マクロ
+// 前方宣言
 //*****************************************************************************
-#define DEGREE_TO_RADIAN(dig)	(float)((D3DX_PI * dig) / 180.0f)		// ディグリー角度からラジアン角度へ変更
-#define RADIAN_TO_DEGREE(dig)	(float)((180.0f * dig) / D3DX_PI)		// ラジアン角度からディグリー角度へ変更
+class CJudge;
+class CPlayerManager;
 
 //*****************************************************************************
-// プロトタイプ宣言
+// クラス定義
 //*****************************************************************************
-float MagnitudeVector(D3DXVECTOR3 v);	// ベクトルを長さに変換
-float PowVector(D3DXVECTOR3 v);			// ベクトルを長さの二乗に変換
-// 角度正規化関数
-void	NormalizeRotation(float *rot);
-void	NormalizeRotation(D3DXVECTOR3 *rot);
+class CJudgeManager
+{
+public:
+	// コンストラクタ
+	CJudgeManager(void);
 
-// ２Ｄベクトルの外積
-float D3DXVec2Cross(D3DXVECTOR2* v1, D3DXVECTOR2* v2);
+	// デストラクタ
+	~CJudgeManager(void);
+
+	// クリエイト
+	static CJudgeManager* Create(CPlayerManager* playerManager);
+
+	// 終了
+	void Uninit(void);
+
+	// 更新
+	void Update(void);
+
+	CPlayerManager* GetPlayerManager(void){ return m_pPlayerManager; };
+
+private:
+	// 初期化
+	void Init(CPlayerManager* playerManager);
+
+	CJudge* m_pJudge;	//	judgeクラス
+	CPlayerManager* m_pPlayerManager;
+};
 
 #endif
 //----EOF----

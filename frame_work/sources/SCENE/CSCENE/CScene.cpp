@@ -369,6 +369,9 @@ void CScene::UnLinkList(void)
 	{
 		CScene *pNext = this->m_pNext;
 
+		// 先頭アドレス変更
+		m_apTop[this->m_nPriority] = NULL;
+
 		if(pNext)
 		{
 			// 先頭アドレス変更
@@ -385,10 +388,13 @@ void CScene::UnLinkList(void)
 		CScene *pPrev = this->m_pPrev;
 
 		// 終端アドレス変更
-		m_apCur[this->m_nPriority] = pPrev;
+		m_apCur[this->m_nPriority] = NULL;
 
 		if(pPrev)
 		{
+			// 終端アドレス変更
+			m_apCur[this->m_nPriority] = pPrev;
+
 			// 終端に
 			pPrev->m_pNext = NULL;
 		}
@@ -443,7 +449,7 @@ void CScene::ZSort(void)
 			for(int j = m_nNumInList[priority] - 1; j > i; j--)
 			{
 				// 近ければ
-				if(apSortCulc[j].pos.z < apSortCulc[j - 1].pos.z)
+				if(apSortCulc[j].pos.y < apSortCulc[j - 1].pos.y)
 				{
 					// 入れ替え処理
 					SORT_INFO keep = apSortCulc[j - 1];
@@ -467,7 +473,7 @@ void CScene::ZSort(void)
 			}
 
 			// 次のアドレス変更
-			if(i + 1 < m_nNumInList[priority])
+			if(i < m_nNumInList[priority] - 1)
 			{
 				pScene->m_pNext = apSortCulc[i + 1].adrr;
 			}
@@ -477,7 +483,7 @@ void CScene::ZSort(void)
 			}
 
 			// 前のアドレス変更
-			if(i - 1 < m_nNumInList[priority])
+			if(i > 0)
 			{
 				pScene->m_pPrev = apSortCulc[i - 1].adrr;
 			}
@@ -499,4 +505,12 @@ void CScene::ZSort(void)
 	}
 }
 
+
+//*****************************************************************************
+// オブジェタイプセット関数
+//*****************************************************************************
+void CScene::SetObjType(OBJTYPE type)
+{
+	m_objType = type;
+}
 //----EOF----
