@@ -20,7 +20,7 @@ static const char *TEXTURE_PATH[ TEXTURE_MAX ] =
 	"data/TEXTURE/fire0.png",
 	"data/TEXTURE/fire1.png",
 	"data/TEXTURE/thread.png",
-	"data/TEXTURE/player_0.jpg",
+	"data/TEXTURE/Player.png",
 	"data/TEXTURE/figure.png",
 	"data/TEXTURE/goal.png",
 	"data/TEXTURE/treasure.png",

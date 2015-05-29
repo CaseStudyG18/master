@@ -12,7 +12,7 @@
 #include "../../../INPUT/CInputKeyboard.h"
 
 #ifdef _DEBUG
-#define PLAYER_TEXTURE TEXTURE_PLAYER_0		// デバッグ時のプレイヤーのテクスチャ
+#define PLAYER_TEXTURE TEXTURE_PLAYER		// デバッグ時のプレイヤーのテクスチャ
 #else
 #define PLAYER_TEXTURE TEXTURE_NULL		// 
 #endif
@@ -71,7 +71,7 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer)
 		m_apPlayer[nManual] = CPlayer::Create(CRenderer::GetDevice(),
 			D3DXVECTOR3(50.0f, 20.0f, 0),
 			50.0f,
-			50.0f,
+			80.0f,
 			PLAYER_TEXTURE,
 			PLAYER_MANUAL,
 			m_pAttackManager,

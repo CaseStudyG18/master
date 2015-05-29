@@ -27,7 +27,7 @@ static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
 // コンストラクタ
 //	引数　　デバイス、プライオリティ、オブジェクトタイプ
 //-----------------------------------------------------------------------------
-CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CScene2D(pDevice, nPriority, objType)
+CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CAnimation(pDevice, nPriority, objType)
 {
 	m_pD3DDevice = pDevice;									// デバイスオブジェクト(描画に必要)
 	m_pD3DVtxBuff = NULL;									// 頂点座標情報を格納する場所のアドレスを確保する場所
@@ -112,7 +112,8 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 //-----------------------------------------------------------------------------
 void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture)
 {
-	CScene2D::Init(pos, fWidth, fHeight, texture);
+	// テクスチャアニメーションの初期化
+	CAnimation::Init(pos, fWidth, fHeight, texture, 6, 3);
 }
 
 //-----------------------------------------------------------------------------
@@ -138,6 +139,8 @@ void CPlayer::Update(void)
 	}
 
 	CScene2D::Update();
+
+	UpdatePlayerAnimation();
 
 	// 動いてるか判定するためのフラグをfalseに変更
 	//m_Action = PLAYER_ACTION_NONE;
@@ -584,4 +587,79 @@ void CPlayer::FallTreasure(){
 	}
 
 }
+
+//-----------------------------------------------------------------------------
+// プレイヤの向きによってテクスチャ番号処理
+// 更新で一回呼ぶ
+//-----------------------------------------------------------------------------
+void CPlayer::UpdatePlayerAnimation(void){
+
+
+	if (m_PlayerFacing == PLAYER_DIRECTION_UP){
+		const short min = 10;
+		const short max = 13;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a);
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
+		const short min = 6;
+		const short max = 9;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a);
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
+		const short min = 1;
+		const short max = 4;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a, true);
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
+		const short min = 1;
+		const short max = 4;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a, false);
+	}
+
+}
+
 // EOF

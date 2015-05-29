@@ -7,7 +7,7 @@
 #ifndef __CPLAYER_H__
 #define __CPLAYER_H__
 
-#include "../../CSCENE/CScene2D.h"
+#include "../../GAME/ANIMATION/CAnimation.h"
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -80,7 +80,7 @@ class CTreasure;
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
 //-----------------------------------------------------------------------------
-class CPlayer : public CScene2D
+class CPlayer : public CAnimation
 {
 public:
 	// コンストラクタ
@@ -134,6 +134,10 @@ public:
 
 	// 宝物を捨てる時の処理 アイコンを宝物に変更
 	void FallTreasure();
+
+	// プレイヤの向きや状態でテクスチャを更新する
+	// 更新で一回呼んでください by 塚本
+	void UpdatePlayerAnimation(void);
 
 private:
 	// 移動する

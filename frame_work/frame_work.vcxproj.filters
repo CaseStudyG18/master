@@ -95,6 +95,9 @@
     <Filter Include="SCENE\GAME\FIELD">
       <UniqueIdentifier>{af1964e7-a03a-445e-8b63-f6ed73675098}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\GAME\ANIMATION">
+      <UniqueIdentifier>{517b8c98-5768-4f76-bfd5-ef384a1f4bef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -243,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="sources\JUDGE\CJudgeManager.cpp">
       <Filter>JUDGE</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ANIMATION\CAnimation.cpp">
+      <Filter>SCENE\GAME\ANIMATION</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="sources\JUDGE\CJudgeManager.h">
       <Filter>JUDGE</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ANIMATION\CAnimation.h">
+      <Filter>SCENE\GAME\ANIMATION</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
