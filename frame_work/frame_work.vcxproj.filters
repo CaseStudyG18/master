@@ -115,24 +115,6 @@
     <ClCompile Include="sources\SCENE\CSCENE\CScene2D.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CScene3D.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneBillBoard.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneCrinder.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneMeshField.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneMeshSky.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneMeshWall.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
     <ClCompile Include="sources\SCENE\CSCENE\CSceneNumber.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
@@ -140,9 +122,6 @@
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\CSCENE\CSceneTime.cpp">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\CSCENE\CSceneX.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
     <ClCompile Include="sources\INPUT\CInput.cpp">
@@ -288,24 +267,6 @@
     <ClInclude Include="sources\SCENE\CSCENE\CScene2D.h">
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CScene3D.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneBillBoard.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneCrinder.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneMeshField.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneMeshSky.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneMeshWall.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
     <ClInclude Include="sources\SCENE\CSCENE\CSceneNumber.h">
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
@@ -313,9 +274,6 @@
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\CSCENE\CSceneTime.h">
-      <Filter>SCENE\CSCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\CSCENE\CSceneX.h">
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
     <ClInclude Include="sources\INPUT\CInput.h">

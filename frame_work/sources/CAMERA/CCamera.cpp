@@ -11,7 +11,6 @@
 #include "CCamera.h"
 #include "../INPUT/CInputKeyboard.h"
 #include "../INPUT/CInputGamePad.h"
-#include "../SCENE/CSCENE/CSceneMeshField.h"
 #include "../JUDGE/CJudge.h"
 
 //*****************************************************************************
