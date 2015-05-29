@@ -38,7 +38,8 @@ public:
 	static CAttackNormal *Create(
 		LPDIRECT3DDEVICE9 *pDevice,
 		short nPlayerNum,
-		D3DXVECTOR3 pos);
+		D3DXVECTOR3 pos,
+		D3DXVECTOR3 velocity);
 
 	// ”ñŒöŠJƒƒ“ƒo
 private:

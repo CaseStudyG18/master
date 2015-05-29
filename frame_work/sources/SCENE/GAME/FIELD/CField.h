@@ -21,7 +21,7 @@ public:
 	// コンストラクタ
 	// 引数:デバイス、プライオリティ、オブジェタイプ
 	//=======================================================================
-	CField(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_4, OBJTYPE m_objType = OBJTYPE_FIELD);
+	CField(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_FIELD, OBJTYPE m_objType = OBJTYPE_FIELD);
 
 	// デストラクタ
 	~CField();

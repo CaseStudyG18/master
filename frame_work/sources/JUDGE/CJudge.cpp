@@ -197,6 +197,196 @@ void CJudge::ColiFieldxPlayer(void)
 }
 
 //=========================================================================
+// 攻撃とプレイヤーのあたり判定
+//=========================================================================
+void CJudge::ColiAttackxPlayer(void){
+
+	CScene *pScene;
+	CScene *pSceneNext;
+	CPlayer *pPlayer[MAXIMUM_NUMBER_OF_PLAYER] = { NULL };	// プレイヤーの最大人数分用意
+	CScene2D *pAttack;
+	CJudge::OBB_INFO playerOBB[MAXIMUM_NUMBER_OF_PLAYER];
+	int playerNum = 0;
+	bool coli[MAXIMUM_NUMBER_OF_PLAYER] = { false };
+
+	// プレイヤー情報入れる
+	CPlayerManager* playerManager = m_pJudgeManager->GetPlayerManager();
+
+	for (int playerCount = 0; playerCount < MAXIMUM_NUMBER_OF_PLAYER; ++playerCount)
+	{
+		pPlayer[playerCount] = playerManager->GetPlayer(playerCount);
+		if (!pPlayer[playerCount])
+		{
+			continue;
+		}
+		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
+		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
+		float rot = pPlayer[playerCount]->GetRot().z;
+		float width = pPlayer[playerCount]->GetWidth() * 0.5f;
+		float height = pPlayer[playerCount]->GetHeight() * 0.25f;
+
+		// OBB情報作成
+		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
+		playerNum++;
+	}
+
+	// 攻撃との当たり判定ループ
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+	{
+		// 先頭を指定
+		pScene = CScene::GetTopAddress(priority);
+
+		// ポインタがNULLでなければ
+		while (pScene)
+		{
+			// 現在対象としているインスタンスの次のインスタンスを保存
+			pSceneNext = pScene->GetNextAddress();
+
+			if (pScene->GetObjType() != CScene::OBJTYPE_ATTACK)
+			{
+				// 次のインスタンスを対象のインスタンスにする
+				pScene = pSceneNext;
+				continue;
+			}
+
+			// フィールド情報入れる
+			pAttack = (CScene2D*)pScene;
+			D3DXVECTOR2 pos(pAttack->GetPos().x, pAttack->GetPos().y);
+			float rot = pAttack->GetRot().z;
+			float width = pAttack->GetWidth();
+			float height = pAttack->GetHeight();
+			CJudge::OBB_INFO attackOBB;
+			// OBB情報作成
+			CreateOBBInfo(&attackOBB, &pos, &rot, &width, &height);
+
+			// 当たり判定
+			for (int idx = 0; idx < playerNum; ++idx)
+			{
+				// すでにあたってるなら判定しない
+				if (coli[idx])
+				{
+					continue;
+				}
+
+				if (IsOBB(playerOBB[idx], attackOBB))
+				{
+					// ヒットフラグオン
+					coli[idx] = true;
+
+					// 最後に当たった場所更新
+					m_LastFieldColiPlayer[idx] = pAttack;
+
+					// 当たった時の処理
+					// これでいいのかな？
+					pPlayer[idx]->SetPlyerKnockBack();
+
+#ifdef _DEBUG
+					CDebugProc::Print("攻撃ヒット\n");
+#endif
+				}
+			}
+
+			// 次のインスタンスを対象のインスタンスにする
+			pScene = pSceneNext;
+		}
+	}
+}
+
+//=========================================================================
+// フィールドと足場になる糸のあたり判定
+//=========================================================================
+void CJudge::ColiFieldxThreadOfFoothold(void)
+{
+	CScene *pSceneThread = CScene::GetTopAddress(TYPE_PRIORITY_THREAD_OF_FOOTHOLD);
+	CScene *pSceneNextThread;
+	CScene *pSceneField;
+	CScene *pSceneNextField;
+	CScene2D *pThread;
+	CScene2D *pField;
+	CJudge::OBB_INFO threadOBB, fieldOBB;
+	bool hit = false;
+
+
+	// 判定すべきものがないなら
+	if (!pSceneThread)
+	{
+		return;
+	}
+
+	// 糸ループ
+	while (pSceneThread)
+	{
+		// 現在対象としているインスタンスの次のインスタンスを保存
+		pSceneNextThread = pSceneThread->GetNextAddress();
+
+		// 足場になってないやつなら
+		if (pSceneThread->GetObjType() != CScene::OBJTYPE_FIELD)
+		{
+			// 糸情報取得
+			pThread = (CScene2D*)pSceneThread;
+			D3DXVECTOR2 pos(pThread->GetPos().x, pThread->GetPos().y);
+			float rot = pThread->GetRot().z;
+			float width = pThread->GetWidth();
+			float height = pThread->GetHeight();
+			// OBB情報作成
+			CreateOBBInfo(&threadOBB, &pos, &rot, &width, &height);
+
+			for (int prioryty = TYPE_PRIORITY_0; prioryty < TYPE_PRIORITY_MAX; ++prioryty)
+			{
+				pSceneField = CScene::GetTopAddress(prioryty);
+
+				// フィールドとの当たり判定ループ
+				while (pSceneField)
+				{
+					// 現在対象としているインスタンスの次のインスタンスを保存
+					pSceneNextField = pSceneField->GetNextAddress();
+
+					if (pSceneField->GetObjType() == CScene::OBJTYPE_FIELD)
+					{
+						// フィールド情報取得
+						pField = (CScene2D*)pSceneField;
+						D3DXVECTOR2 pos2(pField->GetPos().x, pField->GetPos().y);
+						float rot2 = pField->GetRot().z;
+						float width2 = pField->GetWidth();
+						float height2 = pField->GetHeight();
+						// OBB情報作成
+						CreateOBBInfo(&fieldOBB, &pos2, &rot2, &width2, &height2);
+
+						// 当たり判定
+						if (IsOBB(threadOBB, fieldOBB))
+						{
+							// フィールドにタイプ変更
+							pThread->SetObjType(CScene::OBJTYPE_FIELD);
+
+							// 足場になるアニメーションはじめ
+							//
+							//
+							//
+
+							hit = true;
+							break;
+						}
+					}
+
+					// 次のインスタンスを対象のインスタンスにする
+					pSceneField = pSceneNextField;
+				}
+
+				// 既に調べている糸が当たってたら次の糸へ
+				if (hit)
+				{
+					hit = false;
+					break;
+				}
+			}
+		}
+
+		// 次のインスタンスを対象のインスタンスにする
+		pSceneThread = pSceneNextThread;
+	}
+}
+
+//=========================================================================
 // 宝箱とプレイヤーのあたり判定
 //=========================================================================
 void CJudge::ColiTreasurexPlayer(void)

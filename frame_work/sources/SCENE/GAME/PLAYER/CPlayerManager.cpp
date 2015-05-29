@@ -9,6 +9,7 @@
 #include "CPlayer.h"
 #include "../../../RENDERER/CRenderer.h"
 #include "../../../TEXTURE/CTexture.h"
+#include "../../../INPUT/CInputKeyboard.h"
 
 #ifdef _DEBUG
 #define PLAYER_TEXTURE TEXTURE_PLAYER_0		// デバッグ時のプレイヤーのテクスチャ
@@ -97,7 +98,14 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer)
 //-----------------------------------------------------------------------------
 void CPlayerManager::Update(void)
 {
-
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_3))
+	{
+		m_apPlayer[0]->SetPlyerKnockBack();
+	}
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_2))
+	{
+		m_apPlayer[0]->SetPlayerDown();
+	}
 }
 
 //-----------------------------------------------------------------------------

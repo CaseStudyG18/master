@@ -9,10 +9,6 @@
 //*****************************************************************************
 #include "CRenderer.h"
 #include "../SCENE/CSCENE/CScene2D.h"
-#include "../SCENE/CSCENE/CScene3D.h"
-#include "../SCENE/CSCENE/CSceneX.h"
-#include "../SCENE/CSCENE/CSceneBillBoard.h"
-#include "../CAMERA/CCamera.h"
 #include "../DEBUG_PROC/CDebugProc.h"
 #ifdef _DEBUG
 #include "../INPUT/CInputKeyboard.h"

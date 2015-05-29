@@ -60,11 +60,15 @@ void CAttackManager::Update(void)
 //*****************************************************************************
 // çUåÇÇê∂ê¨Ç∑ÇÈ
 //*****************************************************************************
-void CAttackManager::CreateAttack(AttackType type, int nPlayerNum, D3DXVECTOR3 pos)
+void CAttackManager::CreateAttack(
+	AttackType type,
+	int nPlayerNum,
+	D3DXVECTOR3 pos,
+	D3DXVECTOR3 velocity)
 {
 	// ïÅí ÇÃçUåÇ
 	if (type == ATTACK_TYPE_NORMAL){
-		CAttackNormal::Create(m_pDevice, nPlayerNum, pos);
+		CAttackNormal::Create(m_pDevice, nPlayerNum, pos, velocity);
 	}
 	else if(type == ATTACK_TYPE_NORMAL){
 

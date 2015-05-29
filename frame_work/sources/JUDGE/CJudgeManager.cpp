@@ -63,6 +63,9 @@ void CJudgeManager::Update(void)
 
 	// プレイヤとお宝の当たり判定
 	m_pJudge->ColiTreasurexPlayer();
+
+	// プレイヤと攻撃の当たり判定
+	m_pJudge->ColiAttackxPlayer();
 }
 
 //=========================================================================

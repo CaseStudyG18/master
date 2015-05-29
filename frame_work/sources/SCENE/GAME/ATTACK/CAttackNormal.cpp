@@ -24,6 +24,9 @@ const short ATTACK_NORMAL_HIT_END_TIME = 120;
 const float ATTACK_NORMAL_HIT_WIDTH = 50;
 const float ATTACK_NORMAL_HIT_HEIGHT = 50;
 
+// プレイヤと攻撃エフェクトの距離
+static const float ATTACK_NORMAL_RANGE = 100;
+
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
@@ -88,13 +91,17 @@ void CAttackNormal::Update(void)
 //*****************************************************************************
 // クリエイト関数
 //*****************************************************************************
-CAttackNormal* CAttackNormal::Create(LPDIRECT3DDEVICE9 *pDevice, short nPlayerNum, D3DXVECTOR3 pos)
+CAttackNormal* CAttackNormal::Create(
+	LPDIRECT3DDEVICE9 *pDevice,
+	short nPlayerNum,
+	D3DXVECTOR3 pos,
+	D3DXVECTOR3 velocity)
 {
 	// 作成
 	CAttackNormal* p = new CAttackNormal(pDevice);
 
 	p->m_nPlayerNum = nPlayerNum;
-	p->m_vPos = pos;
+	p->m_vPos = pos + (velocity * ATTACK_NORMAL_RANGE);
 
 	// 初期化
 	p->Init();

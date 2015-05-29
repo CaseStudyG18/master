@@ -22,11 +22,14 @@
 typedef enum
 {
 	TYPE_PRIORITY_0 = 0,
-	TYPE_PRIORITY_1,
-	TYPE_PRIORITY_2,
-	TYPE_PRIORITY_3,
-	TYPE_PRIORITY_4,
-	TYPE_PRIORITY_5,
+	TYPE_PRIORITY_FIELD,				// フィールド
+	TYPE_PRIORITY_THREAD_OF_FOOTHOLD,	// 足場になる糸
+	TYPE_PRIORITY_THREAD_OF_TRAP,		// 罠の糸
+	TYPE_PRIORITY_TRESURE,				// 宝
+	TYPE_PRIORITY_PLAYER,				// プレイヤー
+	TYPE_PRIORITY_ATTACK,				// 攻撃
+	TYPE_PRIORITY_EFFECT,				// エフェクト
+	TYPE_PRIORITY_UI,					// UI
 	TYPE_PRIORITY_PAUSE,
 	TYPE_PRIORITY_FADE,
 	TYPE_PRIORITY_MAX
@@ -55,10 +58,8 @@ public:
 	{
 		OBJTYPE_NONE = 0,
 		OBJTYPE_2D,					// 2D
-		OBJTYPE_3D,					// 3D
-		OBJTYPE_X,					// Xモデル
-		OBJTYPE_ENEMY,				// 敵
 		OBJTYPE_PLAYER,				// プレイヤー
+		OBJTYPE_ATTACK,				// 攻撃
 		OBJTYPE_FIELD,				// フィールド
 		OBJTYPE_TREASURE,			// 宝箱
 		OBJTYPE_SCORE,				// スコア
@@ -130,7 +131,7 @@ public:
 	// オブジェタイプセット関数
 	// 引数: オブジェタイプ
 	//=================================================
-	void SetObjType(OBJTYPE type){m_objType = type;};
+	void SetObjType(OBJTYPE type);
 
 	//=================================================
 	// リストの先頭アドレスゲット関数

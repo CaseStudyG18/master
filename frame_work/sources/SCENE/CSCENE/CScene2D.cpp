@@ -258,7 +258,7 @@ void	CScene2D::SetUV(UV_INDEX *pUVIndex)
 void	CScene2D::SetPos(D3DXVECTOR3 pos)
 {
 	m_vPos = pos;
-};
+}
 
 //*****************************************************************************
 // セット関数
@@ -266,5 +266,178 @@ void	CScene2D::SetPos(D3DXVECTOR3 pos)
 void	CScene2D::SetRot(D3DXVECTOR3 rot)
 {
 	m_vRot = rot;
-};
+}
+
+//*****************************************************************************
+// サイズ変更関数_左側基点
+//*****************************************************************************
+void CScene2D::AddWidth_BaseLeft(float addWidth)
+{
+	// 変更量計算
+	m_fWidth += addWidth;
+
+	VECTOR2 vertexPos[4];
+	
+	vertexPos[0] = VECTOR2(-m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[1] = VECTOR2(m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[2] = VECTOR2(-m_fWidth * 0.5f, m_fHeight * 0.5f);
+	vertexPos[3] = VECTOR2(m_fWidth * 0.5f, m_fHeight * 0.5f);
+
+	m_vPos.x += addWidth * 0.5f;
+
+	MATRIX3 transrationMatrix, rotationMatrix, worldMatrix;
+	VECTOR2 pos(m_vPos.x, m_vPos.y), v;
+
+	// 座標変換
+	Matrix3Identity(&worldMatrix);
+	Matrix3Rotation(&rotationMatrix, m_vRot.z);
+	Matrix3Translation(&transrationMatrix, &pos);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &rotationMatrix);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &transrationMatrix);
+	
+	// ポリゴンの設定
+	VERTEX_2D *pVtx;
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);							// ロックしないと勝手に書き換わる場合がある(アンロックを忘れずに)
+	for (int i = 0; i < 4; i++)
+	{
+		Vector2Transform(&v, &vertexPos[i], &worldMatrix);
+		pVtx[i].vtx = D3DXVECTOR3(v.x
+			, v.y
+			, 0.0f);
+	
+		m_vtxPos[i].x = pVtx[i].vtx.x;
+		m_vtxPos[i].y = pVtx[i].vtx.y;
+	}
+	m_pD3DVtxBuff->Unlock();		// ロックしたら必ずアンロック！！
+}
+
+//*****************************************************************************
+// サイズ変更関数_右側基点
+//*****************************************************************************
+void CScene2D::AddWidth_BaseRight(float addWidth)
+{
+	// 変更量計算
+	m_fWidth += addWidth;
+
+	VECTOR2 vertexPos[4];
+
+	vertexPos[0] = VECTOR2(-m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[1] = VECTOR2(m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[2] = VECTOR2(-m_fWidth * 0.5f, m_fHeight * 0.5f);
+	vertexPos[3] = VECTOR2(m_fWidth * 0.5f, m_fHeight * 0.5f);
+
+	m_vPos.x -= addWidth * 0.5f;
+
+	MATRIX3 transrationMatrix, rotationMatrix, worldMatrix;
+	VECTOR2 pos(m_vPos.x, m_vPos.y), v;
+
+	// 座標変換
+	Matrix3Identity(&worldMatrix);
+	Matrix3Rotation(&rotationMatrix, m_vRot.z);
+	Matrix3Translation(&transrationMatrix, &pos);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &rotationMatrix);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &transrationMatrix);
+
+	// ポリゴンの設定
+	VERTEX_2D *pVtx;
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);							// ロックしないと勝手に書き換わる場合がある(アンロックを忘れずに)
+	for (int i = 0; i < 4; i++)
+	{
+		Vector2Transform(&v, &vertexPos[i], &worldMatrix);
+		pVtx[i].vtx = D3DXVECTOR3(v.x
+			, v.y
+			, 0.0f);
+
+		m_vtxPos[i].x = pVtx[i].vtx.x;
+		m_vtxPos[i].y = pVtx[i].vtx.y;
+	}
+	m_pD3DVtxBuff->Unlock();		// ロックしたら必ずアンロック！！
+}
+
+//*****************************************************************************
+// 幅変更関数_下側基点（上側伸びる）
+//*****************************************************************************
+void CScene2D::AddHeight_BaseBottom(float addHeight)
+{
+	// 変更量計算
+	m_fHeight += addHeight;
+
+	VECTOR2 vertexPos[4];
+
+	vertexPos[0] = VECTOR2(-m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[1] = VECTOR2(m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[2] = VECTOR2(-m_fWidth * 0.5f, m_fHeight * 0.5f);
+	vertexPos[3] = VECTOR2(m_fWidth * 0.5f, m_fHeight * 0.5f);
+
+	m_vPos.y -= addHeight * 0.5f;
+
+	MATRIX3 transrationMatrix, rotationMatrix, worldMatrix;
+	VECTOR2 pos(m_vPos.x, m_vPos.y), v;
+
+	// 座標変換
+	Matrix3Identity(&worldMatrix);
+	Matrix3Rotation(&rotationMatrix, m_vRot.z);
+	Matrix3Translation(&transrationMatrix, &pos);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &rotationMatrix);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &transrationMatrix);
+
+	// ポリゴンの設定
+	VERTEX_2D *pVtx;
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);							// ロックしないと勝手に書き換わる場合がある(アンロックを忘れずに)
+	for (int i = 0; i < 4; i++)
+	{
+		Vector2Transform(&v, &vertexPos[i], &worldMatrix);
+		pVtx[i].vtx = D3DXVECTOR3(v.x
+			, v.y
+			, 0.0f);
+
+		m_vtxPos[i].x = pVtx[i].vtx.x;
+		m_vtxPos[i].y = pVtx[i].vtx.y;
+	}
+	m_pD3DVtxBuff->Unlock();		// ロックしたら必ずアンロック！！
+}
+
+//*****************************************************************************
+// 幅変更関数_上側基点（下側伸びる）
+//*****************************************************************************
+void CScene2D::AddHeight_BaseTop(float addHeight)
+{
+	// 変更量計算
+	m_fHeight += addHeight;
+
+	VECTOR2 vertexPos[4];
+
+	vertexPos[0] = VECTOR2(-m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[1] = VECTOR2(m_fWidth * 0.5f, -m_fHeight * 0.5f);
+	vertexPos[2] = VECTOR2(-m_fWidth * 0.5f, m_fHeight * 0.5f);
+	vertexPos[3] = VECTOR2(m_fWidth * 0.5f, m_fHeight * 0.5f);
+
+	m_vPos.y += addHeight * 0.5f;
+
+	MATRIX3 transrationMatrix, rotationMatrix, worldMatrix;
+	VECTOR2 pos(m_vPos.x, m_vPos.y), v;
+
+	// 座標変換
+	Matrix3Identity(&worldMatrix);
+	Matrix3Rotation(&rotationMatrix, m_vRot.z);
+	Matrix3Translation(&transrationMatrix, &pos);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &rotationMatrix);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &transrationMatrix);
+
+	// ポリゴンの設定
+	VERTEX_2D *pVtx;
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);							// ロックしないと勝手に書き換わる場合がある(アンロックを忘れずに)
+	for (int i = 0; i < 4; i++)
+	{
+		Vector2Transform(&v, &vertexPos[i], &worldMatrix);
+		pVtx[i].vtx = D3DXVECTOR3(v.x
+			, v.y
+			, 0.0f);
+
+		m_vtxPos[i].x = pVtx[i].vtx.x;
+		m_vtxPos[i].y = pVtx[i].vtx.y;
+	}
+	m_pD3DVtxBuff->Unlock();		// ロックしたら必ずアンロック！！
+}
+
 //----EOF----

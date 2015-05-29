@@ -7,7 +7,6 @@
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
-#include "../../CAMERA/CCamera.h"
 #include "../../MANAGER/CManager.h"
 #include "../CSCENE/CScene2D.h"
 #include "../CSCENE/CSceneScore.h"
@@ -46,7 +45,7 @@ static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 
 // プレイヤ人数
 static const short MANUAL_PLAYER_NUM = 1;
-static const short CPU_PLAYER_NUM = 3;
+static const short CPU_PLAYER_NUM = 0;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -82,9 +81,6 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 {
 	// フェーズの初期化
 	CPhase::Init(pDevice, mode);
-
-	// カメラ初期化
-	m_pManager->InitCamera();
 
 	// フェード作成
 	m_pFade = new CFade(pDevice);

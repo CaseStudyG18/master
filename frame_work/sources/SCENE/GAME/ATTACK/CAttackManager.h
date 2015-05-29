@@ -41,8 +41,12 @@ public:
 	void Uninit(void);
 	void Update(void);
 
-	// 攻撃を作る関数(攻撃タイプ,プレイヤ番号,座標)
-	void CreateAttack(AttackType type, int nPlayerNum, D3DXVECTOR3 pos);
+	// 攻撃を作る関数(攻撃タイプ,プレイヤ番号,座標,移動量（向きベクトル）)
+	void CreateAttack(
+		AttackType type,
+		int nPlayerNum,
+		D3DXVECTOR3 pos,
+		D3DXVECTOR3 velocity);
 
 	// 非公開メンバ
 private:

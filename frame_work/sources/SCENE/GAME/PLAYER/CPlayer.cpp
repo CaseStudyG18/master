@@ -52,6 +52,10 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_nAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
 	m_nKnockBackTime = 0;									// ノックバック時間
 	m_nDownTime = 0;										// ダウン時間
+	m_nMatchlessTime = 0;									// 無敵状態の時間
+	m_nKnockBackCount = 0;									// やられ状態になった回数
+
+	m_bMatchless = false;									// 無敵状態かどうか判定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
 }
@@ -358,7 +362,8 @@ void CPlayer::Attack(void)
 	m_pAttackManager->CreateAttack(
 		ATTACK_TYPE_NORMAL,
 		m_sNumber,
-		m_vPos);
+		m_vPos,
+		PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
 }
 
 //-----------------------------------------------------------------------------
@@ -386,6 +391,8 @@ void CPlayer::SpidersThread(void)
 		THREAD_TYPE_NORMAL,
 		m_sNumber,
 		m_vPos);
+
+	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------
@@ -417,10 +424,23 @@ void CPlayer::KnockBack(void)
 {
 	m_nKnockBackTime++;
 
-	if (m_nKnockBackTime > 100)
+	// 一定回数やられ状態になったらダウン状態に移行
+	if (m_nKnockBackCount > 3)
 	{
+		SetPlayerDown();
+		m_nKnockBackCount = 0;
+	}
+
+	// 一定時間経過したら初期状態にもどす
+	else if (m_nKnockBackTime > 100)
+	{
+		// アクションの状態を初期状態に戻す
 		m_Action = PLAYER_ACTION_NONE;
 
+		// やられになった回数を増やす
+		m_nKnockBackCount++;
+
+		// やられ時間の初期化
 		m_nKnockBackTime = 0;
 	}
 }
@@ -439,6 +459,72 @@ void CPlayer::PlayerDown(void)
 		m_Action = PLAYER_ACTION_NONE;
 
 		m_nDownTime = 0;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 無敵状態の際の動作
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::Matchless(void)
+{
+	m_nMatchlessTime++;
+
+	// 色変更
+	CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, (float)(m_nMatchlessTime % 10) / 10.0f));
+
+	// 一定時間経過したら初期状態へ移行
+	if (m_nMatchlessTime > 500)
+	{
+		// 無敵状態フラグを消す
+		m_bMatchless = false;
+
+		// 色変更
+		CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+		// 無敵時間の初期化
+		m_nMatchlessTime = 0;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// プレイヤーの状態をやられ状態に移行既にやられ状態だった場合はダウン状態へ
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::SetPlyerKnockBack(void)
+{
+	// 無敵状態でなければこの処理を行う
+	if (m_bMatchless == false)
+	{
+		// 既にやられ状態だった場合にはダウン状態へ
+		if (m_Action == PLAYER_ACTION_KNOCK_BACK)
+		{
+			m_Action = PLAYER_ACTION_DOWN;
+		}
+		// ダウン状態または変形状態では無かった場合はやられ状態へ
+		else if (m_Action != PLAYER_ACTION_DOWN && m_Action != PLAYER_ACTION_METAMORPHOSE)
+		{
+			m_Action = PLAYER_ACTION_KNOCK_BACK;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// プレイヤーの状態をダウン状態へ移行
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::SetPlayerDown(void)
+{
+	// 無敵状態でなければこの処理を行う
+	if (m_bMatchless == false)
+	{
+		if (m_Action != PLAYER_ACTION_METAMORPHOSE)
+		{
+			m_Action = PLAYER_ACTION_DOWN;
+		}
 	}
 }
 
