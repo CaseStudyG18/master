@@ -22,13 +22,14 @@ class CThreadNormal : public CThreadBase
 {
 	// 公開メンバ
 public:
-
-	CThreadNormal(LPDIRECT3DDEVICE9 *pDevice);
+												// プライオリティとオブジェタイプはテスト
+	CThreadNormal(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_THREAD_OF_FOOTHOLD, OBJTYPE type = OBJTYPE_ATTACK);
 	~CThreadNormal(void);
 
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
+	void Draw(void);
 
 	//=======================================================================
 	// クリエイト関数

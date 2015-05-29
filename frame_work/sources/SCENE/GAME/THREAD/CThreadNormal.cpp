@@ -31,7 +31,7 @@ const float THREAD_NORMAL_HIT_HEIGHT = 50;
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CThreadNormal::CThreadNormal(LPDIRECT3DDEVICE9 *pDevice) : CThreadBase(pDevice)
+CThreadNormal::CThreadNormal(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE type) : CThreadBase(pDevice, priority, type)
 {
 	// 変数初期化
 	m_ThreadType = THREAD_TYPE_NORMAL;
@@ -57,7 +57,8 @@ CThreadNormal ::~CThreadNormal(void)
 //*****************************************************************************
 HRESULT CThreadNormal::Init()
 {
-	CThreadBase::Init();
+	CThreadBase::Init(m_vPos, 100, 100, TEXTURE_THREAD);
+
 	return S_OK;
 }
 
@@ -76,13 +77,13 @@ void CThreadNormal::Update(void)
 {
 	CThreadBase::Update();
 
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount == 10){
-		CEffect::Create(
-			m_pD3DDevice,
-			m_vPos, 100, 100,
-			TEXTURE_THREAD, 10, 1, 20);
-	}
+	//// カウントが10のとき（仮）エフェクトは発動
+	//if (m_nCount == 10){
+	//	CEffect::Create(
+	//		m_pD3DDevice,
+	//		m_vPos, 100, 100,
+	//		TEXTURE_THREAD, 10, 1, 20);
+	//}
 }
 
 //*****************************************************************************
@@ -101,5 +102,10 @@ CThreadNormal* CThreadNormal::Create(LPDIRECT3DDEVICE9 *pDevice, short nPlayerNu
 
 
 	return p;
+}
+
+void CThreadNormal::Draw(void)
+{
+	CThreadBase::Draw();
 }
 //----EOF-------
