@@ -387,9 +387,6 @@
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadNormal.h">
       <Filter>SCENE\GAME\THREAD</Filter>
     </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h">
-      <Filter>SCENE\GAME\THREAD</Filter>
-    </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadManager.h">
       <Filter>SCENE\GAME\THREAD</Filter>
     </ClInclude>
@@ -404,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\ANIMATION\CAnimation.h">
       <Filter>SCENE\GAME\ANIMATION</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h">
+      <Filter>SCENE\GAME\PLAYER</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -28,14 +28,14 @@ class CAttackBase : public CScene2D
 	// 公開メンバ
 public:
 
-	CAttackBase(LPDIRECT3DDEVICE9 *pDevice);
+	CAttackBase(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_ATTACK, OBJTYPE objType = OBJTYPE_ATTACK);
 	virtual ~CAttackBase(void);
 
 	HRESULT Init();
 	void Uninit(void);
 	void Update(void);
 	void Draw(void){};
-
+	short GetPlayerNumber(void){ return m_nPlayerNum; };
 	// 継承メンバ
 protected:
 	// 寿命をカウントする
@@ -54,11 +54,6 @@ protected:
 	// 攻撃の種類
 	AttackType m_AttackType;
 
-	// 中央の位置,角度,幅,高さ
-	D3DXVECTOR3	m_vPos;
-	D3DXVECTOR3	m_vRot;
-	float		m_fWidth;
-	float		m_fHeight;
 
 	// ポジションアクセサ
 	D3DXVECTOR3 GetPos(void){ return m_vPos; };

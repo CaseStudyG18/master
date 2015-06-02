@@ -22,7 +22,7 @@
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CAttackBase::CAttackBase(LPDIRECT3DDEVICE9 *pDevice) : CScene2D(pDevice)
+CAttackBase::CAttackBase(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) : CScene2D(pDevice, nPriority, objType)
 {
 	// 描画しない
 	SetDrawFlag(false);

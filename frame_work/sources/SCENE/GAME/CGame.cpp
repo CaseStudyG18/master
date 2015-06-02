@@ -44,7 +44,7 @@ static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 };
 
 // ÉvÉåÉCÉÑêlêî
-static const short MANUAL_PLAYER_NUM = 1;
+static const short MANUAL_PLAYER_NUM = 2;
 static const short CPU_PLAYER_NUM = 0;
 
 //*****************************************************************************

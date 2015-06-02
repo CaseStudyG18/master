@@ -92,5 +92,7 @@ void CTreasure::Reset(D3DXVECTOR3 pos){
 	// 座標(仮)
 	// これはアニメーションしたい
 	CScene2D::SetPos(pos + D3DXVECTOR3(100, 100, 0));
+
+	m_TreasureState = TREASURE_STATE_OWNER_NONE;
 }
 //----EOF-------

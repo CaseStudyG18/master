@@ -22,10 +22,10 @@
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CThreadBase::CThreadBase(LPDIRECT3DDEVICE9 *pDevice) : CScene2D(pDevice)
+CThreadBase::CThreadBase(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE type) : CScene2D(pDevice, priority, type)
 {
 	// 描画しない
-	SetDrawFlag(false);
+	//SetDrawFlag(false);
 	
 	// 変数初期化
 	m_nCount = 0;
@@ -41,9 +41,10 @@ CThreadBase ::~CThreadBase(void)
 //*****************************************************************************
 // 初期化
 //*****************************************************************************
-HRESULT CThreadBase::Init()
+HRESULT CThreadBase::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType)
 {
 
+	CScene2D::Init(pos, width, height, texType);
 	return S_OK;
 }
 
@@ -64,7 +65,7 @@ void CThreadBase::Update(void)
 
 	// 寿命？
 	if (m_nCount > m_nEndTime){
-		Uninit();
+	//	Uninit();
 	}
 
 	// 当たり判定フラグ更新
@@ -76,5 +77,10 @@ void CThreadBase::Update(void)
 	}
 	
 
+}
+
+void CThreadBase::Draw (void)
+{
+	CScene2D::Draw();
 }
 //----EOF-------

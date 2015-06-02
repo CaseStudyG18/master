@@ -17,6 +17,7 @@
 #include "../SCENE/GAME/PLAYER/CPlayer.h"
 #include "../SCENE/CSCENE/CScene2D.h"
 #include "../SCENE/GAME/TREASURE/CTreasure.h"
+#include "../SCENE/GAME/ATTACK/CAttackBase.h"
 
 //=========================================================================
 // コンストラクタ
@@ -158,7 +159,14 @@ void CJudge::ColiFieldxPlayer(void)
 		D3DXVECTOR2 playerPos, fieldPos, vertexPosA, vertexPosB, vertexPosC, vertexPosD, hitPos;
 		playerPos = (D3DXVECTOR2)pPlayer[idx]->GetPos();
 		playerPos.y += pPlayer[idx]->GetHeight() * 0.25f;
-		fieldPos = (D3DXVECTOR2)m_LastFieldColiPlayer[idx]->GetPos();
+		if (m_LastFieldColiPlayer[idx])
+		{
+			fieldPos = (D3DXVECTOR2)m_LastFieldColiPlayer[idx]->GetPos();
+		}
+		else
+		{
+			fieldPos = playerPos;
+		}
 
 		// コの字なので順番注意
 		vertexPosA = *m_LastFieldColiPlayer[idx]->GetVertexPos(0);
@@ -220,10 +228,10 @@ void CJudge::ColiAttackxPlayer(void){
 			continue;
 		}
 		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
-		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
+		pos.y += pPlayer[playerCount]->GetHeight();
 		float rot = pPlayer[playerCount]->GetRot().z;
-		float width = pPlayer[playerCount]->GetWidth() * 0.5f;
-		float height = pPlayer[playerCount]->GetHeight() * 0.25f;
+		float width = pPlayer[playerCount]->GetWidth();
+		float height = pPlayer[playerCount]->GetHeight();
 
 		// OBB情報作成
 		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
@@ -251,6 +259,7 @@ void CJudge::ColiAttackxPlayer(void){
 
 			// フィールド情報入れる
 			pAttack = (CScene2D*)pScene;
+			CAttackBase* pAttackBase = (CAttackBase*)pScene;
 			D3DXVECTOR2 pos(pAttack->GetPos().x, pAttack->GetPos().y);
 			float rot = pAttack->GetRot().z;
 			float width = pAttack->GetWidth();
@@ -268,13 +277,15 @@ void CJudge::ColiAttackxPlayer(void){
 					continue;
 				}
 
+				if (idx == (int)pAttackBase->GetPlayerNumber())
+				{
+					continue;
+				}
+
 				if (IsOBB(playerOBB[idx], attackOBB))
 				{
 					// ヒットフラグオン
 					coli[idx] = true;
-
-					// 最後に当たった場所更新
-					m_LastFieldColiPlayer[idx] = pAttack;
 
 					// 当たった時の処理
 					// これでいいのかな？
@@ -477,13 +488,15 @@ void CJudge::ColiTreasurexPlayer(void)
 	}
 
 	// 当たり判定なんとなく見やすいかなと思ってここに分けた
-	for (int idx = 0; idx < playerNum; ++idx){
-		if (coli[idx]){
-			// プレイヤにお宝を渡す
-			pPlayer[idx]->SetTreasure(pTreasure);
-			break;
+	if(pTreasure->GetTreasureState() != TREASURE_STATE_OWNED)
+		for (int idx = 0; idx < playerNum; ++idx){
+			if (coli[idx]){
+				// プレイヤにお宝を渡す
+				pPlayer[idx]->SetTreasure(pTreasure);
+				pTreasure->SetTreasureState(TREASURE_STATE_OWNED);
+				break;
+			}
 		}
-	}
 
 }
 

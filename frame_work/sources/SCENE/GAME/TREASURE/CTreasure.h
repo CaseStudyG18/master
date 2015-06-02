@@ -54,11 +54,23 @@ public:
 	// テクスチャと大きさをリセットする
 	void Reset(D3DXVECTOR3 pos);
 
+	// 宝箱を持っているプレイヤーのIDをセット
+	void SetOwnerPlayerNumber(short sPlayerNumber){ m_sOwnerPlayer = sPlayerNumber; m_TreasureState = TREASURE_STATE_OWNED; }
+
+	// 宝箱を持っているプレイヤーのIDをゲット
+	short GetOwnerPlayerNumber(void){ return m_sOwnerPlayer; }
+
+	// 宝箱の状態を取得
+	TreasureState GetTreasureState(void){ return m_TreasureState; }
+
+	// 宝箱の状態をセット
+	void SetTreasureState(TreasureState State){ m_TreasureState = State; }
+
 	// 非公開メンバ
 private:
 	// お宝の状態
 	TreasureState m_TreasureState;
-
+	short m_sOwnerPlayer;
 };
 
 #endif

@@ -24,14 +24,14 @@ class CThreadBase : public CScene2D
 	// 公開メンバ
 public:
 
-	CThreadBase(LPDIRECT3DDEVICE9 *pDevice);
+	CThreadBase(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE type);
 	virtual ~CThreadBase(void);
 
-	HRESULT Init();
+	HRESULT Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
 	void Uninit(void);
 	void Update(void);
-	void Draw(void){};
-
+	void Draw(void);
+	short GetPlayerNum(void){ return m_nPlayerNum; };
 	// 継承メンバ
 protected:
 	// 寿命をカウントする
