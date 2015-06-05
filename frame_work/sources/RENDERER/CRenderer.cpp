@@ -193,28 +193,15 @@ void CRenderer ::Draw()
 	// •`‰æ‚ÌŠJŽn
 	if(SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
+		// ‘S‚Ä•`‰æ
+		CScene::DrawAll();
 #ifdef _DEBUG
 		// FPS•`‰æ
-		CDebugProc::Print("FPS:%d\n",m_nCountFPS);
+		CDebugProc::Print("FPS:%d\n", m_nCountFPS);
 
 		// ƒfƒoƒbƒOî•ñ•`‰æ
 		CDebugProc::Draw();
-
-		// ƒƒCƒ„[ƒtƒŒ[ƒ€•`‰æ
-		if(CInputKeyboard::GetKeyboardPress(DIK_1))
-		{
-			m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		}
-
-		// ƒ\ƒŠƒbƒh•`‰æ
-		if(CInputKeyboard::GetKeyboardPress(DIK_0))
-		{
-			m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		}
 #endif
-		// ‘S‚Ä•`‰æ
-		CScene::DrawAll();
-
 		// •`‰æ‚ÌI—¹
 		m_pD3DDevice->EndScene();
 	}

@@ -28,7 +28,7 @@ const TEXTURE_TYPE GOAL_TEXTURE = TEXTURE_GOAL;
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CGoal::CGoal(LPDIRECT3DDEVICE9 *pDevice) : CScene2D(pDevice)
+CGoal::CGoal(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE m_objType) : CScene2D(pDevice, nPriority, m_objType)
 {
 }
 

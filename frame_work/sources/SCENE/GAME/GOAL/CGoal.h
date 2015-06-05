@@ -27,7 +27,7 @@ class CGoal : public CScene2D
 	// åˆäJÉÅÉìÉo
 public:
 
-	CGoal(LPDIRECT3DDEVICE9 *pDevice);
+	CGoal(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_GOAL, OBJTYPE m_objType = OBJTYPE_GOAL);
 	~CGoal(void);
 
 	void Init(void);

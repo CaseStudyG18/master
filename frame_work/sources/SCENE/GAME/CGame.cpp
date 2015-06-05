@@ -132,12 +132,8 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
 
 	// フィールド作成
-	CScene2D* p;
 	m_pFieldManager = new CFieldManager;
-	p = (CScene2D*)m_pFieldManager->CreateField(m_pD3DDevice, D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, -1), 600, 600, TEXTURE_NULL);
-
-	p->SetColorPolygon(D3DXCOLOR(0.2f, 0.5f, 0.5f, 1.0f));
-
+	m_pFieldManager->LoadField(m_pD3DDevice, CFieldManager::FIELD_TEST);
 	// カウントダウン
 	m_pCountDown = new CCountDown(m_pD3DDevice, &m_bPlayerControl);
 	m_pCountDown->Init();
