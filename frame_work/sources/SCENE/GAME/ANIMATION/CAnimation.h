@@ -62,6 +62,15 @@ public:
 	//======================================================
 	void SetDrawFlag(bool flag){m_bDraw = flag;};
 
+	// 落ちるセット
+	void SetFall(D3DXVECTOR3 pos, float fFloorHeight);
+	// 落ないセット
+	void SetNonFall(D3DXVECTOR3 pos);
+	// フェードアウトセット
+	void SetFadeOut(float fFadeSpeed);
+	// フェードアウトしないセット
+	void SetNonFadeOut();
+
 	//======================================================
 	// クリエイト関数
 	// 引数: デバイス、座標、幅、高さ、テクスチャータイプ、テクスチャ横分割数、テクスチャ縦分割数
@@ -88,6 +97,14 @@ protected:
 	int					m_nIdx;					// 分割番号
 	int					m_nMaxIdx;				// idxの最大値
 	bool				m_bDraw;				// 描画するか
+
+	// 追加 06/01 塚本
+	bool				m_bFall;				// 落下るフラグ
+	float				m_fGravity;				// 重力
+	float				m_fFloor;				// 落ちる時の床の位置
+	bool				m_bFadeOut;				// フェードするフラグ
+	float				m_fAlpha;				// 2Dのアルファ値
+	float				m_fFadeSpeed;			// フェードするスピード
 };
 #endif
 //----EOF----

@@ -19,7 +19,7 @@
 #include "CGame.h"
 #include "../../JUDGE/CJudgeManager.h"
 #include "FIELD/CFieldManager.h"
-
+#include "UI\CCountDown.h"
 
 //*****************************************************************************
 // マクロ
@@ -64,7 +64,10 @@ CGame ::CGame(void)
 	m_pGoalManager = NULL;
 	m_pJudgeManager = NULL;
 	m_pFieldManager = NULL;
+	m_pCountDown = NULL;
 
+	// プレイヤ操作可能フラグ
+	m_bPlayerControl = false;
 }
 
 //*****************************************************************************
@@ -135,6 +138,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 
 	p->SetColorPolygon(D3DXCOLOR(0.2f, 0.5f, 0.5f, 1.0f));
 
+	// カウントダウン
+	m_pCountDown = new CCountDown(m_pD3DDevice, &m_bPlayerControl);
+	m_pCountDown->Init();
+
 }
 
 //*****************************************************************************
@@ -142,6 +149,11 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
+	if (m_pCountDown){
+		m_pCountDown->Uninit();
+		SAFE_DELETE(m_pCountDown);
+	}
+
 	if (m_pJudgeManager){
 		m_pJudgeManager->Uninit();
 		SAFE_DELETE(m_pJudgeManager);
@@ -190,33 +202,39 @@ void CGame::Uninit(void)
 //*****************************************************************************
 void CGame::Update(void)
 {
+	// カウントダウンの更新
+	m_pCountDown->Update();
+
 	// Ｐが押されたら
-	if(CInputKeyboard::GetKeyboardTrigger(DIK_P))
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_P))
 	{
 		// ポーズフラグ反転
 		m_pPause->ReverceFlag();
 		m_pPause->SetCursolDrawFlag(false);
 
 		// ポーズ終了なら
-		if(!m_pPause->GetPauseFlag())
+		if (!m_pPause->GetPauseFlag())
 		{
 			// カーソル位置を戻るに
 			m_pPause->SetChoiceMenu(m_pPause->PAUSE_RETURN);
 		}
 	}
 
-	if(!m_pPause->GetPauseFlag())
+	if (!m_pPause->GetPauseFlag())
 	{
 		CPhase::Update();
 
-		// マネージャー更新
-		m_pPlayerManager->Update();
-		m_pTimeManager->Update();
-		m_pTreasureManager->Update();
-		m_pJudgeManager->Update();
-		m_pFieldManager->Update();
+		// プレイヤの操作ができるなら
+		if (m_bPlayerControl){
+			// マネージャー更新
+			m_pPlayerManager->Update();
+			m_pTimeManager->Update();
+			m_pTreasureManager->Update();
+			m_pJudgeManager->Update();
+			m_pFieldManager->Update();
+		}
 
-		if(CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 		{
 			// フェードアウト開始
 			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
@@ -227,7 +245,7 @@ void CGame::Update(void)
 	}
 
 	// タイトルに戻る選択なら
-	if(m_pPause->GetReturnTitleFlag())
+	if (m_pPause->GetReturnTitleFlag())
 	{
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
@@ -237,7 +255,7 @@ void CGame::Update(void)
 	}
 
 	// リトライに戻る選択なら
-	if(m_pPause->GetRetryFlag())
+	if (m_pPause->GetRetryFlag())
 	{
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);

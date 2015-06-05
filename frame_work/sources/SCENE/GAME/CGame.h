@@ -27,6 +27,7 @@ class CAttackManager;
 class CThreadManager;
 class CJudgeManager;
 class CFieldManager;
+class CCountDown;
 
 //*****************************************************************************
 // クラス定義
@@ -80,6 +81,10 @@ private:
 	CJudgeManager* m_pJudgeManager;
 	// フィールドマネージャー
 	CFieldManager* m_pFieldManager;
+	// カウントダウン
+	CCountDown* m_pCountDown;
+	// ゲーム開始フラグ
+	bool m_bPlayerControl;
 };
 
 #endif

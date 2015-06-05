@@ -10,11 +10,25 @@
 #include "CAnimation.h"
 
 //*****************************************************************************
+// 静的メンバ変数
+//*****************************************************************************
+// 重力加速度
+static const float GRAVITY_SCALE = 2.0f;
+static const float REFLECT_SCALE = 0.34f;
+
+
+//*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
 CAnimation::CAnimation(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CScene2D(pDevice, nPriority)
 {
 	m_bDraw = true;
+	m_bFall = false;
+	m_bFadeOut = false;
+	m_fGravity = 0;
+	m_fFloor = 0;
+	m_fAlpha = 1.0f;
+	m_fFadeSpeed = 0.0f;
 }
 
 //*****************************************************************************
@@ -60,7 +74,24 @@ void CAnimation ::Uninit(void)
 //*****************************************************************************
 void CAnimation ::Update(void)
 {
+	// 落ちる設定なら
+	if (m_bFall){
+		m_fGravity += GRAVITY_SCALE;
+		m_vPos.y += m_fGravity;
+		if (m_vPos.y > m_fFloor){
+			m_fGravity *= -REFLECT_SCALE;
+			m_vPos.y = m_fFloor;
+		}
+	}
 
+	// フェードアウトするなら
+	if (m_bFadeOut){
+		m_fAlpha -= m_fFadeSpeed;
+		if (m_fAlpha < 0.0f){
+			m_fAlpha = 0.0f;
+		}
+		SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
+	}
 }
 
 
@@ -150,5 +181,47 @@ void CAnimation::SetIndex(int nIdx, bool reverse)
 
 	UV_INDEX uv = { m_fLeft, m_fRight, m_fTop, m_fBottom };
 	SetUV(&uv);
+}
+
+//=============================================================================
+// 落ちるセット
+//=============================================================================
+void CAnimation::SetFall(D3DXVECTOR3 pos, float fFloorHeight){
+	m_vPos = pos;
+	m_bFall = true;
+	m_fFloor = fFloorHeight;
+	m_fGravity = 0;
+}
+
+//=============================================================================
+// 落ちるしないセット
+//=============================================================================
+void CAnimation::SetNonFall(D3DXVECTOR3 pos){
+	m_vPos = pos;
+	m_bFall = false;
+	m_fFloor = 0;
+	m_fGravity = 0;
+}
+
+//=============================================================================
+// フェードアウトセット
+//=============================================================================
+void CAnimation::SetFadeOut(float fFadeSpeed){
+
+	m_bFadeOut = true;
+	m_fAlpha = 1.0f;
+	m_fFadeSpeed = fFadeSpeed;
+	SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
+}
+
+//=============================================================================
+// フェードアウトしないセット
+//=============================================================================
+void CAnimation::SetNonFadeOut(){
+
+	m_bFadeOut = false;
+	m_fAlpha = 1.0f;
+	m_fFadeSpeed = 0.0f;
+	SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
 }
 //----EOF----

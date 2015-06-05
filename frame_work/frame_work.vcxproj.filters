@@ -98,6 +98,9 @@
     <Filter Include="SCENE\GAME\ANIMATION">
       <UniqueIdentifier>{517b8c98-5768-4f76-bfd5-ef384a1f4bef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\GAME\UI">
+      <UniqueIdentifier>{27363750-8588-4d2b-b6e5-f34d2edb50a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -208,15 +211,6 @@
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasureManager.cpp">
       <Filter>SCENE\GAME\TREASURE</Filter>
     </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackManager.cpp">
-      <Filter>SCENE\GAME\ATTACK</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackBase.cpp">
-      <Filter>SCENE\GAME\ATTACK</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackNormal.cpp">
-      <Filter>SCENE\GAME\ATTACK</Filter>
-    </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayer.cpp">
       <Filter>SCENE\GAME\PLAYER</Filter>
     </ClCompile>
@@ -249,6 +243,27 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\ANIMATION\CAnimation.cpp">
       <Filter>SCENE\GAME\ANIMATION</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackSpecialSpeed.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackSpecialTrap.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackBase.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackManager.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackNormal.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackSpecialAttack.cpp">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\UI\CCountDown.cpp">
+      <Filter>SCENE\GAME\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -363,15 +378,6 @@
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasureManager.h">
       <Filter>SCENE\GAME\TREASURE</Filter>
     </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackManager.h">
-      <Filter>SCENE\GAME\ATTACK</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackBase.h">
-      <Filter>SCENE\GAME\ATTACK</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackNormal.h">
-      <Filter>SCENE\GAME\ATTACK</Filter>
-    </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayer.h">
       <Filter>SCENE\GAME\PLAYER</Filter>
     </ClInclude>
@@ -404,6 +410,27 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h">
       <Filter>SCENE\GAME\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackSpecialSpeed.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackSpecialTrap.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackBase.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackManager.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackNormal.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackSpecialAttack.h">
+      <Filter>SCENE\GAME\ATTACK</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\UI\CCountDown.h">
+      <Filter>SCENE\GAME\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

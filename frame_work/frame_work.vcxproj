@@ -108,6 +108,9 @@
     <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackBase.cpp" />
     <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackNormal.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackSpecialAttack.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackSpecialSpeed.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\ATTACK\CAttackSpecialTrap.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CGame.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CNowLoading.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp" />
@@ -122,6 +125,7 @@
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadNormal.cpp" />
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasure.cpp" />
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasureManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\UI\CCountDown.cpp" />
     <ClCompile Include="sources\SCENE\PAUSE\CPause.cpp" />
     <ClCompile Include="sources\SCENE\RESULT\CResult.cpp" />
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp" />
@@ -161,6 +165,9 @@
     <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackBase.h" />
     <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackManager.h" />
     <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackNormal.h" />
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackSpecialAttack.h" />
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackSpecialSpeed.h" />
+    <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackSpecialTrap.h" />
     <ClInclude Include="sources\SCENE\GAME\CGame.h" />
     <ClInclude Include="sources\SCENE\GAME\CNowLoading.h" />
     <ClInclude Include="sources\SCENE\GAME\CTimeManager.h" />
@@ -175,6 +182,7 @@
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadNormal.h" />
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasure.h" />
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasureManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\UI\CCountDown.h" />
     <ClInclude Include="sources\SCENE\PAUSE\CPause.h" />
     <ClInclude Include="sources\SCENE\RESULT\CResult.h" />
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h" />
