@@ -28,6 +28,7 @@ typedef enum
 	TEXTURE_GOAL,
 	TEXTURE_TREASURE,
 	TEXTURE_TREASURE_ICON,
+	TEXTURE_TEST_FIELD,
 	TEXTURE_MAX					// テクスチャタイプ総数
 }TEXTURE_TYPE;
 
@@ -58,6 +59,13 @@ public:
 	// 戻り値:テクスチャのポインタ
 	//============================================================
 	static LPDIRECT3DTEXTURE9 GetTexture(const TEXTURE_TYPE type);
+
+	//============================================================
+	// テクスチャタイプゲッター
+	// 引数:テクスチャのファイルパス
+	// 戻り値:テクスチャタイプ
+	//============================================================
+	static TEXTURE_TYPE GetTextureTye(char* texFilePath);
 
 private:
 	//============================================================
