@@ -19,6 +19,9 @@
 //=============================================================================
 enum AttackType{
 	ATTACK_TYPE_NORMAL,
+	ATTACK_TYPE_ATTACK,		// 攻撃力特化型
+	ATTACK_TYPE_SPEED,		// スピード特化型
+	ATTACK_TYPE_TRAP,		// 罠作成型
 	ATTACK_TYPE_MAX
 };
 
@@ -44,7 +47,7 @@ public:
 	// 攻撃を作る関数(攻撃タイプ,プレイヤ番号,座標,移動量（向きベクトル）)
 	void CreateAttack(
 		AttackType type,
-		int nPlayerNum,
+		short sPlayerNum,
 		D3DXVECTOR3 pos,
 		D3DXVECTOR3 velocity);
 

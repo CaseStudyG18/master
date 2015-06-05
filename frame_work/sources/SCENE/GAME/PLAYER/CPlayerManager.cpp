@@ -11,11 +11,10 @@
 #include "../../../TEXTURE/CTexture.h"
 #include "../../../INPUT/CInputKeyboard.h"
 
-#ifdef _DEBUG
-#define PLAYER_TEXTURE TEXTURE_PLAYER		// デバッグ時のプレイヤーのテクスチャ
-#else
-#define PLAYER_TEXTURE TEXTURE_NULL		// 
-#endif
+//-----------------------------------------------------------------------------
+//	マクロ定義
+//-----------------------------------------------------------------------------
+static const TEXTURE_TYPE PLAYER_TEXTURE = TEXTURE_PLAYER;		// デバッグ時のプレイヤーのテクスチャ
 
 //-----------------------------------------------------------------------------
 // コンストラクタ

@@ -1,102 +1,113 @@
 //=============================================================================
 //
-// CAttackManagerクラス [CAttackManager.cpp]
-// Author : 塚本　俊彦
+// CAttacSpecialSpeedクラス [CAttacSpecialSpeed.cpp]
+// Author : 佐藤　諒一
 //
 //=============================================================================
+
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
-#include <Windows.h>
-#include "CAttackManager.h"
-#include "CAttackNormal.h"
-#include "CAttackSpecialAttack.h"
-#include "CAttackSpecialSpeed.h"
 #include "CAttackSpecialTrap.h"
+#include "../../EFFECT/CEffect.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
+// 寿命
+const short ATTACK_TRAP_END_TIME = 1000;
+// 当たり判定の始まる時間
+const short ATTACK_TRAP_HIT_START_TIME = 100;
+// 当たり判定の終わる時間
+const short ATTACK_TRAP_HIT_END_TIME = 950;
 
+// 当たり判 定幅,高さ
+const float ATTACK_TRAP_HIT_WIDTH = 30;
+const float ATTACK_TRAP_HIT_HEIGHT = 30;
+
+// プレイヤと攻撃エフェクトの距離
+static const float ATTACK_TRAP_RANGE = 0;
 
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
 
-
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CAttackManager::CAttackManager(LPDIRECT3DDEVICE9 *pDevice)
+CAttackSpecialTrap::CAttackSpecialTrap(LPDIRECT3DDEVICE9 *pDevice) : CAttackBase(pDevice)
 {
-	m_pDevice = pDevice;
+	// 変数初期化
+	m_AttackType = ATTACK_TYPE_NORMAL;
+
+	// この攻撃の固有ステータス初期化
+	m_fWidth = ATTACK_TRAP_HIT_WIDTH;
+	m_fHeight = ATTACK_TRAP_HIT_HEIGHT;
+	m_vRot = D3DXVECTOR3(0, 0, 0);
+	m_nEndTime = ATTACK_TRAP_END_TIME;
+	m_nHitStartTime = ATTACK_TRAP_HIT_START_TIME;
+	m_nHitEndTime = ATTACK_TRAP_HIT_END_TIME;
 }
 
 //*****************************************************************************
 // デストラクタ
 //*****************************************************************************
-CAttackManager ::~CAttackManager(void)
+CAttackSpecialTrap ::~CAttackSpecialTrap(void)
 {
 }
 
 //*****************************************************************************
 // 初期化
 //*****************************************************************************
-void CAttackManager::Init()
+HRESULT CAttackSpecialTrap::Init()
 {
+	CAttackBase::Init();
+	return S_OK;
 }
 
 //*****************************************************************************
 // 終了
 //*****************************************************************************
-void CAttackManager::Uninit(void)
+void CAttackSpecialTrap::Uninit(void)
 {
+	CAttackBase::Uninit();
 }
 
 //*****************************************************************************
 // 更新
 //*****************************************************************************
-void CAttackManager::Update(void)
+void CAttackSpecialTrap::Update(void)
 {
+	CAttackBase::Update();
+
+	// カウントが10のとき（仮）エフェクトは発動
+	if (m_nCount == 10){
+		CEffect::Create(
+			m_pD3DDevice,
+			m_vPos, ATTACK_TRAP_HIT_WIDTH, ATTACK_TRAP_HIT_HEIGHT,
+			TEXTURE_FIRE_1, 10, 1, m_nEndTime);
+	}
 }
 
 //*****************************************************************************
-// 攻撃を生成する
+// クリエイト関数
 //*****************************************************************************
-void CAttackManager::CreateAttack(
-	AttackType type,
-	short sPlayerNum,
+CAttackSpecialTrap* CAttackSpecialTrap::Create(
+	LPDIRECT3DDEVICE9 *pDevice,
+	short nPlayerNum,
 	D3DXVECTOR3 pos,
 	D3DXVECTOR3 velocity)
 {
-	/*
-	switch (type)
-	{
-	case ATTACK_TYPE_NORMAL:
-		CAttackNormal::Create(m_pDevice, sPlayerNum, pos, velocity);
-		break;
-	case ATTACK_TYPE_ATTACK:
-		break;
-	case ATTACK_TYPE_SPEED:
-		break;
-	case ATTACK_TYPE_TRAP:
-		break;
-	default:
-		break;
-	}
-	*/
-	// 普通の攻撃
-	if (type == ATTACK_TYPE_NORMAL){
-		CAttackNormal::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if(type == ATTACK_TYPE_ATTACK){
-		CAttackSpecialAttack::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if (type == ATTACK_TYPE_SPEED){
-		CAttackSpecialSpeed::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if (type == ATTACK_TYPE_TRAP){
-		CAttackSpecialTrap::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
+	// 作成
+	CAttackSpecialTrap* p = new CAttackSpecialTrap(pDevice);
+
+	p->m_nPlayerNum = nPlayerNum;
+	p->m_vPos = pos; // -(velocity * ATTACK_TRAP_RANGE);
+
+	// 初期化
+	p->Init();
+
+
+	return p;
 }
 //----EOF-------
