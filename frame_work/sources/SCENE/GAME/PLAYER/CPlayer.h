@@ -7,12 +7,12 @@
 #ifndef __CPLAYER_H__
 #define __CPLAYER_H__
 
-#include "../../CSCENE/CScene2D.h"
+#include "../../GAME/ANIMATION/CAnimation.h"
 
 //-----------------------------------------------------------------------------
 // マクロ定義
 //-----------------------------------------------------------------------------
-static const int PLAYER_DEFAULT_HP = 500;	  	// プレイヤーのデフォルトの体力
+static const float PLAYER_DEFAULT_HP = 500.0f; 	// プレイヤーのデフォルトの体力
 static const float PLAYER_DEFAULT_MP = 300.0f;	// プレイヤーのデフォルトの変形用ポイント
 static const bool PLAYER_MANUAL = TRUE;		  	// プレイヤー操作マニュアル
 static const bool PLAYER_COMPUTER = FALSE;	  	// プレイヤー操作AUTO
@@ -25,7 +25,10 @@ static const bool PLAYER_COMPUTER = FALSE;	  	// プレイヤー操作AUTO
 // プレイヤーの形態
 typedef enum
 {
-	PLAYER_MODE_NONE = 0,
+	PLAYER_MODE_NONE = 0,		// 通常状態
+	PLAYER_MODE_ATTACK,			// 攻撃特化
+	PLAYER_MODE_SPEED,			// 素早さ特化
+	PLAYER_MODE_TRAP,			// 妨害特化
 	PLAYER_MODE_MAX
 }PLAYER_MODE;
 
@@ -80,7 +83,7 @@ class CTreasure;
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
 //-----------------------------------------------------------------------------
-class CPlayer : public CScene2D
+class CPlayer : public CAnimation
 {
 public:
 	// コンストラクタ
@@ -129,14 +132,22 @@ public:
 	//  プレイヤーの行動状態をダウンに変更するだけ
 	void SetPlayerDown(void);
 
-	// プレイヤーのIDの取得
-	short GetPlayerNumber(void){ return m_sNumber; }
-
 	// 宝物を拾うときの処理 宝物をアイコンに変更
 	void SetTreasure(CTreasure *pTreasure);
 
 	// 宝物を捨てる時の処理 アイコンを宝物に変更
 	void FallTreasure();
+
+	// プレイヤの向きや状態でテクスチャを更新する
+	// 更新で一回呼んでください by 塚本
+	void UpdatePlayerAnimation(void);
+
+	// 体力回復関数
+	//	引数　回復する分の体力ポイント
+	void HPRepair(float fPoint){ m_fHP += fPoint; }
+
+	// MP減少用関数
+	void MPReduce(void);
 
 private:
 	// 移動する
@@ -147,7 +158,7 @@ private:
 
 	// 変形
 	// 引数　変形するタイプ
-	void Metamorphose(PLAYER_MODE mode);
+	void Metamorphose(void);
 
 	// 糸発射
 	void SpidersThread(void);
@@ -171,7 +182,7 @@ private:
 	// 変数
 	//---------------------------------
 	float					m_fMoveSpeedY;		// プレイヤーのX方向の移動量
-	int						m_nHP;				// プレイヤーの体力
+	float					m_fHP;				// プレイヤーの体力
 	float					m_fMoveSpeedX;		// プレイヤーのX方向の移動量
 	float					m_fMP;				// プレイヤーの変形用のポイント
 	BOOL					m_bOperation;		// プレイヤーの操作フラグ
@@ -185,12 +196,13 @@ private:
 	DIRECTION_PLAYER_FACING	m_PlayerFacing;		// プレイヤーの向いている方向
 	DIRECTION_PLAYER_FACING	m_PlayerFacingOld;	// プレイヤーの向いている方向
 
-	int						m_nAnimTime;		// 変形時のアニメーションの時間
-	int						m_nKnockBackTime;	// ノックバック時の時間
-	int						m_nDownTime;		// ダウン時の時間
-	int						m_nMatchlessTime;	// 無敵状態の時間
-	int						m_nKnockBackCount;	// やられ状態になった回数
+	short					m_sAnimTime;		// 変形時のアニメーションの時間
+	short					m_sKnockBackTime;	// ノックバック時の時間
+	short					m_sDownTime;		// ダウン時の時間
+	short					m_sMatchlessTime;	// 無敵状態の時間
+	short					m_sKnockBackCount;	// やられ状態になった回数
 	bool					m_bMatchless;		// 無敵状態かどうかの判定
+	bool					m_bMetamorphose;	// 変形している状態かのフラグ
 
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー

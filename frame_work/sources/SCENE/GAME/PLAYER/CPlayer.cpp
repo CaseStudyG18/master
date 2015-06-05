@@ -15,6 +15,9 @@
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
+// プレイヤーの移動速度(仮)
+static const float PLAYER_SPEED = 3.0f;
+
 // 宝物アイコンの大きさ
 static const float TREASURE_ICON_WIDTH = 40;
 static const float TREASURE_ICON_HEIGHT = 30;
@@ -27,7 +30,7 @@ static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
 // コンストラクタ
 //	引数　　デバイス、プライオリティ、オブジェクトタイプ
 //-----------------------------------------------------------------------------
-CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CScene2D(pDevice, nPriority, objType)
+CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CAnimation(pDevice, nPriority, objType)
 {
 	m_pD3DDevice = pDevice;									// デバイスオブジェクト(描画に必要)
 	m_pD3DVtxBuff = NULL;									// 頂点座標情報を格納する場所のアドレスを確保する場所
@@ -42,20 +45,21 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_ModeDest = PLAYER_MODE_NONE;							// プレイヤーの目的の変形状態
 	m_vPosOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// ポリゴンの中央の位置
 	m_vPosDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// ポリゴンの中央の位置
-	m_nHP = PLAYER_DEFAULT_HP;								// プレイヤーの体力
+	m_fHP = PLAYER_DEFAULT_HP;								// プレイヤーの体力
 	m_fMP = PLAYER_DEFAULT_MP;								// プレイヤーの変形用のポイント
 	m_bOperation = PLAYER_COMPUTER;							// プレイヤーの操作フラグ
 	m_sNumber = 0;											// マネージャーに割り振られるプレイヤー番号
 	m_PlayerFacing = PLAYER_DIRECTION_UP;					// プレイヤーの初期向き
 	m_PlayerFacingOld = PLAYER_DIRECTION_UP;				// プレイヤーの過去の向き
 
-	m_nAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
-	m_nKnockBackTime = 0;									// ノックバック時間
-	m_nDownTime = 0;										// ダウン時間
-	m_nMatchlessTime = 0;									// 無敵状態の時間
-	m_nKnockBackCount = 0;									// やられ状態になった回数
+	m_sAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
+	m_sKnockBackTime = 0;									// ノックバック時間
+	m_sDownTime = 0;										// ダウン時間
+	m_sMatchlessTime = 0;									// 無敵状態の時間
+	m_sKnockBackCount = 0;									// やられ状態になった回数
 
 	m_bMatchless = false;									// 無敵状態かどうか判定
+	m_bMetamorphose = false;								// 変形中判定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
 }
@@ -89,9 +93,6 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	// 作成したプレイヤー情報の初期化
 	temp->Init(pos, fWidth, fHeight, texture);
 
-	// 初期座標セット
-	temp->m_vPos = pos;
-
 	// 操作フラグを変更
 	temp->m_bOperation = playerOperation;
 
@@ -115,7 +116,8 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 //-----------------------------------------------------------------------------
 void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture)
 {
-	CScene2D::Init(pos, fWidth, fHeight, texture);
+	// テクスチャアニメーションの初期化
+	CAnimation::Init(pos, fWidth, fHeight, texture, 6, 3);
 }
 
 //-----------------------------------------------------------------------------
@@ -142,9 +144,8 @@ void CPlayer::Update(void)
 
 	CScene2D::Update();
 
-	// 動いてるか判定するためのフラグをfalseに変更
-	//m_Action = PLAYER_ACTION_NONE;
-
+	UpdatePlayerAnimation();
+	
 	// 移動量を０にする
 	m_fMoveSpeedY = 0.0f;
 	m_fMoveSpeedX = 0.0f;
@@ -176,29 +177,81 @@ void CPlayer::Update(void)
 			// Wで画面上方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_W))
 			{
-				m_fMoveSpeedY = -5.0f;
+				// 移動速度の変更
+				// プレイヤーの形態が速度重視だった場合速く移動する
+				if (m_Mode == PLAYER_MODE_SPEED)
+				{
+					m_fMoveSpeedY = -PLAYER_SPEED * 1.5f;
+				}
+				else
+				{
+					m_fMoveSpeedY = -PLAYER_SPEED;
+				}
+
+				// 行動を移動状態に変える
 				m_Action = PLAYER_ACTION_WALK;
+
+				// プレイヤーの向いている方向を変える
 				m_PlayerFacing = PLAYER_DIRECTION_UP;
 			}
 			// Sで画面下方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_S))
 			{
-				m_fMoveSpeedY = 5.0f;
+				// 移動速度の変更
+				// プレイヤーの形態が速度重視だった場合速く移動する
+				if (m_Mode == PLAYER_MODE_SPEED)
+				{
+					m_fMoveSpeedY = PLAYER_SPEED * 1.5f;
+				}
+				else
+				{
+					m_fMoveSpeedY = PLAYER_SPEED;
+				}
+
+				// 行動を移動状態に変える
 				m_Action = PLAYER_ACTION_WALK;
+
+				// プレイヤーの向いている方向を変える
 				m_PlayerFacing = PLAYER_DIRECTION_DOWN;
 			}
 			// Aで画面左方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_A))
 			{
-				m_fMoveSpeedX = -5.0f;
+				// 移動速度の変更
+				// プレイヤーの形態が速度重視だった場合速く移動する
+				if (m_Mode == PLAYER_MODE_SPEED)
+				{
+					m_fMoveSpeedX = -PLAYER_SPEED * 1.5f;
+				}
+				else
+				{
+					m_fMoveSpeedX = -PLAYER_SPEED;
+				}
+
+				// 行動を移動状態に変える
 				m_Action = PLAYER_ACTION_WALK;
+
+				// プレイヤーの向いている方向を変える
 				m_PlayerFacing = PLAYER_DIRECTION_LEFT;
 			}
 			// Dで画面右方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_D))
 			{
-				m_fMoveSpeedX = 5.0f;
+				// 移動速度の変更
+				// プレイヤーの形態が速度重視だった場合速く移動する
+				if (m_Mode == PLAYER_MODE_SPEED)
+				{
+					m_fMoveSpeedX = PLAYER_SPEED * 1.5f;
+				}
+				else
+				{
+					m_fMoveSpeedX = PLAYER_SPEED;
+				}
+
+				// 行動を移動状態に変える
 				m_Action = PLAYER_ACTION_WALK;
+
+				// プレイヤーの向いている方向を変える
 				m_PlayerFacing = PLAYER_DIRECTION_RIGHT;
 			}
 
@@ -221,12 +274,44 @@ void CPlayer::Update(void)
 			}
 
 			/*----------------------------------------------------------*/
-			/*Mキーでプレイヤー変形開始									*/
+			/*6キーでプレイヤー変形開始	(Attack)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_M))
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) && m_fMP>0.0f)
 			{
 				// アクションの状態を変形に変える
 				m_Action = PLAYER_ACTION_METAMORPHOSE;
+				// 次に変形する状態を変更する
+				m_ModeDest = PLAYER_MODE_ATTACK;
+			}
+			/*----------------------------------------------------------*/
+			/*7キーでプレイヤー変形開始	(Speed)						*/
+			/*----------------------------------------------------------*/
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_7) && m_fMP>0.0f)
+			{
+				// アクションの状態を変形に変える
+				m_Action = PLAYER_ACTION_METAMORPHOSE;
+				// 次に変形する状態を変更する
+				m_ModeDest = PLAYER_MODE_SPEED;
+			}
+			/*----------------------------------------------------------*/
+			/*8キーでプレイヤー変形開始	(Trap)						*/
+			/*----------------------------------------------------------*/
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_8) && m_fMP>0.0f)
+			{
+				// アクションの状態を変形に変える
+				m_Action = PLAYER_ACTION_METAMORPHOSE;
+				// 次に変形する状態を変更する
+				m_ModeDest = PLAYER_MODE_TRAP;
+			}
+			/*----------------------------------------------------------*/
+			/*9キーでプレイヤー変形開始	(Normal)						*/
+			/*----------------------------------------------------------*/
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_9) && m_fMP>0.0f)
+			{
+				// アクションの状態を変形に変える
+				m_Action = PLAYER_ACTION_METAMORPHOSE;
+				// 次に変形する状態を変更する
+				m_ModeDest = PLAYER_MODE_NONE;
 			}
 
 			// debug
@@ -235,6 +320,9 @@ void CPlayer::Update(void)
 				FallTreasure();
 			}
 		}
+		/*----------------------------------------------------------*/
+		/*２体目の敵の動き											*/
+		/*----------------------------------------------------------*/
 		else if (m_sNumber == 1)
 		{
 			// Iで画面上方向への移動
@@ -300,16 +388,15 @@ void CPlayer::Update(void)
 
 		// プレイヤーのアクションが変形だった際の動き
 	case PLAYER_ACTION_METAMORPHOSE:
-		/*----------------------------------------------------------*/
-		/*テスト用の状態変化										*/
-		/*----------------------------------------------------------*/
-		if (m_Mode == PLAYER_MODE_NONE)
+		// 変形先と変形元が違ったら変形開始
+		if (m_Mode != m_ModeDest)
 		{
-			Metamorphose(PLAYER_MODE_MAX);
+			Metamorphose();
 		}
+		// 変形予定先と現在の形態が同じだったら行動を戻す
 		else
 		{
-			Metamorphose(PLAYER_MODE_NONE);
+			m_Action = PLAYER_ACTION_NONE;
 		}
 		break;
 
@@ -337,6 +424,36 @@ void CPlayer::Update(void)
 	{
 		Matchless();
 	}
+
+	// 変形している場合MPを減少させていく
+	if (m_bMetamorphose)
+	{
+		MPReduce();
+
+		// MPが０になったら通常状態に戻す
+		if (m_fMP <= 0.0f)
+		{
+			m_ModeDest = PLAYER_MODE_NONE;
+
+			m_Action = PLAYER_ACTION_METAMORPHOSE;
+
+			m_fMP = 0.0f;
+		}
+	}
+	else
+	{
+		// デフォルトMPまで回復させる
+		if (m_fMP < PLAYER_DEFAULT_MP)
+		{
+			m_fMP += 10.0f;
+		}
+	}
+
+	// 現在のMPを表示する
+#ifdef _DEBUG
+	CDebugProc::Print("%dプレイヤー残りMP %f\n", m_sNumber , m_fMP);
+#endif
+
 }
 
 //-----------------------------------------------------------------------------
@@ -346,8 +463,6 @@ void CPlayer::Update(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Draw(void)
 {
-//	CScene2D::SetPos(m_vPos);
-//	CScene2D::SetRot(m_vRot);
 	CScene2D::Draw();
 }
 
@@ -411,15 +526,47 @@ void CPlayer::Move(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Attack(void)
 {
-	// 普通攻撃
-	m_pAttackManager->CreateAttack(
-		ATTACK_TYPE_NORMAL,
-		m_sNumber,
-		m_vPos,
-		PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+	switch (m_Mode)
+	{
+		// 普通攻撃
+	case PLAYER_MODE_NONE:
+		m_pAttackManager->CreateAttack(
+			ATTACK_TYPE_NORMAL,
+			m_sNumber,
+			m_vPos,
+			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+		break;
+		// 攻撃特化の攻撃
+	case PLAYER_MODE_ATTACK:
+		m_pAttackManager->CreateAttack(
+			ATTACK_TYPE_ATTACK,
+			m_sNumber,
+			m_vPos,
+			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+		break;
+		// 移動特化の攻撃
+	case PLAYER_MODE_SPEED:
+		m_pAttackManager->CreateAttack(
+			ATTACK_TYPE_SPEED,
+			m_sNumber,
+			m_vPos,
+			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+		break;
+		// 罠型の攻撃
+	case PLAYER_MODE_TRAP:
+		m_pAttackManager->CreateAttack(
+			ATTACK_TYPE_TRAP,
+			m_sNumber,
+			m_vPos,
+			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+		break;
+	default:
+		break;
+	}
 
 	// アクションの状態を戻す
 	m_Action = PLAYER_ACTION_NONE;
+
 }
 
 //-----------------------------------------------------------------------------
@@ -427,12 +574,78 @@ void CPlayer::Attack(void)
 //	引数　　変形する状態
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::Metamorphose(PLAYER_MODE mode)
+void CPlayer::Metamorphose(void)
 {
-	// 目的の状態を切り替える
-	m_ModeDest = mode;
-
 	MetamorphoseAnimation();
+}
+
+//-----------------------------------------------------------------------------
+// 変形アニメーション
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::MetamorphoseAnimation(void)
+{
+	// アニメーションの時間の増加
+	m_sAnimTime++;
+
+	if (m_sAnimTime > 60)
+	{
+		switch (m_ModeDest)
+		{
+			// 攻撃形態だったら赤くする
+		case PLAYER_MODE_ATTACK:
+			// 色変更
+			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+			// フラグ変更
+			m_bMetamorphose = true;
+			break;
+			// 移動形態だったら青くする
+		case PLAYER_MODE_SPEED:
+			// 色変更
+			CScene2D::SetColorPolygon(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+			// フラグ変更
+			m_bMetamorphose = true;
+			break;
+			// 罠形態だったら緑にする
+		case PLAYER_MODE_TRAP:
+			// 色変更
+			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			// フラグ変更
+			m_bMetamorphose = true;
+			break;
+			// 通常状態だったら通常の色にする
+		case PLAYER_MODE_NONE:
+			// 色変更
+			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			// フラグ変更
+			m_bMetamorphose = false;
+			break;
+		default:
+			break;
+		}
+
+		// アニメーション時間をリセットしておく
+		m_sAnimTime = 0;
+
+		// 目的の形態を現在の形態にする
+		m_Mode = m_ModeDest;
+
+		// プレイヤーの行動を初期状態にもどす
+		m_Action = PLAYER_ACTION_NONE;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// MPを減少させる関数
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::MPReduce(void)
+{
+	// MPを減らしていく
+	// 数値は仮
+	//m_fMP -= 1.5f;
 }
 
 //-----------------------------------------------------------------------------
@@ -452,52 +665,32 @@ void CPlayer::SpidersThread(void)
 }
 
 //-----------------------------------------------------------------------------
-// 変形アニメーション
-//	引数　　無し
-//	戻り値　無し
-//-----------------------------------------------------------------------------
-void CPlayer::MetamorphoseAnimation(void)
-{
-	m_Mode = m_ModeDest;
-
-	// アニメーションの時間の増加
-	m_nAnimTime++;
-
-	if (m_nAnimTime > 60)
-	{
-		m_Action = PLAYER_ACTION_NONE;
-
-		m_nAnimTime = 0;
-	}
-}
-
-//-----------------------------------------------------------------------------
 // やられ状態での処理
 //	引数　　無し
 //	戻り値　無し
 //-----------------------------------------------------------------------------
 void CPlayer::KnockBack(void)
 {
-	m_nKnockBackTime++;
+	m_sKnockBackTime++;
 
 	// 一定回数やられ状態になったらダウン状態に移行
-	if (m_nKnockBackCount > 3)
+	if (m_sKnockBackCount > 3)
 	{
 		SetPlayerDown();
-		m_nKnockBackCount = 0;
+		m_sKnockBackCount = 0;
 	}
 
 	// 一定時間経過したら初期状態にもどす
-	else if (m_nKnockBackTime > 100)
+	else if (m_sKnockBackTime > 100)
 	{
 		// アクションの状態を初期状態に戻す
 		m_Action = PLAYER_ACTION_NONE;
 
 		// やられになった回数を増やす
-		m_nKnockBackCount++;
+		m_sKnockBackCount++;
 
 		// やられ時間の初期化
-		m_nKnockBackTime = 0;
+		m_sKnockBackTime = 0;
 
 		// 色変更
 		CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
@@ -511,9 +704,9 @@ void CPlayer::KnockBack(void)
 //-----------------------------------------------------------------------------
 void CPlayer::PlayerDown(void)
 {
-	m_nDownTime++;
+	m_sDownTime++;
 
-	if (m_nDownTime > 300)
+	if (m_sDownTime > 300)
 	{
 		m_Action = PLAYER_ACTION_NONE;
 
@@ -521,7 +714,7 @@ void CPlayer::PlayerDown(void)
 
 		m_bMatchless = true;
 
-		m_nDownTime = 0;
+		m_sDownTime = 0;
 	}
 }
 
@@ -532,13 +725,13 @@ void CPlayer::PlayerDown(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Matchless(void)
 {
-	m_nMatchlessTime++;
+	m_sMatchlessTime++;
 
 	// 色変更
-	CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, (float)(m_nMatchlessTime % 10) / 10.0f));
+	CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, (float)(m_sMatchlessTime % 10) / 10.0f));
 
 	// 一定時間経過したら初期状態へ移行
-	if (m_nMatchlessTime > 500)
+	if (m_sMatchlessTime > 500)
 	{
 		// 無敵状態フラグを消す
 		m_bMatchless = false;
@@ -547,7 +740,7 @@ void CPlayer::Matchless(void)
 		CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 		// 無敵時間の初期化
-		m_nMatchlessTime = 0;
+		m_sMatchlessTime = 0;
 	}
 }
 
@@ -597,7 +790,7 @@ void CPlayer::SetPlayerDown(void)
 		{
 			m_Action = PLAYER_ACTION_DOWN;
 
-			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f,0.2f,0.2f,1.0f));
+			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
 
 			// 宝を持っていたら落とす
 			if (m_pTreasure)
@@ -664,4 +857,79 @@ void CPlayer::FallTreasure(){
 	}
 
 }
+
+//-----------------------------------------------------------------------------
+// プレイヤの向きによってテクスチャ番号処理
+// 更新で一回呼ぶ
+//-----------------------------------------------------------------------------
+void CPlayer::UpdatePlayerAnimation(void){
+
+
+	if (m_PlayerFacing == PLAYER_DIRECTION_UP){
+		const short min = 10;
+		const short max = 13;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a);
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
+		const short min = 6;
+		const short max = 9;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a);
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
+		const short min = 1;
+		const short max = 4;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a, true);
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
+		const short min = 1;
+		const short max = 4;
+		static int t = 0;
+		static int a = min;
+		t++;
+		if (t > 10){
+			t = 0;
+
+			a++;
+			if (a > max){
+				a = min;
+			}
+		}
+		SetIndex(a, false);
+	}
+
+}
+
 // EOF
