@@ -58,6 +58,7 @@ typedef struct
 {
 	LPDIRECTINPUT8 pInput;				// デバイスを作成するためのインターフェイス
 	LPDIRECTINPUTDEVICE8 *ppPadDevice;	// 使用するデバイスを格納するポインタのポインタ
+	int padID;
 }STR_ENUMDATA;
 
 // コントローラーの構造体
@@ -132,28 +133,28 @@ public:
 	// 引数: 調べたいキー
 	// 戻り値: 押されてるか
 	//======================================
-	static bool GetGamePadPress(KEY key);
+	static bool GetGamePadPress(KEY key, int playerID);
 
 	//======================================
 	// ジョイパッドのトリガキー取得
 	// 引数: 調べたいキー
 	// 戻り値: 押された瞬間か
 	//======================================
-	static bool GetGamePadTrigger(KEY key);
+	static bool GetGamePadTrigger(KEY key, int playerID);
 
 	//======================================
 	// ジョイパッドのリリースキー取得
 	// 引数: 調べたいキー
 	// 戻り値: 離された瞬間か
 	//======================================
-	static bool GetGamePadRelease(KEY key);
+	static bool GetGamePadRelease(KEY key, int playerID);
 
 	//======================================
 	// ジョイパッドのリピートキー取得
 	// 引数: 調べたいキー
 	// 戻り値: 一定時間押されっぱなしか
 	//======================================
-	static bool GetGamePadRepeat(KEY key);
+	static bool GetGamePadRepeat(KEY key, int playerID);
 
 	//======================================
 	// デモ用のキー入力保存
@@ -220,14 +221,15 @@ private:
 	static const int m_KeyRepeatInputStartTime	= 30;		// リピートキーの入力開始時間
 	static const int m_KeyRepeateIntervalTime	= 1;		// リピートキー間隔の時間
 	static const int KEY_MAX_NUM = 256;						// キーの総数
+	static const int MAX_PAD_NUM = 4;						// コントローラーの最大数
 
-	static GAMEPAD	m_GamePad;										// ゲームパッドの情報
-	static GUID		m_pad_discrimination;							// 各デバイスの識別子を格納
-	static bool		m_aKeyStateGamePad[KEY_MAX_NUM];				// ジョイパッドの押下状態を保持するワーク
-	static bool		m_aKeyStateTriggerGamePad[KEY_MAX_NUM];			// ジョイパッドのトリガー状態を保持するワーク
-	static bool		m_aKeyStateReleaseGamePad[KEY_MAX_NUM];			// ジョイパッドのリリース状態を保持するワーク
-	static bool		m_aKeyStateRepeatGamePad[KEY_MAX_NUM];			// ジョイパッドのリピート状態を保持するワーク
-	static int		m_aKeyStateRepeatCntGamePad[KEY_MAX_NUM];		// ジョイパッドのリピートカウンタ
+	static GAMEPAD	m_GamePad[MAX_PAD_NUM];									// ゲームパッドの情報
+	static GUID		m_pad_discrimination[MAX_PAD_NUM];						// 各デバイスの識別子を格納
+	static bool		m_aKeyStateGamePad[MAX_PAD_NUM][KEY_MAX_NUM];			// ジョイパッドの押下状態を保持するワーク
+	static bool		m_aKeyStateTriggerGamePad[MAX_PAD_NUM][KEY_MAX_NUM];	// ジョイパッドのトリガー状態を保持するワーク
+	static bool		m_aKeyStateReleaseGamePad[MAX_PAD_NUM][KEY_MAX_NUM];	// ジョイパッドのリリース状態を保持するワーク
+	static bool		m_aKeyStateRepeatGamePad[MAX_PAD_NUM][KEY_MAX_NUM];		// ジョイパッドのリピート状態を保持するワーク
+	static int		m_aKeyStateRepeatCntGamePad[MAX_PAD_NUM][KEY_MAX_NUM];	// ジョイパッドのリピートカウンタ
 	static unsigned short	m_nKeepDemoKey[MAX_KEEP_KEY_FOR_DEMO];	// デモ用のキーのワーク
 	static int				m_nKeyFrameForDemo;						// デモ用のキーフレーム
 };

@@ -88,8 +88,7 @@ void CPause :: Update(void)
 
 		// カーソル上に移動
 		if(CInputKeyboard::GetKeyboardTrigger(DIK_W)
-			|| CInputKeyboard::GetKeyboardTrigger(DIK_UP)
-			|| CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_UP))
+			|| CInputKeyboard::GetKeyboardTrigger(DIK_UP) )
 		{
 			m_nChoiceMenu--;
 
@@ -102,8 +101,7 @@ void CPause :: Update(void)
 
 		// カーソル下に移動
 		if(CInputKeyboard::GetKeyboardTrigger(DIK_S)
-			|| CInputKeyboard::GetKeyboardTrigger(DIK_DOWN)
-			|| CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_DOWN))
+			|| CInputKeyboard::GetKeyboardTrigger(DIK_DOWN))
 		{
 			m_nChoiceMenu++;
 
@@ -124,8 +122,7 @@ void CPause :: Update(void)
 			
 				// 決定キー押されたら
 				if(CInputKeyboard::GetKeyboardTrigger(DIK_Z) 
-					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN)
-					|| CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE))
+					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 				{
 					// リトライ
 					m_bRetry = true;
@@ -142,8 +139,7 @@ void CPause :: Update(void)
 
 				// 決定キー押されたら
 				if(CInputKeyboard::GetKeyboardTrigger(DIK_Z)
-					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN)
-					|| CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE))
+					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 				{
 					// タイトルへ
 					m_bReturnTititle = true;
@@ -160,8 +156,7 @@ void CPause :: Update(void)
 
 				// 決定キー押されたら
 				if(CInputKeyboard::GetKeyboardTrigger(DIK_Z)
-					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN)
-					|| CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE))
+					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 				{
 					// ポーズ終了
 					m_bPause = false;
