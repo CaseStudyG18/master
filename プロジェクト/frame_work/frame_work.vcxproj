@@ -100,6 +100,7 @@
     <ClCompile Include="sources\RENDERER\CRenderer.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CScene.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CScene2D.cpp" />
+    <ClCompile Include="sources\SCENE\CSCENE\CSceneCircle.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CSceneNumber.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CSceneScore.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CSceneTime.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasure.cpp" />
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasureManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\UI\CCountDown.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\UI\CMp.cpp" />
     <ClCompile Include="sources\SCENE\PAUSE\CPause.cpp" />
     <ClCompile Include="sources\SCENE\RESULT\CResult.cpp" />
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp" />
@@ -160,6 +162,7 @@
     <ClInclude Include="sources\RENDERER\CRenderer.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CScene.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CScene2D.h" />
+    <ClInclude Include="sources\SCENE\CSCENE\CSceneCircle.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CSceneNumber.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CSceneScore.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CSceneTime.h" />
@@ -189,6 +192,7 @@
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasure.h" />
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasureManager.h" />
     <ClInclude Include="sources\SCENE\GAME\UI\CCountDown.h" />
+    <ClInclude Include="sources\SCENE\GAME\UI\CMp.h" />
     <ClInclude Include="sources\SCENE\PAUSE\CPause.h" />
     <ClInclude Include="sources\SCENE\RESULT\CResult.h" />
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h" />

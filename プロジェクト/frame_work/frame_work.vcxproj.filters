@@ -274,6 +274,12 @@
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadBase.cpp">
       <Filter>SCENE\GAME\THREAD</Filter>
     </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\UI\CMp.cpp">
+      <Filter>SCENE\GAME\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\CSCENE\CSceneCircle.cpp">
+      <Filter>SCENE\CSCENE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\MAIN\main.h">
@@ -449,6 +455,12 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h">
       <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\UI\CMp.h">
+      <Filter>SCENE\GAME\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\CSCENE\CSceneCircle.h">
+      <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

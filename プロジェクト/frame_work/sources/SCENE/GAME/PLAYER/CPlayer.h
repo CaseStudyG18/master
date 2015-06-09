@@ -79,6 +79,7 @@ static const D3DXVECTOR3 PLAYER_DIRECTION_VECTOR[] = {
 class CAttackManager;
 class CThreadManager;
 class CTreasure;
+class CMp;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -208,6 +209,7 @@ private:
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
+	CMp*					m_pMp;				// MPゲージ
 };
 
 #endif // __CPLAYER_H__

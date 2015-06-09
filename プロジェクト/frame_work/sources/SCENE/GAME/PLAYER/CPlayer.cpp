@@ -11,12 +11,13 @@
 #include "../ATTACK/CAttackManager.h"
 #include "../THREAD/CThreadManager.h"
 #include "../TREASURE/CTreasure.h"
+#include "../UI/CMp.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
 // プレイヤーの移動速度(仮)
-static const float PLAYER_SPEED = 3.0f;
+static const float PLAYER_SPEED = 8.0f;
 
 // 宝物アイコンの大きさ
 static const float TREASURE_ICON_WIDTH = 40;
@@ -62,6 +63,11 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_bMetamorphose = false;								// 変形中判定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
+
+	// MP作る
+	m_pMp = new CMp(pDevice, PLAYER_DEFAULT_MP);
+	m_pMp->Init();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -70,6 +76,11 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 //-----------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
+	// MP削除
+	if (m_pMp){
+		m_pMp->Uninit();
+	}
+	SAFE_DELETE(m_pMp);
 }
 
 //-----------------------------------------------------------------------------
@@ -143,6 +154,9 @@ void CPlayer::Update(void)
 	}
 
 	CScene2D::Update();
+
+	// MP更新
+	m_pMp->Update(m_vPos, m_fMP);
 
 	UpdatePlayerAnimation();
 	
@@ -445,7 +459,12 @@ void CPlayer::Update(void)
 		// デフォルトMPまで回復させる
 		if (m_fMP < PLAYER_DEFAULT_MP)
 		{
-			m_fMP += 10.0f;
+			m_fMP += 0.5f;
+
+			// 押し戻し処理追加
+			if (m_fMP > PLAYER_DEFAULT_MP){
+				m_fMP = PLAYER_DEFAULT_MP;
+			}
 		}
 	}
 
@@ -645,7 +664,7 @@ void CPlayer::MPReduce(void)
 {
 	// MPを減らしていく
 	// 数値は仮
-	//m_fMP -= 1.5f;
+	m_fMP -= 0.5f;
 }
 
 //-----------------------------------------------------------------------------
@@ -655,11 +674,39 @@ void CPlayer::MPReduce(void)
 //-----------------------------------------------------------------------------
 void CPlayer::SpidersThread(void)
 {
-	// 普通攻撃
-	m_pThreadManager->CreateThread(
-		THREAD_TYPE_NORMAL,
-		m_sNumber,
-		m_vPos);
+	switch (m_Mode)
+	{
+		// 通常の糸モーション
+	case PLAYER_MODE_NONE:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_NORMAL,
+			m_sNumber,
+			m_vPos);
+		break;
+		// 攻撃特化状態の糸モーション
+	case PLAYER_MODE_ATTACK:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_ATTACK,
+			m_sNumber,
+			m_vPos);
+		break;
+		// 移動特化状態での糸モーション
+	case PLAYER_MODE_SPEED:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_SPEED,
+			m_sNumber,
+			m_vPos);
+		break;
+		// 罠状態での糸モーション
+	case PLAYER_MODE_TRAP:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_TRAP,
+			m_sNumber,
+			m_vPos); 
+		break;
+	default:
+		break;
+	}
 
 	m_Action = PLAYER_ACTION_NONE;
 }

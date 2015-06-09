@@ -15,7 +15,8 @@ static const char*	CLASS_NAME	= "AppClass";		// ウインドウのクラス名
 static const char*	WINDOW_NAME	= "TEST";			// ウインドウのキャプション名
 static const int	TIME_INTERVAL = 500;			// 実行間隔
 static const int	FPS_COEFFICIENT = 1000;			// FPSの係数
-static const int	BASE_FPS = 1000 / 60;			// FPSの基準速度
+static const int	BASE_DRAW_FPS = 1000 / 30;			// FPSの基準速度
+static const int	BASE_UPDATE_FPS = 1000 / 60;			// FPSの基準速度
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -163,13 +164,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				dwFrameCount = 0;
 			}
 
-			if((dwCurrentTime - dwExecLastTime) >= BASE_FPS)
+			// 
+			if ((dwCurrentTime - dwExecLastTime) >= BASE_UPDATE_FPS)
+			{
+			}
+
+			if ((dwCurrentTime - dwExecLastTime) >= BASE_DRAW_FPS)
 			{
 				dwExecLastTime = dwCurrentTime;
-
 				// 更新処理
 				Update();
-
 				// 描画処理
 				Draw();
 
