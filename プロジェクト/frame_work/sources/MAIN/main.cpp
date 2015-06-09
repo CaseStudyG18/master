@@ -16,6 +16,7 @@ static const char*	WINDOW_NAME	= "TEST";			// ウインドウのキャプション名
 static const int	TIME_INTERVAL = 500;			// 実行間隔
 static const int	FPS_COEFFICIENT = 1000;			// FPSの係数
 static const int	BASE_FPS = 1000 / 60;			// FPSの基準速度
+static const int	DRAW_FPS = 1000 / 30;			// FPSの基準速度
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -48,6 +49,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	// FPS用
 	DWORD dwExecLastTime;
+	DWORD dwDrawLastTime;
 	DWORD dwFPSLastTime;
 	DWORD dwCurrentTime;
 	DWORD dwFrameCount;
@@ -106,8 +108,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	//フレームカウント初期化
 	timeBeginPeriod(1);				// 分解能を設定
-	dwExecLastTime = 
-	dwFPSLastTime = timeGetTime();
+	dwDrawLastTime = dwExecLastTime = dwFPSLastTime = timeGetTime();
 	dwCurrentTime =
 	dwFrameCount = 0;
 
@@ -155,23 +156,32 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			dwCurrentTime = timeGetTime();
 			if((dwCurrentTime - dwFPSLastTime) >= TIME_INTERVAL)	// 0.5秒ごとに実行
 			{
-#ifdef _DEBUG
-				// FPS表示
-				g_pManager->GetRenderer()->SetFPS(dwFrameCount * FPS_COEFFICIENT / (dwCurrentTime - dwFPSLastTime));
-#endif
 				dwFPSLastTime = dwCurrentTime;
 				dwFrameCount = 0;
 			}
 
-			if((dwCurrentTime - dwExecLastTime) >= BASE_FPS)
+			if ((dwCurrentTime - dwExecLastTime) >= BASE_FPS)
 			{
-				dwExecLastTime = dwCurrentTime;
-
 				// 更新処理
 				Update();
+				dwExecLastTime = dwCurrentTime;
 
+			}
+				
+			if ((dwCurrentTime - dwDrawLastTime) >= DRAW_FPS)
+			{
+#ifdef _DEBUG
+				DWORD culcTime = dwCurrentTime - dwFPSLastTime;
+				if (culcTime > 0)
+				{
+					// FPS表示
+					g_pManager->GetRenderer()->SetFPS(dwFrameCount * FPS_COEFFICIENT / (culcTime));
+				}
+#endif
 				// 描画処理
 				Draw();
+
+				dwDrawLastTime = dwCurrentTime;
 
 				dwFrameCount++;
 			}
