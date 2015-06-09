@@ -19,6 +19,9 @@
 //=============================================================================
 enum ThreadType{
 	THREAD_TYPE_NORMAL,
+	THREAD_TYPE_ATTACK,		// UŒ‚“Á‰»Œ`‘Ô‚ÌŽ…
+	THREAD_TYPE_SPEED,		// ˆÚ“®“Á‰»Œ`‘Ô‚ÌŽ…
+	THREAD_TYPE_TRAP,		// ã©“Á‰»Œ`‘Ô‚ÌŽ…
 	THREAD_TYPE_MAX
 };
 

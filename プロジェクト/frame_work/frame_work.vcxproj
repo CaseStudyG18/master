@@ -123,6 +123,9 @@
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadBase.cpp" />
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadNormal.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadSpecialAttack.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadSpecialSpeed.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadSpecialTrap.cpp" />
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasure.cpp" />
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasureManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\UI\CCountDown.cpp" />
@@ -180,6 +183,9 @@
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h" />
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadManager.h" />
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadNormal.h" />
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadSpecialAttack.h" />
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadSpecialSpeed.h" />
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadSpecialTrap.h" />
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasure.h" />
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasureManager.h" />
     <ClInclude Include="sources\SCENE\GAME\UI\CCountDown.h" />

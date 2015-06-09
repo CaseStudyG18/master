@@ -10,6 +10,9 @@
 #include <Windows.h>
 #include "CThreadManager.h"
 #include "CThreadNormal.h"
+#include "CThreadSpecialAttack.h"
+#include "CThreadSpecialSpeed.h"
+#include "CThreadSpecialTrap.h"
 
 //*****************************************************************************
 // マクロ
@@ -62,12 +65,26 @@ void CThreadManager::Update(void)
 //*****************************************************************************
 void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos)
 {
-	// 普通の糸
-	if (type == THREAD_TYPE_NORMAL){
+	switch (type)
+	{
+		// 通常形態の糸
+	case THREAD_TYPE_NORMAL:
 		CThreadNormal::Create(m_pDevice, nPlayerNum, pos);
-	}
-	else if(type == THREAD_TYPE_NORMAL){
-
+		break;
+		// 攻撃特化形態の糸
+	case THREAD_TYPE_ATTACK:
+		CThreadSpecialAttack::Create(m_pDevice, nPlayerNum, pos);
+		break;
+		// 移動特化形態の糸
+	case THREAD_TYPE_SPEED:
+		CThreadSpecialSpeed::Create(m_pDevice, nPlayerNum, pos);
+		break;
+		// 罠特化形態の糸
+	case THREAD_TYPE_TRAP:
+		CThreadSpecialTrap::Create(m_pDevice, nPlayerNum, pos);
+		break;
+	default:
+		break;
 	}
 }
 //----EOF-------

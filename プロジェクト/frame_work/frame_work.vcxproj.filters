@@ -223,15 +223,6 @@
     <ClCompile Include="sources\MATH\vector.cpp">
       <Filter>MATH</Filter>
     </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadBase.cpp">
-      <Filter>SCENE\GAME\THREAD</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadManager.cpp">
-      <Filter>SCENE\GAME\THREAD</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadNormal.cpp">
-      <Filter>SCENE\GAME\THREAD</Filter>
-    </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\FIELD\CFieldManager.cpp">
       <Filter>SCENE\GAME\FIELD</Filter>
     </ClCompile>
@@ -264,6 +255,24 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\UI\CCountDown.cpp">
       <Filter>SCENE\GAME\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadSpecialTrap.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadManager.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadNormal.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadSpecialAttack.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadSpecialSpeed.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadBase.cpp">
+      <Filter>SCENE\GAME\THREAD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,12 +399,6 @@
     <ClInclude Include="sources\MATH\vector.h">
       <Filter>MATH</Filter>
     </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadNormal.h">
-      <Filter>SCENE\GAME\THREAD</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadManager.h">
-      <Filter>SCENE\GAME\THREAD</Filter>
-    </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\FIELD\CField.h">
       <Filter>SCENE\GAME\FIELD</Filter>
     </ClInclude>
@@ -407,9 +410,6 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\ANIMATION\CAnimation.h">
       <Filter>SCENE\GAME\ANIMATION</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h">
-      <Filter>SCENE\GAME\PLAYER</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\ATTACK\CAttackSpecialSpeed.h">
       <Filter>SCENE\GAME\ATTACK</Filter>
@@ -431,6 +431,24 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\UI\CCountDown.h">
       <Filter>SCENE\GAME\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadSpecialTrap.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadManager.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadNormal.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadSpecialAttack.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadSpecialSpeed.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h">
+      <Filter>SCENE\GAME\THREAD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
