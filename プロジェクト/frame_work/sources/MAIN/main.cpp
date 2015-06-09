@@ -11,8 +11,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-static const char*	CLASS_NAME	= "AppClass";		// ウインドウのクラス名
-static const char*	WINDOW_NAME	= "TEST";			// ウインドウのキャプション名
+static const char*	CLASS_NAME = "AppClass";		// ウインドウのクラス名
+static const char*	WINDOW_NAME = "TEST";			// ウインドウのキャプション名
 static const int	TIME_INTERVAL = 500;			// 実行間隔
 static const int	FPS_COEFFICIENT = 1000;			// FPSの係数
 static const int	BASE_FPS = 1000 / 60;			// FPSの基準速度
@@ -71,7 +71,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	};
 	HWND hWnd;
 	MSG msg;
-	
+
 	// ウィンドウクラスの登録
 	RegisterClassEx(&wcex);
 
@@ -93,31 +93,31 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	// ウィンドウの作成
 	hWnd = CreateWindowEx(0,
-						CLASS_NAME,
-						WINDOW_NAME,
-						style,
-						CW_USEDEFAULT,
-						CW_USEDEFAULT,
-						WidthWindow,
-						HeightWindow,
-						NULL,
-						NULL,
-						hInstance,
-						NULL);
+		CLASS_NAME,
+		WINDOW_NAME,
+		style,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		WidthWindow,
+		HeightWindow,
+		NULL,
+		NULL,
+		hInstance,
+		NULL);
 
 
 	//フレームカウント初期化
 	timeBeginPeriod(1);				// 分解能を設定
 	dwDrawLastTime = dwExecLastTime = dwFPSLastTime = timeGetTime();
 	dwCurrentTime =
-	dwFrameCount = 0;
+		dwFrameCount = 0;
 
 	// ウインドウの表示(初期化処理の後に呼ばないと駄目)
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	bool modeWindow = false;
-	if(MessageBox(NULL,"フルスクリーンで起動しますか？","ウィンドウモード",MB_YESNO)==IDYES)
+	if (MessageBox(NULL, "フルスクリーンで起動しますか？", "ウィンドウモード", MB_YESNO) == IDYES)
 	{
 		//フルスクリーンで初期化処理(ウィンドウを作成してから行う)
 		modeWindow = false;
@@ -129,17 +129,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	// 初期化処理(ウィンドウを作成してから行う)
-	if(FAILED(g_pManager->Init(hInstance, hWnd, modeWindow)))
+	if (FAILED(g_pManager->Init(hInstance, hWnd, modeWindow)))
 	{
 		return -1;
 	}
 
 	// メッセージループ
-	while(1)
+	while (1)
 	{
-		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			if(msg.message == WM_QUIT)
+			if (msg.message == WM_QUIT)
 			{// PostQuitMessage()が呼ばれたらループ終了
 				break;
 			}
@@ -154,7 +154,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		{
 			// 現在時刻取得
 			dwCurrentTime = timeGetTime();
-			if((dwCurrentTime - dwFPSLastTime) >= TIME_INTERVAL)	// 0.5秒ごとに実行
+			if ((dwCurrentTime - dwFPSLastTime) >= TIME_INTERVAL)	// 0.5秒ごとに実行
 			{
 				dwFPSLastTime = dwCurrentTime;
 				dwFrameCount = 0;
@@ -167,7 +167,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				dwExecLastTime = dwCurrentTime;
 
 			}
-				
+
 			if ((dwCurrentTime - dwDrawLastTime) >= DRAW_FPS)
 			{
 #ifdef _DEBUG
@@ -187,7 +187,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			}
 		}
 	}
-	
+
 	// ウィンドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);
 
@@ -204,14 +204,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch(uMsg)
+	switch (uMsg)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 
 	case WM_KEYDOWN:
-		switch(wParam)
+		switch (wParam)
 		{
 		case VK_ESCAPE:
 			DestroyWindow(hWnd);

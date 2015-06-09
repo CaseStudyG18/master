@@ -19,6 +19,8 @@
 #include "../SCENE/GAME/TREASURE/CTreasure.h"
 #include "../SCENE/GAME/ATTACK/CAttackBase.h"
 #include "../SCENE/GAME/THREAD/CThreadBase.h"
+#include "../SCENE/GAME/GOAL/CGoal.h"
+#include "../SCENE/GAME/GOAL/CGoalManager.h"
 
 //=========================================================================
 // コンストラクタ
@@ -492,8 +494,8 @@ void CJudge::ColiTreasurexPlayer(void)
 					coli[idx] = true;
 #ifdef _DEBUG
 					CDebugProc::Print("TREASURE x PLAYER!!\n");
-					break;
 #endif
+					break;
 				}
 			}
 			// 次のインスタンスを対象のインスタンスにする
@@ -514,6 +516,126 @@ void CJudge::ColiTreasurexPlayer(void)
 				break;
 			}
 		}
+
+}
+
+//=========================================================================
+// プレイヤーとゴールのあたり判定
+//=========================================================================
+void CJudge::ColiGoalxPlayer(void)
+{
+	CScene *pScene;
+	CScene *pSceneNext;
+	CPlayer *pPlayer[MAXIMUM_NUMBER_OF_PLAYER] = { NULL };	// プレイヤーの最大人数分用意
+	CGoal *pGoal = NULL;
+	CGoal *pGoalHit = NULL;
+	int nHitGoalPlayerNum;
+	CGoal *pGoalAll[GOAL_MAX] = { NULL };
+	CJudge::OBB_INFO playerOBB[MAXIMUM_NUMBER_OF_PLAYER];
+	int playerNum = 0;
+	bool coli[MAXIMUM_NUMBER_OF_PLAYER] = { false };
+
+	// プレイヤー情報入れる
+	CPlayerManager* playerManager = m_pJudgeManager->GetPlayerManager();
+
+	for (int playerCount = 0; playerCount < MAXIMUM_NUMBER_OF_PLAYER; ++playerCount)
+	{
+		pPlayer[playerCount] = playerManager->GetPlayer(playerCount);
+		if (!pPlayer[playerCount])
+		{
+			continue;
+		}
+		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
+		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
+		float rot = pPlayer[playerCount]->GetRot().z;
+		float width = pPlayer[playerCount]->GetWidth() * 0.5f;
+		float height = pPlayer[playerCount]->GetHeight() * 0.25f;
+
+		// OBB情報作成
+		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
+		playerNum++;
+	}
+
+	// 当たり判定ループ
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+	{
+		// 先頭を指定
+		pScene = CScene::GetTopAddress(priority);
+
+		// ポインタがNULLでなければ
+		while (pScene)
+		{
+			// 現在対象としているインスタンスの次のインスタンスを保存
+			pSceneNext = pScene->GetNextAddress();
+
+			if (pScene->GetObjType() != CScene::OBJTYPE_GOAL)
+			{
+				// 次のインスタンスを対象のインスタンスにする
+				pScene = pSceneNext;
+				continue;
+			}
+
+			// フィールド情報入れる
+			pGoal = (CGoal*)pScene;
+			D3DXVECTOR2 pos(pGoal->GetPos().x, pGoal->GetPos().y);
+
+			float rot = pGoal->GetRot().z;
+			float width = pGoal->GetWidth();
+			float height = pGoal->GetHeight();
+			CJudge::OBB_INFO goalOBB;
+			// OBB情報作成
+			CreateOBBInfo(&goalOBB, &pos, &rot, &width, &height);
+
+			// プレイヤ番号を配列番号としてゴールのポインタを格納
+			pGoalAll[pGoal->GetPlayerNum()] = pGoal;
+
+			// 当たり判定
+			for (int idx = 0; idx < playerNum; ++idx)
+			{
+				// 宝物を持っていなかったら次へ
+				if (pPlayer[idx]->GetTreasure() == NULL){
+					continue;
+				}
+				
+				// すでにあたってるなら判定しない
+				if (coli[idx])
+				{
+					continue;
+				}
+
+				if (IsOBB(playerOBB[idx], goalOBB))
+				{
+					// 当たったゴールのインスタンスを保存
+					pGoalHit = pGoal;
+					nHitGoalPlayerNum = pGoal->GetPlayerNum();
+
+					// ヒットフラグオン
+					coli[idx] = true;
+				}
+			}
+			// 次のインスタンスを対象のインスタンスにする
+			pScene = pSceneNext;
+		}
+	}
+
+	// 当たり判定チェック
+	for (int idx = 0; idx < playerNum; ++idx){
+		if (coli[idx]){
+
+			// プレイヤに対応したゴールじゃなければさよなら
+			if (nHitGoalPlayerNum != pPlayer[idx]->GetPlayerNum()){
+				break;
+			}
+			pGoalHit->SetTrans();
+		}
+		else{
+			for (int i = 0; i < GOAL_MAX; i++){
+				if (i != nHitGoalPlayerNum){
+					pGoalAll[i]->SetNoTrans();
+				}
+			}
+		}
+	}
 
 }
 

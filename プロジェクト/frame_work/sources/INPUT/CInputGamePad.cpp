@@ -67,19 +67,19 @@ CInputGamePad::~CInputGamePad(void)
 //==============================================
 // 初期化
 //==============================================
-HRESULT CInputGamePad::Init(HINSTANCE hInstance,HWND hWnd)
+HRESULT CInputGamePad::Init(HINSTANCE hInstance, HWND hWnd)
 {
 
 	// インターフェイスの取得
-	HRESULT hr;  
+	HRESULT hr;
 	hr = DirectInput8Create(hInstance				// ソフトのインスタンスハンドル
-							, DIRECTINPUT_VERSION	// DirectInputのバージョン
-							, IID_IDirectInput8		// 取得するインターフェイスのタイプ
-							, (LPVOID*)&m_pDInput	// インターフェイスの格納先
-							, NULL);				// COM集成の制御オブジェクト（使わないのでNULL）
-	if(FAILED(hr))
+		, DIRECTINPUT_VERSION	// DirectInputのバージョン
+		, IID_IDirectInput8		// 取得するインターフェイスのタイプ
+		, (LPVOID*)&m_pDInput	// インターフェイスの格納先
+		, NULL);				// COM集成の制御オブジェクト（使わないのでNULL）
+	if (FAILED(hr))
 	{
-		MessageBox(NULL,"DirectInputオブジェクトの作成失敗","DirectInputオブジェクトの作成失敗",MB_OK);
+		MessageBox(NULL, "DirectInputオブジェクトの作成失敗", "DirectInputオブジェクトの作成失敗", MB_OK);
 		return hr;
 	}
 
@@ -149,7 +149,7 @@ HRESULT CInputGamePad::Init(HINSTANCE hInstance,HWND hWnd)
 	}
 
 	// デモ用配列の初期化
-	for(int idx = 0; idx < MAX_KEEP_KEY_FOR_DEMO; idx++)
+	for (int idx = 0; idx < MAX_KEEP_KEY_FOR_DEMO; idx++)
 	{
 		m_nKeepDemoKey[idx] = 0x0000;
 	}
@@ -229,7 +229,7 @@ void CInputGamePad::Update(void)
 			// 権利獲得
 			m_GamePad[idx].pPadDevice->Acquire();
 		}
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		for (int pos = 0; pos < 127; pos++)
 		{
 			if (m_GamePad[idx].PadData.rgbButtons[pos] != 0)
@@ -238,7 +238,7 @@ void CInputGamePad::Update(void)
 				CDebugProc::Print("ボタンコード：%d\n", pos);
 			}
 		}
-	#endif
+#endif
 	}
 }
 
@@ -261,20 +261,20 @@ BOOL CALLBACK CInputGamePad::EnumGamePad(const DIDEVICEINSTANCE* pInstance, LPVO
 
 	// デバイスの識別子を保存
 	m_pad_discrimination[ed->padID] = pInstance->guidInstance;
-	
+
 
 	HRESULT hr;
-	
+
 	// 列挙されたジョイスティックへのインターフェイスを取得
 	hr = ed->pInput->CreateDevice(pInstance->guidInstance, ed->ppPadDevice, NULL);
-	if(FAILED(hr))
+	if (FAILED(hr))
 	{
 		return DIENUM_CONTINUE;  // デバイスが作成できないので列挙を続ける
 	}
-	
+
 	// ジョイパッドの能力を調べる
 	diDevCaps.dwSize = sizeof(DIDEVCAPS);
-	
+
 	// 希望するデバイスが作成できたので列挙を終了する
 	return DIENUM_STOP;
 }
@@ -584,9 +584,9 @@ bool CInputGamePad::GetGamePadRepeat(KEY key, int playerID)
 //=============================================================================
 void CInputGamePad::KeepKeyForDemo(int frame)
 {
-	for(int idx = 0; idx < KEY_MAX_NUM; ++idx)
+	for (int idx = 0; idx < KEY_MAX_NUM; ++idx)
 	{
-		if(m_aKeyStateGamePad[idx])
+		if (m_aKeyStateGamePad[idx])
 		{
 			SaveKeyForDemo((KEY)idx, frame);
 		}
@@ -598,62 +598,62 @@ void CInputGamePad::KeepKeyForDemo(int frame)
 //=============================================================================
 void CInputGamePad::SaveKeyForDemo(KEY key, int idx)
 {
-	if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
+	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
 	{
 		return;
 	}
 
-	if(key == LEFT_STICK_LEFT)
+	if (key == LEFT_STICK_LEFT)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_LEFT_KEY;
 	}
 
-	if(key == LEFT_STICK_RIGHT)
+	if (key == LEFT_STICK_RIGHT)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_RIGHT_KEY;
 	}
 
-	if(key == LEFT_STICK_UP)
+	if (key == LEFT_STICK_UP)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_UP_KEY;
 	}
 
-	if(key == LEFT_STICK_DOWN)
+	if (key == LEFT_STICK_DOWN)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_DOWN_KEY;
 	}
 
-	if(key == RIGHT_STICK_LEFT)
+	if (key == RIGHT_STICK_LEFT)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_LEFT_KEY;
 	}
 
-	if(key == RIGHT_STICK_RIGHT)
+	if (key == RIGHT_STICK_RIGHT)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_RIGHT_KEY;
 	}
 
-	if(key == RIGHT_STICK_UP)
+	if (key == RIGHT_STICK_UP)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_UP_KEY;
 	}
 
-	if(key == RIGHT_STICK_DOWN)
+	if (key == RIGHT_STICK_DOWN)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_DOWN_KEY;
 	}
 
-	if(key == KEY_3)
+	if (key == KEY_3)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | JUMP_KEY;
 	}
 
-	if(key == KEY_1)
+	if (key == KEY_1)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | KICK_KEY;
 	}
 
-	if(key == KEY_10)
+	if (key == KEY_10)
 	{
 		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_STICK_KEY;
 	}
@@ -668,7 +668,7 @@ void CInputGamePad::OutPutKeyForDemo(void)
 	FILE* fpw = fopen(DEMO_FILE_PATH, "wb");
 
 	// 失敗したら
-	if(fpw == NULL)
+	if (fpw == NULL)
 	{
 		printf("ファイル読み込み失敗\n");
 		rewind(stdin);
@@ -693,7 +693,7 @@ void CInputGamePad::LoadKeyForDemo(void)
 	FILE* fpr = fopen(DEMO_FILE_PATH, "rb");
 
 	// 失敗したら
-	if(fpr == NULL)
+	if (fpr == NULL)
 	{
 		printf("ファイル読み込み失敗\n");
 		rewind(stdin);
@@ -715,94 +715,94 @@ void CInputGamePad::LoadKeyForDemo(void)
 bool CInputGamePad::GetKeyForDemo(KEY key, int idx)
 {
 	// 限界値判定
-	if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
+	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
 	{
 		return false;
 	}
 
-	if(key == LEFT_STICK_LEFT)
+	if (key == LEFT_STICK_LEFT)
 	{
-		if(m_nKeepDemoKey[idx] & L_LEFT_KEY)
+		if (m_nKeepDemoKey[idx] & L_LEFT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_RIGHT)
+	if (key == LEFT_STICK_RIGHT)
 	{
-		if(m_nKeepDemoKey[idx] & L_RIGHT_KEY)
+		if (m_nKeepDemoKey[idx] & L_RIGHT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_UP)
+	if (key == LEFT_STICK_UP)
 	{
-		if(m_nKeepDemoKey[idx] & L_UP_KEY)
+		if (m_nKeepDemoKey[idx] & L_UP_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_DOWN)
+	if (key == LEFT_STICK_DOWN)
 	{
-		if(m_nKeepDemoKey[idx] & L_DOWN_KEY)
+		if (m_nKeepDemoKey[idx] & L_DOWN_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_LEFT)
+	if (key == RIGHT_STICK_LEFT)
 	{
-		if(m_nKeepDemoKey[idx] & R_LEFT_KEY)
+		if (m_nKeepDemoKey[idx] & R_LEFT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_RIGHT)
+	if (key == RIGHT_STICK_RIGHT)
 	{
-		if(m_nKeepDemoKey[idx] & R_RIGHT_KEY)
+		if (m_nKeepDemoKey[idx] & R_RIGHT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_UP)
+	if (key == RIGHT_STICK_UP)
 	{
-		if(m_nKeepDemoKey[idx] & R_UP_KEY)
+		if (m_nKeepDemoKey[idx] & R_UP_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_DOWN)
+	if (key == RIGHT_STICK_DOWN)
 	{
-		if(m_nKeepDemoKey[idx] & R_DOWN_KEY)
+		if (m_nKeepDemoKey[idx] & R_DOWN_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_3)
+	if (key == KEY_3)
 	{
-		if(m_nKeepDemoKey[idx] & JUMP_KEY)
+		if (m_nKeepDemoKey[idx] & JUMP_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_1)
+	if (key == KEY_1)
 	{
-		if(m_nKeepDemoKey[idx] & KICK_KEY)
+		if (m_nKeepDemoKey[idx] & KICK_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_10)
+	if (key == KEY_10)
 	{
-		if(m_nKeepDemoKey[idx] & R_STICK_KEY)
+		if (m_nKeepDemoKey[idx] & R_STICK_KEY)
 		{
 			return true;
 		}
@@ -816,193 +816,193 @@ bool CInputGamePad::GetKeyForDemo(KEY key, int idx)
 bool CInputGamePad::GetTriggerKeyForDemo(KEY key, int idx)
 {
 	// 限界値判定
-	if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
+	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
 	{
 		return false;
 	}
 
-	if(key == LEFT_STICK_LEFT)
+	if (key == LEFT_STICK_LEFT)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & L_LEFT_KEY)
+			if (m_nKeepDemoKey[idx - 1] & L_LEFT_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & L_LEFT_KEY)
+		if (m_nKeepDemoKey[idx] & L_LEFT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_RIGHT)
+	if (key == LEFT_STICK_RIGHT)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY)
+			if (m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & L_RIGHT_KEY)
+		if (m_nKeepDemoKey[idx] & L_RIGHT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_UP)
+	if (key == LEFT_STICK_UP)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & L_UP_KEY)
+			if (m_nKeepDemoKey[idx - 1] & L_UP_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & L_UP_KEY)
+		if (m_nKeepDemoKey[idx] & L_UP_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_DOWN)
+	if (key == LEFT_STICK_DOWN)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & L_DOWN_KEY)
+			if (m_nKeepDemoKey[idx - 1] & L_DOWN_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & L_DOWN_KEY)
+		if (m_nKeepDemoKey[idx] & L_DOWN_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_LEFT)
+	if (key == RIGHT_STICK_LEFT)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & R_LEFT_KEY)
+			if (m_nKeepDemoKey[idx - 1] & R_LEFT_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & R_LEFT_KEY)
+		if (m_nKeepDemoKey[idx] & R_LEFT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_RIGHT)
+	if (key == RIGHT_STICK_RIGHT)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY)
+			if (m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & R_RIGHT_KEY)
+		if (m_nKeepDemoKey[idx] & R_RIGHT_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_UP)
+	if (key == RIGHT_STICK_UP)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & R_UP_KEY)
+			if (m_nKeepDemoKey[idx - 1] & R_UP_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & R_UP_KEY)
+		if (m_nKeepDemoKey[idx] & R_UP_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_DOWN)
+	if (key == RIGHT_STICK_DOWN)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & R_DOWN_KEY)
+			if (m_nKeepDemoKey[idx - 1] & R_DOWN_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & R_DOWN_KEY)
+		if (m_nKeepDemoKey[idx] & R_DOWN_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_3)
+	if (key == KEY_3)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & JUMP_KEY)
+			if (m_nKeepDemoKey[idx - 1] & JUMP_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & JUMP_KEY)
+		if (m_nKeepDemoKey[idx] & JUMP_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_1)
+	if (key == KEY_1)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & KICK_KEY)
+			if (m_nKeepDemoKey[idx - 1] & KICK_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & KICK_KEY)
+		if (m_nKeepDemoKey[idx] & KICK_KEY)
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_10)
+	if (key == KEY_10)
 	{
-		if(idx - 1 >= 0)
+		if (idx - 1 >= 0)
 		{
 			// 前回押されてたら
-			if(m_nKeepDemoKey[idx - 1] & R_STICK_KEY)
+			if (m_nKeepDemoKey[idx - 1] & R_STICK_KEY)
 			{
 				return false;
 			}
 		}
 
-		if(m_nKeepDemoKey[idx] & R_STICK_KEY)
+		if (m_nKeepDemoKey[idx] & R_STICK_KEY)
 		{
 			return true;
 		}
@@ -1016,160 +1016,160 @@ bool CInputGamePad::GetTriggerKeyForDemo(KEY key, int idx)
 bool CInputGamePad::GetReleaseKeyForDemo(KEY key, int idx)
 {
 	// 限界値判定
-	if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx <= 0)
+	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx <= 0)
 	{
 		return false;
 	}
 
-	if(key == LEFT_STICK_LEFT)
+	if (key == LEFT_STICK_LEFT)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & L_LEFT_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & L_LEFT_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & L_LEFT_KEY))
+		if (!(m_nKeepDemoKey[idx] & L_LEFT_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_RIGHT)
+	if (key == LEFT_STICK_RIGHT)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & L_RIGHT_KEY))
+		if (!(m_nKeepDemoKey[idx] & L_RIGHT_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_UP)
+	if (key == LEFT_STICK_UP)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & L_UP_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & L_UP_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & L_UP_KEY))
+		if (!(m_nKeepDemoKey[idx] & L_UP_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == LEFT_STICK_DOWN)
+	if (key == LEFT_STICK_DOWN)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & L_DOWN_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & L_DOWN_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & L_DOWN_KEY))
+		if (!(m_nKeepDemoKey[idx] & L_DOWN_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_LEFT)
+	if (key == RIGHT_STICK_LEFT)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & R_LEFT_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & R_LEFT_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & R_LEFT_KEY))
+		if (!(m_nKeepDemoKey[idx] & R_LEFT_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_RIGHT)
+	if (key == RIGHT_STICK_RIGHT)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & R_RIGHT_KEY))
+		if (!(m_nKeepDemoKey[idx] & R_RIGHT_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_UP)
+	if (key == RIGHT_STICK_UP)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & R_UP_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & R_UP_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & R_UP_KEY))
+		if (!(m_nKeepDemoKey[idx] & R_UP_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == RIGHT_STICK_DOWN)
+	if (key == RIGHT_STICK_DOWN)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & R_DOWN_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & R_DOWN_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & R_DOWN_KEY))
+		if (!(m_nKeepDemoKey[idx] & R_DOWN_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_3)
+	if (key == KEY_3)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & JUMP_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & JUMP_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & JUMP_KEY))
+		if (!(m_nKeepDemoKey[idx] & JUMP_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_1)
+	if (key == KEY_1)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & KICK_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & KICK_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & KICK_KEY))
+		if (!(m_nKeepDemoKey[idx] & KICK_KEY))
 		{
 			return true;
 		}
 	}
 
-	if(key == KEY_10)
+	if (key == KEY_10)
 	{
 		// 前回押されてないなら
-		if(!(m_nKeepDemoKey[idx - 1] & R_STICK_KEY))
+		if (!(m_nKeepDemoKey[idx - 1] & R_STICK_KEY))
 		{
 			return false;
 		}
 
-		if(!(m_nKeepDemoKey[idx] & R_STICK_KEY))
+		if (!(m_nKeepDemoKey[idx] & R_STICK_KEY))
 		{
 			return true;
 		}

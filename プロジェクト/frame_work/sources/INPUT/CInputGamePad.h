@@ -123,7 +123,7 @@ public:
 
 	// 更新
 	void Update(void);
-	
+
 	// コールバック関数
 	static BOOL CALLBACK EnumGamePad(const DIDEVICEINSTANCE* pInstance, LPVOID pContext);
 	static BOOL CALLBACK EnumObject(LPCDIDEVICEOBJECTINSTANCE pInstance, LPVOID pvRef);
@@ -185,7 +185,7 @@ public:
 	// 引数: 押したキー、何フレーム目か
 	//======================================
 	static bool GetTriggerKeyForDemo(KEY key, int idx);
-	
+
 	//======================================
 	// デモ用のリリースキー取得
 	// 引数: 押したキー、何フレーム目か
@@ -196,15 +196,15 @@ private:
 	// デモ用キーの保存場所マップ
 	typedef enum
 	{
-		L_UP_KEY	= 0x0001,
-		L_DOWN_KEY	= 0x0002,
-		L_LEFT_KEY	= 0x0004,
+		L_UP_KEY = 0x0001,
+		L_DOWN_KEY = 0x0002,
+		L_LEFT_KEY = 0x0004,
 		L_RIGHT_KEY = 0x0008,
-		JUMP_KEY	= 0x0010,
-		KICK_KEY	= 0x0020,
-		R_UP_KEY	= 0x0040,
-		R_DOWN_KEY	= 0x0080,
-		R_LEFT_KEY	= 0x0100,
+		JUMP_KEY = 0x0010,
+		KICK_KEY = 0x0020,
+		R_UP_KEY = 0x0040,
+		R_DOWN_KEY = 0x0080,
+		R_LEFT_KEY = 0x0100,
 		R_RIGHT_KEY = 0x0200,
 		R_STICK_KEY = 0x0400,
 	}KEEP_KEY;
@@ -215,11 +215,11 @@ private:
 	static const int INPUT_DEEP_X = 15;						// アナログスティックの受け取り範囲
 	static const int INPUT_DEEP_Y = 290;					// アナログスティックの受け取り範囲
 	static const int MAX_KEEP_KEY_FOR_DEMO = 1800;			// デモの最大フレーム数
-	static const int m_kInputDeep				= 8;		// 入力深度
-	static const int m_KeyStateMask				= 0x0080;	// キー状態マスク用定数
-	static const int m_KeyMaxNum				= 256;		// キーの総数
-	static const int m_KeyRepeatInputStartTime	= 30;		// リピートキーの入力開始時間
-	static const int m_KeyRepeateIntervalTime	= 1;		// リピートキー間隔の時間
+	static const int m_kInputDeep = 8;		// 入力深度
+	static const int m_KeyStateMask = 0x0080;	// キー状態マスク用定数
+	static const int m_KeyMaxNum = 256;		// キーの総数
+	static const int m_KeyRepeatInputStartTime = 30;		// リピートキーの入力開始時間
+	static const int m_KeyRepeateIntervalTime = 1;		// リピートキー間隔の時間
 	static const int KEY_MAX_NUM = 256;						// キーの総数
 	static const int MAX_PAD_NUM = 4;						// コントローラーの最大数
 

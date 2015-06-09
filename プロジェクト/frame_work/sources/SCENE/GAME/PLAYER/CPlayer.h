@@ -150,6 +150,16 @@ public:
 	// MP減少用関数
 	void MPReduce(void);
 
+	// プレイヤ番号ゲッター
+	short GetPlayerNum(){
+		return m_sNumber;
+	}
+
+	// プレイヤ保持宝箱インスタンスゲッター
+	CTreasure *GetTreasure(){
+		return m_pTreasure;
+	}
+
 private:
 	// 移動する
 	void Move(void);

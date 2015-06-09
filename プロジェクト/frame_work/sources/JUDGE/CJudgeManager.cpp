@@ -66,6 +66,9 @@ void CJudgeManager::Update(void)
 
 	// プレイヤと攻撃の当たり判定
 	m_pJudge->ColiAttackxPlayer();
+
+	// プレイヤとゴールの当たり判定
+	m_pJudge->ColiGoalxPlayer();
 }
 
 //=========================================================================

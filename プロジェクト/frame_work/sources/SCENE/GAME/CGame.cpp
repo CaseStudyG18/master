@@ -32,7 +32,6 @@ static const short GAME_TIME = 300;
 static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(200, 100, 0);
 
 // ゴール
-static const short GOAL_MAX = 4;
 static const D3DXVECTOR3 GOAL_POS[GOAL_MAX] = {
 	D3DXVECTOR3(100, 100, 0),
 	D3DXVECTOR3(700, 100, 0),
@@ -40,7 +39,7 @@ static const D3DXVECTOR3 GOAL_POS[GOAL_MAX] = {
 	D3DXVECTOR3(700, 500, 0),
 };
 static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
-	0,1,2,3
+	0, 1, 2, 3
 };
 
 // プレイヤ人数
@@ -54,7 +53,7 @@ static const short CPU_PLAYER_NUM = 0;
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CGame ::CGame(void)
+CGame::CGame(void)
 {
 	m_pPause = NULL;
 	m_pTimeManager = NULL;
@@ -68,6 +67,8 @@ CGame ::CGame(void)
 
 	// プレイヤ操作可能フラグ
 	m_bPlayerControl = false;
+	// ゲーム終了フラグ
+	m_bGameOver = false;
 }
 
 //*****************************************************************************
@@ -118,12 +119,11 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pTreasureManager->CreateTreasure(TREASURE_POS);
 
 	// ゴール生成
-	m_pGoalManager = new CGoalManager(pDevice);
+	m_pGoalManager = new CGoalManager(pDevice, this);
 	m_pGoalManager->Init();
 	m_pGoalManager->CreateGoal(
 		const_cast<D3DXVECTOR3*>(GOAL_POS),
-		const_cast<short*>(GOAL_PLAYER_NUMBER),
-		GOAL_MAX);
+		const_cast<short*>(GOAL_PLAYER_NUMBER), this);
 
 	// 音再生
 	CManager::PlaySoundA(SOUND_LABEL_BGM000);
@@ -188,7 +188,7 @@ void CGame::Uninit(void)
 		m_pTimeManager->Uninit();
 		SAFE_DELETE(m_pTimeManager);
 	}
-	
+
 	CManager::StopSound();
 	CPhase::Uninit();
 }
@@ -231,6 +231,16 @@ void CGame::Update(void)
 		}
 
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
+		{
+			// フェードアウト開始
+			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+
+			// リザルトへ
+			m_pManager->SetNextPhase(MODE_PHASE_RESULT);
+		}
+
+		// ゲームクリアフラグ
+		if (m_bGameOver)
 		{
 			// フェードアウト開始
 			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);

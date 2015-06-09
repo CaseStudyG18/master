@@ -61,6 +61,11 @@ public:
 	//======================================================
 	static CGame* Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
+	// ゲーム終了セット
+	void SetGameOver(){
+		m_bGameOver = true;
+	}
+
 	// 非公開メンバ
 private:
 	// ポーズ
@@ -83,8 +88,10 @@ private:
 	CFieldManager* m_pFieldManager;
 	// カウントダウン
 	CCountDown* m_pCountDown;
-	// ゲーム開始フラグ
+	// ゲーム開始フラグ(プレイヤを操作できるフラグ)
 	bool m_bPlayerControl;
+	// ゲームクリアフラグ
+	bool m_bGameOver;
 };
 
 #endif

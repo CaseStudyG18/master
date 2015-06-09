@@ -18,6 +18,12 @@
 // 前方宣言
 //=============================================================================
 class CGoal;
+class CGame;
+
+//=============================================================================
+// 定数
+//=============================================================================
+static const short GOAL_MAX = 4;
 
 //*****************************************************************************
 // クラス定義
@@ -26,7 +32,7 @@ class CGoalManager
 {
 	// 公開メンバ
 public:
-	CGoalManager(LPDIRECT3DDEVICE9 *pDevice);
+	CGoalManager(LPDIRECT3DDEVICE9 *pDevice, CGame *pGame);
 	~CGoalManager(void);
 
 	void Init(void);
@@ -34,12 +40,13 @@ public:
 	void Update(void);
 
 	// ゴール生成関数
-	void CreateGoal(D3DXVECTOR3 *pos, short *nPlayerNum, short nGoalNum);
+	void CreateGoal(D3DXVECTOR3 *pos, short *nPlayerNum, CGame *pGame);
 
 	// 非公開メンバ
 private:
 	// ゴール
 	CGoal *m_pGoal;
+	CGame *m_pGame;
 
 	// デバイス
 	LPDIRECT3DDEVICE9 *m_pDevice;

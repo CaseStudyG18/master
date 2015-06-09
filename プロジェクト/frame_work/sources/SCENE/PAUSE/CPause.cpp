@@ -88,7 +88,7 @@ void CPause :: Update(void)
 
 		// ƒJ[ƒ\ƒ‹ã‚ÉˆÚ“®
 		if(CInputKeyboard::GetKeyboardTrigger(DIK_W)
-			|| CInputKeyboard::GetKeyboardTrigger(DIK_UP) )
+			|| CInputKeyboard::GetKeyboardTrigger(DIK_UP))
 		{
 			m_nChoiceMenu--;
 
