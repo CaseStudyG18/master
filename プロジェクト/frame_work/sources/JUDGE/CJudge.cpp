@@ -18,6 +18,7 @@
 #include "../SCENE/CSCENE/CScene2D.h"
 #include "../SCENE/GAME/TREASURE/CTreasure.h"
 #include "../SCENE/GAME/ATTACK/CAttackBase.h"
+#include "../SCENE/GAME/THREAD/CThreadBase.h"
 
 //=========================================================================
 // コンストラクタ
@@ -339,6 +340,9 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 			float rot = pThread->GetRot().z;
 			float width = pThread->GetWidth();
 			float height = pThread->GetHeight();
+			CThreadBase* threadBase = (CThreadBase*)pSceneThread;
+			int playerNum = threadBase->GetPlayerNum();
+
 			// OBB情報作成
 			CreateOBBInfo(&threadOBB, &pos, &rot, &width, &height);
 
@@ -360,6 +364,19 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 						float rot2 = pField->GetRot().z;
 						float width2 = pField->GetWidth();
 						float height2 = pField->GetHeight();
+
+						// 自分が乗ってる床以外ならやらない
+						CScene2D* lastField = m_LastFieldColiPlayer[playerNum];
+						if (lastField)
+						{
+							if (lastField == pField)
+							{
+								// 次のインスタンスを対象のインスタンスにする
+								pSceneField = pSceneNextField;
+								continue;
+							}
+						}
+
 						// OBB情報作成
 						CreateOBBInfo(&fieldOBB, &pos2, &rot2, &width2, &height2);
 
