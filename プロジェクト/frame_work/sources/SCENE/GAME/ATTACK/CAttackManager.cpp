@@ -69,22 +69,28 @@ void CAttackManager::CreateAttack(
 	D3DXVECTOR3 pos,
 	D3DXVECTOR3 velocity)
 {
-	/*
 	switch (type)
 	{
+		// ’Êíó‘Ô‚ÌUŒ‚
 	case ATTACK_TYPE_NORMAL:
 		CAttackNormal::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
+		// UŒ‚Œ`‘Ô‚ÌUŒ‚
 	case ATTACK_TYPE_ATTACK:
+		CAttackSpecialAttack::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
+		// ˆÚ“®Œ`‘Ô‚ÌUŒ‚
 	case ATTACK_TYPE_SPEED:
+		CAttackSpecialSpeed::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
+		// ã©Œ`‘Ô‚ÌUŒ‚
 	case ATTACK_TYPE_TRAP:
+		CAttackSpecialTrap::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
 	default:
 		break;
 	}
-	*/
+	/*
 	// •’Ê‚ÌUŒ‚
 	if (type == ATTACK_TYPE_NORMAL){
 		CAttackNormal::Create(m_pDevice, sPlayerNum, pos, velocity);
@@ -98,5 +104,6 @@ void CAttackManager::CreateAttack(
 	else if (type == ATTACK_TYPE_TRAP){
 		CAttackSpecialTrap::Create(m_pDevice, sPlayerNum, pos, velocity);
 	}
+	*/
 }
 //----EOF-------
