@@ -73,6 +73,53 @@ static const D3DXVECTOR3 PLAYER_DIRECTION_VECTOR[] = {
 	D3DXVECTOR3(-0.5f, +0.5f, 0)
 };
 
+// プレイヤの向きに対してのテクスチャインデックスの最小と最大
+static const short PLAYER_TEXTURE_INDEX_MIN[] = {
+	0,	// なし
+	10,	// 上
+	6,	// 下
+	1,	// 右
+	1,	// 左
+	10,	// 右上
+	10,	// 左上
+	6,	// 右下
+	6	// 左下
+};
+static const short PLAYER_TEXTURE_INDEX_MAX[] = {
+	0,	// なし
+	13,	// 上
+	9,	// 下
+	4,	// 右
+	4,	// 左
+	13,	// 右上
+	13,	// 左上
+	9,	// 右下
+	9,	// 左下
+};
+
+// プレイヤのHPの残り状態
+enum PLAYER_HP_STATE{
+	PLAYER_HP_STATE_NORMAL,
+	PLAYER_HP_STATE_LOW,
+	PLAYER_HP_STATE_VERY_LOW,
+	PLAYER_HP_STATE_DIE,
+	PLAYER_HP_STATE_MAX
+};
+// プレイヤのHPの残り状態を決めるHPの値
+static const float PLAYER_HP_STATE_RATIO[] = {
+	1.0f,	// PLAYER_NORMAL
+	0.3f,	// PLAYER_LOW
+	0.1f,	// PLAYER_VERY_LOW
+	0.0f	// PLAYER_DIE
+};
+// プレイヤの残りHP状態ごとの赤く点滅するカウント数
+static const short PLAYER_HP_STATE_FLASH_INTERVAL[] = {
+	-1,	// PLAYER_NORMAL
+	30,	// PLAYER_LOW
+	12,	// PLAYER_VERY_LOW
+	-1	// PLAYER_DIE
+};
+
 //-----------------------------------------------------------------------------
 // 前方宣言
 //-----------------------------------------------------------------------------
@@ -117,7 +164,8 @@ public:
 		BOOL playerOperation,
 		CAttackManager *pAttackManager,
 		CThreadManager *pThreadManager,
-		short sPlayerNumber);
+		short sPlayerNumber,
+		bool *bPlayerControl);
 
 	// 現在の変形状態の取得
 	// 戻り値　プレイヤーの現在の状態
@@ -140,12 +188,13 @@ public:
 	void FallTreasure();
 
 	// プレイヤの向きや状態でテクスチャを更新する
-	// 更新で一回呼んでください by 塚本
 	void UpdatePlayerAnimation(void);
 
-	// 体力回復関数
-	//	引数　回復する分の体力ポイント
-	void HPRepair(float fPoint){ m_fHP += fPoint; }
+	// プレイヤの向きを変更する関数
+	void SetFace(DIRECTION_PLAYER_FACING value);
+
+	// 体力セッター
+	void AddHp(float fPoint);
 
 	// MP減少用関数
 	void MPReduce(void);
@@ -195,6 +244,10 @@ private:
 	// プレイヤーが移動形態の際の攻撃での移動
 	void Rush(void);
 
+	// プレイヤのHP残りステート管理
+	void UpdatePlayerHpState(void);
+	void UpdatePlayerRed(void);
+
 	//---------------------------------
 	// 変数
 	//---------------------------------
@@ -212,7 +265,8 @@ private:
 	short					m_sNumber;			// マネージャに割り振られたプレイヤー番号
 	DIRECTION_PLAYER_FACING	m_PlayerFacing;		// プレイヤーの向いている方向
 	DIRECTION_PLAYER_FACING	m_PlayerFacingOld;	// プレイヤーの向いている方向
-
+	short					m_nTextureIndex;	// プレイヤテクスチャの現在のインデックス
+	short					m_nTextureCount;	// テクスチャアニメーションのカウント
 	short					m_sAnimTime;		// 変形時のアニメーションの時間
 	short					m_sKnockBackTime;	// ノックバック時の時間
 	short					m_sDownTime;		// ダウン時の時間
@@ -222,11 +276,19 @@ private:
 	bool					m_bMatchless;		// 無敵状態かどうかの判定
 	bool					m_bMetamorphose;	// 変形している状態かのフラグ
 	bool					m_bSpeedAttack;		// 移動形態での攻撃中かどうかのフラグ
-
+	bool*					m_bPlayerControl;	// プレイヤがコントロールできるかフラグ
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
 	CMp*					m_pMp;				// MPゲージ
+
+	// 赤くする系
+	short					m_nRedCount;		// 赤くするためにカウント
+	bool					m_bRed;				// 赤い状態かフラグ
+	PLAYER_HP_STATE			m_HpState;			// プレイヤの残りHP状態
+	// シェーダー
+	IDirect3DPixelShader9 *m_pPS;
+	LPD3DXCONSTANTTABLE m_pPSC;
 
 };
 

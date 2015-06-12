@@ -464,11 +464,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\SHADER\basicVS.hlsl">
+    <FxCompile Include="data\SHADER\redPS.hlsl">
       <Filter>SHADER</Filter>
-    </None>
-    <None Include="data\SHADER\basicPS.hlsl">
-      <Filter>SHADER</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -111,7 +111,7 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 
 	// プレイヤ生成
 	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager);
-	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM);
+	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
 
 	// 宝物生成
 	m_pTreasureManager = new CTreasureManager(pDevice);
@@ -244,8 +244,7 @@ void CGame::Update(void)
 			// フェードアウト開始
 			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 
-			// リザルトへ
-			m_pManager->SetNextPhase(MODE_PHASE_RESULT);
+			m_pManager->SetNextPhase(MODE_PHASE_TITLE);
 		}
 	}
 

@@ -293,7 +293,7 @@ void CJudge::ColiAttackxPlayer(void){
 					// “–‚½‚Á‚½‚Ìˆ—
 					// ‚±‚ê‚Å‚¢‚¢‚Ì‚©‚ÈH
 					pPlayer[idx]->SetPlyerKnockBack();
-
+					pPlayer[idx]->AddHp(-1);
 #ifdef _DEBUG
 					CDebugProc::Print("UŒ‚ƒqƒbƒg\n");
 #endif
