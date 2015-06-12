@@ -29,14 +29,14 @@
 static const short GAME_TIME = 300;
 
 // 宝物の場所
-static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(200, 100, 0);
+static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(630, 350, 0);
 
 // ゴール
 static const D3DXVECTOR3 GOAL_POS[GOAL_MAX] = {
-	D3DXVECTOR3(100, 100, 0),
-	D3DXVECTOR3(700, 100, 0),
-	D3DXVECTOR3(100, 500, 0),
-	D3DXVECTOR3(700, 500, 0),
+	D3DXVECTOR3(50, 50, 0),
+	D3DXVECTOR3(1230, 50, 0),
+	D3DXVECTOR3(50, 670, 0),
+	D3DXVECTOR3(1230, 670, 0),
 };
 static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 	0, 1, 2, 3
@@ -137,7 +137,6 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// カウントダウン
 	m_pCountDown = new CCountDown(m_pD3DDevice, &m_bPlayerControl);
 	m_pCountDown->Init();
-
 }
 
 //*****************************************************************************

@@ -11,6 +11,7 @@
 #include "../ATTACK/CAttackManager.h"
 #include "../THREAD/CThreadManager.h"
 #include "../TREASURE/CTreasure.h"
+#include "../UI/CMp.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
@@ -52,6 +53,10 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_PlayerFacing = PLAYER_DIRECTION_UP;					// プレイヤーの初期向き
 	m_PlayerFacingOld = PLAYER_DIRECTION_UP;				// プレイヤーの過去の向き
 
+	// MP作る
+	m_pMp = new CMp(pDevice, PLAYER_DEFAULT_MP);
+	m_pMp->Init();
+
 	m_sAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
 	m_sKnockBackTime = 0;									// ノックバック時間
 	m_sDownTime = 0;										// ダウン時間
@@ -72,6 +77,11 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 //-----------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
+	// MP削除
+	if (m_pMp){
+		m_pMp->Uninit();
+	}
+	SAFE_DELETE(m_pMp);
 }
 
 //-----------------------------------------------------------------------------
@@ -145,6 +155,9 @@ void CPlayer::Update(void)
 	}
 
 	CScene2D::Update();
+
+	// MP更新
+	m_pMp->Update(m_vPos, m_fMP);
 
 	UpdatePlayerAnimation();
 	
@@ -398,7 +411,12 @@ void CPlayer::Update(void)
 		// デフォルトMPまで回復させる
 		if (m_fMP < PLAYER_DEFAULT_MP)
 		{
-			m_fMP += 10.0f;
+			m_fMP += 0.5f;
+
+			// 押し戻し処理追加
+			if (m_fMP > PLAYER_DEFAULT_MP){
+				m_fMP = PLAYER_DEFAULT_MP;
+			}
 		}
 	}
 
@@ -659,7 +677,7 @@ void CPlayer::MPReduce(void)
 {
 	// MPを減らしていく
 	// 数値は仮
-	//m_fMP -= 1.5f;
+	m_fMP -= 1.5f;
 }
 
 //-----------------------------------------------------------------------------
