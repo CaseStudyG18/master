@@ -11,13 +11,12 @@
 #include "../ATTACK/CAttackManager.h"
 #include "../THREAD/CThreadManager.h"
 #include "../TREASURE/CTreasure.h"
-#include "../UI/CMp.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
 // プレイヤーの移動速度(仮)
-static const float PLAYER_SPEED = 8.0f;
+static const float PLAYER_SPEED = 3.0f;
 
 // 宝物アイコンの大きさ
 static const float TREASURE_ICON_WIDTH = 40;
@@ -58,16 +57,13 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_sDownTime = 0;										// ダウン時間
 	m_sMatchlessTime = 0;									// 無敵状態の時間
 	m_sKnockBackCount = 0;									// やられ状態になった回数
+	m_sRushTime = 0;
 
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
+	m_bSpeedAttack = false;									// 移動形態の攻撃中か判定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
-
-	// MP作る
-	m_pMp = new CMp(pDevice, PLAYER_DEFAULT_MP);
-	m_pMp->Init();
-
 }
 
 //-----------------------------------------------------------------------------
@@ -76,11 +72,6 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 //-----------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
-	// MP削除
-	if (m_pMp){
-		m_pMp->Uninit();
-	}
-	SAFE_DELETE(m_pMp);
 }
 
 //-----------------------------------------------------------------------------
@@ -154,9 +145,6 @@ void CPlayer::Update(void)
 	}
 
 	CScene2D::Update();
-
-	// MP更新
-	m_pMp->Update(m_vPos, m_fMP);
 
 	UpdatePlayerAnimation();
 	
@@ -384,6 +372,47 @@ void CPlayer::Update(void)
 		/*----------------------------------------------------------*/
 	}
 
+	// 無敵状態での処理
+	if (m_bMatchless)
+	{
+		Matchless();
+	}
+
+	// 変形している場合MPを減少させていく
+	if (m_bMetamorphose)
+	{
+		MPReduce();
+
+		// MPが０になったら通常状態に戻す
+		if (m_fMP <= 0.0f)
+		{
+			m_ModeDest = PLAYER_MODE_NONE;
+
+			m_Action = PLAYER_ACTION_METAMORPHOSE;
+
+			m_fMP = 0.0f;
+		}
+	}
+	else
+	{
+		// デフォルトMPまで回復させる
+		if (m_fMP < PLAYER_DEFAULT_MP)
+		{
+			m_fMP += 10.0f;
+		}
+	}
+
+	/*----------------------------------------------------------*/
+	/*移動形態での攻撃中だった場合アクションをNONEに変えて		*/
+	/*移動形態の攻撃のエフェクトに合わせて移動する				*/
+	/*----------------------------------------------------------*/
+	if (m_bSpeedAttack)
+	{
+		Rush();
+		m_Action = PLAYER_ACTION_NONE;
+		return;
+	}
+
 	/*----------------------------------------------------------*/
 	/*プレイヤーのアクションの状態に対応した行動を取らせる		*/
 	/*歩行、攻撃、糸発射、変形									*/
@@ -431,41 +460,6 @@ void CPlayer::Update(void)
 
 	default:
 		break;
-	}
-
-	// 無敵状態での処理
-	if (m_bMatchless)
-	{
-		Matchless();
-	}
-
-	// 変形している場合MPを減少させていく
-	if (m_bMetamorphose)
-	{
-		MPReduce();
-
-		// MPが０になったら通常状態に戻す
-		if (m_fMP <= 0.0f)
-		{
-			m_ModeDest = PLAYER_MODE_NONE;
-
-			m_Action = PLAYER_ACTION_METAMORPHOSE;
-
-			m_fMP = 0.0f;
-		}
-	}
-	else
-	{
-		// デフォルトMPまで回復させる
-		if (m_fMP < PLAYER_DEFAULT_MP)
-		{
-			m_fMP += 0.5f;
-
-			// 押し戻し処理追加
-			if (m_fMP > PLAYER_DEFAULT_MP){
-				m_fMP = PLAYER_DEFAULT_MP;
-			}
-		}
 	}
 
 	// 現在のMPを表示する
@@ -570,6 +564,7 @@ void CPlayer::Attack(void)
 			m_sNumber,
 			m_vPos,
 			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+		m_bSpeedAttack = true;
 		break;
 		// 罠型の攻撃
 	case PLAYER_MODE_TRAP:
@@ -664,7 +659,7 @@ void CPlayer::MPReduce(void)
 {
 	// MPを減らしていく
 	// 数値は仮
-	m_fMP -= 0.5f;
+	//m_fMP -= 1.5f;
 }
 
 //-----------------------------------------------------------------------------
@@ -676,38 +671,39 @@ void CPlayer::SpidersThread(void)
 {
 	switch (m_Mode)
 	{
-		// 通常の糸モーション
+		// 通常状態の糸
 	case PLAYER_MODE_NONE:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_NORMAL,
 			m_sNumber,
 			m_vPos);
 		break;
-		// 攻撃特化状態の糸モーション
+		// 攻撃特化形態の糸
 	case PLAYER_MODE_ATTACK:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_ATTACK,
 			m_sNumber,
 			m_vPos);
 		break;
-		// 移動特化状態での糸モーション
+		// 移動特化形態の糸
 	case PLAYER_MODE_SPEED:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_SPEED,
 			m_sNumber,
 			m_vPos);
 		break;
-		// 罠状態での糸モーション
+		// 罠特化形態の糸
 	case PLAYER_MODE_TRAP:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_TRAP,
 			m_sNumber,
-			m_vPos); 
+			m_vPos);
 		break;
 	default:
 		break;
 	}
 
+	// 行動を初期状態に戻す
 	m_Action = PLAYER_ACTION_NONE;
 }
 
@@ -977,6 +973,22 @@ void CPlayer::UpdatePlayerAnimation(void){
 		SetIndex(a, false);
 	}
 
+}
+
+//-----------------------------------------------------------------------------
+// 移動形態での攻撃でのタックル移動
+//-----------------------------------------------------------------------------
+void CPlayer::Rush(void)
+{
+	m_vPos += PLAYER_DIRECTION_VECTOR[m_PlayerFacing] * 4.0f;
+
+	m_sRushTime++;
+
+	if (m_sRushTime > 50)
+	{
+		m_bSpeedAttack = false;
+		m_sRushTime = 0;
+	}
 }
 
 // EOF

@@ -79,7 +79,6 @@ static const D3DXVECTOR3 PLAYER_DIRECTION_VECTOR[] = {
 class CAttackManager;
 class CThreadManager;
 class CTreasure;
-class CMp;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -161,6 +160,9 @@ public:
 	}
 
 private:
+	//---------------------------------
+	// 関数
+	//---------------------------------
 	// 移動する
 	void Move(void);
 
@@ -189,6 +191,9 @@ private:
 	// プレイヤーのテクスチャのUV値の切り替え(Uの切り替え)
 	void ChangeTextureFaceU(void);
 
+	// プレイヤーが移動形態の際の攻撃での移動
+	void Rush(void);
+
 	//---------------------------------
 	// 変数
 	//---------------------------------
@@ -212,14 +217,15 @@ private:
 	short					m_sDownTime;		// ダウン時の時間
 	short					m_sMatchlessTime;	// 無敵状態の時間
 	short					m_sKnockBackCount;	// やられ状態になった回数
+	short					m_sRushTime;		// 移動形態での攻撃中のタイマー
 	bool					m_bMatchless;		// 無敵状態かどうかの判定
 	bool					m_bMetamorphose;	// 変形している状態かのフラグ
+	bool					m_bSpeedAttack;		// 移動形態での攻撃中かどうかのフラグ
 
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
-	CMp*					m_pMp;				// MPゲージ
 };
 
 #endif // __CPLAYER_H__
