@@ -49,10 +49,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	// FPS用
 	DWORD dwExecLastTime;
-	DWORD dwDrawLastTime;
 	DWORD dwFPSLastTime;
 	DWORD dwCurrentTime;
 	DWORD dwFrameCount;
+	bool bDrawCounter = true;
 
 	WNDCLASSEX wcex =
 	{
@@ -85,11 +85,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	rc.bottom = SCREEN_HEIGHT;
 	rc.right = SCREEN_WIDTH;
 
-	long WidthWindow = rc.right - rc.left;
-	long HeightWindow = rc.bottom - rc.top;
-
 	// アジャストウィンドウ
 	AdjustWindowRect(&rc, style, FALSE);
+
+	long WidthWindow = rc.right - rc.left;
+	long HeightWindow = rc.bottom - rc.top;
 
 	// ウィンドウの作成
 	hWnd = CreateWindowEx(0,
@@ -108,16 +108,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	//フレームカウント初期化
 	timeBeginPeriod(1);				// 分解能を設定
-	dwDrawLastTime = dwExecLastTime = dwFPSLastTime = timeGetTime();
+	dwExecLastTime =
+		dwFPSLastTime = timeGetTime();
 	dwCurrentTime =
-	dwFrameCount = 0;
+		dwFrameCount = 0;
 
 	// ウインドウの表示(初期化処理の後に呼ばないと駄目)
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	bool modeWindow = false;
-	if(MessageBox(NULL,"フルスクリーンで起動しますか？","ウィンドウモード",MB_YESNO)==IDYES)
+	if (MessageBox(NULL, "フルスクリーンで起動しますか？", "ウィンドウモード", MB_YESNO) == IDYES)
 	{
 		//フルスクリーンで初期化処理(ウィンドウを作成してから行う)
 		modeWindow = false;
@@ -129,17 +130,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	// 初期化処理(ウィンドウを作成してから行う)
-	if(FAILED(g_pManager->Init(hInstance, hWnd, modeWindow)))
+	if (FAILED(g_pManager->Init(hInstance, hWnd, modeWindow)))
 	{
 		return -1;
 	}
 
 	// メッセージループ
-	while(1)
+	while (1)
 	{
-		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			if(msg.message == WM_QUIT)
+			if (msg.message == WM_QUIT)
 			{// PostQuitMessage()が呼ばれたらループ終了
 				break;
 			}
@@ -154,39 +155,40 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		{
 			// 現在時刻取得
 			dwCurrentTime = timeGetTime();
-			if((dwCurrentTime - dwFPSLastTime) >= TIME_INTERVAL)	// 0.5秒ごとに実行
+			if ((dwCurrentTime - dwFPSLastTime) >= TIME_INTERVAL)	// 0.5秒ごとに実行
 			{
+#ifdef _DEBUG
+				// FPS表示
+				g_pManager->GetRenderer()->SetFPS(dwFrameCount * FPS_COEFFICIENT / (dwCurrentTime - dwFPSLastTime));
+#endif
 				dwFPSLastTime = dwCurrentTime;
 				dwFrameCount = 0;
 			}
 
 			if ((dwCurrentTime - dwExecLastTime) >= BASE_FPS)
 			{
-				// 更新処理
-				Update();
 				dwExecLastTime = dwCurrentTime;
 
-			}
-				
-			if ((dwCurrentTime - dwDrawLastTime) >= DRAW_FPS)
-			{
-#ifdef _DEBUG
-				DWORD culcTime = dwCurrentTime - dwFPSLastTime;
-				if (culcTime > 0)
+				// 更新処理
+				Update();
+
+				if (bDrawCounter)
 				{
-					// FPS表示
-					g_pManager->GetRenderer()->SetFPS(dwFrameCount * FPS_COEFFICIENT / (culcTime));
+					// 描画処理
+					Draw();
+
+					dwFrameCount++;
 				}
+
+				bDrawCounter = !bDrawCounter;
+#ifdef _DEBUG
+				// バッファクリア
+				CDebugProc::ClearBuff();
 #endif
-				// 描画処理
-				Draw();
-
-				dwDrawLastTime = dwCurrentTime;
-
-				dwFrameCount++;
 			}
 		}
 	}
+
 	
 	// ウィンドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);

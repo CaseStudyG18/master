@@ -15,7 +15,6 @@
 //**********************************************
 // マクロ
 //**********************************************
-
 // パッドの方向キー用
 #define PP_NONE 0x0
 #define PP_UP 0x1
@@ -23,31 +22,6 @@
 #define PP_DOWN 0x4
 #define PP_LEFT 0x8
 
-// ELECOMパッドのボタン用
-static const int ELECOM_PAD_BUTTON_1 = 0;
-static const int ELECOM_PAD_BUTTON_2 = 1;
-static const int ELECOM_PAD_BUTTON_3 = 2;
-static const int ELECOM_PAD_BUTTON_4 = 3;
-static const int ELECOM_PAD_BUTTON_5 = 4;
-static const int ELECOM_PAD_BUTTON_6 = 5;
-static const int ELECOM_PAD_BUTTON_7 = 6;
-static const int ELECOM_PAD_BUTTON_8 = 7;
-static const int ELECOM_PAD_BUTTON_9 = 8;
-static const int ELECOM_PAD_BUTTON_10 = 9;
-static const int ELECOM_PAD_BUTTON_11 = 10;
-static const int ELECOM_PAD_BUTTON_12 = 11;
-
-// XBOXパッドのボタン用
-static const int XBOX_PAD_BUTTON_A = 0;
-static const int XBOX_PAD_BUTTON_B = 1;
-static const int XBOX_PAD_BUTTON_X = 2;
-static const int XBOX_PAD_BUTTON_Y = 3;
-static const int XBOX_PAD_BUTTON_LB = 4;
-static const int XBOX_PAD_BUTTON_RB = 5;
-static const int XBOX_PAD_BUTTON_BACK = 6;
-static const int XBOX_PAD_BUTTON_START = 7;
-static const int XBOX_PAD_BUTTON_L3 = 8;
-static const int XBOX_PAD_BUTTON_R3 = 9;
 
 //**********************************************
 // 構造体定義
@@ -78,7 +52,7 @@ typedef struct
 class CInputGamePad : CInput
 {
 public:
-	// ボタンの種類
+	// 仮想コントローラーボタンの種類
 	typedef enum
 	{
 		LEFT_STICK_LEFT = 0,	// ←
@@ -89,21 +63,31 @@ public:
 		RIGHT_STICK_RIGHT,		// →
 		RIGHT_STICK_UP,			// ↑
 		RIGHT_STICK_DOWN,		// ↓
-		KEY_1,					// □
-		KEY_2,					// ○
-		KEY_3,					// ×
-		KEY_4,					// △
-		KEY_5,					// L1
-		KEY_6,					// R1
-		KEY_7,					// L2
-		KEY_8,					// Start
-		KEY_9,					// LeftStick
-		KEY_10,					// RightStick
-		KEY_11,					// Select
-		KEY_12,					// 
-		KEY_DECIDE,				// □△×○
+		KEY_A,					// A
+		KEY_B,					// B
+		KEY_Y,					// Y
+		KEY_X,					// X
+		KEY_L,					// L
+		KEY_R,					// R
+		KEY_START,				// Start
+		KEY_SELECT,				// Select
+		KEY_DECIDE,				// 決定
 		KEY_MAX
 	}KEY;
+
+	// キーの種類(キーコフィングできるやつ)
+	typedef enum
+	{
+		PAD_KEY_A = 0,
+		PAD_KEY_B,
+		PAD_KEY_Y,
+		PAD_KEY_X,
+		PAD_KEY_L,
+		PAD_KEY_R,
+		PAD_KEY_START,
+		PAD_KEY_SELECT,
+		PAD_KEY_MAX
+	}PAD_BUTTON;
 
 	// コンストラクタ
 	CInputGamePad(void);
@@ -192,6 +176,26 @@ public:
 	//======================================
 	static bool GetReleaseKeyForDemo(KEY key, int idx);
 
+	//======================================
+	// キーコフィング情報セット
+	// 引数: コントローラーID, キーコフィング情報の配列アドレス
+	//======================================
+	static void SetKeyCofingInfo(int id, int* keyConfigInfo);
+
+	//======================================
+	// 何かトリガーしたか
+	// 引数: コントローラーID, 押されたキーコード保存する場所
+	// 戻り値：トリガーされてたか
+	//======================================
+	static bool CheckTriggerAnyKey(int ID, int* pCord);
+
+	//======================================
+	// コントローラー繋がってるか調べる
+	// 引数: コントローラーID
+	// 戻り値：繋がってるか
+	//======================================
+	static bool CheckConectPad(int ID);
+
 private:
 	// デモ用キーの保存場所マップ
 	typedef enum
@@ -230,8 +234,10 @@ private:
 	static bool		m_aKeyStateReleaseGamePad[MAX_PAD_NUM][KEY_MAX_NUM];	// ジョイパッドのリリース状態を保持するワーク
 	static bool		m_aKeyStateRepeatGamePad[MAX_PAD_NUM][KEY_MAX_NUM];		// ジョイパッドのリピート状態を保持するワーク
 	static int		m_aKeyStateRepeatCntGamePad[MAX_PAD_NUM][KEY_MAX_NUM];	// ジョイパッドのリピートカウンタ
-	static unsigned short	m_nKeepDemoKey[MAX_KEEP_KEY_FOR_DEMO];	// デモ用のキーのワーク
-	static int				m_nKeyFrameForDemo;						// デモ用のキーフレーム
+	static unsigned short	m_nKeepDemoKey[MAX_KEEP_KEY_FOR_DEMO];			// デモ用のキーのワーク
+	static int				m_nKeyFrameForDemo;								// デモ用のキーフレーム
+	
+	static int		m_aKeyConfig[MAX_PAD_NUM][PAD_KEY_MAX];	// それぞれのキーコンフィグ情報
 };
 
 #endif

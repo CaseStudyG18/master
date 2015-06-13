@@ -22,6 +22,7 @@ class CRenderer;
 class CNowLoading;
 class CInputKeyboard;
 class CInputGamePad;
+class CControllerManager;
 #ifdef _DEBUG
 class CDebugProc;
 #endif
@@ -111,6 +112,7 @@ private:
 	static CSound			*m_pSound;					// サウンド
 	CInputKeyboard			*m_pInputKeyboard;			// キーボード
 	CInputGamePad			*m_pInputGamePad;			// ゲームパッド
+	CControllerManager		*m_pControllerManager;		// コントローラーマネージャー
 	SEND_LOAD_THRED_PARAM	m_sendParam;				// ロードスレッドに渡す情報
 	HANDLE					m_ThreadHandle;				// スレッドのハンドル
 	CNowLoading				*m_pNowLoading;				// NowLoading
