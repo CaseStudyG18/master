@@ -34,17 +34,9 @@ public:
 	// デストラクタ
 	~CPlayerManager();
 
-	// クリエイト関数
-	//	引数　　制作するプレイヤーの数、マニュアル操作するプレイヤーの数、CPUの数、攻撃マネージャー 糸マネージャー
-	static CPlayerManager* Create(
-		int nPlayerNum,
-		int nManualPlayer,
-		CAttackManager *pAttackPlayer,
-		CThreadManager *pThreadPlayer);
-
 	// 初期化
 	// CPU人数、プレイヤー人数
-	void Init(int nNumPlayer, int nManualPlayer);
+	void Init(int nNumPlayer, int nManualPlayer, bool *bPlayerControl);
 
 	// 終了
 	void Uninit(void);
@@ -61,6 +53,14 @@ public:
 	//	引数　　プレイヤーポインタ、セットする先の配列番号
 	void SetPlayer(CPlayer* pPlayer, int nNumber){ m_apPlayer[nNumber] = pPlayer; }
 
+	// プレイヤーの停止
+	//  引数　　プレイヤーナンバー
+	void SetPlayerStop(short playerNumber);
+
+	// プレイヤーの再生
+	//  引数　　プレイヤーナンバー
+	void SetPlayerPlayback(short playerNumber);
+
 private:
 	// プレイヤーのポインタ格納用配列
 	CPlayer* m_apPlayer[MAXIMUM_NUMBER_OF_PLAYER];
@@ -71,6 +71,7 @@ private:
 	CAttackManager *m_pAttackManager;
 	// 糸出す時に必要なマネージャー
 	CThreadManager *m_pThreadManager;
+
 };
 
 #endif //__CPLAYERMANAGER_H__
