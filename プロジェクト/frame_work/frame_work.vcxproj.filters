@@ -101,6 +101,12 @@
     <Filter Include="SCENE\GAME\UI">
       <UniqueIdentifier>{27363750-8588-4d2b-b6e5-f34d2edb50a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\OPTION">
+      <UniqueIdentifier>{ce11cd21-2574-485c-94a3-f6428501403c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CONTROLLER">
+      <UniqueIdentifier>{664b5e1a-f49d-4299-abf5-129f01b21b59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -279,6 +285,15 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\CSCENE\CSceneCircle.cpp">
       <Filter>SCENE\CSCENE</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\OPTION\COption.cpp">
+      <Filter>SCENE\OPTION</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\CONTROLLER\CControllerManager.cpp">
+      <Filter>CONTROLLER</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\CONTROLLER\CController.cpp">
+      <Filter>CONTROLLER</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -461,6 +476,15 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\CSCENE\CSceneCircle.h">
       <Filter>SCENE\CSCENE</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\OPTION\COption.h">
+      <Filter>SCENE\OPTION</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\CONTROLLER\CControllerManager.h">
+      <Filter>CONTROLLER</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\CONTROLLER\CController.h">
+      <Filter>CONTROLLER</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

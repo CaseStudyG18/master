@@ -38,6 +38,7 @@ bool	CInputGamePad::m_aKeyStateRepeatGamePad[MAX_PAD_NUM][KEY_MAX_NUM];
 int		CInputGamePad::m_aKeyStateRepeatCntGamePad[MAX_PAD_NUM][KEY_MAX_NUM];
 unsigned short	CInputGamePad::m_nKeepDemoKey[MAX_KEEP_KEY_FOR_DEMO];
 int		CInputGamePad::m_nKeyFrameForDemo;
+int		CInputGamePad::m_aKeyConfig[MAX_PAD_NUM][PAD_KEY_MAX];
 //==============================================
 // コンストラクタ
 //==============================================
@@ -54,6 +55,10 @@ CInputGamePad::CInputGamePad(void)
 			m_aKeyStateReleaseGamePad[idx][cnt] = false;
 			m_aKeyStateRepeatGamePad[idx][cnt] = false;
 		}
+		for (int i = 0; i < PAD_KEY_MAX; ++i)
+		{
+			m_aKeyConfig[idx][i] = 0;
+		}
 	}
 }
 
@@ -67,19 +72,19 @@ CInputGamePad::~CInputGamePad(void)
 //==============================================
 // 初期化
 //==============================================
-HRESULT CInputGamePad::Init(HINSTANCE hInstance, HWND hWnd)
+HRESULT CInputGamePad::Init(HINSTANCE hInstance,HWND hWnd)
 {
 
 	// インターフェイスの取得
-	HRESULT hr;
+	HRESULT hr;  
 	hr = DirectInput8Create(hInstance				// ソフトのインスタンスハンドル
-		, DIRECTINPUT_VERSION	// DirectInputのバージョン
-		, IID_IDirectInput8		// 取得するインターフェイスのタイプ
-		, (LPVOID*)&m_pDInput	// インターフェイスの格納先
-		, NULL);				// COM集成の制御オブジェクト（使わないのでNULL）
-	if (FAILED(hr))
+							, DIRECTINPUT_VERSION	// DirectInputのバージョン
+							, IID_IDirectInput8		// 取得するインターフェイスのタイプ
+							, (LPVOID*)&m_pDInput	// インターフェイスの格納先
+							, NULL);				// COM集成の制御オブジェクト（使わないのでNULL）
+	if(FAILED(hr))
 	{
-		MessageBox(NULL, "DirectInputオブジェクトの作成失敗", "DirectInputオブジェクトの作成失敗", MB_OK);
+		MessageBox(NULL,"DirectInputオブジェクトの作成失敗","DirectInputオブジェクトの作成失敗",MB_OK);
 		return hr;
 	}
 
@@ -149,7 +154,7 @@ HRESULT CInputGamePad::Init(HINSTANCE hInstance, HWND hWnd)
 	}
 
 	// デモ用配列の初期化
-	for (int idx = 0; idx < MAX_KEEP_KEY_FOR_DEMO; idx++)
+	for(int idx = 0; idx < MAX_KEEP_KEY_FOR_DEMO; idx++)
 	{
 		m_nKeepDemoKey[idx] = 0x0000;
 	}
@@ -188,6 +193,11 @@ void CInputGamePad::Update(void)
 		}
 
 		// 前回のデータを保存
+		for (int pos = 0; pos < 127; pos++)
+		{
+			m_GamePad[idx].OldPadData.rgbButtons[pos] = m_GamePad[idx].PadData.rgbButtons[pos];
+		}
+
 		for (int nCntKey = 0; nCntKey < KEY_MAX; nCntKey++)
 		{
 			aKeyStateOld[nCntKey] = m_aKeyStateGamePad[idx][nCntKey];
@@ -229,7 +239,7 @@ void CInputGamePad::Update(void)
 			// 権利獲得
 			m_GamePad[idx].pPadDevice->Acquire();
 		}
-#ifdef _DEBUG
+	#ifdef _DEBUG
 		for (int pos = 0; pos < 127; pos++)
 		{
 			if (m_GamePad[idx].PadData.rgbButtons[pos] != 0)
@@ -238,7 +248,7 @@ void CInputGamePad::Update(void)
 				CDebugProc::Print("ボタンコード：%d\n", pos);
 			}
 		}
-#endif
+	#endif
 	}
 }
 
@@ -261,20 +271,20 @@ BOOL CALLBACK CInputGamePad::EnumGamePad(const DIDEVICEINSTANCE* pInstance, LPVO
 
 	// デバイスの識別子を保存
 	m_pad_discrimination[ed->padID] = pInstance->guidInstance;
-
+	
 
 	HRESULT hr;
-
+	
 	// 列挙されたジョイスティックへのインターフェイスを取得
 	hr = ed->pInput->CreateDevice(pInstance->guidInstance, ed->ppPadDevice, NULL);
-	if (FAILED(hr))
+	if(FAILED(hr))
 	{
 		return DIENUM_CONTINUE;  // デバイスが作成できないので列挙を続ける
 	}
-
+	
 	// ジョイパッドの能力を調べる
 	diDevCaps.dwSize = sizeof(DIDEVCAPS);
-
+	
 	// 希望するデバイスが作成できたので列挙を終了する
 	return DIENUM_STOP;
 }
@@ -312,10 +322,6 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_LEFT_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_LEFT_MAX_STICK))
 		{
 			m_aKeyStateGamePad[idx][LEFT_STICK_LEFT] = true;
-#ifdef _DEBUG
-			CDebugProc::Print("プレイヤーID：%d\n", idx);
-			CDebugProc::Print("LEFT\n");
-#endif
 		}
 		else
 		{
@@ -326,10 +332,6 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_RIGHT_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_RIGHT_MAX_STICK))
 		{
 			m_aKeyStateGamePad[idx][LEFT_STICK_RIGHT] = true;
-#ifdef _DEBUG
-			CDebugProc::Print("プレイヤーID：%d\n", idx);
-			CDebugProc::Print("RIGHT\n");
-#endif
 		}
 		else
 		{
@@ -340,10 +342,6 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_UP_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_UP_MAX_STICK))
 		{
 			m_aKeyStateGamePad[idx][LEFT_STICK_UP] = true;
-#ifdef _DEBUG
-			CDebugProc::Print("プレイヤーID：%d\n", idx);
-			CDebugProc::Print("UP\n");
-#endif
 		}
 		else
 		{
@@ -354,10 +352,6 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_DOWN_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_DOWN_MAX_STICK))
 		{
 			m_aKeyStateGamePad[idx][LEFT_STICK_DOWN] = true;
-#ifdef _DEBUG
-			CDebugProc::Print("プレイヤーID：%d\n", idx);
-			CDebugProc::Print("DOWN\n");
-#endif
 		}
 		else
 		{
@@ -408,119 +402,86 @@ void CInputGamePad::SetKeyStateGamePad(void)
 		}
 
 		// ゲームパッドボタン[1]
-		if (m_GamePad[idx].PadData.rgbButtons[0])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_A]])
 		{
-			m_aKeyStateGamePad[idx][KEY_1] = true;
+			m_aKeyStateGamePad[idx][KEY_A] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_1] = false;
+			m_aKeyStateGamePad[idx][KEY_A] = false;
 		}
 		// ゲームパッドボタン[2]
-		if (m_GamePad[idx].PadData.rgbButtons[1])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_B]])
 		{
-			m_aKeyStateGamePad[idx][KEY_2] = true;
+			m_aKeyStateGamePad[idx][KEY_B] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_2] = false;
+			m_aKeyStateGamePad[idx][KEY_B] = false;
 		}
 		// ゲームパッドボタン[3]
-		if (m_GamePad[idx].PadData.rgbButtons[2])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_Y]])
 		{
-			m_aKeyStateGamePad[idx][KEY_3] = true;
+			m_aKeyStateGamePad[idx][KEY_Y] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_3] = false;
+			m_aKeyStateGamePad[idx][KEY_Y] = false;
 		}
 		// ゲームパッドボタン[4]
-		if (m_GamePad[idx].PadData.rgbButtons[3])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_X]])
 		{
-			m_aKeyStateGamePad[idx][KEY_4] = true;
+			m_aKeyStateGamePad[idx][KEY_X] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_4] = false;
+			m_aKeyStateGamePad[idx][KEY_X] = false;
 		}
 		// ゲームパッドボタン[5]
-		if (m_GamePad[idx].PadData.rgbButtons[4])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_L]])
 		{
-			m_aKeyStateGamePad[idx][KEY_5] = true;
+			m_aKeyStateGamePad[idx][KEY_L] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_5] = false;
+			m_aKeyStateGamePad[idx][KEY_L] = false;
 		}
 		// ゲームパッドボタン[6]
-		if (m_GamePad[idx].PadData.rgbButtons[5])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_R]])
 		{
-			m_aKeyStateGamePad[idx][KEY_6] = true;
+			m_aKeyStateGamePad[idx][KEY_R] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_6] = false;
+			m_aKeyStateGamePad[idx][KEY_R] = false;
 		}
 		// ゲームパッドボタン[7]
-		if (m_GamePad[idx].PadData.rgbButtons[6])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_START]])
 		{
-			m_aKeyStateGamePad[idx][KEY_7] = true;
+			m_aKeyStateGamePad[idx][KEY_START] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_7] = false;
+			m_aKeyStateGamePad[idx][KEY_START] = false;
 		}
 		// ゲームパッドボタン[8]
-		if (m_GamePad[idx].PadData.rgbButtons[7])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_SELECT]])
 		{
-			m_aKeyStateGamePad[idx][KEY_8] = true;
+			m_aKeyStateGamePad[idx][KEY_SELECT] = true;
 		}
 		else
 		{
-			m_aKeyStateGamePad[idx][KEY_8] = false;
-		}
-		// ゲームパッドボタン[9]
-		if (m_GamePad[idx].PadData.rgbButtons[8])
-		{
-			m_aKeyStateGamePad[idx][KEY_9] = true;
-		}
-		else
-		{
-			m_aKeyStateGamePad[idx][KEY_9] = false;
-		}
-		// ゲームパッドボタン[10]
-		if (m_GamePad[idx].PadData.rgbButtons[9])
-		{
-			m_aKeyStateGamePad[idx][KEY_10] = true;
-		}
-		else
-		{
-			m_aKeyStateGamePad[idx][KEY_10] = false;
-		}
-		// ゲームパッドボタン[11]
-		if (m_GamePad[idx].PadData.rgbButtons[10])
-		{
-			m_aKeyStateGamePad[idx][KEY_11] = true;
-		}
-		else
-		{
-			m_aKeyStateGamePad[idx][KEY_11] = false;
-		}
-		// ゲームパッドボタン[12]
-		if (m_GamePad[idx].PadData.rgbButtons[11])
-		{
-			m_aKeyStateGamePad[idx][KEY_12] = true;
-		}
-		else
-		{
-			m_aKeyStateGamePad[idx][KEY_12] = false;
+			m_aKeyStateGamePad[idx][KEY_SELECT] = false;
 		}
 
-		// ゲームパッドボタン[1][2][3][4]のいずれか
-		if (m_GamePad[idx].PadData.rgbButtons[0]
-			|| m_GamePad[idx].PadData.rgbButtons[1]
-			|| m_GamePad[idx].PadData.rgbButtons[2]
-			|| m_GamePad[idx].PadData.rgbButtons[3])
+		// ゲームパッドボタンA,Y,X,R,L,STARTのいずれか
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_A]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_Y]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_X]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_R]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_L]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_START]]
+			)
 		{
 			m_aKeyStateGamePad[idx][KEY_DECIDE] = true;
 		}
@@ -584,9 +545,9 @@ bool CInputGamePad::GetGamePadRepeat(KEY key, int playerID)
 //=============================================================================
 void CInputGamePad::KeepKeyForDemo(int frame)
 {
-	for (int idx = 0; idx < KEY_MAX_NUM; ++idx)
+	for(int idx = 0; idx < KEY_MAX_NUM; ++idx)
 	{
-		if (m_aKeyStateGamePad[idx])
+		if(m_aKeyStateGamePad[idx])
 		{
 			SaveKeyForDemo((KEY)idx, frame);
 		}
@@ -598,65 +559,65 @@ void CInputGamePad::KeepKeyForDemo(int frame)
 //=============================================================================
 void CInputGamePad::SaveKeyForDemo(KEY key, int idx)
 {
-	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
-	{
-		return;
-	}
-
-	if (key == LEFT_STICK_LEFT)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_LEFT_KEY;
-	}
-
-	if (key == LEFT_STICK_RIGHT)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_RIGHT_KEY;
-	}
-
-	if (key == LEFT_STICK_UP)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_UP_KEY;
-	}
-
-	if (key == LEFT_STICK_DOWN)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_DOWN_KEY;
-	}
-
-	if (key == RIGHT_STICK_LEFT)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_LEFT_KEY;
-	}
-
-	if (key == RIGHT_STICK_RIGHT)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_RIGHT_KEY;
-	}
-
-	if (key == RIGHT_STICK_UP)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_UP_KEY;
-	}
-
-	if (key == RIGHT_STICK_DOWN)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_DOWN_KEY;
-	}
-
-	if (key == KEY_3)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | JUMP_KEY;
-	}
-
-	if (key == KEY_1)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | KICK_KEY;
-	}
-
-	if (key == KEY_10)
-	{
-		m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_STICK_KEY;
-	}
+	//if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
+	//{
+	//	return;
+	//}
+	//
+	//if(key == LEFT_STICK_LEFT)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_LEFT_KEY;
+	//}
+	//
+	//if(key == LEFT_STICK_RIGHT)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_RIGHT_KEY;
+	//}
+	//
+	//if(key == LEFT_STICK_UP)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_UP_KEY;
+	//}
+	//
+	//if(key == LEFT_STICK_DOWN)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | L_DOWN_KEY;
+	//}
+	//
+	//if(key == RIGHT_STICK_LEFT)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_LEFT_KEY;
+	//}
+	//
+	//if(key == RIGHT_STICK_RIGHT)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_RIGHT_KEY;
+	//}
+	//
+	//if(key == RIGHT_STICK_UP)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_UP_KEY;
+	//}
+	//
+	//if(key == RIGHT_STICK_DOWN)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_DOWN_KEY;
+	//}
+	//
+	//if(key == KEY_3)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | JUMP_KEY;
+	//}
+	//
+	//if(key == KEY_1)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | KICK_KEY;
+	//}
+	//
+	//if(key == KEY_10)
+	//{
+	//	m_nKeepDemoKey[idx] = m_nKeepDemoKey[idx] | R_STICK_KEY;
+	//}
 }
 
 //=============================================================================
@@ -668,7 +629,7 @@ void CInputGamePad::OutPutKeyForDemo(void)
 	FILE* fpw = fopen(DEMO_FILE_PATH, "wb");
 
 	// 失敗したら
-	if (fpw == NULL)
+	if(fpw == NULL)
 	{
 		printf("ファイル読み込み失敗\n");
 		rewind(stdin);
@@ -693,7 +654,7 @@ void CInputGamePad::LoadKeyForDemo(void)
 	FILE* fpr = fopen(DEMO_FILE_PATH, "rb");
 
 	// 失敗したら
-	if (fpr == NULL)
+	if(fpr == NULL)
 	{
 		printf("ファイル読み込み失敗\n");
 		rewind(stdin);
@@ -714,99 +675,99 @@ void CInputGamePad::LoadKeyForDemo(void)
 //=============================================================================
 bool CInputGamePad::GetKeyForDemo(KEY key, int idx)
 {
-	// 限界値判定
-	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
-	{
-		return false;
-	}
-
-	if (key == LEFT_STICK_LEFT)
-	{
-		if (m_nKeepDemoKey[idx] & L_LEFT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_RIGHT)
-	{
-		if (m_nKeepDemoKey[idx] & L_RIGHT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_UP)
-	{
-		if (m_nKeepDemoKey[idx] & L_UP_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_DOWN)
-	{
-		if (m_nKeepDemoKey[idx] & L_DOWN_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_LEFT)
-	{
-		if (m_nKeepDemoKey[idx] & R_LEFT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_RIGHT)
-	{
-		if (m_nKeepDemoKey[idx] & R_RIGHT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_UP)
-	{
-		if (m_nKeepDemoKey[idx] & R_UP_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_DOWN)
-	{
-		if (m_nKeepDemoKey[idx] & R_DOWN_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_3)
-	{
-		if (m_nKeepDemoKey[idx] & JUMP_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_1)
-	{
-		if (m_nKeepDemoKey[idx] & KICK_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_10)
-	{
-		if (m_nKeepDemoKey[idx] & R_STICK_KEY)
-		{
-			return true;
-		}
-	}
+	//// 限界値判定
+	//if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
+	//{
+	//	return false;
+	//}
+	//
+	//if(key == LEFT_STICK_LEFT)
+	//{
+	//	if(m_nKeepDemoKey[idx] & L_LEFT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_RIGHT)
+	//{
+	//	if(m_nKeepDemoKey[idx] & L_RIGHT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_UP)
+	//{
+	//	if(m_nKeepDemoKey[idx] & L_UP_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_DOWN)
+	//{
+	//	if(m_nKeepDemoKey[idx] & L_DOWN_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_LEFT)
+	//{
+	//	if(m_nKeepDemoKey[idx] & R_LEFT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_RIGHT)
+	//{
+	//	if(m_nKeepDemoKey[idx] & R_RIGHT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_UP)
+	//{
+	//	if(m_nKeepDemoKey[idx] & R_UP_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_DOWN)
+	//{
+	//	if(m_nKeepDemoKey[idx] & R_DOWN_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_3)
+	//{
+	//	if(m_nKeepDemoKey[idx] & JUMP_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_1)
+	//{
+	//	if(m_nKeepDemoKey[idx] & KICK_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_10)
+	//{
+	//	if(m_nKeepDemoKey[idx] & R_STICK_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
 	return false;
 }
 
@@ -815,198 +776,198 @@ bool CInputGamePad::GetKeyForDemo(KEY key, int idx)
 //=============================================================================
 bool CInputGamePad::GetTriggerKeyForDemo(KEY key, int idx)
 {
-	// 限界値判定
-	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
-	{
-		return false;
-	}
-
-	if (key == LEFT_STICK_LEFT)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & L_LEFT_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & L_LEFT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_RIGHT)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & L_RIGHT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_UP)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & L_UP_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & L_UP_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_DOWN)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & L_DOWN_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & L_DOWN_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_LEFT)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & R_LEFT_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & R_LEFT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_RIGHT)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & R_RIGHT_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_UP)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & R_UP_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & R_UP_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_DOWN)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & R_DOWN_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & R_DOWN_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_3)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & JUMP_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & JUMP_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_1)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & KICK_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & KICK_KEY)
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_10)
-	{
-		if (idx - 1 >= 0)
-		{
-			// 前回押されてたら
-			if (m_nKeepDemoKey[idx - 1] & R_STICK_KEY)
-			{
-				return false;
-			}
-		}
-
-		if (m_nKeepDemoKey[idx] & R_STICK_KEY)
-		{
-			return true;
-		}
-	}
+	//// 限界値判定
+	//if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx < 0)
+	//{
+	//	return false;
+	//}
+	//
+	//if(key == LEFT_STICK_LEFT)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & L_LEFT_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & L_LEFT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_RIGHT)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & L_RIGHT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_UP)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & L_UP_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & L_UP_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_DOWN)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & L_DOWN_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & L_DOWN_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_LEFT)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & R_LEFT_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & R_LEFT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_RIGHT)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & R_RIGHT_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_UP)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & R_UP_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & R_UP_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_DOWN)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & R_DOWN_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & R_DOWN_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_3)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & JUMP_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & JUMP_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_1)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & KICK_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & KICK_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_10)
+	//{
+	//	if(idx - 1 >= 0)
+	//	{
+	//		// 前回押されてたら
+	//		if(m_nKeepDemoKey[idx - 1] & R_STICK_KEY)
+	//		{
+	//			return false;
+	//		}
+	//	}
+	//
+	//	if(m_nKeepDemoKey[idx] & R_STICK_KEY)
+	//	{
+	//		return true;
+	//	}
+	//}
 	return false;
 }
 
@@ -1015,166 +976,218 @@ bool CInputGamePad::GetTriggerKeyForDemo(KEY key, int idx)
 //=============================================================================
 bool CInputGamePad::GetReleaseKeyForDemo(KEY key, int idx)
 {
-	// 限界値判定
-	if (idx >= MAX_KEEP_KEY_FOR_DEMO || idx <= 0)
+	//// 限界値判定
+	//if(idx >= MAX_KEEP_KEY_FOR_DEMO || idx <= 0)
+	//{
+	//	return false;
+	//}
+	//
+	//if(key == LEFT_STICK_LEFT)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & L_LEFT_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & L_LEFT_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_RIGHT)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & L_RIGHT_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_UP)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & L_UP_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & L_UP_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == LEFT_STICK_DOWN)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & L_DOWN_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & L_DOWN_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_LEFT)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & R_LEFT_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & R_LEFT_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_RIGHT)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & R_RIGHT_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_UP)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & R_UP_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & R_UP_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == RIGHT_STICK_DOWN)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & R_DOWN_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & R_DOWN_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_3)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & JUMP_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & JUMP_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_1)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & KICK_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & KICK_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	//
+	//if(key == KEY_10)
+	//{
+	//	// 前回押されてないなら
+	//	if(!(m_nKeepDemoKey[idx - 1] & R_STICK_KEY))
+	//	{
+	//		return false;
+	//	}
+	//
+	//	if(!(m_nKeepDemoKey[idx] & R_STICK_KEY))
+	//	{
+	//		return true;
+	//	}
+	//}
+	return false;
+}
+
+//======================================
+// キーコフィング情報セット
+//======================================
+void CInputGamePad::SetKeyCofingInfo(int id, int* keyConfigInfo)
+{
+	if (id < 0 || id >= MAX_PAD_NUM)
+	{
+		return;
+	}
+	for (int i = 0; i < PAD_KEY_MAX; ++i)
+	{
+		m_aKeyConfig[id][i] = keyConfigInfo[i];
+	}
+}
+
+//======================================
+// 何かトリガーしたか
+//======================================
+bool CInputGamePad::CheckTriggerAnyKey(int ID, int* pCord)
+{
+	if (!m_GamePad[ID].pPadDevice)
 	{
 		return false;
 	}
-
-	if (key == LEFT_STICK_LEFT)
+	for (int pos = 0; pos < 127; pos++)
 	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & L_LEFT_KEY))
+		if (m_GamePad[ID].OldPadData.rgbButtons[pos] != 0)
 		{
-			return false;
+			continue;
 		}
-
-		if (!(m_nKeepDemoKey[idx] & L_LEFT_KEY))
+		if (m_GamePad[ID].PadData.rgbButtons[pos] != 0)
 		{
+			*pCord = pos;
 			return true;
 		}
 	}
 
-	if (key == LEFT_STICK_RIGHT)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & L_RIGHT_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & L_RIGHT_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_UP)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & L_UP_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & L_UP_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == LEFT_STICK_DOWN)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & L_DOWN_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & L_DOWN_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_LEFT)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & R_LEFT_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & R_LEFT_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_RIGHT)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & R_RIGHT_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & R_RIGHT_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_UP)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & R_UP_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & R_UP_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == RIGHT_STICK_DOWN)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & R_DOWN_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & R_DOWN_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_3)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & JUMP_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & JUMP_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_1)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & KICK_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & KICK_KEY))
-		{
-			return true;
-		}
-	}
-
-	if (key == KEY_10)
-	{
-		// 前回押されてないなら
-		if (!(m_nKeepDemoKey[idx - 1] & R_STICK_KEY))
-		{
-			return false;
-		}
-
-		if (!(m_nKeepDemoKey[idx] & R_STICK_KEY))
-		{
-			return true;
-		}
-	}
 	return false;
+}
+
+//======================================
+// コントローラー繋がってるか調べる
+//======================================
+bool CInputGamePad::CheckConectPad(int ID)
+{
+	if (!m_GamePad[ID].pPadDevice)
+	{
+		return false;
+	}
+	return true;
 }
 
 //----EOF----

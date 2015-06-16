@@ -13,6 +13,7 @@
 #include "../MAIN/main.h"
 #include "../FADE/CFade.h"
 #include "../INPUT/CInputKeyboard.h"
+#include "../INPUT/CInputGamePad.h"
 
 //*****************************************************************************
 // ëOï˚êÈåæ
@@ -29,6 +30,7 @@ typedef enum
 	MODE_PHASE_TITLE,
 	MODE_PHASE_GAME,
 	MODE_PHASE_RESULT,
+	MODE_PHASE_OPTION,
 	MODE_PHASE_MAX
 }MODE_PHASE;
 

@@ -95,11 +95,7 @@ void CDebugProc::Draw(void)
 	// 描画
 	m_pD3DXFONT->DrawText(NULL, m_aStr, -1, &rect, DT_LEFT, DRAW_TEXT_COLOR);
 
-	// バッファ初期化
-	ZeroMemory(&m_aStr[0],sizeof(char));
-
-	// 文字数初期化
-	m_nCounter = 0;
+	ClearBuff();
 #endif
 }
 
@@ -137,6 +133,48 @@ void CDebugProc::Print(const char *fmt, ...)
 
 	// 文字列合成
 	strcat(m_aStr,str);
+#endif
+}
+
+//=================================================
+// 座標ログ吐き出し処理
+//==================================================
+void CDebugProc::PrintLog_Pos(char* fileName, D3DXVECTOR3 pos)
+{
+#ifdef _DEBUG
+	// 書き込み用ファイル
+	FILE* fpw = fopen(fileName, "a");
+
+	// 失敗したら
+	if (fpw == NULL)
+	{
+		MessageBox(NULL, "ファイルオープン失敗しました(ログ、ポス)\n", "エラー", MB_OK | MB_ICONERROR);
+	}
+
+	// 成功したら
+	else
+	{
+		fprintf(fpw, "X:%f", pos.x);
+		fprintf(fpw, "Y:%f", pos.y);
+		fprintf(fpw, "Z:%f\n", pos.z);
+	}
+
+	fclose(fpw);
+#endif
+}
+
+//=================================================
+// バッファクリア処理
+// 引数:ファイル名、座標
+//==================================================
+void CDebugProc::ClearBuff(void)
+{
+#ifdef _DEBUG
+	// バッファ初期化
+	ZeroMemory(&m_aStr[0], sizeof(char));
+
+	// 文字数初期化
+	m_nCounter = 0;
 #endif
 }
 //----EOF----

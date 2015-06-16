@@ -11,8 +11,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-static const char*	CLASS_NAME = "AppClass";		// ウインドウのクラス名
-static const char*	WINDOW_NAME = "TEST";			// ウインドウのキャプション名
+static const char*	CLASS_NAME	= "AppClass";		// ウインドウのクラス名
+static const char*	WINDOW_NAME	= "TEST";			// ウインドウのキャプション名
 static const int	TIME_INTERVAL = 500;			// 実行間隔
 static const int	FPS_COEFFICIENT = 1000;			// FPSの係数
 static const int	BASE_FPS = 1000 / 60;			// FPSの基準速度
@@ -49,10 +49,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	// FPS用
 	DWORD dwExecLastTime;
-	DWORD dwDrawLastTime;
 	DWORD dwFPSLastTime;
 	DWORD dwCurrentTime;
 	DWORD dwFrameCount;
+	bool bDrawCounter = true;
 
 	WNDCLASSEX wcex =
 	{
@@ -71,7 +71,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	};
 	HWND hWnd;
 	MSG msg;
-
+	
 	// ウィンドウクラスの登録
 	RegisterClassEx(&wcex);
 
@@ -85,30 +85,31 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	rc.bottom = SCREEN_HEIGHT;
 	rc.right = SCREEN_WIDTH;
 
-	long WidthWindow = rc.right - rc.left;
-	long HeightWindow = rc.bottom - rc.top;
-
 	// アジャストウィンドウ
 	AdjustWindowRect(&rc, style, FALSE);
 
+	long WidthWindow = rc.right - rc.left;
+	long HeightWindow = rc.bottom - rc.top;
+
 	// ウィンドウの作成
 	hWnd = CreateWindowEx(0,
-		CLASS_NAME,
-		WINDOW_NAME,
-		style,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		WidthWindow,
-		HeightWindow,
-		NULL,
-		NULL,
-		hInstance,
-		NULL);
+						CLASS_NAME,
+						WINDOW_NAME,
+						style,
+						CW_USEDEFAULT,
+						CW_USEDEFAULT,
+						WidthWindow,
+						HeightWindow,
+						NULL,
+						NULL,
+						hInstance,
+						NULL);
 
 
 	//フレームカウント初期化
 	timeBeginPeriod(1);				// 分解能を設定
-	dwDrawLastTime = dwExecLastTime = dwFPSLastTime = timeGetTime();
+	dwExecLastTime =
+		dwFPSLastTime = timeGetTime();
 	dwCurrentTime =
 		dwFrameCount = 0;
 
@@ -156,38 +157,39 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			dwCurrentTime = timeGetTime();
 			if ((dwCurrentTime - dwFPSLastTime) >= TIME_INTERVAL)	// 0.5秒ごとに実行
 			{
+#ifdef _DEBUG
+				// FPS表示
+				g_pManager->GetRenderer()->SetFPS(dwFrameCount * FPS_COEFFICIENT / (dwCurrentTime - dwFPSLastTime));
+#endif
 				dwFPSLastTime = dwCurrentTime;
 				dwFrameCount = 0;
 			}
 
 			if ((dwCurrentTime - dwExecLastTime) >= BASE_FPS)
 			{
-				// 更新処理
-				Update();
 				dwExecLastTime = dwCurrentTime;
 
-			}
+				// 更新処理
+				Update();
 
-			if ((dwCurrentTime - dwDrawLastTime) >= DRAW_FPS)
-			{
-#ifdef _DEBUG
-				DWORD culcTime = dwCurrentTime - dwFPSLastTime;
-				if (culcTime > 0)
+				if (bDrawCounter)
 				{
-					// FPS表示
-					g_pManager->GetRenderer()->SetFPS(dwFrameCount * FPS_COEFFICIENT / (culcTime));
+					// 描画処理
+					Draw();
+
+					dwFrameCount++;
 				}
+
+				bDrawCounter = !bDrawCounter;
+#ifdef _DEBUG
+				// バッファクリア
+				CDebugProc::ClearBuff();
 #endif
-				// 描画処理
-				Draw();
-
-				dwDrawLastTime = dwCurrentTime;
-
-				dwFrameCount++;
 			}
 		}
 	}
 
+	
 	// ウィンドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);
 
@@ -204,14 +206,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
+	switch(uMsg)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 
 	case WM_KEYDOWN:
-		switch (wParam)
+		switch(wParam)
 		{
 		case VK_ESCAPE:
 			DestroyWindow(hWnd);
