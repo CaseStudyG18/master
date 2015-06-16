@@ -197,7 +197,15 @@ public:
 	void AddHp(float fPoint);
 
 	// MP減少用関数
-	void MPReduce(void);
+	void MPGainAndLoss(float changeValue);
+
+	// HP増減関数
+	void HPGainAndLoss(float changeValue);
+
+	// 鈍足フラグ
+	void SetDonashi(bool flg){
+		m_bDonashi = flg;
+	}
 
 	// プレイヤ番号ゲッター
 	short GetPlayerNum(){
@@ -277,6 +285,7 @@ private:
 	bool					m_bMetamorphose;	// 変形している状態かのフラグ
 	bool					m_bSpeedAttack;		// 移動形態での攻撃中かどうかのフラグ
 	bool*					m_bPlayerControl;	// プレイヤがコントロールできるかフラグ
+	bool					m_bDonashi;			// 鈍足フラグ
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ

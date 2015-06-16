@@ -90,20 +90,5 @@ void CAttackManager::CreateAttack(
 	default:
 		break;
 	}
-	/*
-	// ïÅí ÇÃçUåÇ
-	if (type == ATTACK_TYPE_NORMAL){
-		CAttackNormal::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if(type == ATTACK_TYPE_ATTACK){
-		CAttackSpecialAttack::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if (type == ATTACK_TYPE_SPEED){
-		CAttackSpecialSpeed::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if (type == ATTACK_TYPE_TRAP){
-		CAttackSpecialTrap::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	*/
 }
 //----EOF-------

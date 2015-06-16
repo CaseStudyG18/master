@@ -72,6 +72,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
 	m_bSpeedAttack = false;									// 移動形態の攻撃中か判定
+	m_bDonashi = false;										// 鈍足フラグの初期設定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
 
@@ -205,7 +206,10 @@ void CPlayer::Update(void)
 	/*プレイヤーのアクションが変形中で無かった場合のみ他の行動を*/
 	/*行うことができる											*/
 	/*----------------------------------------------------------*/
-	if (m_Action != PLAYER_ACTION_METAMORPHOSE && m_Action != PLAYER_ACTION_KNOCK_BACK && m_Action != PLAYER_ACTION_DOWN)
+	if (m_Action != PLAYER_ACTION_METAMORPHOSE &&
+		m_Action != PLAYER_ACTION_KNOCK_BACK &&
+		m_Action != PLAYER_ACTION_DOWN &&
+		m_Action != PLAYER_ACTION_ATTACK)
 	{
 
 		/*----------------------------------------------------------*/
@@ -426,7 +430,7 @@ void CPlayer::Update(void)
 	// 変形している場合MPを減少させていく
 	if (m_bMetamorphose)
 	{
-		MPReduce();
+		MPGainAndLoss(-1.5f);
 
 		// MPが０になったら通常状態に戻す
 		if (m_fMP <= 0.0f)
@@ -713,11 +717,29 @@ void CPlayer::MetamorphoseAnimation(void)
 //	引数　　無し
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::MPReduce(void)
+void CPlayer::MPGainAndLoss(float changeValue)
 {
 	// MPを減らしていく
-	// 数値は仮
-	m_fMP -= 1.5f;
+	m_fMP += changeValue;
+	if (m_fMP > PLAYER_DEFAULT_MP)
+	{
+		m_fMP = PLAYER_DEFAULT_MP;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// HPを減少させる関数
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::HPGainAndLoss(float changeValue)
+{
+	// MPを減らしていく
+	m_fHP += changeValue;
+	if (m_fHP > PLAYER_DEFAULT_HP)
+	{
+		m_fHP = PLAYER_DEFAULT_HP;
+	}
 }
 
 //-----------------------------------------------------------------------------

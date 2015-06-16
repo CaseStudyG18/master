@@ -10,6 +10,7 @@
 //*****************************************************************************
 #include "CAttackSpecialAttack.h"
 #include "../../EFFECT/CEffect.h"
+#include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // マクロ
@@ -117,4 +118,13 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 
 	return p;
 }
+
+//=============================================================================
+//	プレイヤーに当たった時の処理
+//=============================================================================
+void CAttackSpecialAttack::HitPlayer(CPlayer* pPlayer)
+{
+	pPlayer->HPGainAndLoss(-20.0f);
+}
+
 //----EOF-------
