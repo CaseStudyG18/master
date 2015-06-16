@@ -217,6 +217,8 @@ public:
 		return m_pTreasure;
 	}
 
+	// ‘O‰ñÀ•Wæ“¾
+	D3DXVECTOR3 GetOldPos(void){ return m_vPosOld; };
 private:
 	//---------------------------------
 	// ŠÖ”

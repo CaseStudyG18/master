@@ -63,7 +63,7 @@ void CThreadManager::Update(void)
 //*****************************************************************************
 // éÖÇê∂ê¨Ç∑ÇÈ
 //*****************************************************************************
-void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos)
+void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerDirection)
 {
 	switch (type)
 	{
@@ -77,7 +77,7 @@ void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 p
 		break;
 		// à⁄ìÆì¡âªå`ë‘ÇÃéÖ
 	case THREAD_TYPE_SPEED:
-		CThreadSpecialSpeed::Create(m_pDevice, nPlayerNum, pos);
+		CThreadSpecialSpeed::Create(m_pDevice, nPlayerNum, pos, playerDirection);
 		break;
 		// „©ì¡âªå`ë‘ÇÃéÖ
 	case THREAD_TYPE_TRAP:

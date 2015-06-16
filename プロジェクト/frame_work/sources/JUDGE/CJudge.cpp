@@ -19,8 +19,6 @@
 #include "../SCENE/GAME/TREASURE/CTreasure.h"
 #include "../SCENE/GAME/ATTACK/CAttackBase.h"
 #include "../SCENE/GAME/THREAD/CThreadBase.h"
-#include "../SCENE/GAME/GOAL/CGoal.h"
-#include "../SCENE/GAME/GOAL/CGoalManager.h"
 
 //=========================================================================
 // コンストラクタ
@@ -103,10 +101,10 @@ void CJudge::ColiFieldxPlayer(void)
 
 			// フィールド情報入れる
 			pField = (CScene2D*)pScene;
-			D3DXVECTOR2 pos(pField->GetPos().x, pField->GetPos().y);
+			D3DXVECTOR2 pos(pField->GetJudgePos().x, pField->GetJudgePos().y);
 			float rot = pField->GetRot().z;
-			float width = pField->GetWidth();
-			float height = pField->GetHeight();
+			float width = pField->GetJudgeWidth();
+			float height = pField->GetJudgeHeight();
 			CJudge::OBB_INFO fieldOBB;
 			// OBB情報作成
 			CreateOBBInfo(&fieldOBB, &pos, &rot, &width, &height);
@@ -164,7 +162,7 @@ void CJudge::ColiFieldxPlayer(void)
 		playerPos.y += pPlayer[idx]->GetHeight() * 0.25f;
 		if (m_LastFieldColiPlayer[idx])
 		{
-			fieldPos = (D3DXVECTOR2)m_LastFieldColiPlayer[idx]->GetPos();
+			fieldPos = (D3DXVECTOR2)m_LastFieldColiPlayer[idx]->GetJudgePos();
 		}
 		else
 		{
@@ -172,10 +170,10 @@ void CJudge::ColiFieldxPlayer(void)
 		}
 
 		// コの字なので順番注意
-		vertexPosA = *m_LastFieldColiPlayer[idx]->GetVertexPos(0);
-		vertexPosB = *m_LastFieldColiPlayer[idx]->GetVertexPos(1);
-		vertexPosC = *m_LastFieldColiPlayer[idx]->GetVertexPos(3);
-		vertexPosD = *m_LastFieldColiPlayer[idx]->GetVertexPos(2);
+		vertexPosA = *m_LastFieldColiPlayer[idx]->GetVertexJudgePos(0);
+		vertexPosB = *m_LastFieldColiPlayer[idx]->GetVertexJudgePos(1);
+		vertexPosC = *m_LastFieldColiPlayer[idx]->GetVertexJudgePos(3);
+		vertexPosD = *m_LastFieldColiPlayer[idx]->GetVertexJudgePos(2);
 		
 		Segment playerSegment, vertexSegment;
 		playerSegment.s = fieldPos;
@@ -202,7 +200,8 @@ void CJudge::ColiFieldxPlayer(void)
 				}
 			}
 		}
-		pPlayer[idx]->SetPos(D3DXVECTOR3(hitPos.x, hitPos.y - pPlayer[idx]->GetHeight() * 0.25f, 0.f));
+		pPlayer[idx]->SetPos(pPlayer[idx]->GetOldPos());
+		//pPlayer[idx]->SetPos(D3DXVECTOR3(hitPos.x, hitPos.y - pPlayer[idx]->GetHeight() * 0.25f, 0.f));
 	}
 
 }
@@ -293,7 +292,7 @@ void CJudge::ColiAttackxPlayer(void){
 					// 当たった時の処理
 					// これでいいのかな？
 					pPlayer[idx]->SetPlyerKnockBack();
-					pPlayer[idx]->AddHp(-1);
+
 #ifdef _DEBUG
 					CDebugProc::Print("攻撃ヒット\n");
 #endif
@@ -317,7 +316,8 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 	CScene *pSceneNextField;
 	CScene2D *pThread;
 	CScene2D *pField;
-	CJudge::OBB_INFO threadOBB, fieldOBB;
+	CScene2D* lastCheckField = NULL;
+	CJudge::OBB_INFO threadOBB, fieldOBB, lastCheckOBB;
 	bool hit = false;
 
 
@@ -344,6 +344,7 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 			float height = pThread->GetHeight();
 			CThreadBase* threadBase = (CThreadBase*)pSceneThread;
 			int playerNum = threadBase->GetPlayerNum();
+			lastCheckField = m_LastFieldColiPlayer[playerNum];
 
 			// OBB情報作成
 			CreateOBBInfo(&threadOBB, &pos, &rot, &width, &height);
@@ -362,12 +363,12 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 					{
 						// フィールド情報取得
 						pField = (CScene2D*)pSceneField;
-						D3DXVECTOR2 pos2(pField->GetPos().x, pField->GetPos().y);
+						D3DXVECTOR2 pos2(pField->GetJudgePos().x, pField->GetJudgePos().y);
 						float rot2 = pField->GetRot().z;
-						float width2 = pField->GetWidth();
-						float height2 = pField->GetHeight();
+						float width2 = pField->GetJudgeWidth();
+						float height2 = pField->GetJudgeHeight();
 
-						// 自分が乗ってる床以外ならやらない
+						// 自分が乗ってる床ならやらない
 						CScene2D* lastField = m_LastFieldColiPlayer[playerNum];
 						if (lastField)
 						{
@@ -379,23 +380,40 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 							}
 						}
 
-						// OBB情報作成
+						// フィールドのOBB情報作成
 						CreateOBBInfo(&fieldOBB, &pos2, &rot2, &width2, &height2);
 
 						// 当たり判定
 						if (IsOBB(threadOBB, fieldOBB))
 						{
+							if (lastCheckField)
+							{
+								D3DXVECTOR2 lastCheckPos(lastCheckField->GetJudgePos().x, lastCheckField->GetJudgePos().y);
+								float lastCheckRot = lastCheckField->GetRot().z;
+								float lastCheckWidth = lastCheckField->GetJudgeWidth() * 1.5f;
+								float lastCheckHeight = lastCheckField->GetJudgeHeight() * 1.5f;
+								// 最後に調べたフィールドのOBB情報作成
+								CreateOBBInfo(&lastCheckOBB, &lastCheckPos, &lastCheckRot, &lastCheckWidth, &lastCheckHeight);
+							
+								// 最後に調べた床と今の床が当たってるか
+								if (IsOBB(lastCheckOBB, fieldOBB))
+								{
+									// 最後に調べた床更新
+									lastCheckField = pField;
+
+									// 次のインスタンスを対象のインスタンスにする
+									pSceneField = pSceneNextField;
+									continue;
+								}
+							}
+
 							// フィールドにタイプ変更
 							pThread->SetObjType(CScene::OBJTYPE_FIELD);
-
-							// 足場になるアニメーションはじめ
-							//
-							//
-							//
 
 							hit = true;
 							break;
 						}
+
 					}
 
 					// 次のインスタンスを対象のインスタンスにする
@@ -494,8 +512,8 @@ void CJudge::ColiTreasurexPlayer(void)
 					coli[idx] = true;
 #ifdef _DEBUG
 					CDebugProc::Print("TREASURE x PLAYER!!\n");
-#endif
 					break;
+#endif
 				}
 			}
 			// 次のインスタンスを対象のインスタンスにする
@@ -516,126 +534,6 @@ void CJudge::ColiTreasurexPlayer(void)
 				break;
 			}
 		}
-
-}
-
-//=========================================================================
-// プレイヤーとゴールのあたり判定
-//=========================================================================
-void CJudge::ColiGoalxPlayer(void)
-{
-	CScene *pScene;
-	CScene *pSceneNext;
-	CPlayer *pPlayer[MAXIMUM_NUMBER_OF_PLAYER] = { NULL };	// プレイヤーの最大人数分用意
-	CGoal *pGoal = NULL;
-	CGoal *pGoalHit = NULL;
-	int nHitGoalPlayerNum;
-	CGoal *pGoalAll[GOAL_MAX] = { NULL };
-	CJudge::OBB_INFO playerOBB[MAXIMUM_NUMBER_OF_PLAYER];
-	int playerNum = 0;
-	bool coli[MAXIMUM_NUMBER_OF_PLAYER] = { false };
-
-	// プレイヤー情報入れる
-	CPlayerManager* playerManager = m_pJudgeManager->GetPlayerManager();
-
-	for (int playerCount = 0; playerCount < MAXIMUM_NUMBER_OF_PLAYER; ++playerCount)
-	{
-		pPlayer[playerCount] = playerManager->GetPlayer(playerCount);
-		if (!pPlayer[playerCount])
-		{
-			continue;
-		}
-		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
-		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
-		float rot = pPlayer[playerCount]->GetRot().z;
-		float width = pPlayer[playerCount]->GetWidth() * 0.5f;
-		float height = pPlayer[playerCount]->GetHeight() * 0.25f;
-
-		// OBB情報作成
-		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
-		playerNum++;
-	}
-
-	// 当たり判定ループ
-	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
-	{
-		// 先頭を指定
-		pScene = CScene::GetTopAddress(priority);
-
-		// ポインタがNULLでなければ
-		while (pScene)
-		{
-			// 現在対象としているインスタンスの次のインスタンスを保存
-			pSceneNext = pScene->GetNextAddress();
-
-			if (pScene->GetObjType() != CScene::OBJTYPE_GOAL)
-			{
-				// 次のインスタンスを対象のインスタンスにする
-				pScene = pSceneNext;
-				continue;
-			}
-
-			// フィールド情報入れる
-			pGoal = (CGoal*)pScene;
-			D3DXVECTOR2 pos(pGoal->GetPos().x, pGoal->GetPos().y);
-
-			float rot = pGoal->GetRot().z;
-			float width = pGoal->GetWidth();
-			float height = pGoal->GetHeight();
-			CJudge::OBB_INFO goalOBB;
-			// OBB情報作成
-			CreateOBBInfo(&goalOBB, &pos, &rot, &width, &height);
-
-			// プレイヤ番号を配列番号としてゴールのポインタを格納
-			pGoalAll[pGoal->GetPlayerNum()] = pGoal;
-
-			// 当たり判定
-			for (int idx = 0; idx < playerNum; ++idx)
-			{
-				// 宝物を持っていなかったら次へ
-				if (pPlayer[idx]->GetTreasure() == NULL){
-					continue;
-				}
-				
-				// すでにあたってるなら判定しない
-				if (coli[idx])
-				{
-					continue;
-				}
-
-				if (IsOBB(playerOBB[idx], goalOBB))
-				{
-					// 当たったゴールのインスタンスを保存
-					pGoalHit = pGoal;
-					nHitGoalPlayerNum = pGoal->GetPlayerNum();
-
-					// ヒットフラグオン
-					coli[idx] = true;
-				}
-			}
-			// 次のインスタンスを対象のインスタンスにする
-			pScene = pSceneNext;
-		}
-	}
-
-	// 当たり判定チェック
-	for (int idx = 0; idx < playerNum; ++idx){
-		if (coli[idx]){
-
-			// プレイヤに対応したゴールじゃなければさよなら
-			if (nHitGoalPlayerNum != pPlayer[idx]->GetPlayerNum()){
-				break;
-			}
-			pGoalHit->SetTrans();
-		}
-		else{
-			for (int i = 0; i < GOAL_MAX; i++){
-				if (i != nHitGoalPlayerNum){
-					pGoalAll[i]->SetNoTrans();
-				}
-			}
-		}
-	}
 
 }
 

@@ -14,6 +14,7 @@
 //=============================================================================
 #include "../../../RENDERER/CRenderer.h"
 #include "CThreadBase.h"
+#include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // クラス定義
@@ -23,10 +24,9 @@ class CThreadSpecialSpeed : public CThreadBase
 	// 公開メンバ
 public:
 	// プライオリティとオブジェタイプはテスト
-	CThreadSpecialSpeed(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_THREAD_OF_FOOTHOLD, OBJTYPE type = OBJTYPE_FIELD);
+	CThreadSpecialSpeed(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_THREAD_OF_FOOTHOLD, OBJTYPE type = OBJTYPE_2D);
 	~CThreadSpecialSpeed(void);
 
-	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
@@ -39,10 +39,24 @@ public:
 	static CThreadSpecialSpeed *Create(
 		LPDIRECT3DDEVICE9 *pDevice,
 		short nPlayerNum,
-		D3DXVECTOR3 pos);
+		D3DXVECTOR3 pos,
+		DIRECTION_PLAYER_FACING playerDirection);
 
-	// 非公開メンバ
+	// デス関数
+	void Death(void);
+	
 private:
+	HRESULT Init(short nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerDirection);
+
+	// 糸伸びる処理
+	void GrowThread(void);
+
+	// フィールドアニメーション
+	void FieldAnim(void);
+
+	DIRECTION_PLAYER_FACING m_Direction;	// 方向
+	float					m_fAddPower;	// 伸びる大きさ
+	int						m_nAnimTimer;	// アニメーションのカウンター
 
 };
 

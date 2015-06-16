@@ -48,11 +48,6 @@ protected:
 	// 糸の種類
 	ThreadType m_ThreadType;
 
-	// 中央の位置,角度,幅,高さ
-	D3DXVECTOR3	m_vPos;
-	D3DXVECTOR3	m_vRot;
-	float		m_fWidth;
-	float		m_fHeight;
 
 	// ポジションアクセサ
 	D3DXVECTOR3 GetPos(void){ return m_vPos; };

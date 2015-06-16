@@ -17,7 +17,7 @@
 //=======================================================================
 CField::CField(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE m_objType) :CScene2D(pDevice, nPriority, m_objType)
 {
-
+	
 }
 
 //=======================================================================
@@ -69,6 +69,12 @@ CField* CField::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width,
 HRESULT CField::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock, int hblock)
 {
 	CScene2D::Init(pos, width, height, texType);
+	
+	m_fJudgeWidth = width;
+	m_fJudgeHeight = height * 0.5f;
+	m_vJudgePos = pos;
+	m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+
 	return TRUE;
 }
 //----EOF----
