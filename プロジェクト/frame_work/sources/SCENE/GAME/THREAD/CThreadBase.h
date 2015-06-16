@@ -15,6 +15,7 @@
 #include "../../CSCENE/CScene2D.h"
 #include "../PLAYER/CPlayerManager.h"
 #include "CThreadManager.h"
+#include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // クラス定義
@@ -23,7 +24,6 @@ class CThreadBase : public CScene2D
 {
 	// 公開メンバ
 public:
-
 	CThreadBase(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE type);
 	virtual ~CThreadBase(void);
 
@@ -32,6 +32,7 @@ public:
 	void Update(void);
 	void Draw(void);
 	short GetPlayerNum(void){ return m_nPlayerNum; };
+	void SetPlayerFacing(DIRECTION_PLAYER_FACING playerFacing){ m_PlayerFaicing = playerFacing; }
 	// 継承メンバ
 protected:
 	// 寿命をカウントする
@@ -47,6 +48,9 @@ protected:
 	bool m_bHitFlg;
 	// 糸の種類
 	ThreadType m_ThreadType;
+
+	// プレイヤーが糸発射時に向いていた方向
+	DIRECTION_PLAYER_FACING m_PlayerFaicing;
 
 	// 中央の位置,角度,幅,高さ
 	D3DXVECTOR3	m_vPos;

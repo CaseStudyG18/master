@@ -42,6 +42,7 @@ typedef enum
 	PLAYER_ACTION_THREAD,			// 糸を出す
 	PLAYER_ACTION_KNOCK_BACK,		// やられ状態
 	PLAYER_ACTION_DOWN,				// ダウン状態
+	PLAYER_ACTION_STOP,				// 止まり状態
 	PLAYER_ACTION_MAX
 }PLAYER_ACTION;
 
@@ -206,6 +207,12 @@ public:
 	void SetDonashi(bool flg){
 		m_bDonashi = flg;
 	}
+
+	// プレイヤーの行動状態を初期状態に変える
+	void SetPlayerActionNone(void){ m_Action = PLAYER_ACTION_NONE; }
+
+	// プレイヤーの行動状態を停止状態に変える
+	void SetPlayerActionStop(void){ m_Action = PLAYER_ACTION_STOP; }
 
 	// プレイヤ番号ゲッター
 	short GetPlayerNum(){

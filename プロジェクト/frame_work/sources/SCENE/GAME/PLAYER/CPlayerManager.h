@@ -53,6 +53,14 @@ public:
 	//	引数　　プレイヤーポインタ、セットする先の配列番号
 	void SetPlayer(CPlayer* pPlayer, int nNumber){ m_apPlayer[nNumber] = pPlayer; }
 
+	// プレイヤーの停止
+	//  引数　　プレイヤーナンバー
+	void SetPlayerStop(short playerNumber);
+
+	// プレイヤーの再生
+	//  引数　　プレイヤーナンバー
+	void SetPlayerPlayback(short playerNumber);
+
 private:
 	// プレイヤーのポインタ格納用配列
 	CPlayer* m_apPlayer[MAXIMUM_NUMBER_OF_PLAYER];

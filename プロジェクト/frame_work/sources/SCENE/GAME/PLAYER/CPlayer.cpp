@@ -564,26 +564,6 @@ void CPlayer::Move(void)
 	m_vPos.x += fDiffPosX * 0.5f;
 	m_vPos.y += fDiffPosY * 0.5f;
 
-	/*
-	// 上と下の移動以外の移動では向きを変える
-	if (m_PlayerFacing == PLAYER_DIRECTION_UP || m_PlayerFacing == PLAYER_DIRECTION_DOWN)
-	{
-		// 向き設定
-		m_vRot.z = DEGREE_TO_RADIAN(0.0f);
-
-		// 角度の正規化
-		NormalizeRotation(&m_vRot.z);
-	}
-	else
-	{
-		// 向き設定
-		m_vRot.z = atan2f(fDiffPosY, fDiffPosX) + DEGREE_TO_RADIAN(90.0f);
-
-		// 角度の正規化
-		NormalizeRotation(&m_vRot.z);
-	}
-	*/
-
 	// プレイヤーの移動方向が変わったらテクスチャのU値を変える
 	if ((m_PlayerFacing == PLAYER_DIRECTION_LEFT || m_PlayerFacing == PLAYER_DIRECTION_RIGHT) &&
 		m_PlayerFacing != m_PlayerFacingOld)
@@ -756,28 +736,32 @@ void CPlayer::SpidersThread(void)
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_NORMAL,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 		// 攻撃特化形態の糸
 	case PLAYER_MODE_ATTACK:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_ATTACK,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 		// 移動特化形態の糸
 	case PLAYER_MODE_SPEED:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_SPEED,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 		// 罠特化形態の糸
 	case PLAYER_MODE_TRAP:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_TRAP,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 	default:
 		break;
