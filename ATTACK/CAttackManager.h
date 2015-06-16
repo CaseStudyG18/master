@@ -29,6 +29,11 @@ enum AttackType{
 // 前方宣言
 //=============================================================================
 class CAttack;
+class CPlayerManager;
+class CAttackNormal;
+class CAttackSpecialAttack;
+class CAttackSpecialSpeed;
+class CAttackSpecialTrap;
 
 //*****************************************************************************
 // クラス定義
@@ -37,7 +42,7 @@ class CAttackManager
 {
 	// 公開メンバ
 public:
-	CAttackManager(LPDIRECT3DDEVICE9 *pDevice);
+	CAttackManager(LPDIRECT3DDEVICE9 *pDevice);//, CPlayerManager* pPlayerManager);
 	~CAttackManager(void);
 
 	void Init(void);
@@ -53,7 +58,12 @@ public:
 
 	// 非公開メンバ
 private:
-	LPDIRECT3DDEVICE9 *m_pDevice;
+	LPDIRECT3DDEVICE9*			m_pDevice;
+	//CPlayerManager*				m_pPlayerManager;		// プレイヤーマネージャのポインタ
+	//CAttackNormal*			m_apAttackNormal[12];	// 通常攻撃のポインタを入れておく配列
+	//CAttackSpecialAttack*		m_apAttackAttack[12];	// 攻撃特化攻撃のポインタを入れておく配列
+	//CAttackSpecialSpeed*		m_apAttackSpeed[4];		// 移動特化の攻撃のポインタを入れておく配列
+	//CAttackSpecialTrap*		m_apAttackTrap[12];		// 妨害特化の攻撃のポインタを入れておく配列
 };
 
 #endif

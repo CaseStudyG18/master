@@ -35,6 +35,8 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	void HitPlayer(CPlayer* pPlayer);
+
 	//=======================================================================
 	// クリエイト関数
 	// 引数:デバイス、プレイヤ番号、座標
