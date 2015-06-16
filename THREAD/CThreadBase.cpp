@@ -75,7 +75,6 @@ void CThreadBase::Update(void)
 	if (m_nHitEndTime < m_nCount){
 		m_bHitFlg = false;
 	}
-	
 
 }
 
