@@ -30,7 +30,7 @@
 static const short GAME_TIME = 300;
 
 // 宝物の場所
-static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(630, 350, 0);
+static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(647, 315, 0);
 
 // ゴール
 static const D3DXVECTOR3 GOAL_POS[GOAL_MAX] = {
@@ -46,6 +46,9 @@ static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 // プレイヤ人数
 static const short MANUAL_PLAYER_NUM = 2;
 static const short CPU_PLAYER_NUM = 0;
+
+// 背景のスクロールの速さ
+static const float BG_SPEED = 2.0f;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -130,10 +133,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_BackGroundManager = new CBackGroundManager(pDevice);
 	m_BackGroundManager->Init();
 	m_BackGroundManager->CreateBG(TEXTURE_BG_0);
-	m_BackGroundManager->CreateBG(TEXTURE_BG_1, 5);
+	m_BackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
 
 	// 音再生
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 
 	// ジャッジ作成
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);

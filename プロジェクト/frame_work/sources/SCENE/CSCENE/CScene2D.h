@@ -45,21 +45,21 @@ public:
 	void Draw(void);
 
 	// ポジションアクセサ
-	D3DXVECTOR3 GetPos(void){ return m_vPos;};
+	D3DXVECTOR3 GetPos(void){ return m_vPos; };
 	void		SetPos(D3DXVECTOR3 pos);
-	void		SetPos(float x,float y, float z){ m_vPos.x = x; m_vPos.y = y; m_vPos.z = z;};
+	void		SetPos(float x, float y, float z){ m_vPos.x = x; m_vPos.y = y; m_vPos.z = z; };
 
 	// ロットアクセサ
-	D3DXVECTOR3 GetRot(void){return m_vRot;};
+	D3DXVECTOR3 GetRot(void){ return m_vRot; };
 	void		SetRot(D3DXVECTOR3 rot);
-	void		SetRot(float x,float y,float z){ m_vRot.x = x; m_vRot.y = y; m_vRot.z = z;};
+	void		SetRot(float x, float y, float z){ m_vRot.x = x; m_vRot.y = y; m_vRot.z = z; };
 
 	// サイズアクセサ
-	float GetWidth(void){return m_fWidth;};
-	void SetWidth(float width){m_fWidth = width;};
-	float GetHeight(void){return m_fHeight;};
-	void SetHeight(float height){m_fHeight = height;};
-	
+	float GetWidth(void){ return m_fWidth; };
+	void SetWidth(float width){ m_fWidth = width; };
+	float GetHeight(void){ return m_fHeight; };
+	void SetHeight(float height){ m_fHeight = height; };
+
 	//=======================================================================
 	// サイズと場所変更関数
 	// 引数:座標、幅、高さ
@@ -103,16 +103,21 @@ public:
 	void SetUV(UV_INDEX *pUVIndex);
 
 	//=======================================================================
+	// UV値90度回転関数
+	//=======================================================================
+	void Rot90_UV(void);
+
+	//=======================================================================
 	// 自動描画フラグセット関数
 	// 引数:真偽値
 	//=======================================================================
-	void SetDrawFlag(bool flag){m_AutoDraw = flag;};
+	void SetDrawFlag(bool flag){ m_AutoDraw = flag; };
 
 	//=======================================================================
 	// テクスチャー変更関数
 	// 引数:テクスチャーの種類
 	//=======================================================================
-	void ChangeTexture(TEXTURE_TYPE texType){m_pD3DTexBuff = CTexture::GetTexture(texType);};
+	void ChangeTexture(TEXTURE_TYPE texType){ m_pD3DTexBuff = CTexture::GetTexture(texType); };
 
 	//=======================================================================
 	// クリエイト関数
@@ -128,10 +133,22 @@ public:
 	//=======================================================================
 	D3DXVECTOR2* GetVertexPos(int idx){ return &m_vtxPos[idx]; };
 
+	//=======================================================================
+	// 当たり判定用頂点座標取得関数
+	// 引数:頂点番号
+	// 戻り値:座標
+	//=======================================================================
+	D3DXVECTOR2* GetVertexJudgePos(int idx){ return &m_vtxJudgePos[idx]; };
+
+	D3DXVECTOR3 GetJudgePos(void){ return m_vJudgePos; };
+	float GetJudgeWidth(void){ return m_fJudgeWidth; };
+	float GetJudgeHeight(void){ return m_fJudgeHeight; };
+
 private:
 	static const int VERTEX_NUM = 4;	// 頂点の数
 	bool		m_AutoDraw;				// 自動で描画するか
 	D3DXVECTOR2	m_vtxPos[VERTEX_NUM];	// 頂点の座標
+	D3DXVECTOR2	m_vtxJudgePos[VERTEX_NUM];	// 頂点の座標
 
 protected:
 	// 頂点情報セットワールド変換関数
@@ -144,6 +161,10 @@ protected:
 	D3DXVECTOR3	m_vRot;								// ポリゴンの回転
 	float		m_fWidth;							// 幅
 	float		m_fHeight;							// 高さ
+	// 当たり判定用のパラメーター
+	D3DXVECTOR3 m_vJudgePos;
+	float m_fJudgeWidth;
+	float m_fJudgeHeight;
 };
 #endif
 //----EOF----

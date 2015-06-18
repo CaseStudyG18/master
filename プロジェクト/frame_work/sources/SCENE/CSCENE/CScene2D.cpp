@@ -187,6 +187,26 @@ void CScene2D::SetVertexPolygon(void)
 		m_vtxPos[i].y = pVtx[i].vtx.y;
 	}
 	m_pD3DVtxBuff->Unlock();		// ロックしたら必ずアンロック！！
+
+
+	pos = VECTOR2(m_vJudgePos.x, m_vJudgePos.y);
+	vertexPos[0] = VECTOR2(-m_fJudgeWidth * 0.5f, -m_fJudgeHeight * 0.5f);
+	vertexPos[1] = VECTOR2(m_fJudgeWidth * 0.5f, -m_fJudgeHeight * 0.5f);
+	vertexPos[2] = VECTOR2(-m_fJudgeWidth * 0.5f, m_fJudgeHeight * 0.5f);
+	vertexPos[3] = VECTOR2(m_fJudgeWidth * 0.5f, m_fJudgeHeight * 0.5f);
+
+	// 座標変換
+	Matrix3Identity(&worldMatrix);
+	Matrix3Rotation(&rotationMatrix, m_vRot.z);
+	Matrix3Translation(&transrationMatrix, &pos);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &rotationMatrix);
+	Matrix3Multiply(&worldMatrix, &worldMatrix, &transrationMatrix);
+	for (int i = 0; i < 4; i++)
+	{
+		Vector2Transform(&v, &vertexPos[i], &worldMatrix);
+		m_vtxJudgePos[i].x = v.x;
+		m_vtxJudgePos[i].y = v.y;
+	}
 }
 
 //*****************************************************************************
@@ -247,6 +267,31 @@ void	CScene2D::SetUV(UV_INDEX *pUVIndex)
 	pVtx[1].tex = D3DXVECTOR2(pUVIndex->right, pUVIndex->top);
 	pVtx[2].tex = D3DXVECTOR2(pUVIndex->left, pUVIndex->bottom);
 	pVtx[3].tex = D3DXVECTOR2(pUVIndex->right, pUVIndex->bottom);
+
+	m_pD3DVtxBuff->Unlock();									// ロックしたら必ずアンロック！！
+	//********************************************************************************************************************
+}
+
+//*****************************************************************************
+// UV値90度回転関数
+//*****************************************************************************
+void	CScene2D::Rot90_UV(void)
+{
+	VERTEX_2D *pVtx;
+	D3DXVECTOR2 uv[4];
+	//********************************************************************************************************************
+	//ポリゴンの設定
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);					// ロックしないと勝手に書き換わる場合がある(アンロックを忘れずに)
+
+	for (int i = 0; i < 4; ++i)
+	{
+		uv[i] = pVtx[i].tex;
+	}
+
+	pVtx[0].tex = uv[1];
+	pVtx[1].tex = uv[3];
+	pVtx[2].tex = uv[0];
+	pVtx[3].tex = uv[2];
 
 	m_pD3DVtxBuff->Unlock();									// ロックしたら必ずアンロック！！
 	//********************************************************************************************************************

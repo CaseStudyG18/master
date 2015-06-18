@@ -56,7 +56,7 @@ HRESULT CPause :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE 
 	CScene2D::Init(pos, width, height, texType);
 	
 	// ƒJ[ƒ\ƒ‹‚Ì‰Šú‰»
-	m_pCursol = m_pCursol->Create(m_pD3DDevice, RETURN_CURSOL_POS, CURSOL_WIDTH, CURSOL_HEIGHT, TEXTURE_NULL, DEFAULT_CURSOL_LENGTH_OF_LEFT_TO_RIGHT);
+	//m_pCursol = m_pCursol->Create(m_pD3DDevice, RETURN_CURSOL_POS, CURSOL_WIDTH, CURSOL_HEIGHT, TEXTURE_NULL, DEFAULT_CURSOL_LENGTH_OF_LEFT_TO_RIGHT);
 
 	m_bPause = false;
 	m_bRetry = false;
