@@ -27,6 +27,7 @@ class CAttackManager;
 class CThreadManager;
 class CJudgeManager;
 class CFieldManager;
+class CBackGroundManager;
 class CCountDown;
 
 //*****************************************************************************
@@ -86,6 +87,8 @@ private:
 	CJudgeManager* m_pJudgeManager;
 	// フィールドマネージャー
 	CFieldManager* m_pFieldManager;
+	// 背景マネージャー
+	CBackGroundManager *m_BackGroundManager;
 	// カウントダウン
 	CCountDown* m_pCountDown;
 	// ゲーム開始フラグ(プレイヤを操作できるフラグ)

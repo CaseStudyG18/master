@@ -20,6 +20,7 @@
 #include "../../JUDGE/CJudgeManager.h"
 #include "FIELD/CFieldManager.h"
 #include "UI\CCountDown.h"
+#include "../../BACKGROUND/CBackGroundManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -125,6 +126,12 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		const_cast<D3DXVECTOR3*>(GOAL_POS),
 		const_cast<short*>(GOAL_PLAYER_NUMBER), this);
 
+	// 背景作成
+	m_BackGroundManager = new CBackGroundManager(pDevice);
+	m_BackGroundManager->Init();
+	m_BackGroundManager->CreateBG(TEXTURE_BG_0);
+	m_BackGroundManager->CreateBG(TEXTURE_BG_1, 5);
+
 	// 音再生
 	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 
@@ -149,10 +156,16 @@ void CGame::Uninit(void)
 		SAFE_DELETE(m_pCountDown);
 	}
 
+	if (m_BackGroundManager){
+		m_BackGroundManager->Uninit();
+		SAFE_DELETE(m_BackGroundManager);
+	}
+
 	if (m_pJudgeManager){
 		m_pJudgeManager->Uninit();
 		SAFE_DELETE(m_pJudgeManager);
 	}
+
 	if (m_pFieldManager){
 		m_pFieldManager->Uninit();
 		SAFE_DELETE(m_pFieldManager);
@@ -199,6 +212,7 @@ void CGame::Update(void)
 {
 	// カウントダウンの更新
 	m_pCountDown->Update();
+	m_BackGroundManager->Update();
 
 	// Ｐが押されたら
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_P))

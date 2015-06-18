@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="sources\BACKGROUND\CBackGroundManager.cpp" />
     <ClCompile Include="sources\CAMERA\CameraManager.cpp" />
     <ClCompile Include="sources\CAMERA\CCamera.cpp" />
     <ClCompile Include="sources\CONTROLLER\CController.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="sources\TEXTURE\CTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sources\BACKGROUND\CBackGroundManager.h" />
     <ClInclude Include="sources\CAMERA\CameraManager.h" />
     <ClInclude Include="sources\CAMERA\CCamera.h" />
     <ClInclude Include="sources\CONST\const.h" />

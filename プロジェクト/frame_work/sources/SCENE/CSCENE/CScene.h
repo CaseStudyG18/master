@@ -22,6 +22,7 @@
 typedef enum
 {
 	TYPE_PRIORITY_0 = 0,
+	TYPE_PRIORITY_BG,					// BG
 	TYPE_PRIORITY_FIELD,				// フィールド
 	TYPE_PRIORITY_GOAL,		// ゴール
 	TYPE_PRIORITY_THREAD_OF_FOOTHOLD,	// 足場になる糸

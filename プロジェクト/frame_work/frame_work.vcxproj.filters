@@ -107,6 +107,9 @@
     <Filter Include="CONTROLLER">
       <UniqueIdentifier>{664b5e1a-f49d-4299-abf5-129f01b21b59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BACKGROUND">
+      <UniqueIdentifier>{fe72bf1c-1abf-4206-9836-2e71b3d34165}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -294,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="sources\CONTROLLER\CController.cpp">
       <Filter>CONTROLLER</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\BACKGROUND\CBackGroundManager.cpp">
+      <Filter>BACKGROUND</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,6 +491,9 @@
     </ClInclude>
     <ClInclude Include="sources\CONTROLLER\CController.h">
       <Filter>CONTROLLER</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\BACKGROUND\CBackGroundManager.h">
+      <Filter>BACKGROUND</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
