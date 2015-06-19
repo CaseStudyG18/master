@@ -18,7 +18,7 @@ static const float TREASURE_WIDTH = 70;
 static const float TREASURE_HEIGHT = 70;
 static const TEXTURE_TYPE TREASURE_TEXTURE = TEXTURE_TREASURE;
 static const int TREASURE_TEXTURE_ANIME_SPEED = 5;
-static const int TREASURE_TEXTURE_X = 3;
+static const int TREASURE_TEXTURE_X = 13;
 static const int TREASURE_TEXTURE_Y = 1;
 
 // ‚¨•ó‚ÌŠ”Ô†i’N‚à‚Á‚Ä‚¢‚È‚¢‚Æ‚«‚Ì-1j
