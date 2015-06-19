@@ -19,6 +19,9 @@
 // プレイヤーの移動速度(仮)
 static const float PLAYER_SPEED = 8.0f;
 
+// プレイヤーが鈍足状態になった時の係数(仮)
+static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
+
 // 宝物アイコンの大きさ
 static const float TREASURE_ICON_WIDTH = 40;
 static const float TREASURE_ICON_HEIGHT = 30;
@@ -72,7 +75,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
 	m_bSpeedAttack = false;									// 移動形態の攻撃中か判定
-	m_bDonashi = false;										// 鈍足フラグの初期設定
+	m_bSlowSpeed = false;									// 鈍足状態フラグ
 
 	m_pTreasure = NULL;										// 宝物ポインタ
 
@@ -206,7 +209,7 @@ void CPlayer::Update(void)
 	/*プレイヤーのアクションが変形中で無かった場合のみ他の行動を*/
 	/*行うことができる											*/
 	/*----------------------------------------------------------*/
-	if (m_Action == PLAYER_ACTION_NONE)
+	if (m_Action != PLAYER_ACTION_METAMORPHOSE && m_Action != PLAYER_ACTION_KNOCK_BACK && m_Action != PLAYER_ACTION_DOWN)
 	{
 
 		/*----------------------------------------------------------*/
@@ -427,7 +430,7 @@ void CPlayer::Update(void)
 	// 変形している場合MPを減少させていく
 	if (m_bMetamorphose)
 	{
-		MPGainAndLoss(-1.5f);
+		MPReduce();
 
 		// MPが０になったら通常状態に戻す
 		if (m_fMP <= 0.0f)
@@ -546,20 +549,17 @@ void CPlayer::Draw(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Move(void)
 {
-	float fDiffPosX;		// 現在の座標と目的の座標の差分(X軸)
-	float fDiffPosY;		// 現在の座標と目的の座標の差分(Y軸)
-
-	// 目的の座標を決める
-	m_vPosDest.y += m_fMoveSpeedY;
-	m_vPosDest.x += m_fMoveSpeedX;
-
-	// 目的の座標と現在の座標を求める
-	fDiffPosX = m_vPosDest.x - m_vPos.x;
-	fDiffPosY = m_vPosDest.y - m_vPos.y;
-
 	// 現在の座標を更新する
-	m_vPos.x += fDiffPosX * 0.5f;
-	m_vPos.y += fDiffPosY * 0.5f;
+	if (!m_bSlowSpeed)
+	{
+		m_vPos.x += m_fMoveSpeedX * 0.5f;
+		m_vPos.y += m_fMoveSpeedY * 0.5f;
+	}
+	else
+	{
+		m_vPos.x += m_fMoveSpeedX * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
+		m_vPos.y += m_fMoveSpeedY * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
+	}
 
 	// プレイヤーの移動方向が変わったらテクスチャのU値を変える
 	if ((m_PlayerFacing == PLAYER_DIRECTION_LEFT || m_PlayerFacing == PLAYER_DIRECTION_RIGHT) &&
@@ -569,6 +569,8 @@ void CPlayer::Move(void)
 
 		m_PlayerFacingOld = m_PlayerFacing;
 	}
+
+	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------
@@ -694,29 +696,11 @@ void CPlayer::MetamorphoseAnimation(void)
 //	引数　　無し
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::MPGainAndLoss(float changeValue)
+void CPlayer::MPReduce(void)
 {
 	// MPを減らしていく
-	m_fMP += changeValue;
-	if (m_fMP > PLAYER_DEFAULT_MP)
-	{
-		m_fMP = PLAYER_DEFAULT_MP;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// HPを減少させる関数
-//	引数　　無し
-//	戻り値　無し
-//-----------------------------------------------------------------------------
-void CPlayer::HPGainAndLoss(float changeValue)
-{
-	// MPを減らしていく
-	m_fHP += changeValue;
-	if (m_fHP > PLAYER_DEFAULT_HP)
-	{
-		m_fHP = PLAYER_DEFAULT_HP;
-	}
+	// 数値は仮
+	m_fMP -= 1.5f;
 }
 
 //-----------------------------------------------------------------------------
@@ -733,28 +717,32 @@ void CPlayer::SpidersThread(void)
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_NORMAL,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 		// 攻撃特化形態の糸
 	case PLAYER_MODE_ATTACK:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_ATTACK,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 		// 移動特化形態の糸
 	case PLAYER_MODE_SPEED:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_SPEED,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 		// 罠特化形態の糸
 	case PLAYER_MODE_TRAP:
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_TRAP,
 			m_sNumber,
-			m_vPos);
+			m_vPos,
+			m_PlayerFacing);
 		break;
 	default:
 		break;
@@ -1099,6 +1087,7 @@ void CPlayer::UpdatePlayerRed(void){
 	if (CInputKeyboard::GetKeyboardPress(DIK_RSHIFT)){
 		AddHp(PLAYER_DEFAULT_HP);
 	}
+#ifdef _DEBUG
 	if (m_HpState == PLAYER_HP_STATE_NORMAL){
 		CDebugProc::Print("プレイヤHP状態 = NORMAL\n");
 	}
@@ -1112,7 +1101,7 @@ void CPlayer::UpdatePlayerRed(void){
 		CDebugProc::Print("プレイヤHP状態 = DIE\n");
 	}
 	CDebugProc::Print("count = %d\n", m_nRedCount);
-
+#endif
 	// 死んでいる or HPが十分あるなら更新しない
 	if (m_HpState == PLAYER_HP_STATE_DIE ||
 		m_HpState == PLAYER_HP_STATE_NORMAL){

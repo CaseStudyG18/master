@@ -197,21 +197,7 @@ public:
 	void AddHp(float fPoint);
 
 	// MP減少用関数
-	void MPGainAndLoss(float changeValue);
-
-	// HP増減関数
-	void HPGainAndLoss(float changeValue);
-
-	// 鈍足フラグ
-	void SetDonashi(bool flg){
-		m_bDonashi = flg;
-	}
-
-	// プレイヤーの行動状態を初期状態に変える
-	void SetPlayerActionNone(void){ m_Action = PLAYER_ACTION_NONE; }
-
-	// プレイヤーの行動状態を停止状態に変える
-	void SetPlayerActionStop(void){ m_Action = PLAYER_ACTION_STOP; }
+	void MPReduce(void);
 
 	// プレイヤ番号ゲッター
 	short GetPlayerNum(){
@@ -222,6 +208,9 @@ public:
 	CTreasure *GetTreasure(){
 		return m_pTreasure;
 	}
+
+	// プレイヤーの鈍足状態セット用関数
+	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed; }
 
 private:
 	//---------------------------------
@@ -291,7 +280,7 @@ private:
 	bool					m_bMetamorphose;	// 変形している状態かのフラグ
 	bool					m_bSpeedAttack;		// 移動形態での攻撃中かどうかのフラグ
 	bool*					m_bPlayerControl;	// プレイヤがコントロールできるかフラグ
-	bool					m_bDonashi;			// 鈍足フラグ
+	bool					m_bSlowSpeed;		// 鈍足状態になっているかどうかのフラグ
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ

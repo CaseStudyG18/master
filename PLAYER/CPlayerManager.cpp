@@ -108,23 +108,4 @@ void CPlayerManager::Uninit(void)
 	}
 }
 
-//-----------------------------------------------------------------------------
-//	プレイヤー停止用関数
-//	 引数　　プレイヤー番号
-//-----------------------------------------------------------------------------
-void CPlayerManager::SetPlayerStop(short playerNumber)
-{
-	m_apPlayer[playerNumber]->SetPlayerActionStop();
-}
-
-//-----------------------------------------------------------------------------
-//	プレイヤー停止用関数
-//	 引数　　プレイヤー番号
-//-----------------------------------------------------------------------------
-void CPlayerManager::SetPlayerPlayback(short playerNumber)
-{
-	m_apPlayer[playerNumber]->SetPlayerActionNone();
-}
-
-
 // EOF
