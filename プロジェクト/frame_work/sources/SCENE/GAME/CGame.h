@@ -67,9 +67,21 @@ public:
 	void SetGameOver(){
 		m_bGameOver = true;
 	}
+	
+	//======================================================
+	// こいつらはゲーム中のリザルトシーンに
+	// 移るときに一回のみ呼ばれる Init的な。
+	//======================================================
+	// 勝ったプレイヤ番号をセット
+	void SetWinPlayer(short num);
+	// 引き分けにする
+	void SetDraw();
 
 	// 非公開メンバ
 private:
+	// ゲーム中のリザルトシーンの更新 毎フレーム呼ばれる
+	void Result();
+
 	// ポーズ
 	CPause *m_pPause;
 	// ゲームのタイム管理者
@@ -98,6 +110,8 @@ private:
 	bool m_bPlayerControl;
 	// ゲームクリアフラグ
 	bool m_bGameOver;
+	// 勝ったプレイヤー番号
+	short m_nWinPlayerNum;
 };
 
 #endif

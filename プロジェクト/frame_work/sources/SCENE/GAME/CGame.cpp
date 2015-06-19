@@ -74,6 +74,8 @@ CGame::CGame(void)
 	m_bPlayerControl = false;
 	// ゲーム終了フラグ
 	m_bGameOver = false;
+	// 勝ったプレイヤー番号
+	m_nWinPlayerNum = -1;
 }
 
 //*****************************************************************************
@@ -247,6 +249,7 @@ void CGame::Update(void)
 			m_pFieldManager->Update();
 		}
 
+		// テストでエフェクトをクリエイト
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
 			m_pEffectManager->CreateEffect(D3DXVECTOR3(300, 200, 0), EFFECT_ATTACK_HIT);
 		}
@@ -263,10 +266,11 @@ void CGame::Update(void)
 		// ゲームクリアフラグ
 		if (m_bGameOver)
 		{
-			// フェードアウト開始
-			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+			Result();
 
-			m_pManager->SetNextPhase(MODE_PHASE_TITLE);
+			// フェードアウト開始
+//			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+//			m_pManager->SetNextPhase(MODE_PHASE_TITLE);
 		}
 	}
 
@@ -286,6 +290,10 @@ void CGame::Update(void)
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 	}
+	//debug
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
+		SetDraw();
+	}
 }
 
 //*****************************************************************************
@@ -302,5 +310,44 @@ CGame* CGame::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	pGame->Init(mode, pDevice);
 
 	return pGame;
+}
+
+//*****************************************************************************
+// 勝ったプレイヤ番号のセット 一回だけ呼ばれる
+//*****************************************************************************
+void CGame::SetWinPlayer(short num){
+
+	m_nWinPlayerNum = num;
+
+	m_bGameOver = true;
+
+}
+//*****************************************************************************
+// 引き分けにする 一回だけ呼ばれる
+//*****************************************************************************
+void CGame::SetDraw(){
+
+	m_bGameOver = true;
+
+	// ロゴの表示
+//	m_pLogoDraw = new CLogoDraw(m_pD3DDevice);
+//	m_pLogoDraw->Init();
+}
+
+//*****************************************************************************
+// ゲーム中のリザルトシーンの更新 毎フレーム呼ばれる
+//*****************************************************************************
+void CGame::Result(){
+
+	// 引き分け
+	if (m_nWinPlayerNum == -1){
+		// ＤＲＡＷロゴの更新（アニメーション）
+		CDebugProc::Print("●引き分けシーン\n");
+	}
+
+
+//	if (m_pLogoDraw)
+//		m_pLogoDraw->Update();
+
 }
 //----EOF-------

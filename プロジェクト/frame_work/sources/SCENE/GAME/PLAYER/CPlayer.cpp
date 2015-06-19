@@ -19,6 +19,9 @@
 // プレイヤーの移動速度(仮)
 static const float PLAYER_SPEED = 8.0f;
 
+// プレイヤーが鈍足状態になった時の係数(仮)
+static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
+
 // 宝物アイコンの表示位置
 static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
 
@@ -68,7 +71,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
 	m_bSpeedAttack = false;									// 移動形態の攻撃中か判定
-	m_bDonashi = false;										// 鈍足フラグの初期設定
+	m_bSlowSpeed = false;									// 鈍足フラグの初期設定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
 
@@ -426,7 +429,7 @@ void CPlayer::Update(void)
 	// 変形している場合MPを減少させていく
 	if (m_bMetamorphose)
 	{
-		MPGainAndLoss(-1.5f);
+		MPReduce();
 
 		// MPが０になったら通常状態に戻す
 		if (m_fMP <= 0.0f)
@@ -545,29 +548,27 @@ void CPlayer::Draw(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Move(void)
 {
-	float fDiffPosX;		// 現在の座標と目的の座標の差分(X軸)
-	float fDiffPosY;		// 現在の座標と目的の座標の差分(Y軸)
-
-	// 目的の座標を決める
-	m_vPosDest.y += m_fMoveSpeedY;
-	m_vPosDest.x += m_fMoveSpeedX;
-
-	// 目的の座標と現在の座標を求める
-	fDiffPosX = m_vPosDest.x - m_vPos.x;
-	fDiffPosY = m_vPosDest.y - m_vPos.y;
-
 	// 現在の座標を更新する
-	m_vPos.x += fDiffPosX * 0.5f;
-	m_vPos.y += fDiffPosY * 0.5f;
+	if (!m_bSlowSpeed)
+	{
+		m_vPos.x += m_fMoveSpeedX * 0.5f;
+		m_vPos.y += m_fMoveSpeedY * 0.5f;
+	}
+	else
+	{
+		m_vPos.x += m_fMoveSpeedX * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
+		m_vPos.y += m_fMoveSpeedY * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
+	}
 
 	// プレイヤーの移動方向が変わったらテクスチャのU値を変える
 	if ((m_PlayerFacing == PLAYER_DIRECTION_LEFT || m_PlayerFacing == PLAYER_DIRECTION_RIGHT) &&
 		m_PlayerFacing != m_PlayerFacingOld)
 	{
 		ChangeTextureFaceU();
-
 		m_PlayerFacingOld = m_PlayerFacing;
 	}
+
+	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------
@@ -693,29 +694,11 @@ void CPlayer::MetamorphoseAnimation(void)
 //	引数　　無し
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::MPGainAndLoss(float changeValue)
+void CPlayer::MPReduce(void)
 {
 	// MPを減らしていく
-	m_fMP += changeValue;
-	if (m_fMP > PLAYER_DEFAULT_MP)
-	{
-		m_fMP = PLAYER_DEFAULT_MP;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// HPを減少させる関数
-//	引数　　無し
-//	戻り値　無し
-//-----------------------------------------------------------------------------
-void CPlayer::HPGainAndLoss(float changeValue)
-{
-	// MPを減らしていく
-	m_fHP += changeValue;
-	if (m_fHP > PLAYER_DEFAULT_HP)
-	{
-		m_fHP = PLAYER_DEFAULT_HP;
-	}
+	// 数値は仮
+	m_fMP -= 1.5f;
 }
 
 //-----------------------------------------------------------------------------
@@ -1094,6 +1077,7 @@ void CPlayer::UpdatePlayerHpState(void){
 //-----------------------------------------------------------------------------
 void CPlayer::UpdatePlayerRed(void){
 
+#ifdef _DEBUG
 	if (CInputKeyboard::GetKeyboardPress(DIK_RCONTROL)){
 		AddHp(-2);
 	}
@@ -1113,6 +1097,7 @@ void CPlayer::UpdatePlayerRed(void){
 		CDebugProc::Print("プレイヤHP状態 = DIE\n");
 	}
 	CDebugProc::Print("count = %d\n", m_nRedCount);
+#endif
 
 	// 死んでいる or HPが十分あるなら更新しない
 	if (m_HpState == PLAYER_HP_STATE_DIE ||
