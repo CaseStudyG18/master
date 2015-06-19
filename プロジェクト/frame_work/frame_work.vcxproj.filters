@@ -23,9 +23,6 @@
     <Filter Include="RENDERER">
       <UniqueIdentifier>{fcd15478-4c4c-4828-a644-d8781eb7bd72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CAMERA">
-      <UniqueIdentifier>{c8369b40-e458-4336-aa8f-d817ab46db43}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FADE">
       <UniqueIdentifier>{388465db-7011-4031-8efc-94ebf203fa2d}</UniqueIdentifier>
     </Filter>
@@ -145,9 +142,6 @@
     <ClCompile Include="sources\INPUT\CInputMouse.cpp">
       <Filter>INPUT</Filter>
     </ClCompile>
-    <ClCompile Include="sources\CAMERA\CCamera.cpp">
-      <Filter>CAMERA</Filter>
-    </ClCompile>
     <ClCompile Include="sources\FADE\CFade.cpp">
       <Filter>FADE</Filter>
     </ClCompile>
@@ -186,9 +180,6 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\UI\CNumber.cpp">
       <Filter>SCENE\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\CAMERA\CameraManager.cpp">
-      <Filter>CAMERA</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp">
       <Filter>SCENE\GAME</Filter>
@@ -289,6 +280,15 @@
     <ClCompile Include="sources\SCENE\CSCENE\CSceneAnime.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectManager.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectBase.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\MAIN\main.h">
@@ -333,9 +333,6 @@
     <ClInclude Include="sources\INPUT\CInputMouse.h">
       <Filter>INPUT</Filter>
     </ClInclude>
-    <ClInclude Include="sources\CAMERA\CCamera.h">
-      <Filter>CAMERA</Filter>
-    </ClInclude>
     <ClInclude Include="sources\FADE\CFade.h">
       <Filter>FADE</Filter>
     </ClInclude>
@@ -374,9 +371,6 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\UI\CNumber.h">
       <Filter>SCENE\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\CAMERA\CameraManager.h">
-      <Filter>CAMERA</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\CTimeManager.h">
       <Filter>SCENE\GAME</Filter>
@@ -476,6 +470,15 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\CSCENE\CSceneAnime.h">
       <Filter>SCENE\CSCENE</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectManager.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectBase.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.h">
+      <Filter>SCENE\EFFECT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

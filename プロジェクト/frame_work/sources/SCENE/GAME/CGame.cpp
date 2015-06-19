@@ -21,6 +21,7 @@
 #include "FIELD/CFieldManager.h"
 #include "UI\CCountDown.h"
 #include "../../BACKGROUND/CBackGroundManager.h"
+#include "EFFECT\CEffectManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -130,10 +131,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		const_cast<short*>(GOAL_PLAYER_NUMBER), this);
 
 	// 背景作成
-	m_BackGroundManager = new CBackGroundManager(pDevice);
-	m_BackGroundManager->Init();
-	m_BackGroundManager->CreateBG(TEXTURE_BG_0);
-	m_BackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
+	m_pBackGroundManager = new CBackGroundManager(pDevice);
+	m_pBackGroundManager->Init();
+	m_pBackGroundManager->CreateBG(TEXTURE_BG_0);
+	m_pBackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
 
 	// 音再生
 //	CManager::PlaySoundA(SOUND_LABEL_BGM000);
@@ -147,6 +148,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// カウントダウン
 	m_pCountDown = new CCountDown(m_pD3DDevice, &m_bPlayerControl);
 	m_pCountDown->Init();
+
+	// エフェクトマネージャー
+	m_pEffectManager = new CEffectManager(m_pD3DDevice);
+	m_pEffectManager->Init();
 }
 
 //*****************************************************************************
@@ -154,51 +159,46 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
+	if (m_pEffectManager){
+		m_pEffectManager->Uninit();
+		SAFE_DELETE(m_pEffectManager);
+	}
 	if (m_pCountDown){
 		m_pCountDown->Uninit();
 		SAFE_DELETE(m_pCountDown);
 	}
-
-	if (m_BackGroundManager){
-		m_BackGroundManager->Uninit();
-		SAFE_DELETE(m_BackGroundManager);
+	if (m_pBackGroundManager){
+		m_pBackGroundManager->Uninit();
+		SAFE_DELETE(m_pBackGroundManager);
 	}
-
 	if (m_pJudgeManager){
 		m_pJudgeManager->Uninit();
 		SAFE_DELETE(m_pJudgeManager);
 	}
-
 	if (m_pFieldManager){
 		m_pFieldManager->Uninit();
 		SAFE_DELETE(m_pFieldManager);
 	}
-
 	if (m_pThreadManager){
 		m_pThreadManager->Uninit();
 		SAFE_DELETE(m_pThreadManager);
 	}
-
 	if (m_pAttackManager){
 		m_pAttackManager->Uninit();
 		SAFE_DELETE(m_pAttackManager);
 	}
-
 	if (m_pPlayerManager){
 		m_pPlayerManager->Uninit();
 		SAFE_DELETE(m_pPlayerManager);
 	}
-
 	if (m_pGoalManager){
 		m_pGoalManager->Uninit();
 		SAFE_DELETE(m_pGoalManager);
 	}
-
 	if (m_pTreasureManager){
 		m_pTreasureManager->Uninit();
 		SAFE_DELETE(m_pTreasureManager);
 	}
-
 	if (m_pTimeManager){
 		m_pTimeManager->Uninit();
 		SAFE_DELETE(m_pTimeManager);
@@ -216,7 +216,7 @@ void CGame::Update(void)
 	// カウントダウンの更新
 	m_pCountDown->Update();
 	// 背景の更新
-	m_BackGroundManager->Update();
+	m_pBackGroundManager->Update();
 
 	// Ｐが押されたら
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_P))
@@ -247,6 +247,10 @@ void CGame::Update(void)
 			m_pFieldManager->Update();
 		}
 
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
+			m_pEffectManager->CreateEffect(D3DXVECTOR3(300, 200, 0), EFFECT_ATTACK_HIT);
+		}
+	
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 		{
 			// フェードアウト開始

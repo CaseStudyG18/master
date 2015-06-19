@@ -80,8 +80,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="sources\BACKGROUND\CBackGroundManager.cpp" />
-    <ClCompile Include="sources\CAMERA\CameraManager.cpp" />
-    <ClCompile Include="sources\CAMERA\CCamera.cpp" />
     <ClCompile Include="sources\CONTROLLER\CController.cpp" />
     <ClCompile Include="sources\CONTROLLER\CControllerManager.cpp" />
     <ClCompile Include="sources\DEBUG_PROC\CDebugProc.cpp" />
@@ -116,6 +114,9 @@
     <ClCompile Include="sources\SCENE\GAME\CGame.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CNowLoading.cpp" />
     <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectBase.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CField.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CFieldManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoal.cpp" />
@@ -143,8 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\BACKGROUND\CBackGroundManager.h" />
-    <ClInclude Include="sources\CAMERA\CameraManager.h" />
-    <ClInclude Include="sources\CAMERA\CCamera.h" />
     <ClInclude Include="sources\CONST\const.h" />
     <ClInclude Include="sources\CONTROLLER\CController.h" />
     <ClInclude Include="sources\CONTROLLER\CControllerManager.h" />
@@ -180,6 +179,9 @@
     <ClInclude Include="sources\SCENE\GAME\CGame.h" />
     <ClInclude Include="sources\SCENE\GAME\CNowLoading.h" />
     <ClInclude Include="sources\SCENE\GAME\CTimeManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectBase.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectManager.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CField.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CFieldManager.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoal.h" />

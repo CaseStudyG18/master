@@ -29,6 +29,7 @@ class CJudgeManager;
 class CFieldManager;
 class CBackGroundManager;
 class CCountDown;
+class CEffectManager;
 
 //*****************************************************************************
 // クラス定義
@@ -88,7 +89,9 @@ private:
 	// フィールドマネージャー
 	CFieldManager* m_pFieldManager;
 	// 背景マネージャー
-	CBackGroundManager *m_BackGroundManager;
+	CBackGroundManager *m_pBackGroundManager;
+	// エフェクトマネージャー
+	CEffectManager *m_pEffectManager;
 	// カウントダウン
 	CCountDown* m_pCountDown;
 	// ゲーム開始フラグ(プレイヤを操作できるフラグ)
