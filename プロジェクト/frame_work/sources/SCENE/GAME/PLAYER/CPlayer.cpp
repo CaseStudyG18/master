@@ -1106,6 +1106,7 @@ void CPlayer::UpdatePlayerRed(void){
 	if (CInputKeyboard::GetKeyboardPress(DIK_RSHIFT)){
 		AddHp(PLAYER_DEFAULT_HP);
 	}
+#ifdef _DEBUG
 	if (m_HpState == PLAYER_HP_STATE_NORMAL){
 		CDebugProc::Print("プレイヤHP状態 = NORMAL\n");
 	}
@@ -1119,7 +1120,7 @@ void CPlayer::UpdatePlayerRed(void){
 		CDebugProc::Print("プレイヤHP状態 = DIE\n");
 	}
 	CDebugProc::Print("count = %d\n", m_nRedCount);
-
+#endif
 	// 死んでいる or HPが十分あるなら更新しない
 	if (m_HpState == PLAYER_HP_STATE_DIE ||
 		m_HpState == PLAYER_HP_STATE_NORMAL){
