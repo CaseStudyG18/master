@@ -8,7 +8,6 @@
 // インクルード
 //*****************************************************************************
 #include "CThreadNormal.h"
-#include "../../../SCENE/CSCENE/CSceneAnime.h"
 
 //*****************************************************************************
 // マクロ
@@ -79,7 +78,7 @@ void CThreadNormal::Update(void)
 
 	//// カウントが10のとき（仮）エフェクトは発動
 	//if (m_nCount == 10){
-	//	CSceneAnime::Create(
+	//	CEffect::Create(
 	//		m_pD3DDevice,
 	//		m_vPos, 100, 100,
 	//		TEXTURE_THREAD, 10, 1, 20);

@@ -8,8 +8,8 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackNormal.h"
-#include "../../../SCENE/CSCENE/CSceneAnime.h"
 #include "../PLAYER/CPlayer.h"
+#include "../../CSCENE/CSceneAnime.h"
 
 //*****************************************************************************
 // マクロ
@@ -117,7 +117,7 @@ CAttackNormal* CAttackNormal::Create(
 //*****************************************************************************
 void CAttackNormal::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->SetDonashi(true);
+	pPlayer->SetSlowSpeed(true);
 }
 
 //----EOF-------

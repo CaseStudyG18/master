@@ -8,28 +8,24 @@
 // インクルード
 //*****************************************************************************
 #include "CThreadSpecialSpeed.h"
-#include "../../../SCENE/CSCENE/CSceneAnime.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-// 幅,高さ
-static const float	MIN_WIDTH = 20.f;
-static const float	MIN_HEIGHT = 20.f;
-static const float	MAX_WIDTH = 40.f;
-static const float	MAX_HEIGHT = 400.f;
+// 寿命
+const short THREAD_NORMAL_END_TIME = 180;
+// 当たり判定の始まる時間
+const short THREAD_NORMAL_HIT_START_TIME = 60;
+// 当たり判定の終わる時間
+const short THREAD_NORMAL_HIT_END_TIME = 120;
 
-// 糸が伸び縮みする最大時間
-static const int	GROW_THREAD_TIME = 60;
+// 当たり判 定幅,高さ
+const float THREAD_NORMAL_HIT_WIDTH = 50;
+const float THREAD_NORMAL_HIT_HEIGHT = 50;
 
-// 糸が床になるまでのアニメーション時間
-static const int	THREAD_FIELD_ANIM_TIME = 30;
-
-// 長さ変更量
-static const float	ADD_HEIGHT = MAX_HEIGHT / (float)GROW_THREAD_TIME;
-
-// 幅変更量
-static const float	ADD_WIDTH = MAX_WIDTH / (float)THREAD_FIELD_ANIM_TIME;
+//*****************************************************************************
+// 静的メンバ変数
+//*****************************************************************************
 
 //*****************************************************************************
 // コンストラクタ
@@ -37,14 +33,15 @@ static const float	ADD_WIDTH = MAX_WIDTH / (float)THREAD_FIELD_ANIM_TIME;
 CThreadSpecialSpeed::CThreadSpecialSpeed(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE type) : CThreadBase(pDevice, priority, type)
 {
 	// 変数初期化
-	m_ThreadType = THREAD_TYPE_SPEED;
+	m_ThreadType = THREAD_TYPE_NORMAL;
 
 	// この糸の固有ステータス初期化
-	m_fWidth = MIN_WIDTH;
-	m_fHeight = MIN_HEIGHT;
+	m_fWidth = THREAD_NORMAL_HIT_WIDTH;
+	m_fHeight = THREAD_NORMAL_HIT_HEIGHT;
 	m_vRot = D3DXVECTOR3(0, 0, 0);
-	
-	m_nAnimTimer = 0;
+	m_nEndTime = THREAD_NORMAL_END_TIME;
+	m_nHitStartTime = THREAD_NORMAL_HIT_START_TIME;
+	m_nHitEndTime = THREAD_NORMAL_HIT_END_TIME;
 }
 
 //*****************************************************************************
@@ -57,20 +54,9 @@ CThreadSpecialSpeed ::~CThreadSpecialSpeed(void)
 //*****************************************************************************
 // 初期化
 //*****************************************************************************
-HRESULT CThreadSpecialSpeed::Init(short nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerDirection)
+HRESULT CThreadSpecialSpeed::Init()
 {
-	m_nPlayerNum = nPlayerNum;
-	m_vPos = pos;
-	m_Direction = playerDirection;
-	CThreadBase::Init(m_vPos, m_fWidth, m_fHeight, TEXTURE_THREAD);
-
-	if (m_Direction == PLAYER_DIRECTION_UP || m_Direction == PLAYER_DIRECTION_DOWN)
-	{
-		Rot90_UV();
-	}
-	m_fJudgeWidth = m_fWidth;
-	m_fJudgeHeight = m_fHeight;
-	m_vJudgePos = m_vPos;
+	CThreadBase::Init(m_vPos, 100, 100, TEXTURE_THREAD);
 
 	return S_OK;
 }
@@ -88,114 +74,41 @@ void CThreadSpecialSpeed::Uninit(void)
 //*****************************************************************************
 void CThreadSpecialSpeed::Update(void)
 {
-	if (GetObjType() != CScene::OBJTYPE_FIELD)
-	{
-		GrowThread();
-	}
-	else
-	{
-		FieldAnim();
-	}
-	m_fJudgeWidth = m_fWidth;
-	m_fJudgeHeight = m_fHeight;
-	m_vJudgePos = m_vPos;
+	CThreadBase::Update();
+
+#ifdef _DEBUG
+	CDebugProc::Print("移動特化形態の糸生成済\n");
+#endif
+
+	//// カウントが10のとき（仮）エフェクトは発動
+	//if (m_nCount == 10){
+	//	CEffect::Create(
+	//		m_pD3DDevice,
+	//		m_vPos, 100, 100,
+	//		TEXTURE_THREAD, 10, 1, 20);
+	//}
 }
 
 //*****************************************************************************
 // クリエイト関数
 //*****************************************************************************
-CThreadSpecialSpeed* CThreadSpecialSpeed::Create(LPDIRECT3DDEVICE9 *pDevice, short nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerDirection)
+CThreadSpecialSpeed* CThreadSpecialSpeed::Create(LPDIRECT3DDEVICE9 *pDevice, short nPlayerNum, D3DXVECTOR3 pos)
 {
 	// 作成
 	CThreadSpecialSpeed* p = new CThreadSpecialSpeed(pDevice);
 
+	p->m_nPlayerNum = nPlayerNum;
+	p->m_vPos = pos;
+
 	// 初期化
-	p->Init(nPlayerNum, pos, playerDirection);
+	p->Init();
 
 
 	return p;
 }
 
-//*****************************************************************************
-// 描画関数
-//*****************************************************************************
 void CThreadSpecialSpeed::Draw(void)
 {
 	CThreadBase::Draw();
-}
-
-//*****************************************************************************
-// 糸伸びる処理
-//*****************************************************************************
-void CThreadSpecialSpeed::GrowThread(void)
-{
-	m_nCount++;
-	if (m_nCount < GROW_THREAD_TIME * 0.5)
-	{
-		m_fAddPower = ADD_HEIGHT;
-	}
-	else if (m_nCount < GROW_THREAD_TIME)
-	{
-		m_fAddPower = -ADD_HEIGHT;
-	}
-	else
-	{
-		Death();
-	}
-
-
-	if (m_Direction == PLAYER_DIRECTION_UP)
-	{
-		CScene2D::AddHeight_BaseBottom(m_fAddPower);
-	}
-	else if (m_Direction == PLAYER_DIRECTION_DOWN)
-	{
-		CScene2D::AddHeight_BaseTop(m_fAddPower);
-	}
-	else if (m_Direction == PLAYER_DIRECTION_LEFT || m_Direction == PLAYER_DIRECTION_DOWNER_LEFT || m_Direction == PLAYER_DIRECTION_UPPER_LEFT)
-	{
-		CScene2D::AddWidth_BaseRight(m_fAddPower);
-	}
-	else if (m_Direction == PLAYER_DIRECTION_RIGHT || m_Direction == PLAYER_DIRECTION_DOWNER_RIGHT || m_Direction == PLAYER_DIRECTION_UPPER_RIGHT)
-	{
-		CScene2D::AddWidth_BaseLeft(m_fAddPower);
-	}
-}
-
-//*****************************************************************************
-// デス関数
-//*****************************************************************************
-void CThreadSpecialSpeed::Death(void)
-{
-	Release();
-}
-
-//*****************************************************************************
-// フィールドアニメーション
-//*****************************************************************************
-void CThreadSpecialSpeed::FieldAnim(void)
-{
-	m_nAnimTimer++;
-	if (m_nAnimTimer > THREAD_FIELD_ANIM_TIME)
-	{
-		return;
-	}
-
-	if (m_Direction == PLAYER_DIRECTION_UP)
-	{
-		m_fWidth += ADD_WIDTH;
-	}
-	else if (m_Direction == PLAYER_DIRECTION_DOWN)
-	{
-		m_fWidth += ADD_WIDTH;
-	}
-	else if (m_Direction == PLAYER_DIRECTION_LEFT || m_Direction == PLAYER_DIRECTION_DOWNER_LEFT || m_Direction == PLAYER_DIRECTION_UPPER_LEFT)
-	{
-		m_fHeight += ADD_WIDTH;
-	}
-	else if (m_Direction == PLAYER_DIRECTION_RIGHT || m_Direction == PLAYER_DIRECTION_DOWNER_RIGHT || m_Direction == PLAYER_DIRECTION_UPPER_RIGHT)
-	{
-		m_fHeight += ADD_WIDTH;
-	}
 }
 //----EOF-------

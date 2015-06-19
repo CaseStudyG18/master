@@ -43,8 +43,8 @@ CThreadBase ::~CThreadBase(void)
 //*****************************************************************************
 HRESULT CThreadBase::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType)
 {
-	CScene2D::Init(pos, width, height, texType);
 
+	CScene2D::Init(pos, width, height, texType);
 	return S_OK;
 }
 
@@ -75,8 +75,6 @@ void CThreadBase::Update(void)
 	if (m_nHitEndTime < m_nCount){
 		m_bHitFlg = false;
 	}
-	
-
 }
 
 void CThreadBase::Draw (void)

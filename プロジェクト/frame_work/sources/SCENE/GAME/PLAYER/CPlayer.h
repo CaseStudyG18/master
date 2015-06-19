@@ -213,6 +213,10 @@ public:
 	// オールドポジションアクセサ
 	D3DXVECTOR3 GetOldPos(void) { return m_vPosOld; }
 
+	// 鈍足セット
+	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed; }
+
+
 private:
 	//---------------------------------
 	// 関数

@@ -19,9 +19,10 @@
 //=============================================================================
 enum AttackType{
 	ATTACK_TYPE_NORMAL,
-	ATTACK_TYPE_ATTACK,		// 攻撃力特化型
-	ATTACK_TYPE_SPEED,		// スピード特化型
-	ATTACK_TYPE_TRAP,		// 罠作成型
+	ATTACK_TYPE_ATTACK,			// 攻撃力特化型
+	ATTACK_TYPE_ATTACK_THREAD,	// 攻撃力特化型(糸攻撃)
+	ATTACK_TYPE_SPEED,			// スピード特化型
+	ATTACK_TYPE_TRAP,			// 罠作成型
 	ATTACK_TYPE_MAX
 };
 
@@ -34,6 +35,7 @@ class CAttackNormal;
 class CAttackSpecialAttack;
 class CAttackSpecialSpeed;
 class CAttackSpecialTrap;
+class CGame;
 
 //*****************************************************************************
 // クラス定義
@@ -43,6 +45,7 @@ class CAttackManager
 	// 公開メンバ
 public:
 	CAttackManager(LPDIRECT3DDEVICE9 *pDevice);//, CPlayerManager* pPlayerManager);
+	CAttackManager(LPDIRECT3DDEVICE9 *pDevice , CGame* pGame);//, CPlayerManager* pPlayerManager);
 	~CAttackManager(void);
 
 	void Init(void);
@@ -59,8 +62,9 @@ public:
 	// 非公開メンバ
 private:
 	LPDIRECT3DDEVICE9*			m_pDevice;
+	CGame*						m_pGame;
 	//CPlayerManager*				m_pPlayerManager;		// プレイヤーマネージャのポインタ
-	//CAttackNormal*			m_apAttackNormal[12];	// 通常攻撃のポインタを入れておく配列
+	CAttackNormal*			m_apAttackNormal[20];	// 通常攻撃のポインタを入れておく配列
 	//CAttackSpecialAttack*		m_apAttackAttack[12];	// 攻撃特化攻撃のポインタを入れておく配列
 	//CAttackSpecialSpeed*		m_apAttackSpeed[4];		// 移動特化の攻撃のポインタを入れておく配列
 	//CAttackSpecialTrap*		m_apAttackTrap[12];		// 妨害特化の攻撃のポインタを入れておく配列

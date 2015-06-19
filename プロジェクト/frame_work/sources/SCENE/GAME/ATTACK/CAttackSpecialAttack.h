@@ -3,7 +3,7 @@
 // CAttackSpecialAttackクラス [CAttackSpecialAttack.h]
 // Author : 佐藤　諒一
 //
-// 普通攻撃
+// 攻撃形態の攻撃
 //
 //=============================================================================
 #ifndef _CATTACKSPECIALATTACK_H_

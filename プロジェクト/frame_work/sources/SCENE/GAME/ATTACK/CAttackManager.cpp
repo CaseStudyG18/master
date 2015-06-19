@@ -13,6 +13,7 @@
 #include "CAttackSpecialAttack.h"
 #include "CAttackSpecialSpeed.h"
 #include "CAttackSpecialTrap.h"
+#include "../CGame.h"
 
 //*****************************************************************************
 // マクロ
@@ -30,6 +31,15 @@
 CAttackManager::CAttackManager(LPDIRECT3DDEVICE9 *pDevice)
 {
 	m_pDevice = pDevice;
+}
+
+//*****************************************************************************
+// コンストラクタ
+//*****************************************************************************
+CAttackManager::CAttackManager(LPDIRECT3DDEVICE9 *pDevice , CGame* pGame)
+{
+	m_pDevice = pDevice;
+	m_pGame = pGame;
 }
 
 //*****************************************************************************
