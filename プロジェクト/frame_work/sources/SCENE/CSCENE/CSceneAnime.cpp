@@ -1,18 +1,18 @@
 //=============================================================================
 //
-// CEffectクラス [CEffect.cpp]
+// CSceneAnimeクラス [CSceneAnime.cpp]
 // Author : 野尻　尚希
 //
 //=============================================================================
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
-#include "CEffect.h"
+#include "CSceneAnime.h"
 
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CEffect::CEffect(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CScene2D(pDevice, nPriority, objType)
+CSceneAnime::CSceneAnime(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CScene2D(pDevice, nPriority, objType)
 {
 	m_nMaxLoopNum = 0;
 	m_nCurLoopNum = 0;
@@ -23,14 +23,14 @@ CEffect::CEffect(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 //*****************************************************************************
 // デストラクタ
 //*****************************************************************************
-CEffect ::~CEffect(void)
+CSceneAnime ::~CSceneAnime(void)
 {
 }
 
 //*****************************************************************************
 // 初期化関数 ループなしバー
 //*****************************************************************************
-HRESULT CEffect :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int endTime)
+HRESULT CSceneAnime :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int endTime)
 {
 	CScene2D ::Init(pos, width, height, texType);
 
@@ -55,7 +55,7 @@ HRESULT CEffect :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE
 //*****************************************************************************
 // 初期化関数 ループありバー loopNumがマイナス値なら無限ループ
 //*****************************************************************************
-HRESULT CEffect :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum)
+HRESULT CSceneAnime :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum)
 {
 	CScene2D ::Init(pos, width, height, texType);
 
@@ -80,7 +80,7 @@ HRESULT CEffect :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE
 //*****************************************************************************
 // 終了関数
 //*****************************************************************************
-void CEffect ::Uninit(void)
+void CSceneAnime ::Uninit(void)
 {
 	CScene2D :: Uninit();
 
@@ -89,7 +89,7 @@ void CEffect ::Uninit(void)
 //*****************************************************************************
 // 更新関数
 //*****************************************************************************
-void CEffect ::Update(void)
+void CSceneAnime ::Update(void)
 {
 	if(!m_bAutoUpdate)
 	{
@@ -109,7 +109,7 @@ void CEffect ::Update(void)
 }
 
 // ループなし
-void CEffect ::Update_Normal(void)
+void CSceneAnime ::Update_Normal(void)
 {
 	m_nDoAnimCounter++;
 
@@ -131,7 +131,7 @@ void CEffect ::Update_Normal(void)
 }
 
 // ループver
-void CEffect ::Update_Loop(void)
+void CSceneAnime ::Update_Loop(void)
 {
 	m_nDoAnimCounter++;
 
@@ -156,7 +156,7 @@ void CEffect ::Update_Loop(void)
 //*****************************************************************************
 // 描画関数
 //*****************************************************************************
-void CEffect ::Draw(void)
+void CSceneAnime ::Draw(void)
 {
 	if(m_bDraw)
 	{
@@ -167,10 +167,10 @@ void CEffect ::Draw(void)
 //*****************************************************************************
 // クリエイト関数　ループなしVer
 //*****************************************************************************
-CEffect* CEffect::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int endTime)
+CSceneAnime* CSceneAnime::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int endTime)
 {
 	// 作成
-	CEffect* p = new CEffect(pDevice);
+	CSceneAnime* p = new CSceneAnime(pDevice);
 
 	p->m_pD3DDevice = pDevice;
 
@@ -183,10 +183,10 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float widt
 //*****************************************************************************
 // クリエイト関数　ループVer
 //*****************************************************************************
-CEffect* CEffect::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum)
+CSceneAnime* CSceneAnime::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum)
 {
 	// 作成
-	CEffect* p = new CEffect(pDevice);
+	CSceneAnime* p = new CSceneAnime(pDevice);
 
 	p->m_pD3DDevice = pDevice;
 
@@ -199,7 +199,7 @@ CEffect* CEffect::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float widt
 //=============================================================================
 // インデックスの設定
 //=============================================================================
-void CEffect::SetIndex(int nIdx)
+void CSceneAnime::SetIndex(int nIdx)
 {
 	float fU,fV;
 

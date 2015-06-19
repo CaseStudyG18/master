@@ -74,48 +74,35 @@ void CGoal::Update(void)
 
 		// “]‘—ˆê’iŠK–Ú‚É‚·‚é
 		m_State = GOAL_STATE_TRANS_FIRST;
+
+		CDebugProc::Print("GOAL_STATE_ARRIVE\n");
 	}
 	else if (m_State == GOAL_STATE_TRANS_FIRST){
 		m_nCount++;
 		if (m_nCount == TRANSE_INTERVAL_FIRST){
 			m_State = GOAL_STATE_TRANS_SECOND;
 		}
+		CDebugProc::Print("GOAL_STATE_FIRST\n");
 	}
 	else if (m_State == GOAL_STATE_TRANS_SECOND){
 		m_nCount++;
 		if (m_nCount == TRANSE_INTERVAL_SECOND){
 			m_State = GOAL_STATE_TRANS_THIRD;
 		}
+		CDebugProc::Print("GOAL_STATE_SECOND\n");
 	}
 	else if (m_State == GOAL_STATE_TRANS_THIRD){
 		m_nCount++;
 		if (m_nCount == TRANSE_INTERVAL_THIRD){
 			m_State = GOAL_STATE_TRANSED;
 		}
-	}
-	else if (m_State == GOAL_STATE_TRANSED){
-		// ƒQ[ƒ€I—¹
-		m_pGame->SetGameOver();
-	}
-
-#ifdef _DEBUG
-	if (m_State == GOAL_STATE_ARRIVE){
-		CDebugProc::Print("GOAL_STATE_ARRIVE\n");
-	}
-	else if (m_State == GOAL_STATE_TRANS_FIRST){
-		CDebugProc::Print("GOAL_STATE_FIRST\n");
-	}
-	else if (m_State == GOAL_STATE_TRANS_SECOND){
-		CDebugProc::Print("GOAL_STATE_SECOND\n");
-	}
-	else if (m_State == GOAL_STATE_TRANS_THIRD){
 		CDebugProc::Print("GOAL_STATE_THIRD\n");
 	}
 	else if (m_State == GOAL_STATE_TRANSED){
 		CDebugProc::Print("GOAL_STATE_TRANSED\n");
+		// ƒQ[ƒ€I—¹
+		m_pGame->SetGameOver();
 	}
-#endif
-
 }
 
 //*****************************************************************************

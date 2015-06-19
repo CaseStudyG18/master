@@ -17,12 +17,6 @@
     <Filter Include="MANAGER">
       <UniqueIdentifier>{48d06205-02a8-4028-8f37-070fe7c2eceb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SCENE">
-      <UniqueIdentifier>{e3663ac9-e02b-45d8-91c6-b2e8e20e05f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SCENE\CSCENE">
-      <UniqueIdentifier>{6ff7fddb-d6d9-4785-a7b8-c05b5dda28b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="INPUT">
       <UniqueIdentifier>{9ed518b5-37d9-4392-883e-131f699f534b}</UniqueIdentifier>
     </Filter>
@@ -34,9 +28,6 @@
     </Filter>
     <Filter Include="FADE">
       <UniqueIdentifier>{388465db-7011-4031-8efc-94ebf203fa2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MODEL">
-      <UniqueIdentifier>{e60ca241-ecec-4e76-8bf3-26097bb221a5}</UniqueIdentifier>
     </Filter>
     <Filter Include="TEXTURE">
       <UniqueIdentifier>{623f1cc2-813c-4106-9cc7-580f5e7af6bc}</UniqueIdentifier>
@@ -53,35 +44,32 @@
     <Filter Include="PHASE">
       <UniqueIdentifier>{dc0fa4a0-2f64-4e92-9afa-cbac0051438a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SHADER">
+      <UniqueIdentifier>{f7eca0cc-d99c-40fd-9414-e5efac76994e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CONTROLLER">
+      <UniqueIdentifier>{664b5e1a-f49d-4299-abf5-129f01b21b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BACKGROUND">
+      <UniqueIdentifier>{fe72bf1c-1abf-4206-9836-2e71b3d34165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE">
+      <UniqueIdentifier>{e3663ac9-e02b-45d8-91c6-b2e8e20e05f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE\CSCENE">
+      <UniqueIdentifier>{6ff7fddb-d6d9-4785-a7b8-c05b5dda28b2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="SCENE\TITLE">
       <UniqueIdentifier>{ae433024-07fc-4458-a5d8-86177922a688}</UniqueIdentifier>
     </Filter>
     <Filter Include="SCENE\GAME">
       <UniqueIdentifier>{4e618ae1-1c75-44ae-846a-3f0eaf702881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SCENE\RESULT">
-      <UniqueIdentifier>{56bcd4d3-c792-4938-bde2-b64f69898733}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SCENE\PAUSE">
-      <UniqueIdentifier>{4534b58c-9602-4534-9555-9cbf1744395c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SCENE\EFFECT">
-      <UniqueIdentifier>{66f78eba-f3e9-4f85-86e3-4650778a06e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SCENE\UI">
-      <UniqueIdentifier>{e9dc00e5-479f-4803-968c-bae2c4c6fa46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SHADER">
-      <UniqueIdentifier>{f7eca0cc-d99c-40fd-9414-e5efac76994e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SCENE\GAME\TREASURE">
       <UniqueIdentifier>{742a757d-ffa6-492e-a860-c91876c6dacf}</UniqueIdentifier>
     </Filter>
     <Filter Include="SCENE\GAME\GOAL">
       <UniqueIdentifier>{eccee3e0-2b95-4a2f-8b98-4ccdf461bae9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MAIN\LIGHT">
-      <UniqueIdentifier>{cea930a1-8623-4d97-9988-d5913af66db4}</UniqueIdentifier>
     </Filter>
     <Filter Include="SCENE\GAME\ATTACK">
       <UniqueIdentifier>{df22901e-e922-4223-b830-d8cbae31e656}</UniqueIdentifier>
@@ -101,14 +89,20 @@
     <Filter Include="SCENE\GAME\UI">
       <UniqueIdentifier>{27363750-8588-4d2b-b6e5-f34d2edb50a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\RESULT">
+      <UniqueIdentifier>{56bcd4d3-c792-4938-bde2-b64f69898733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE\PAUSE">
+      <UniqueIdentifier>{4534b58c-9602-4534-9555-9cbf1744395c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE\EFFECT">
+      <UniqueIdentifier>{66f78eba-f3e9-4f85-86e3-4650778a06e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE\UI">
+      <UniqueIdentifier>{e9dc00e5-479f-4803-968c-bae2c4c6fa46}</UniqueIdentifier>
+    </Filter>
     <Filter Include="SCENE\OPTION">
       <UniqueIdentifier>{ce11cd21-2574-485c-94a3-f6428501403c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CONTROLLER">
-      <UniqueIdentifier>{664b5e1a-f49d-4299-abf5-129f01b21b59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BACKGROUND">
-      <UniqueIdentifier>{fe72bf1c-1abf-4206-9836-2e71b3d34165}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,9 +157,6 @@
     <ClCompile Include="sources\SOUND\CSound.cpp">
       <Filter>SOUND</Filter>
     </ClCompile>
-    <ClCompile Include="sources\MODEL\CModel.cpp">
-      <Filter>MODEL</Filter>
-    </ClCompile>
     <ClCompile Include="sources\JUDGE\CJudge.cpp">
       <Filter>JUDGE</Filter>
     </ClCompile>
@@ -174,9 +165,6 @@
     </ClCompile>
     <ClCompile Include="sources\PHASE\CPhase.cpp">
       <Filter>PHASE</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\LIGHT\CLight.cpp">
-      <Filter>MAIN\LIGHT</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp">
       <Filter>SCENE\TITLE</Filter>
@@ -198,9 +186,6 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\UI\CNumber.cpp">
       <Filter>SCENE\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\EFFECT\CEffect.cpp">
-      <Filter>SCENE\EFFECT</Filter>
     </ClCompile>
     <ClCompile Include="sources\CAMERA\CameraManager.cpp">
       <Filter>CAMERA</Filter>
@@ -301,6 +286,9 @@
     <ClCompile Include="sources\BACKGROUND\CBackGroundManager.cpp">
       <Filter>BACKGROUND</Filter>
     </ClCompile>
+    <ClCompile Include="sources\SCENE\CSCENE\CSceneAnime.cpp">
+      <Filter>SCENE\CSCENE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\MAIN\main.h">
@@ -357,9 +345,6 @@
     <ClInclude Include="sources\SOUND\CSound.h">
       <Filter>SOUND</Filter>
     </ClInclude>
-    <ClInclude Include="sources\MODEL\CModel.h">
-      <Filter>MODEL</Filter>
-    </ClInclude>
     <ClInclude Include="sources\JUDGE\CJudge.h">
       <Filter>JUDGE</Filter>
     </ClInclude>
@@ -368,9 +353,6 @@
     </ClInclude>
     <ClInclude Include="sources\PHASE\CPhase.h">
       <Filter>PHASE</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\LIGHT\CLight.h">
-      <Filter>MAIN\LIGHT</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h">
       <Filter>SCENE\TITLE</Filter>
@@ -392,9 +374,6 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\UI\CNumber.h">
       <Filter>SCENE\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\EFFECT\CEffect.h">
-      <Filter>SCENE\EFFECT</Filter>
     </ClInclude>
     <ClInclude Include="sources\CAMERA\CameraManager.h">
       <Filter>CAMERA</Filter>
@@ -494,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="sources\BACKGROUND\CBackGroundManager.h">
       <Filter>BACKGROUND</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\CSCENE\CSceneAnime.h">
+      <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

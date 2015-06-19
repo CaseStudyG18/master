@@ -1,11 +1,11 @@
 //=============================================================================
 //
-// CEffectクラス [CEffect.h]
+// CSceneAnimeクラス [CSceneAnime.h]
 // Author : 野尻　尚希
 //
 //=============================================================================
-#ifndef _CEFFECT_H_
-#define _CEFFECT_H_
+#ifndef _CSCENEANIME_H_
+#define _CSCENEANIME_H_
 
 //=============================================================================
 // インクルード
@@ -21,17 +21,17 @@ static const short	INFINIT_LOOP = -1;					// 無限ループを示す
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CEffect : public CScene2D
+class CSceneAnime : public CScene2D
 {
 public:
 	//======================================================
 	// コンストラクタ
 	// 引数: デバイス、プライオリティ
 	//======================================================
-	CEffect(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT, OBJTYPE objType = OBJTYPE_NONE);
+	CSceneAnime(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT, OBJTYPE objType = OBJTYPE_NONE);
 
 	// デストラクタ
-	~CEffect();
+	~CSceneAnime();
 
 	//======================================================
 	// 初期化　ループなし
@@ -55,7 +55,12 @@ public:
 
 	// 描画
 	void Draw(void);
-	
+
+	// アニメスピードのセッター
+	void SetAnimeSpeed(int value){
+		m_nChangeTime = value;
+	}
+
 	//======================================================
 	// アニメーション番号設定
 	// 引数: アニメーション番号
@@ -79,14 +84,14 @@ public:
 	// 引数: デバイス、座標、幅、高さ、テクスチャータイプ、テクスチャ横分割数、テクスチャ縦分割数、終了時間
 	// 戻り値: 作ったやつのアドレス
 	//======================================================
-	static CEffect* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int endTime);
+	static CSceneAnime* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int endTime);
 	
 	//======================================================
 	// クリエイト関数　ループあり
 	// 引数: デバイス、座標、幅、高さ、テクスチャータイプ、テクスチャ横分割数、テクスチャ縦分割数、ループ回数（-1で無限）
 	// 戻り値: 作ったやつのアドレス
 	//======================================================
-	static CEffect* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum);
+	static CSceneAnime* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum);
 private:
 	// ループなし更新
 	void Update_Normal(void);

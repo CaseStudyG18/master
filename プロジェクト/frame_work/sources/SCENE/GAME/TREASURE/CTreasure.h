@@ -13,7 +13,7 @@
 // インクルード
 //=============================================================================
 #include "../../../MAIN/main.h"
-#include "../../EFFECT/CEffect.h"
+#include "../../CSCENE/CSceneAnime.h"
 
 //=============================================================================
 // 定数
@@ -29,7 +29,7 @@ enum TreasureState{
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CTreasure : public CEffect
+class CTreasure : public CSceneAnime
 {
 	// 公開メンバ
 public:
@@ -52,6 +52,10 @@ public:
 	// プレイヤが宝物を落とすときの処理
 	// テクスチャと大きさをリセットする
 	void Reset(D3DXVECTOR3 pos);
+
+	// プレイヤが宝物を拾ったとき
+	// テクスチャと大きさをセットする
+	void SetIcon();
 
 	// 宝箱を持っているプレイヤーのIDをセット
 	void SetOwnerPlayerNumber(short sPlayerNumber){ m_sOwnerPlayer = sPlayerNumber; m_TreasureState = TREASURE_STATE_OWNED; }

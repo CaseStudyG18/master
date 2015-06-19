@@ -19,10 +19,6 @@
 // プレイヤーの移動速度(仮)
 static const float PLAYER_SPEED = 8.0f;
 
-// 宝物アイコンの大きさ
-static const float TREASURE_ICON_WIDTH = 40;
-static const float TREASURE_ICON_HEIGHT = 30;
-
 // 宝物アイコンの表示位置
 static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
 
@@ -942,10 +938,8 @@ void CPlayer::SetTreasure(CTreasure *pTreasure){
 	// ポインタ保存
 	m_pTreasure = pTreasure;
 
-	// テクスチャと大きさを変更
-	m_pTreasure->SetWidth(TREASURE_ICON_WIDTH);
-	m_pTreasure->SetHeight(TREASURE_ICON_HEIGHT);
-	m_pTreasure->ChangeTexture(TEXTURE_TREASURE_ICON);
+	// 宝物をアイコンにする
+	m_pTreasure->SetIcon();
 }
 
 //-----------------------------------------------------------------------------
@@ -1106,7 +1100,6 @@ void CPlayer::UpdatePlayerRed(void){
 	if (CInputKeyboard::GetKeyboardPress(DIK_RSHIFT)){
 		AddHp(PLAYER_DEFAULT_HP);
 	}
-#ifdef _DEBUG
 	if (m_HpState == PLAYER_HP_STATE_NORMAL){
 		CDebugProc::Print("プレイヤHP状態 = NORMAL\n");
 	}
@@ -1120,7 +1113,7 @@ void CPlayer::UpdatePlayerRed(void){
 		CDebugProc::Print("プレイヤHP状態 = DIE\n");
 	}
 	CDebugProc::Print("count = %d\n", m_nRedCount);
-#endif
+
 	// 死んでいる or HPが十分あるなら更新しない
 	if (m_HpState == PLAYER_HP_STATE_DIE ||
 		m_HpState == PLAYER_HP_STATE_NORMAL){

@@ -512,8 +512,8 @@ void CJudge::ColiTreasurexPlayer(void)
 					coli[idx] = true;
 #ifdef _DEBUG
 					CDebugProc::Print("TREASURE x PLAYER!!\n");
-					break;
 #endif
+					break;
 				}
 			}
 			// 次のインスタンスを対象のインスタンスにする
