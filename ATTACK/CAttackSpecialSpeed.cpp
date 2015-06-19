@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialSpeed.h"
-#include "../../EFFECT/CEffect.h"
+#include "../EFFECT/CEffect.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -121,7 +121,7 @@ CAttackSpecialSpeed* CAttackSpecialSpeed::Create(
 //=============================================================================
 void CAttackSpecialSpeed::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->HPGainAndLoss(-10.0f);
+	pPlayer->AddHp(-10.0f);
 }
 
 //----EOF-------

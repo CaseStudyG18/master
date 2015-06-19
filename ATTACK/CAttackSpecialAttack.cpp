@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialAttack.h"
-#include "../../EFFECT/CEffect.h"
+#include "../EFFECT/CEffect.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -124,7 +124,7 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 //=============================================================================
 void CAttackSpecialAttack::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->HPGainAndLoss(-20.0f);
+	pPlayer->AddHp(-20.0f);
 }
 
 //----EOF-------

@@ -8,7 +8,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackNormal.h"
-#include "../../EFFECT/CEffect.h"
+#include "../EFFECT/CEffect.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -117,7 +117,7 @@ CAttackNormal* CAttackNormal::Create(
 //*****************************************************************************
 void CAttackNormal::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->SetDonashi(true);
+	pPlayer->SetSlowSpeed(true);
 }
 
 //----EOF-------

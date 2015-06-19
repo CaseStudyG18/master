@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialTrap.h"
-#include "../../EFFECT/CEffect.h"
+#include "../EFFECT/CEffect.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -117,7 +117,7 @@ CAttackSpecialTrap* CAttackSpecialTrap::Create(
 //=============================================================================
 void CAttackSpecialTrap::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->MPGainAndLoss(-10.0f);
+	pPlayer->AddHp(-10.0f);
 }
 
 //----EOF-------
