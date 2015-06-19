@@ -114,7 +114,8 @@ CGoal* CGoal::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, short nPlayerN
 	CGoal* p = new CGoal(pDevice);
 
 	// ‰Šú‰»
-	p->CScene2D::Init(pos, GOAL_WIDTH, GOAL_HEIGHT, GOAL_TEXTURE);
+//	p->CScene2D::Init(pos, GOAL_WIDTH, GOAL_HEIGHT, GOAL_TEXTURE);
+	p->SetDrawFlag(false);
 
 	p->m_nPlayerNum = nPlayerNum;
 	p->m_pGame = pGame;

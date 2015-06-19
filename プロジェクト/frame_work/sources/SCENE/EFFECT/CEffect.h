@@ -28,7 +28,7 @@ public:
 	// コンストラクタ
 	// 引数: デバイス、プライオリティ
 	//======================================================
-	CEffect(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT);
+	CEffect(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT, OBJTYPE objType = OBJTYPE_NONE);
 
 	// デストラクタ
 	~CEffect();

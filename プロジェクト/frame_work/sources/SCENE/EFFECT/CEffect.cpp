@@ -12,7 +12,7 @@
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CEffect ::CEffect(LPDIRECT3DDEVICE9 *pDevice, int nPriority):CScene2D(pDevice, nPriority)
+CEffect::CEffect(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CScene2D(pDevice, nPriority, objType)
 {
 	m_nMaxLoopNum = 0;
 	m_nCurLoopNum = 0;

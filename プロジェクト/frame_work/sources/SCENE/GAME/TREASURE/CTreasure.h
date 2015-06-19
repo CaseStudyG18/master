@@ -13,7 +13,7 @@
 // インクルード
 //=============================================================================
 #include "../../../MAIN/main.h"
-#include "../../CSCENE/CScene2D.h"
+#include "../../EFFECT/CEffect.h"
 
 //=============================================================================
 // 定数
@@ -29,7 +29,7 @@ enum TreasureState{
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CTreasure : public CScene2D
+class CTreasure : public CEffect
 {
 	// 公開メンバ
 public:
@@ -37,7 +37,6 @@ public:
 	CTreasure(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_TRESURE, OBJTYPE m_objType = OBJTYPE_TREASURE);
 	~CTreasure(void);
 
-	void Init(void);
 	void Uninit(void);
 	void Update(void);
 
@@ -68,6 +67,10 @@ public:
 
 	// 非公開メンバ
 private:
+
+	// 初期化
+	void Init(D3DXVECTOR3 pos);
+
 	// お宝の状態
 	TreasureState m_TreasureState;
 	short m_sOwnerPlayer;

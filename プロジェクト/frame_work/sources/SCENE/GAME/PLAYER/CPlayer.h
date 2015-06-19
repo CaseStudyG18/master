@@ -224,6 +224,9 @@ public:
 		return m_pTreasure;
 	}
 
+	// オールドポジションアクセサ
+	D3DXVECTOR3 GetOldPos(void) { return m_vPosOld; }
+
 private:
 	//---------------------------------
 	// 関数

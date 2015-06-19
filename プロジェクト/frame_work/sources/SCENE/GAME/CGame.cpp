@@ -215,6 +215,7 @@ void CGame::Update(void)
 {
 	// カウントダウンの更新
 	m_pCountDown->Update();
+	// 背景の更新
 	m_BackGroundManager->Update();
 
 	// Ｐが押されたら
