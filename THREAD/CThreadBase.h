@@ -52,28 +52,6 @@ protected:
 	// プレイヤーが糸発射時に向いていた方向
 	DIRECTION_PLAYER_FACING m_PlayerFaicing;
 
-	// 中央の位置,角度,幅,高さ
-	D3DXVECTOR3	m_vPos;
-	D3DXVECTOR3	m_vRot;
-	float		m_fWidth;
-	float		m_fHeight;
-
-	// ポジションアクセサ
-	D3DXVECTOR3 GetPos(void){ return m_vPos; };
-	void		SetPos(D3DXVECTOR3 pos){ m_vPos = pos; };
-	void		SetPos(float x, float y, float z){ m_vPos.x = x; m_vPos.y = y; m_vPos.z = z; };
-
-	// ロットアクセサ
-	D3DXVECTOR3 GetRot(void){ return m_vRot; };
-	void		SetRot(D3DXVECTOR3 rot){ m_vRot = rot; };
-	void		SetRot(float x, float y, float z){ m_vRot.x = x; m_vRot.y = y; m_vRot.z = z; };
-
-	// サイズアクセサ
-	float GetWidth(void){ return m_fWidth; };
-	void SetWidth(float width){ m_fWidth = width; };
-	float GetHeight(void){ return m_fHeight; };
-	void SetHeight(float height){ m_fHeight = height; };
-
 	// 非公開メンバ
 private:
 	

@@ -13,20 +13,22 @@
 // インクルード
 //=============================================================================
 #include "../../../RENDERER/CRenderer.h"
-#include "CThreadBase.h"
+#include "../ATTACK/CAttackBase.h"
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CThreadSpecialAttack : public CThreadBase
+class CThreadSpecialAttack : public CAttackBase
 {
 	// 公開メンバ
 public:
 	// プライオリティとオブジェタイプはテスト
-	CThreadSpecialAttack(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_THREAD_OF_FOOTHOLD, OBJTYPE type = OBJTYPE_FIELD);
+	CThreadSpecialAttack(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_THREAD_OF_FOOTHOLD, OBJTYPE type = OBJTYPE_ATTACK);
 	~CThreadSpecialAttack(void);
 
-	HRESULT Init(void);
+	// 初期化
+	//  引数　　座標、プレイヤー番号
+	HRESULT Init(D3DXVECTOR3 pos, short playerNumber, D3DXVECTOR3 velocity);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
@@ -39,11 +41,12 @@ public:
 	static CThreadSpecialAttack *Create(
 		LPDIRECT3DDEVICE9 *pDevice,
 		short nPlayerNum,
-		D3DXVECTOR3 pos);
+		D3DXVECTOR3 pos,
+		D3DXVECTOR3 velocity);
 
 	// 非公開メンバ
 private:
-
+	D3DXVECTOR3 m_vVelocity;
 };
 
 #endif

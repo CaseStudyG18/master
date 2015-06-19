@@ -75,7 +75,7 @@ void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 p
 		break;
 		// UŒ‚“Á‰»Œ`‘Ô‚ÌŽ…
 	case THREAD_TYPE_ATTACK:
-		temp = CThreadSpecialAttack::Create(m_pDevice, nPlayerNum, pos);
+		CThreadSpecialAttack::Create(m_pDevice, nPlayerNum, pos , PLAYER_DIRECTION_VECTOR[playerFacing]);
 		break;
 		// ˆÚ“®“Á‰»Œ`‘Ô‚ÌŽ…
 	case THREAD_TYPE_SPEED:
@@ -88,6 +88,6 @@ void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 p
 	default:
 		break;
 	}
-	temp->SetPlayerFacing(playerFacing);
+	//temp->SetPlayerFacing(playerFacing);
 }
 //----EOF-------
