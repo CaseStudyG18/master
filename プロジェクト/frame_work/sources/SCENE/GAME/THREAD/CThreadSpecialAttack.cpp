@@ -8,7 +8,8 @@
 // インクルード
 //*****************************************************************************
 #include "CThreadSpecialAttack.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../PLAYER/CPlayer.h"
+#include "../EFFECT/CEffectManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -96,7 +97,7 @@ void CThreadSpecialAttack::Update(void)
 
 	// カウントが10のとき（仮）エフェクトは発動
 	if (m_nCount == THREAD_FIRST_ATTACK_CREATE_TIME){
-		CSceneAnime::Create(
+		CEffect::Create(
 			m_pD3DDevice,
 			m_vPos, 100, 100,
 			TEXTURE_FIRE_1, 10, 1, 40);
@@ -106,7 +107,7 @@ void CThreadSpecialAttack::Update(void)
 	if (m_nCount >= THREAD_SECOND_ATTACK_CREATE_TIME){
 		if (m_nCount % 11 == 0)
 		{
-			CSceneAnime::Create(
+			CEffect::Create(
 				m_pD3DDevice,
 				m_vPos, 100, 100,
 				TEXTURE_FIRE_0, 10, 1, 60);
@@ -155,4 +156,16 @@ void CThreadSpecialAttack::Draw(void)
 {
 	CAttackBase::Draw();
 }
+
+//*****************************************************************************
+//
+//*****************************************************************************
+void CThreadSpecialAttack::HitPlayer(CPlayer* pPlayer)
+{
+	CEffect::Create(
+		m_pD3DDevice,
+		pPlayer->GetPos(), 100, 100,
+		TEXTURE_FIRE_1, 10, 1, 40);
+}
+
 //----EOF-------

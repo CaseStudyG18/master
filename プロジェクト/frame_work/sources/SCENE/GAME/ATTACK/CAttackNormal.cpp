@@ -8,8 +8,8 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackNormal.h"
+#include "../EFFECT/CEffect.h"
 #include "../PLAYER/CPlayer.h"
-#include "../../CSCENE/CSceneAnime.h"
 
 //*****************************************************************************
 // マクロ
@@ -82,7 +82,7 @@ void CAttackNormal::Update(void)
 
 	// カウントが10のとき（仮）エフェクトは発動
 	if (m_nCount == 10){
-		CSceneAnime::Create(
+		CEffect::Create(
 			m_pD3DDevice,
 			m_vPos, 100, 100,
 			TEXTURE_FIRE_1, 10, 1, 20);

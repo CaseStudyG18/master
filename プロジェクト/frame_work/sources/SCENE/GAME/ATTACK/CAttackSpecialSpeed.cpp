@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialSpeed.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffect.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -85,7 +85,7 @@ void CAttackSpecialSpeed::Update(void)
 
 	// カウントが10のとき（仮）エフェクトは発動
 	if (m_nCount == 9){
-		CSceneAnime::Create(
+		CEffect::Create(
 			m_pD3DDevice,
 			m_vPos, 100, 100,
 			TEXTURE_FIRE_1, 10, 1, m_nEndTime);

@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialTrap.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffect.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -83,7 +83,7 @@ void CAttackSpecialTrap::Update(void)
 
 	// カウントが10のとき（仮）エフェクトは発動
 	if (m_nCount == 10){
-		CSceneAnime::Create(
+		CEffect::Create(
 			m_pD3DDevice,
 			m_vPos, ATTACK_TRAP_HIT_WIDTH, ATTACK_TRAP_HIT_HEIGHT,
 			TEXTURE_FIRE_1, 10, 1, m_nEndTime);

@@ -26,7 +26,7 @@ static const D3DXVECTOR3 PLAYER_START_POS[] = {
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CPlayerManager::CPlayerManager(CAttackManager *pAttackManager, CThreadManager *pThreadManager)
+CPlayerManager::CPlayerManager(CAttackManager *pAttackManager, CThreadManager *pThreadManager , CEffectManager *pEffectManager)
 {
 	for (int i = 0; i < MAXIMUM_NUMBER_OF_PLAYER; i++)
 	{
@@ -35,6 +35,7 @@ CPlayerManager::CPlayerManager(CAttackManager *pAttackManager, CThreadManager *p
 	m_nTimer = 0;
 	m_pAttackManager = pAttackManager;
 	m_pThreadManager = pThreadManager;
+	m_pEffectManager = pEffectManager;
 }
 
 //-----------------------------------------------------------------------------
@@ -63,6 +64,7 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer, bool *bPlayerContro
 			PLAYER_MANUAL,
 			m_pAttackManager,
 			m_pThreadManager,
+			m_pEffectManager, //2015_06_23追加　サトウ　リョウイチ
 			(short)nManual,
 			bPlayerControl);
 	}
@@ -77,6 +79,7 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer, bool *bPlayerContro
 			PLAYER_COMPUTER,
 			m_pAttackManager,
 			m_pThreadManager,
+			m_pEffectManager, //2015_06_23追加　サトウ　リョウイチ
 			(short)nCPU,
 			bPlayerControl);
 	}

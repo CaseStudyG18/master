@@ -13,6 +13,7 @@
 class CPlayer;
 class CAttackManager;
 class CThreadManager;
+class CEffectManager;
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -29,7 +30,8 @@ public:
 	// コンストラクタ
 	CPlayerManager(
 		CAttackManager *pAttackManager, 
-		CThreadManager *pThreadManager);
+		CThreadManager *pThreadManager,
+		CEffectManager *pEffectManager);
 
 	// デストラクタ
 	~CPlayerManager();
@@ -63,6 +65,10 @@ private:
 	CAttackManager *m_pAttackManager;
 	// 糸出す時に必要なマネージャー
 	CThreadManager *m_pThreadManager;
+	// 2015_06_23追加
+	// サトウ　リョウイチ
+	// エフェクトに必要なマネージャー
+	CEffectManager *m_pEffectManager;
 
 };
 

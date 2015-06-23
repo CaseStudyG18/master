@@ -63,15 +63,16 @@ void CThreadManager::Update(void)
 
 //*****************************************************************************
 // 糸を生成する
+// 2015_06_23変更
+// サトウ　リョウイチ
 //*****************************************************************************
-void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerFacing)
+void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerFacing, CEffectManager *pEffectManager)
 {
-	CThreadBase* temp;
 	switch (type)
 	{
 		// 通常形態の糸
 	case THREAD_TYPE_NORMAL:
-		temp = CThreadNormal::Create(m_pDevice, nPlayerNum, pos);
+		CThreadNormal::Create(m_pDevice, nPlayerNum, pos);
 		break;
 		// 攻撃特化形態の糸
 	case THREAD_TYPE_ATTACK:
@@ -79,15 +80,14 @@ void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 p
 		break;
 		// 移動特化形態の糸
 	case THREAD_TYPE_SPEED:
-		temp = CThreadSpecialSpeed::Create(m_pDevice, nPlayerNum, pos);
+		CThreadSpecialSpeed::Create(m_pDevice, nPlayerNum, pos, playerFacing);
 		break;
 		// 罠特化形態の糸
 	case THREAD_TYPE_TRAP:
-		temp = CThreadSpecialTrap::Create(m_pDevice, nPlayerNum, pos);
+		CThreadSpecialTrap::Create(m_pDevice, nPlayerNum, pos);
 		break;
 	default:
 		break;
 	}
-	//temp->SetPlayerFacing(playerFacing);
 }
 //----EOF-------
