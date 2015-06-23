@@ -70,7 +70,7 @@ void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 p
 	{
 		// ’ÊíŒ`‘Ô‚Ì…
 	case THREAD_TYPE_NORMAL:
-		CThreadNormal::Create(m_pDevice, nPlayerNum, pos);
+		CThreadNormal::Create(m_pDevice, nPlayerNum, pos, PLAYER_DIRECTION_VECTOR[playerFacing]);
 		break;
 		// UŒ‚“Á‰»Œ`‘Ô‚Ì…
 	case THREAD_TYPE_ATTACK:

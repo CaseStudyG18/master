@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// CThreadManagerクラス [CAttacManager.cpp]
+// CThreadNormalクラス [CThreadNormal.cpp]
 // Author : 塚本　俊彦
 //
 //=============================================================================
@@ -14,15 +14,18 @@
 // マクロ
 //*****************************************************************************
 // 寿命
-const short THREAD_NORMAL_END_TIME = 180;
+static const short THREAD_NORMAL_END_TIME = 80;
 // 当たり判定の始まる時間
-const short THREAD_NORMAL_HIT_START_TIME = 60;
+static const short THREAD_NORMAL_HIT_START_TIME = 60;
 // 当たり判定の終わる時間
-const short THREAD_NORMAL_HIT_END_TIME = 120;
-
+static const short THREAD_NORMAL_HIT_END_TIME = 120;
 // 当たり判 定幅,高さ
-const float THREAD_NORMAL_HIT_WIDTH = 50;
-const float THREAD_NORMAL_HIT_HEIGHT = 50;
+static const float THREAD_NORMAL_HIT_WIDTH = 50;
+static const float THREAD_NORMAL_HIT_HEIGHT = 50;
+
+// 弾の移動量
+static const float THREAD_NORMAL_VEL = 1;
+
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -43,6 +46,12 @@ CThreadNormal::CThreadNormal(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE t
 	m_nEndTime = THREAD_NORMAL_END_TIME;
 	m_nHitStartTime = THREAD_NORMAL_HIT_START_TIME;
 	m_nHitEndTime = THREAD_NORMAL_HIT_END_TIME;
+
+	// 弾を作る
+	m_pBulletAnime = CSceneAnime::Create(
+		pDevice,
+		m_vPos, THREAD_NORMAL_HIT_WIDTH, THREAD_NORMAL_HIT_HEIGHT,
+		TEXTURE_TREASURE, 13, 1, THREAD_NORMAL_END_TIME);
 }
 
 //*****************************************************************************
@@ -57,7 +66,7 @@ CThreadNormal ::~CThreadNormal(void)
 //*****************************************************************************
 HRESULT CThreadNormal::Init()
 {
-	CThreadBase::Init(m_vPos, 100, 100, TEXTURE_THREAD);
+	CThreadBase::Init(m_vPos, THREAD_NORMAL_HIT_WIDTH, THREAD_NORMAL_HIT_HEIGHT, TEXTURE_THREAD);
 
 	return S_OK;
 }
@@ -77,35 +86,56 @@ void CThreadNormal::Update(void)
 {
 	CThreadBase::Update();
 
-	//// カウントが10のとき（仮）エフェクトは発動
-	//if (m_nCount == 10){
-	//	CEffect::Create(
-	//		m_pD3DDevice,
-	//		m_vPos, 100, 100,
-	//		TEXTURE_THREAD, 10, 1, 20);
-	//}
+	// 弾の移動
+	m_vPos += m_vPlayerDirection * THREAD_NORMAL_VEL;
+
+	// 弾の座標を当たり判定用座標でセット
+	m_pBulletAnime->SetPos(m_vPos);
+
+	// カウントで消す
+	if (m_nCount == THREAD_NORMAL_END_TIME){
+		Release();
+	}
 }
 
 //*****************************************************************************
 // クリエイト関数
 //*****************************************************************************
-CThreadNormal* CThreadNormal::Create(LPDIRECT3DDEVICE9 *pDevice, short nPlayerNum, D3DXVECTOR3 pos)
+CThreadNormal* CThreadNormal::Create(
+	LPDIRECT3DDEVICE9 *pDevice,
+	short nPlayerNum, D3DXVECTOR3 pos, D3DXVECTOR3 direction)
 {
 	// 作成
 	CThreadNormal* p = new CThreadNormal(pDevice);
 
 	p->m_nPlayerNum = nPlayerNum;
 	p->m_vPos = pos;
+	p->m_vPlayerDirection = direction;
 
 	// 初期化
 	p->Init();
 
-
 	return p;
 }
 
+//*****************************************************************************
+// 描画
+//*****************************************************************************
 void CThreadNormal::Draw(void)
 {
 	CThreadBase::Draw();
 }
+
+//*****************************************************************************
+// プレイヤに当たった時に呼ばれる関数
+//*****************************************************************************
+void CThreadNormal::HitPlayer(CPlayer* pPlayer)
+{
+#ifdef _DEBUG
+	CDebugProc::Print("通常形態の糸がプレイヤにヒット\n");
+#endif
+	// 鈍足にしてダメージは無し
+	pPlayer->SetSlowSpeed(true);
+}
+
 //----EOF-------

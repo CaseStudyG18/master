@@ -76,10 +76,6 @@ void CThreadSpecialTrap::Update(void)
 {
 	CThreadBase::Update();
 
-#ifdef _DEBUG
-	CDebugProc::Print("罠特化形態の糸生成済\n");
-#endif
-
 	//// カウントが10のとき（仮）エフェクトは発動
 	//if (m_nCount == 10){
 	//	CEffect::Create(
@@ -107,8 +103,25 @@ CThreadSpecialTrap* CThreadSpecialTrap::Create(LPDIRECT3DDEVICE9 *pDevice, short
 	return p;
 }
 
+//*****************************************************************************
+// 描画
+//*****************************************************************************
 void CThreadSpecialTrap::Draw(void)
 {
 	CThreadBase::Draw();
 }
+
+//*****************************************************************************
+// プレイヤに当たった時に呼ばれる関数
+//*****************************************************************************
+void CThreadSpecialTrap::HitPlayer(CPlayer* pPlayer)
+{
+#ifdef _DEBUG
+	CDebugProc::Print("罠形態の糸がプレイヤにヒット\n");
+#endif
+
+	// トラップとプレイヤの当たり判定の処理
+
+}
+
 //----EOF-------

@@ -62,6 +62,7 @@ public:
 		OBJTYPE_2D,					// 2D
 		OBJTYPE_PLAYER,				// プレイヤー
 		OBJTYPE_ATTACK,				// 攻撃
+		OBJTYPE_THREAD,				// 糸
 		OBJTYPE_FIELD,				// フィールド
 		OBJTYPE_TREASURE,			// 宝箱
 		OBJTYPE_SCORE,				// スコア

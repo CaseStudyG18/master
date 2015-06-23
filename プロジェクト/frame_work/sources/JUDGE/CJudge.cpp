@@ -259,7 +259,7 @@ void CJudge::ColiAttackxPlayer(void){
 				continue;
 			}
 
-			// フィールド情報入れる
+			// 攻撃情報入れる
 			pAttack = (CScene2D*)pScene;
 			CAttackBase* pAttackBase = (CAttackBase*)pScene;
 			D3DXVECTOR2 pos(pAttack->GetPos().x, pAttack->GetPos().y);
@@ -279,6 +279,7 @@ void CJudge::ColiAttackxPlayer(void){
 					continue;
 				}
 
+				// 自分の攻撃か
 				if (idx == (int)pAttackBase->GetPlayerNumber())
 				{
 					continue;
@@ -296,6 +297,95 @@ void CJudge::ColiAttackxPlayer(void){
 #ifdef _DEBUG
 					CDebugProc::Print("攻撃ヒット\n");
 #endif
+				}
+			}
+
+			// 次のインスタンスを対象のインスタンスにする
+			pScene = pSceneNext;
+		}
+	}
+}
+
+//=========================================================================
+// 糸とプレイヤーのあたり判定
+//=========================================================================
+void CJudge::ColiThreadxPlayer(void){
+
+	CScene *pScene;
+	CScene *pSceneNext;
+	CPlayer *pPlayer[MAXIMUM_NUMBER_OF_PLAYER] = { NULL };	// プレイヤーの最大人数分用意
+	CScene2D *pThread;
+	CJudge::OBB_INFO playerOBB[MAXIMUM_NUMBER_OF_PLAYER];
+	int playerNum = 0;
+	bool coli[MAXIMUM_NUMBER_OF_PLAYER] = { false };
+
+	// プレイヤー情報入れる
+	CPlayerManager* playerManager = m_pJudgeManager->GetPlayerManager();
+
+	for (int playerCount = 0; playerCount < MAXIMUM_NUMBER_OF_PLAYER; ++playerCount)
+	{
+		pPlayer[playerCount] = playerManager->GetPlayer(playerCount);
+		if (!pPlayer[playerCount])
+		{
+			continue;
+		}
+		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
+		pos.y += pPlayer[playerCount]->GetHeight();
+		float rot = pPlayer[playerCount]->GetRot().z;
+		float width = pPlayer[playerCount]->GetWidth();
+		float height = pPlayer[playerCount]->GetHeight();
+
+		// OBB情報作成
+		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
+		playerNum++;
+	}
+
+	// 攻撃との当たり判定ループ
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+	{
+		// 先頭を指定
+		pScene = CScene::GetTopAddress(priority);
+
+		// ポインタがNULLでなければ
+		while (pScene)
+		{
+			// 現在対象としているインスタンスの次のインスタンスを保存
+			pSceneNext = pScene->GetNextAddress();
+
+			if (pScene->GetObjType() != CScene::OBJTYPE_THREAD)
+			{
+				// 次のインスタンスを対象のインスタンスにする
+				pScene = pSceneNext;
+				continue;
+			}
+
+			// 糸情報入れる
+			pThread = (CScene2D*)pScene;
+			CThreadBase* pThreadBase = (CThreadBase*)pScene;
+			D3DXVECTOR2 pos(pThread->GetPos().x, pThread->GetPos().y);
+			float rot = pThread->GetRot().z;
+			float width = pThread->GetWidth();
+			float height = pThread->GetHeight();
+			CJudge::OBB_INFO attackOBB;
+			// OBB情報作成
+			CreateOBBInfo(&attackOBB, &pos, &rot, &width, &height);
+
+			// 当たり判定
+			for (int idx = 0; idx < playerNum; ++idx)
+			{
+				// すでにあたってるなら判定しない
+				if (coli[idx])
+				{
+					continue;
+				}
+
+				if (IsOBB(playerOBB[idx], attackOBB))
+				{
+					// ヒットフラグオン
+					coli[idx] = true;
+
+					// プレイヤに当たった
+					pThreadBase->HitPlayer(pPlayer[idx]);
 				}
 			}
 
