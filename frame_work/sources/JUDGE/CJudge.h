@@ -53,6 +53,9 @@ public:
 	// フィールドと足場になる糸のあたり判定
 	void ColiFieldxThreadOfFoothold(void);
 
+	// ゴールとプレイヤの当たり判定
+	void ColiGoalxPlayer(void);
+
 private:
 	// 線分構造体
 	struct Segment {

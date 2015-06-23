@@ -20,6 +20,11 @@
 #include "../PLAYER/CPlayerManager.h"
 #include "CAttackManager.h"
 
+//=============================================================================
+//	前方宣言
+//=============================================================================
+class CPlayer;
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -36,6 +41,11 @@ public:
 	void Update(void);
 	void Draw(void){};
 	short GetPlayerNumber(void){ return m_nPlayerNum; };
+
+	// 攻撃がヒットした時に呼び出す関数
+	// 引数　この攻撃に当たったプレイヤーのプレイヤー番号
+	virtual void HitPlayer(CPlayer* pPlayer);
+
 	// 継承メンバ
 protected:
 	// 寿命をカウントする
@@ -53,23 +63,6 @@ protected:
 	short m_nHitPlayer[MAXIMUM_NUMBER_OF_PLAYER];
 	// 攻撃の種類
 	AttackType m_AttackType;
-
-
-	// ポジションアクセサ
-	D3DXVECTOR3 GetPos(void){ return m_vPos; };
-	void		SetPos(D3DXVECTOR3 pos){ m_vPos = pos; };
-	void		SetPos(float x, float y, float z){ m_vPos.x = x; m_vPos.y = y; m_vPos.z = z; };
-
-	// ロットアクセサ
-	D3DXVECTOR3 GetRot(void){ return m_vRot; };
-	void		SetRot(D3DXVECTOR3 rot){ m_vRot = rot; };
-	void		SetRot(float x, float y, float z){ m_vRot.x = x; m_vRot.y = y; m_vRot.z = z; };
-
-	// サイズアクセサ
-	float GetWidth(void){ return m_fWidth; };
-	void SetWidth(float width){ m_fWidth = width; };
-	float GetHeight(void){ return m_fHeight; };
-	void SetHeight(float height){ m_fHeight = height; };
 
 	// 非公開メンバ
 private:

@@ -17,14 +17,20 @@ static const char *TEXTURE_PATH[ TEXTURE_MAX ] =
 {
 	NULL,
 	"data/TEXTURE/witch3.tga",
+	"data/TEXTURE/bg_0.png",
+	"data/TEXTURE/bg_1.png",
 	"data/TEXTURE/fire0.png",
 	"data/TEXTURE/fire1.png",
 	"data/TEXTURE/thread.png",
-	"data/TEXTURE/player_0.jpg",
+	"data/TEXTURE/Player.png",
 	"data/TEXTURE/figure.png",
 	"data/TEXTURE/goal.png",
 	"data/TEXTURE/treasure.png",
 	"data/TEXTURE/treasure_icon.png",
+	"data/TEXTURE/test.jpg",
+	"data/TEXTURE/02.png",
+	"data/TEXTURE/03.png",
+	"data/TEXTURE/Spawn.png",
 };
 
 //*****************************************************************************
@@ -102,6 +108,30 @@ LPDIRECT3DTEXTURE9 CTexture::GetTexture( const TEXTURE_TYPE type )
 		return NULL;
 	}
 	return m_pD3DTex[type];
+}
+
+//============================================================
+// テクスチャタイプゲッター
+//============================================================
+TEXTURE_TYPE CTexture::GetTextureTye(char* texFilePath)
+{
+	for (int TexCnt = 0; TexCnt < TEXTURE_MAX; TexCnt++)
+	{
+		if (!TEXTURE_PATH[TexCnt])
+		{
+			continue;
+		}
+		if (strcmp(texFilePath, TEXTURE_PATH[TexCnt]) == 0)
+		{
+			return (TEXTURE_TYPE)TexCnt;
+		}
+	}
+
+#ifdef _DEBUG
+	MessageBox(NULL, "テクスチャパスが不明です\n", "エラー", MB_OK | MB_ICONERROR);
+#endif
+	return TEXTURE_NULL;
+
 }
 
 //----EOF----

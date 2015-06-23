@@ -13,12 +13,16 @@
 // インクルード
 //=============================================================================
 #include "../../../RENDERER/CRenderer.h"
+#include "../PLAYER/CPlayer.h"
 
 //=============================================================================
 // 定数
 //=============================================================================
 enum ThreadType{
 	THREAD_TYPE_NORMAL,
+	THREAD_TYPE_ATTACK,		// 攻撃特化形態の糸
+	THREAD_TYPE_SPEED,		// 移動特化形態の糸
+	THREAD_TYPE_TRAP,		// 罠特化形態の糸
 	THREAD_TYPE_MAX
 };
 
@@ -26,6 +30,7 @@ enum ThreadType{
 // 前方宣言
 //=============================================================================
 class CThread;
+class CEffectManager;
 
 //*****************************************************************************
 // クラス定義
@@ -41,8 +46,10 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	// 2015_06_23追加
+	// サトウ　リョウイチ
 	// 糸を作る関数(糸タイプ,プレイヤ番号,座標)
-	void CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos);
+	void CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerFacing, CEffectManager *pEffectManager);
 
 	// 非公開メンバ
 private:

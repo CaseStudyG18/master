@@ -9,24 +9,25 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialAttack.h"
-#include "../../EFFECT/CEffect.h"
+#include "../EFFECT/CEffect.h"
+#include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
 // 寿命
-const short ATTACK_ATTACK_END_TIME = 100;
+const short ATTACK_ATTACK_END_TIME = 50;
 // 当たり判定の始まる時間
-const short ATTACK_ATTACK_HIT_START_TIME = 60;
+const short ATTACK_ATTACK_HIT_START_TIME = 20;
 // 当たり判定の終わる時間
-const short ATTACK_ATTACK_HIT_END_TIME = 80;
+const short ATTACK_ATTACK_HIT_END_TIME = 40;
 
 // 当たり判 定幅,高さ
 const float ATTACK_ATTACK_HIT_WIDTH = 50;
 const float ATTACK_ATTACK_HIT_HEIGHT = 50;
 
 // プレイヤと攻撃エフェクトの距離
-static const float ATTACK_ATTACK_RANGE = 30;
+static const float ATTACK_ATTACK_RANGE = 50;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -81,12 +82,17 @@ void CAttackSpecialAttack::Update(void)
 	CAttackBase::Update();
 
 	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount == 10){
+	if (m_nCount%2 == 0){
 		CEffect::Create(
 			m_pD3DDevice,
 			m_vPos, 100, 100,
 			TEXTURE_FIRE_1, 10, 1, 20);
 	}
+
+	m_vRot.z += D3DX_PI*2.0f;
+
+	m_vPos.x += ATTACK_ATTACK_RANGE * cosf(m_vRot.z * D3DX_PI);
+	m_vPos.y -= ATTACK_ATTACK_RANGE * sinf(m_vRot.z * D3DX_PI);
 }
 
 //*****************************************************************************
@@ -102,7 +108,9 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 	CAttackSpecialAttack* p = new CAttackSpecialAttack(pDevice);
 
 	p->m_nPlayerNum = nPlayerNum;
-	p->m_vPos = pos + (velocity * ATTACK_ATTACK_RANGE);
+	//p->m_vPos = pos;// +(velocity * ATTACK_ATTACK_RANGE);
+	p->m_vPos.y = pos.y + ATTACK_ATTACK_RANGE;
+	p->m_vPos.x = pos.x + 25.0f;
 
 	// 初期化
 	p->Init();
@@ -110,4 +118,13 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 
 	return p;
 }
+
+//=============================================================================
+//	プレイヤーに当たった時の処理
+//=============================================================================
+void CAttackSpecialAttack::HitPlayer(CPlayer* pPlayer)
+{
+	pPlayer->AddHp(-20.0f);
+}
+
 //----EOF-------

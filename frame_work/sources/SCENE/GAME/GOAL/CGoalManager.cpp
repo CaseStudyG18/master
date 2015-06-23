@@ -24,10 +24,11 @@
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CGoalManager::CGoalManager(LPDIRECT3DDEVICE9 *pDevice)
+CGoalManager::CGoalManager(LPDIRECT3DDEVICE9 *pDevice, CGame *pGame)
 {
 	m_pDevice = pDevice;
 	m_pGoal = NULL;
+	m_pGame = pGame;
 }
 
 //*****************************************************************************
@@ -61,10 +62,10 @@ void CGoalManager::Update(void)
 //*****************************************************************************
 // お宝を生成する
 //*****************************************************************************
-void CGoalManager::CreateGoal(D3DXVECTOR3 *pos, short *nPlayerNum, short nGoalNum)
+void CGoalManager::CreateGoal(D3DXVECTOR3 *pos, short *nPlayerNum, CGame *pGame)
 {
-	for (int i = 0; i < nGoalNum; i++){
-		m_pGoal = CGoal::Create(m_pDevice, pos[i], nPlayerNum[i]);
+	for (int i = 0; i < GOAL_MAX; i++){
+		m_pGoal = CGoal::Create(m_pDevice, pos[i], nPlayerNum[i], pGame);
 	}
 }
 //----EOF-------

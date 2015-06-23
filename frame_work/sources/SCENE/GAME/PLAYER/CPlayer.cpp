@@ -10,17 +10,18 @@
 #include "../../../TEXTURE/CTexture.h"
 #include "../ATTACK/CAttackManager.h"
 #include "../THREAD/CThreadManager.h"
+#include "../EFFECT/CEffectManager.h"	// 2015_06_23追加 サトウ　リョウイチ
 #include "../TREASURE/CTreasure.h"
+#include "../UI/CMp.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
 // プレイヤーの移動速度(仮)
-static const float PLAYER_SPEED = 3.0f;
+static const float PLAYER_SPEED = 8.0f;
 
-// 宝物アイコンの大きさ
-static const float TREASURE_ICON_WIDTH = 40;
-static const float TREASURE_ICON_HEIGHT = 30;
+// プレイヤーが鈍足状態になった時の係数(仮)
+static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
 
 // 宝物アイコンの表示位置
 static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
@@ -51,17 +52,42 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_sNumber = 0;											// マネージャーに割り振られるプレイヤー番号
 	m_PlayerFacing = PLAYER_DIRECTION_UP;					// プレイヤーの初期向き
 	m_PlayerFacingOld = PLAYER_DIRECTION_UP;				// プレイヤーの過去の向き
+	m_nRedCount = 0;										// 赤く点滅するためのカウント
+	m_bRed = false;											// 赤く点滅しているか
+	m_HpState = PLAYER_HP_STATE_NORMAL;						// HPの残り状態
+	m_nTextureIndex = 0;									// プレイヤの最初のインデックス
+	m_nTextureCount = 0;									// テクスチャを変更するためのカウント
+
+	// MP作る
+	m_pMp = new CMp(pDevice, PLAYER_DEFAULT_MP);
+	m_pMp->Init();
 
 	m_sAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
 	m_sKnockBackTime = 0;									// ノックバック時間
 	m_sDownTime = 0;										// ダウン時間
 	m_sMatchlessTime = 0;									// 無敵状態の時間
 	m_sKnockBackCount = 0;									// やられ状態になった回数
+	m_sRushTime = 0;
 
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
+	m_bSpeedAttack = false;									// 移動形態の攻撃中か判定
+	m_bSlowSpeed = false;									// 鈍足フラグの初期設定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
+
+	// シェーダーの初期化
+	LPD3DXBUFFER code;
+	LPD3DXBUFFER error;
+	HRESULT hr = D3DXCompileShaderFromFile(
+		"data/SHADER/redPS.hlsl", NULL, NULL, "main",
+		"ps_2_0", 0, &code, &error, &m_pPSC);
+	if (FAILED(hr)){
+		MessageBox(nullptr, (LPSTR)error->GetBufferPointer(), "エラー", 0);
+	}
+
+	(*pDevice)->CreatePixelShader((DWORD*)code->GetBufferPointer(), &m_pPS);
+
 }
 
 //-----------------------------------------------------------------------------
@@ -70,11 +96,16 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 //-----------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
+	// MP削除
+	if (m_pMp){
+		m_pMp->Uninit();
+	}
+	SAFE_DELETE(m_pMp);
 }
 
 //-----------------------------------------------------------------------------
 // クリエイト
-//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）,攻撃マネージャー , プレイヤー番号
+//	引数　　デバイス、座標、幅、高さ、テクスチャの種類、プレイヤー操作（MANUAL or AUTO）,攻撃マネージャー , プレイヤー番号, プレイヤコントロールフラグ
 //	戻り値　作成したプレイヤーのポインタ
 //-----------------------------------------------------------------------------
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
@@ -85,25 +116,18 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	BOOL playerOperation,
 	CAttackManager *pAttackManager,
 	CThreadManager *pThreadManager,
-	short sPlayerNumber)
+	CEffectManager *pEffectManager,
+	short sPlayerNumber,
+	bool *bPlayerControl)
 {
 	// プレイヤーポインタの作成
 	CPlayer *temp = new CPlayer(pDevice);
 
+
+	// 2015_06_23変更
+	// サトウ　リョウイチ
 	// 作成したプレイヤー情報の初期化
-	temp->Init(pos, fWidth, fHeight, texture);
-
-	// 操作フラグを変更
-	temp->m_bOperation = playerOperation;
-
-	// プレイヤー番号のセット
-	temp->m_sNumber = sPlayerNumber;
-
-	// 攻撃マネージャの保持
-	temp->m_pAttackManager = pAttackManager;
-
-	// 糸マネージャの保持
-	temp->m_pThreadManager = pThreadManager;
+	temp->Init(pos, fWidth, fHeight, texture, playerOperation, pAttackManager, pThreadManager, pEffectManager, sPlayerNumber, bPlayerControl);
 
 	// 作成したプレイヤーのポインタを返す
 	return temp;
@@ -114,10 +138,37 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 //	引数　　座標、幅、高さ、テクスチャの種類
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture)
+void CPlayer::Init(D3DXVECTOR3 pos,
+	float fWidth,
+	float fHeight,
+	TEXTURE_TYPE texture,
+	BOOL playerOperation,
+	CAttackManager *pAttackManager,
+	CThreadManager *pThreadManager,
+	CEffectManager *pEffectManager,
+	short sPlayerNumber,
+	bool *bPlayerControl)
 {
 	// テクスチャアニメーションの初期化
 	CAnimation::Init(pos, fWidth, fHeight, texture, 6, 3);
+
+	// 向きを正面のテクスチャに
+	SetIndex(5);
+
+	// 操作フラグを変更
+	m_bOperation = playerOperation;
+
+	// プレイヤー番号のセット
+	m_sNumber = sPlayerNumber;
+
+	// 攻撃マネージャの保持
+	m_pAttackManager = pAttackManager;
+
+	// 糸マネージャの保持
+	m_pThreadManager = pThreadManager;
+
+	// プレイヤがコントロールできるかフラグ
+	m_bPlayerControl = bPlayerControl;
 }
 
 //-----------------------------------------------------------------------------
@@ -137,6 +188,11 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
+	// プレイヤがコントロールできないなら更新しない
+	if (!(*m_bPlayerControl)){
+		return;
+	}
+
 	// 宝物を持っていたらアイコンの場所更新
 	if (m_pTreasure){
 		m_pTreasure->SetPos(m_vPos + TREASURE_ICON_POS_BUFF);
@@ -144,8 +200,13 @@ void CPlayer::Update(void)
 
 	CScene2D::Update();
 
+	// MP更新
+	m_pMp->Update(m_vPos, m_fMP);
+	// アニメーション更新
 	UpdatePlayerAnimation();
-	
+	// 赤く点滅する間隔更新
+	UpdatePlayerRed();
+
 	// 移動量を０にする
 	m_fMoveSpeedY = 0.0f;
 	m_fMoveSpeedX = 0.0f;
@@ -158,7 +219,10 @@ void CPlayer::Update(void)
 	/*プレイヤーのアクションが変形中で無かった場合のみ他の行動を*/
 	/*行うことができる											*/
 	/*----------------------------------------------------------*/
-	if (m_Action != PLAYER_ACTION_METAMORPHOSE && m_Action != PLAYER_ACTION_KNOCK_BACK && m_Action != PLAYER_ACTION_DOWN)
+	if (m_Action != PLAYER_ACTION_METAMORPHOSE &&
+		m_Action != PLAYER_ACTION_KNOCK_BACK &&
+		m_Action != PLAYER_ACTION_DOWN &&
+		m_Action != PLAYER_ACTION_ATTACK)
 	{
 
 		/*----------------------------------------------------------*/
@@ -192,7 +256,7 @@ void CPlayer::Update(void)
 				m_Action = PLAYER_ACTION_WALK;
 
 				// プレイヤーの向いている方向を変える
-				m_PlayerFacing = PLAYER_DIRECTION_UP;
+				SetFace(PLAYER_DIRECTION_UP);
 			}
 			// Sで画面下方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_S))
@@ -212,7 +276,7 @@ void CPlayer::Update(void)
 				m_Action = PLAYER_ACTION_WALK;
 
 				// プレイヤーの向いている方向を変える
-				m_PlayerFacing = PLAYER_DIRECTION_DOWN;
+				SetFace(PLAYER_DIRECTION_DOWN);
 			}
 			// Aで画面左方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_A))
@@ -232,7 +296,7 @@ void CPlayer::Update(void)
 				m_Action = PLAYER_ACTION_WALK;
 
 				// プレイヤーの向いている方向を変える
-				m_PlayerFacing = PLAYER_DIRECTION_LEFT;
+				SetFace(PLAYER_DIRECTION_LEFT);
 			}
 			// Dで画面右方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_D))
@@ -252,7 +316,7 @@ void CPlayer::Update(void)
 				m_Action = PLAYER_ACTION_WALK;
 
 				// プレイヤーの向いている方向を変える
-				m_PlayerFacing = PLAYER_DIRECTION_RIGHT;
+				SetFace(PLAYER_DIRECTION_RIGHT);
 			}
 
 			/*----------------------------------------------------------*/
@@ -330,28 +394,28 @@ void CPlayer::Update(void)
 			{
 				m_fMoveSpeedY = -5.0f;
 				m_Action = PLAYER_ACTION_WALK;
-				m_PlayerFacing = PLAYER_DIRECTION_UP;
+				SetFace(PLAYER_DIRECTION_UP);
 			}
 			// Kで画面下方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_K))
 			{
 				m_fMoveSpeedY = 5.0f;
 				m_Action = PLAYER_ACTION_WALK;
-				m_PlayerFacing = PLAYER_DIRECTION_DOWN;
+				SetFace(PLAYER_DIRECTION_DOWN);
 			}
 			// Jで画面左方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_J))
 			{
 				m_fMoveSpeedX = -5.0f;
 				m_Action = PLAYER_ACTION_WALK;
-				m_PlayerFacing = PLAYER_DIRECTION_LEFT;
+				SetFace(PLAYER_DIRECTION_LEFT);
 			}
 			// Lで画面右方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_L))
 			{
 				m_fMoveSpeedX = 5.0f;
 				m_Action = PLAYER_ACTION_WALK;
-				m_PlayerFacing = PLAYER_DIRECTION_RIGHT;
+				SetFace(PLAYER_DIRECTION_RIGHT);
 			}
 
 			/*----------------------------------------------------------*/
@@ -368,6 +432,52 @@ void CPlayer::Update(void)
 		/*----------------------------------------------------------*/
 		/*ここまでのものを最終的にはコントローラーで操作			*/
 		/*----------------------------------------------------------*/
+	}
+
+	// 無敵状態での処理
+	if (m_bMatchless)
+	{
+		Matchless();
+	}
+
+	// 変形している場合MPを減少させていく
+	if (m_bMetamorphose)
+	{
+		MPReduce();
+
+		// MPが０になったら通常状態に戻す
+		if (m_fMP <= 0.0f)
+		{
+			m_ModeDest = PLAYER_MODE_NONE;
+
+			m_Action = PLAYER_ACTION_METAMORPHOSE;
+
+			m_fMP = 0.0f;
+		}
+	}
+	else
+	{
+		// デフォルトMPまで回復させる
+		if (m_fMP < PLAYER_DEFAULT_MP)
+		{
+			m_fMP += 0.5f;
+
+			// 押し戻し処理追加
+			if (m_fMP > PLAYER_DEFAULT_MP){
+				m_fMP = PLAYER_DEFAULT_MP;
+			}
+		}
+	}
+
+	/*----------------------------------------------------------*/
+	/*移動形態での攻撃中だった場合アクションをNONEに変えて		*/
+	/*移動形態の攻撃のエフェクトに合わせて移動する				*/
+	/*----------------------------------------------------------*/
+	if (m_bSpeedAttack)
+	{
+		Rush();
+		m_Action = PLAYER_ACTION_NONE;
+		return;
 	}
 
 	/*----------------------------------------------------------*/
@@ -419,36 +529,6 @@ void CPlayer::Update(void)
 		break;
 	}
 
-	// 無敵状態での処理
-	if (m_bMatchless)
-	{
-		Matchless();
-	}
-
-	// 変形している場合MPを減少させていく
-	if (m_bMetamorphose)
-	{
-		MPReduce();
-
-		// MPが０になったら通常状態に戻す
-		if (m_fMP <= 0.0f)
-		{
-			m_ModeDest = PLAYER_MODE_NONE;
-
-			m_Action = PLAYER_ACTION_METAMORPHOSE;
-
-			m_fMP = 0.0f;
-		}
-	}
-	else
-	{
-		// デフォルトMPまで回復させる
-		if (m_fMP < PLAYER_DEFAULT_MP)
-		{
-			m_fMP += 10.0f;
-		}
-	}
-
 	// 現在のMPを表示する
 #ifdef _DEBUG
 	CDebugProc::Print("%dプレイヤー残りMP %f\n", m_sNumber , m_fMP);
@@ -463,7 +543,16 @@ void CPlayer::Update(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Draw(void)
 {
+	// 赤くするフラグ
+	if (m_bRed){
+		// ピクセルシェーダーのセット
+		(*m_pD3DDevice)->SetPixelShader(m_pPS);
+	}
+
 	CScene2D::Draw();
+
+	// ピクセルシェーダーNULLセット
+	(*m_pD3DDevice)->SetPixelShader(nullptr);
 }
 
 //-----------------------------------------------------------------------------
@@ -473,50 +562,27 @@ void CPlayer::Draw(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Move(void)
 {
-	float fDiffPosX;		// 現在の座標と目的の座標の差分(X軸)
-	float fDiffPosY;		// 現在の座標と目的の座標の差分(Y軸)
-
-	// 目的の座標を決める
-	m_vPosDest.y += m_fMoveSpeedY;
-	m_vPosDest.x += m_fMoveSpeedX;
-
-	// 目的の座標と現在の座標を求める
-	fDiffPosX = m_vPosDest.x - m_vPos.x;
-	fDiffPosY = m_vPosDest.y - m_vPos.y;
-
 	// 現在の座標を更新する
-	m_vPos.x += fDiffPosX * 0.5f;
-	m_vPos.y += fDiffPosY * 0.5f;
-
-	/*
-	// 上と下の移動以外の移動では向きを変える
-	if (m_PlayerFacing == PLAYER_DIRECTION_UP || m_PlayerFacing == PLAYER_DIRECTION_DOWN)
+	if (!m_bSlowSpeed)
 	{
-		// 向き設定
-		m_vRot.z = DEGREE_TO_RADIAN(0.0f);
-
-		// 角度の正規化
-		NormalizeRotation(&m_vRot.z);
+		m_vPos.x += m_fMoveSpeedX * 0.5f;
+		m_vPos.y += m_fMoveSpeedY * 0.5f;
 	}
 	else
 	{
-		// 向き設定
-		m_vRot.z = atan2f(fDiffPosY, fDiffPosX) + DEGREE_TO_RADIAN(90.0f);
-
-		// 角度の正規化
-		NormalizeRotation(&m_vRot.z);
+		m_vPos.x += m_fMoveSpeedX * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
+		m_vPos.y += m_fMoveSpeedY * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
 	}
-	*/
 
 	// プレイヤーの移動方向が変わったらテクスチャのU値を変える
 	if ((m_PlayerFacing == PLAYER_DIRECTION_LEFT || m_PlayerFacing == PLAYER_DIRECTION_RIGHT) &&
 		m_PlayerFacing != m_PlayerFacingOld)
 	{
 		ChangeTextureFaceU();
-
 		m_PlayerFacingOld = m_PlayerFacing;
 	}
-	//m_PlayerFacing = PLAYER_DIRECTION_UP;
+
+	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------
@@ -551,6 +617,7 @@ void CPlayer::Attack(void)
 			m_sNumber,
 			m_vPos,
 			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+		m_bSpeedAttack = true;
 		break;
 		// 罠型の攻撃
 	case PLAYER_MODE_TRAP:
@@ -645,7 +712,7 @@ void CPlayer::MPReduce(void)
 {
 	// MPを減らしていく
 	// 数値は仮
-	//m_fMP -= 1.5f;
+	m_fMP -= 1.5f;
 }
 
 //-----------------------------------------------------------------------------
@@ -655,12 +722,45 @@ void CPlayer::MPReduce(void)
 //-----------------------------------------------------------------------------
 void CPlayer::SpidersThread(void)
 {
-	// 普通攻撃
-	m_pThreadManager->CreateThread(
-		THREAD_TYPE_NORMAL,
-		m_sNumber,
-		m_vPos);
+	switch (m_Mode)
+	{
+		// 通常状態の糸
+	case PLAYER_MODE_NONE:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_NORMAL,
+			m_sNumber,
+			m_vPos,
+			m_PlayerFacing);
+		break;
+		// 攻撃特化形態の糸
+	case PLAYER_MODE_ATTACK:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_ATTACK,
+			m_sNumber,
+			m_vPos,
+			m_PlayerFacing);
+		break;
+		// 移動特化形態の糸
+	case PLAYER_MODE_SPEED:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_SPEED,
+			m_sNumber,
+			m_vPos,
+			m_PlayerFacing);
+		break;
+		// 罠特化形態の糸
+	case PLAYER_MODE_TRAP:
+		m_pThreadManager->CreateThread(
+			THREAD_TYPE_TRAP,
+			m_sNumber,
+			m_vPos,
+			m_PlayerFacing);
+		break;
+	default:
+		break;
+	}
 
+	// 行動を初期状態に戻す
 	m_Action = PLAYER_ACTION_NONE;
 }
 
@@ -825,7 +925,6 @@ void CPlayer::ChangeTextureFaceU(void)
 	pVtx[3].tex.x = fTemp;
 
 	m_pD3DVtxBuff->Unlock();
-
 }
 
 //-----------------------------------------------------------------------------
@@ -836,10 +935,8 @@ void CPlayer::SetTreasure(CTreasure *pTreasure){
 	// ポインタ保存
 	m_pTreasure = pTreasure;
 
-	// テクスチャと大きさを変更
-	m_pTreasure->SetWidth(TREASURE_ICON_WIDTH);
-	m_pTreasure->SetHeight(TREASURE_ICON_HEIGHT);
-	m_pTreasure->ChangeTexture(TEXTURE_TREASURE_ICON);
+	// 宝物をアイコンにする
+	m_pTreasure->SetIcon();
 }
 
 //-----------------------------------------------------------------------------
@@ -858,78 +955,177 @@ void CPlayer::FallTreasure(){
 
 }
 
+
+//-----------------------------------------------------------------------------
+// プレイヤの向きをセットする関数
+//-----------------------------------------------------------------------------
+void CPlayer::SetFace(DIRECTION_PLAYER_FACING value){
+
+	// 同じ値は連続でセットしない
+	if (m_PlayerFacing == value){
+		return;
+	}
+
+	// プレイヤの向きステート変更
+	m_PlayerFacing = value;
+
+	// プレイヤの向きに対応したテクスチャをセット
+	m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[value];
+
+	// プレイヤのテクスチャアニメーション用カウントをリセット
+	m_nTextureCount = 0;
+}
+
 //-----------------------------------------------------------------------------
 // プレイヤの向きによってテクスチャ番号処理
 // 更新で一回呼ぶ
 //-----------------------------------------------------------------------------
 void CPlayer::UpdatePlayerAnimation(void){
 
-
 	if (m_PlayerFacing == PLAYER_DIRECTION_UP){
-		const short min = 10;
-		const short max = 13;
-		static int t = 0;
-		static int a = min;
-		t++;
-		if (t > 10){
-			t = 0;
+		m_nTextureCount++;
+		if (m_nTextureCount > 10){
+			m_nTextureCount = 0;
 
-			a++;
-			if (a > max){
-				a = min;
+			m_nTextureIndex++;
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_UP]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_UP];
 			}
 		}
-		SetIndex(a);
+		SetIndex(m_nTextureIndex);
 	}
 	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
-		const short min = 6;
-		const short max = 9;
-		static int t = 0;
-		static int a = min;
-		t++;
-		if (t > 10){
-			t = 0;
+		m_nTextureCount++;
+		if (m_nTextureCount > 10){
+			m_nTextureCount = 0;
 
-			a++;
-			if (a > max){
-				a = min;
+			m_nTextureIndex++;
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_DOWN]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_DOWN];
 			}
 		}
-		SetIndex(a);
+		SetIndex(m_nTextureIndex);
 	}
 	else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
-		const short min = 1;
-		const short max = 4;
-		static int t = 0;
-		static int a = min;
-		t++;
-		if (t > 10){
-			t = 0;
+		m_nTextureCount++;
+		if (m_nTextureCount > 10){
+			m_nTextureCount = 0;
 
-			a++;
-			if (a > max){
-				a = min;
+			m_nTextureIndex++;
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_RIGHT]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_RIGHT];
 			}
 		}
-		SetIndex(a, true);
+		SetIndex(m_nTextureIndex, true);
 	}
 	else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
-		const short min = 1;
-		const short max = 4;
-		static int t = 0;
-		static int a = min;
-		t++;
-		if (t > 10){
-			t = 0;
+		m_nTextureCount++;
+		if (m_nTextureCount > 10){
+			m_nTextureCount = 0;
 
-			a++;
-			if (a > max){
-				a = min;
+			m_nTextureIndex++;
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_LEFT]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_LEFT];
 			}
 		}
-		SetIndex(a, false);
+		SetIndex(m_nTextureIndex, false);
 	}
 
 }
 
+//-----------------------------------------------------------------------------
+// 移動形態での攻撃でのタックル移動
+//-----------------------------------------------------------------------------
+void CPlayer::Rush(void)
+{
+	m_vPos += PLAYER_DIRECTION_VECTOR[m_PlayerFacing] * 4.0f;
+
+	m_sRushTime++;
+
+	if (m_sRushTime > 50)
+	{
+		m_bSpeedAttack = false;
+		m_sRushTime = 0;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 体力セッター
+//-----------------------------------------------------------------------------
+void CPlayer::AddHp(float fPoint){
+
+	// HP合計
+	m_fHP += fPoint;
+
+	// クランプ
+	if (m_fHP > PLAYER_DEFAULT_HP){
+		m_fHP = PLAYER_DEFAULT_HP;
+	}
+	else if (m_fHP < 0.0f){
+		m_fHP = 0.0f;
+	}
+
+	// HP残り状態を更新
+	UpdatePlayerHpState();
+}
+
+//-----------------------------------------------------------------------------
+// プレイヤのHP残り状態を管理　更新で一回呼ぶ　もしくわHP変更のあったときのみでOK 
+//-----------------------------------------------------------------------------
+void CPlayer::UpdatePlayerHpState(void){
+
+	// 現在のHPの割合
+	float ratio = m_fHP / PLAYER_DEFAULT_HP;
+
+	// 割合に応じてステートを変更
+	for (int i = 0; i < PLAYER_HP_STATE_MAX; i++){
+		if (ratio >= PLAYER_HP_STATE_RATIO[i]){
+			m_HpState = (PLAYER_HP_STATE)i;
+			break;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// プレイヤのHP残り状態で赤く点滅する管理　更新で一回呼ぶ
+//-----------------------------------------------------------------------------
+void CPlayer::UpdatePlayerRed(void){
+
+#ifdef _DEBUG
+	if (CInputKeyboard::GetKeyboardPress(DIK_RCONTROL)){
+		AddHp(-2);
+	}
+	if (CInputKeyboard::GetKeyboardPress(DIK_RSHIFT)){
+		AddHp(PLAYER_DEFAULT_HP);
+	}
+	if (m_HpState == PLAYER_HP_STATE_NORMAL){
+		CDebugProc::Print("プレイヤHP状態 = NORMAL\n");
+	}
+	else if (m_HpState == PLAYER_HP_STATE_LOW){
+		CDebugProc::Print("プレイヤHP状態 = LOW\n");
+	}
+	else if (m_HpState == PLAYER_HP_STATE_VERY_LOW){
+		CDebugProc::Print("プレイヤHP状態 = VERY_LOW\n");
+	}
+	else if (m_HpState == PLAYER_HP_STATE_DIE){
+		CDebugProc::Print("プレイヤHP状態 = DIE\n");
+	}
+	CDebugProc::Print("count = %d\n", m_nRedCount);
+#endif
+
+	// 死んでいる or HPが十分あるなら更新しない
+	if (m_HpState == PLAYER_HP_STATE_DIE ||
+		m_HpState == PLAYER_HP_STATE_NORMAL){
+		m_nRedCount = 0;
+		m_bRed = false;
+		return;
+	}
+
+	// 赤く点滅する間隔でフラグ切り替え
+	m_nRedCount++;
+	if (m_nRedCount > PLAYER_HP_STATE_FLASH_INTERVAL[m_HpState]){
+		m_bRed = !m_bRed;
+		m_nRedCount = 0;
+	}
+}
 // EOF

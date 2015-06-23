@@ -15,6 +15,7 @@
 #include "../../CSCENE/CScene2D.h"
 #include "../PLAYER/CPlayerManager.h"
 #include "CThreadManager.h"
+#include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // クラス定義
@@ -23,15 +24,15 @@ class CThreadBase : public CScene2D
 {
 	// 公開メンバ
 public:
-
-	CThreadBase(LPDIRECT3DDEVICE9 *pDevice);
+	CThreadBase(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE type);
 	virtual ~CThreadBase(void);
 
-	HRESULT Init();
+	HRESULT Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
 	void Uninit(void);
 	void Update(void);
-	void Draw(void){};
-
+	void Draw(void);
+	short GetPlayerNum(void){ return m_nPlayerNum; };
+	void SetPlayerFacing(DIRECTION_PLAYER_FACING playerFacing){ m_PlayerFaicing = playerFacing; }
 	// 継承メンバ
 protected:
 	// 寿命をカウントする
@@ -48,27 +49,8 @@ protected:
 	// 糸の種類
 	ThreadType m_ThreadType;
 
-	// 中央の位置,角度,幅,高さ
-	D3DXVECTOR3	m_vPos;
-	D3DXVECTOR3	m_vRot;
-	float		m_fWidth;
-	float		m_fHeight;
-
-	// ポジションアクセサ
-	D3DXVECTOR3 GetPos(void){ return m_vPos; };
-	void		SetPos(D3DXVECTOR3 pos){ m_vPos = pos; };
-	void		SetPos(float x, float y, float z){ m_vPos.x = x; m_vPos.y = y; m_vPos.z = z; };
-
-	// ロットアクセサ
-	D3DXVECTOR3 GetRot(void){ return m_vRot; };
-	void		SetRot(D3DXVECTOR3 rot){ m_vRot = rot; };
-	void		SetRot(float x, float y, float z){ m_vRot.x = x; m_vRot.y = y; m_vRot.z = z; };
-
-	// サイズアクセサ
-	float GetWidth(void){ return m_fWidth; };
-	void SetWidth(float width){ m_fWidth = width; };
-	float GetHeight(void){ return m_fHeight; };
-	void SetHeight(float height){ m_fHeight = height; };
+	// プレイヤーが糸発射時に向いていた方向
+	DIRECTION_PLAYER_FACING m_PlayerFaicing;
 
 	// 非公開メンバ
 private:

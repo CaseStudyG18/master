@@ -12,6 +12,7 @@
 #include "../SCENE/PAUSE/CPause.h"
 #include "../SCENE/GAME/CNowLoading.h"
 #include "../INPUT/CInputKeyboard.h"
+#include "../CONTROLLER/CControllerManager.h"
 #include <process.h>
 
 //*****************************************************************************
@@ -36,6 +37,7 @@ CManager ::CManager(void)
 	m_pInputKeyboard = NULL;
 	m_pInputGamePad = NULL;
 	m_pSound = NULL;
+	m_pControllerManager = NULL;
 
 	#ifdef _DEBUG
 	m_pDebugProc = NULL;
@@ -80,6 +82,8 @@ HRESULT CManager ::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	{
 		return E_FAIL;
 	}
+
+	m_pControllerManager = CControllerManager::Create();
 
 	#ifdef _DEBUG
 	// デバッグプロック作成
@@ -130,6 +134,14 @@ void CManager ::Uninit(void)
 		m_pInputKeyboard->Uninit();
 		delete m_pInputKeyboard;
 		m_pInputKeyboard = NULL;
+	}
+
+	// コントローラーマネージャーの終了
+	if (m_pControllerManager)
+	{
+		m_pControllerManager->Uninit();
+		delete m_pControllerManager;
+		m_pControllerManager = NULL;
 	}
 
 	// ゲームパッドの終了

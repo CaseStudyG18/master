@@ -12,6 +12,7 @@
 #include "../SCENE/GAME/CGame.h"
 #include "../SCENE/CSCENE/CScene.h"
 #include "../SCENE/RESULT/CResult.h"
+#include "../SCENE/OPTION/COption.h"
 #include "../MANAGER/CManager.h"
 
 //*****************************************************************************
@@ -91,6 +92,16 @@ CPhase* CPhase::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice, CManager* pM
 			CResult* pResult;
 			pResult = CResult::Create(mode, pDevice);
 			return pResult;
+
+			break;
+		}
+
+		// ƒIƒvƒVƒ‡ƒ“
+		case MODE_PHASE_OPTION:
+		{
+			COption* pOption;
+			pOption = COption::Create(mode, pDevice);
+			return pOption;
 
 			break;
 		}

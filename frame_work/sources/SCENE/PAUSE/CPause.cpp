@@ -56,7 +56,7 @@ HRESULT CPause :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE 
 	CScene2D::Init(pos, width, height, texType);
 	
 	// カーソルの初期化
-	m_pCursol = m_pCursol->Create(m_pD3DDevice, RETURN_CURSOL_POS, CURSOL_WIDTH, CURSOL_HEIGHT, TEXTURE_NULL, DEFAULT_CURSOL_LENGTH_OF_LEFT_TO_RIGHT);
+	//m_pCursol = m_pCursol->Create(m_pD3DDevice, RETURN_CURSOL_POS, CURSOL_WIDTH, CURSOL_HEIGHT, TEXTURE_NULL, DEFAULT_CURSOL_LENGTH_OF_LEFT_TO_RIGHT);
 
 	m_bPause = false;
 	m_bRetry = false;
@@ -88,8 +88,7 @@ void CPause :: Update(void)
 
 		// カーソル上に移動
 		if(CInputKeyboard::GetKeyboardTrigger(DIK_W)
-			|| CInputKeyboard::GetKeyboardTrigger(DIK_UP)
-			|| CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_UP))
+			|| CInputKeyboard::GetKeyboardTrigger(DIK_UP))
 		{
 			m_nChoiceMenu--;
 
@@ -102,8 +101,7 @@ void CPause :: Update(void)
 
 		// カーソル下に移動
 		if(CInputKeyboard::GetKeyboardTrigger(DIK_S)
-			|| CInputKeyboard::GetKeyboardTrigger(DIK_DOWN)
-			|| CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_DOWN))
+			|| CInputKeyboard::GetKeyboardTrigger(DIK_DOWN))
 		{
 			m_nChoiceMenu++;
 
@@ -124,8 +122,7 @@ void CPause :: Update(void)
 			
 				// 決定キー押されたら
 				if(CInputKeyboard::GetKeyboardTrigger(DIK_Z) 
-					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN)
-					|| CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE))
+					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 				{
 					// リトライ
 					m_bRetry = true;
@@ -142,8 +139,7 @@ void CPause :: Update(void)
 
 				// 決定キー押されたら
 				if(CInputKeyboard::GetKeyboardTrigger(DIK_Z)
-					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN)
-					|| CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE))
+					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 				{
 					// タイトルへ
 					m_bReturnTititle = true;
@@ -160,8 +156,7 @@ void CPause :: Update(void)
 
 				// 決定キー押されたら
 				if(CInputKeyboard::GetKeyboardTrigger(DIK_Z)
-					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN)
-					|| CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE))
+					|| CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 				{
 					// ポーズ終了
 					m_bPause = false;

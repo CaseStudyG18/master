@@ -17,7 +17,7 @@
 //=======================================================================
 CField::CField(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE m_objType) :CScene2D(pDevice, nPriority, m_objType)
 {
-
+	
 }
 
 //=======================================================================
@@ -41,39 +41,6 @@ void CField::Uninit(void)
 void CField::Update(void)
 {
 	CScene2D::Update();
-
-#ifdef _DEBUG
-	if (CInputKeyboard::GetKeyboardPress(DIK_O))
-	{
-		D3DXVECTOR3 rot = GetRot();
-		rot.z += 0.002f;
-		NormalizeRotation(&rot);
-		SetRot(rot);
-	}
-	if (CInputKeyboard::GetKeyboardPress(DIK_U))
-	{
-		D3DXVECTOR3 rot = GetRot();
-		rot.z -= 0.002f;
-		NormalizeRotation(&rot);
-		SetRot(rot);
-	}
-	if (CInputKeyboard::GetKeyboardPress(DIK_L))
-	{
-		AddWidth_BaseLeft(1.f);
-	}
-	if (CInputKeyboard::GetKeyboardPress(DIK_J))
-	{
-		AddWidth_BaseLeft(-1.f);
-	}
-	if (CInputKeyboard::GetKeyboardPress(DIK_I))
-	{
-		AddHeight_BaseBottom(1.f);
-	}
-	if (CInputKeyboard::GetKeyboardPress(DIK_K))
-	{
-		AddHeight_BaseBottom(-1.f);
-	}
-#endif
 }
 
 //=======================================================================
@@ -102,6 +69,12 @@ CField* CField::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width,
 HRESULT CField::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock, int hblock)
 {
 	CScene2D::Init(pos, width, height, texType);
+	
+	m_fJudgeWidth = width;
+	m_fJudgeHeight = height * 0.5f;
+	m_vJudgePos = pos;
+	m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+
 	return TRUE;
 }
 //----EOF----

@@ -13,6 +13,7 @@
 class CPlayer;
 class CAttackManager;
 class CThreadManager;
+class CEffectManager;
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -29,22 +30,15 @@ public:
 	// コンストラクタ
 	CPlayerManager(
 		CAttackManager *pAttackManager, 
-		CThreadManager *pThreadManager);
+		CThreadManager *pThreadManager,
+		CEffectManager *pEffectManager);
 
 	// デストラクタ
 	~CPlayerManager();
 
-	// クリエイト関数
-	//	引数　　制作するプレイヤーの数、マニュアル操作するプレイヤーの数、CPUの数、攻撃マネージャー 糸マネージャー
-	static CPlayerManager* Create(
-		int nPlayerNum,
-		int nManualPlayer,
-		CAttackManager *pAttackPlayer,
-		CThreadManager *pThreadPlayer);
-
 	// 初期化
 	// CPU人数、プレイヤー人数
-	void Init(int nNumPlayer, int nManualPlayer);
+	void Init(int nNumPlayer, int nManualPlayer, bool *bPlayerControl);
 
 	// 終了
 	void Uninit(void);
@@ -71,6 +65,11 @@ private:
 	CAttackManager *m_pAttackManager;
 	// 糸出す時に必要なマネージャー
 	CThreadManager *m_pThreadManager;
+	// 2015_06_23追加
+	// サトウ　リョウイチ
+	// エフェクトに必要なマネージャー
+	CEffectManager *m_pEffectManager;
+
 };
 
 #endif //__CPLAYERMANAGER_H__

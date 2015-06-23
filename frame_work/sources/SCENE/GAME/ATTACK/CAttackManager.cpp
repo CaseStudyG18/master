@@ -13,6 +13,7 @@
 #include "CAttackSpecialAttack.h"
 #include "CAttackSpecialSpeed.h"
 #include "CAttackSpecialTrap.h"
+#include "../CGame.h"
 
 //*****************************************************************************
 // マクロ
@@ -30,6 +31,15 @@
 CAttackManager::CAttackManager(LPDIRECT3DDEVICE9 *pDevice)
 {
 	m_pDevice = pDevice;
+}
+
+//*****************************************************************************
+// コンストラクタ
+//*****************************************************************************
+CAttackManager::CAttackManager(LPDIRECT3DDEVICE9 *pDevice , CGame* pGame)
+{
+	m_pDevice = pDevice;
+	m_pGame = pGame;
 }
 
 //*****************************************************************************
@@ -69,34 +79,26 @@ void CAttackManager::CreateAttack(
 	D3DXVECTOR3 pos,
 	D3DXVECTOR3 velocity)
 {
-	/*
 	switch (type)
 	{
+		// 通常状態の攻撃
 	case ATTACK_TYPE_NORMAL:
 		CAttackNormal::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
+		// 攻撃形態の攻撃
 	case ATTACK_TYPE_ATTACK:
+		CAttackSpecialAttack::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
+		// 移動形態の攻撃
 	case ATTACK_TYPE_SPEED:
+		CAttackSpecialSpeed::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
+		// 罠形態の攻撃
 	case ATTACK_TYPE_TRAP:
+		CAttackSpecialTrap::Create(m_pDevice, sPlayerNum, pos, velocity);
 		break;
 	default:
 		break;
-	}
-	*/
-	// 普通の攻撃
-	if (type == ATTACK_TYPE_NORMAL){
-		CAttackNormal::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if(type == ATTACK_TYPE_ATTACK){
-		CAttackSpecialAttack::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if (type == ATTACK_TYPE_SPEED){
-		CAttackSpecialSpeed::Create(m_pDevice, sPlayerNum, pos, velocity);
-	}
-	else if (type == ATTACK_TYPE_TRAP){
-		CAttackSpecialTrap::Create(m_pDevice, sPlayerNum, pos, velocity);
 	}
 }
 //----EOF-------

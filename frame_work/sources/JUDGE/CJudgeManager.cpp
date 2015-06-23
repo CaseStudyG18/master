@@ -66,6 +66,9 @@ void CJudgeManager::Update(void)
 
 	// ƒvƒŒƒCƒ„‚ÆUŒ‚‚Ì“–‚½‚è”»’è
 	m_pJudge->ColiAttackxPlayer();
+
+	// °‚ÆŽ…‚Æ‚Ì‚ ‚½‚è”»’è
+	m_pJudge->ColiFieldxThreadOfFoothold();
 }
 
 //=========================================================================

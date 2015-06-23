@@ -20,14 +20,20 @@ typedef enum
 {
 	TEXTURE_NULL = 0,			// なし
 	TEXTURE_WITCH,
+	TEXTURE_BG_0,
+	TEXTURE_BG_1,
 	TEXTURE_FIRE_0,
 	TEXTURE_FIRE_1,
 	TEXTURE_THREAD,
-	TEXTURE_PLAYER_0,
+	TEXTURE_PLAYER,
 	TEXTURE_NUMBER,
 	TEXTURE_GOAL,
 	TEXTURE_TREASURE,
 	TEXTURE_TREASURE_ICON,
+	TEXTURE_FIELD_01,
+	TEXTURE_FIELD_02,
+	TEXTURE_FIELD_03,
+	TEXTURE_FIELD_04,
 	TEXTURE_MAX					// テクスチャタイプ総数
 }TEXTURE_TYPE;
 
@@ -58,6 +64,13 @@ public:
 	// 戻り値:テクスチャのポインタ
 	//============================================================
 	static LPDIRECT3DTEXTURE9 GetTexture(const TEXTURE_TYPE type);
+
+	//============================================================
+	// テクスチャタイプゲッター
+	// 引数:テクスチャのファイルパス
+	// 戻り値:テクスチャタイプ
+	//============================================================
+	static TEXTURE_TYPE GetTextureTye(char* texFilePath);
 
 private:
 	//============================================================

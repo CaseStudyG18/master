@@ -3,7 +3,7 @@
 // CGoalクラス [CGoal.h]
 // Author : 塚本　俊彦
 //
-// 宝物をここに運ぶ α版は絵だけ
+// 宝物をここに運ぶ
 //
 //=============================================================================
 #ifndef _CGOAL_H_
@@ -16,8 +16,28 @@
 #include "../../CSCENE/CScene2D.h"
 
 //=============================================================================
-// 前方宣言
+// 定数
 //=============================================================================
+
+enum GOAL_STATE{
+	// なし
+	GOAL_STATE_NONE = 0,
+	// ゴールに宝箱持ったプレイヤが到着（1フレームのみ通る）
+	GOAL_STATE_ARRIVE,
+	// 転送中１段階目
+	GOAL_STATE_TRANS_FIRST,
+	// 転送中２段階目
+	GOAL_STATE_TRANS_SECOND,
+	// 転送中３段階目
+	GOAL_STATE_TRANS_THIRD,
+	// 転送終了
+	GOAL_STATE_TRANSED,
+};
+
+//*****************************************************************************
+// 前方定義
+//*****************************************************************************
+class CGame;
 
 //*****************************************************************************
 // クラス定義
@@ -27,7 +47,7 @@ class CGoal : public CScene2D
 	// 公開メンバ
 public:
 
-	CGoal(LPDIRECT3DDEVICE9 *pDevice);
+	CGoal(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_GOAL, OBJTYPE m_objType = OBJTYPE_GOAL);
 	~CGoal(void);
 
 	void Init(void);
@@ -42,15 +62,30 @@ public:
 	static CGoal *Create(
 		LPDIRECT3DDEVICE9 *pDevice,
 		D3DXVECTOR3 pos,
-		short nPlayerNum);
+		short nPlayerNum,
+		CGame *pGame);
+
+	// プレイヤ番号のゲッター
+	short GetPlayerNum(){
+		return m_nPlayerNum;
+	}
+	// 転送中にセットする
+	void SetTrans();
+	// 転送中じゃないとセットする
+	void SetNoTrans();
 
 	// 非公開メンバ
 private:
-	// 転送中フラグ
-	bool m_bTranceFlg;
 	// プレイヤー番号
 	short m_nPlayerNum;
-
+	// 転送ステート
+	GOAL_STATE m_State;
+	// 転送するカウント
+	int m_nCount;
+	// 転送かフラグ
+	bool m_bTransFlg;
+	// ゲームインスタンス
+	CGame *m_pGame;
 };
 
 #endif

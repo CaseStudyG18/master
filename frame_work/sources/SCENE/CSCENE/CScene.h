@@ -22,7 +22,9 @@
 typedef enum
 {
 	TYPE_PRIORITY_0 = 0,
+	TYPE_PRIORITY_BG,					// BG
 	TYPE_PRIORITY_FIELD,				// フィールド
+	TYPE_PRIORITY_GOAL,					// ゴール
 	TYPE_PRIORITY_THREAD_OF_FOOTHOLD,	// 足場になる糸
 	TYPE_PRIORITY_THREAD_OF_TRAP,		// 罠の糸
 	TYPE_PRIORITY_TRESURE,				// 宝
@@ -63,6 +65,7 @@ public:
 		OBJTYPE_FIELD,				// フィールド
 		OBJTYPE_TREASURE,			// 宝箱
 		OBJTYPE_SCORE,				// スコア
+		OBJTYPE_GOAL,				// GOAL
 		OBJTYPE_MAX					// オブジェタイプ総数
 	}OBJTYPE;
 

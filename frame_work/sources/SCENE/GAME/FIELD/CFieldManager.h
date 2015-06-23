@@ -24,6 +24,13 @@ class CField;
 class CFieldManager
 {
 public:
+	typedef enum
+	{
+		FIELD_TEST = 0,
+		FIELD_MAX
+	}FIELD_TYPE;
+
+
 	// コンストラクタ
 	CFieldManager(void);
 
@@ -32,6 +39,9 @@ public:
 
 	// フィールドクリエイト
 	CField* CreateField(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
+
+	// ロードフィールド
+	void LoadField(LPDIRECT3DDEVICE9 *pDevice, FIELD_TYPE fieldType);
 
 	// 初期化
 	void Init(void);

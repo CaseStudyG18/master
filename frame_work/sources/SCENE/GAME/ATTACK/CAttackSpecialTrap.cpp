@@ -9,7 +9,8 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialTrap.h"
-#include "../../EFFECT/CEffect.h"
+#include "../EFFECT/CEffect.h"
+#include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // マクロ
@@ -110,4 +111,13 @@ CAttackSpecialTrap* CAttackSpecialTrap::Create(
 
 	return p;
 }
+
+//=============================================================================
+//	プレイヤーに当たった時の処理
+//=============================================================================
+void CAttackSpecialTrap::HitPlayer(CPlayer* pPlayer)
+{
+	pPlayer->AddHp(-10.0f);
+}
+
 //----EOF-------

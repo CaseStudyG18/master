@@ -27,6 +27,9 @@ class CAttackManager;
 class CThreadManager;
 class CJudgeManager;
 class CFieldManager;
+class CBackGroundManager;
+class CCountDown;
+class CEffectManager;
 
 //*****************************************************************************
 // クラス定義
@@ -60,8 +63,25 @@ public:
 	//======================================================
 	static CGame* Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
+	// ゲーム終了セット
+	void SetGameOver(){
+		m_bGameOver = true;
+	}
+	
+	//======================================================
+	// こいつらはゲーム中のリザルトシーンに
+	// 移るときに一回のみ呼ばれる Init的な。
+	//======================================================
+	// 勝ったプレイヤ番号をセット
+	void SetWinPlayer(short num);
+	// 引き分けにする
+	void SetDraw();
+
 	// 非公開メンバ
 private:
+	// ゲーム中のリザルトシーンの更新 毎フレーム呼ばれる
+	void Result();
+
 	// ポーズ
 	CPause *m_pPause;
 	// ゲームのタイム管理者
@@ -80,6 +100,18 @@ private:
 	CJudgeManager* m_pJudgeManager;
 	// フィールドマネージャー
 	CFieldManager* m_pFieldManager;
+	// 背景マネージャー
+	CBackGroundManager *m_pBackGroundManager;
+	// エフェクトマネージャー
+	CEffectManager *m_pEffectManager;
+	// カウントダウン
+	CCountDown* m_pCountDown;
+	// ゲーム開始フラグ(プレイヤを操作できるフラグ)
+	bool m_bPlayerControl;
+	// ゲームクリアフラグ
+	bool m_bGameOver;
+	// 勝ったプレイヤー番号
+	short m_nWinPlayerNum;
 };
 
 #endif

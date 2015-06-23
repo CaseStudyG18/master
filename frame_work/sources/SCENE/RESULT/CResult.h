@@ -12,7 +12,7 @@
 #include "../../MAIN/main.h"
 #include "../../PHASE/CPhase.h"
 
-class CEffect;
+class CSceneAnime;
 
 //*****************************************************************************
 // ëOï˚êÈåæ
@@ -51,7 +51,7 @@ private:
 	//======================================================
 	void Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
-	CEffect *m_Fire;
+	CSceneAnime *m_Fire;
 };
 
 #endif
