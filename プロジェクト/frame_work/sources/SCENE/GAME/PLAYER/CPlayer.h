@@ -128,6 +128,7 @@ class CAttackManager;
 class CThreadManager;
 class CTreasure;
 class CMp;
+class CEffectManager;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -144,7 +145,16 @@ public:
 
 	// 初期化
 	// 引数　座標、幅、高さ、テクスチャ
-	void Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture);
+	void Init(D3DXVECTOR3 pos,
+		float fWidth,
+		float fHeight,
+		TEXTURE_TYPE texture,
+		BOOL playerOperation,
+		CAttackManager *pAttackManager,
+		CThreadManager *pThreadManager,
+		CEffectManager *pEffectManager,
+		short sPlayerNumber,
+		bool *bPlayerControl);
 
 	// 終了
 	void Uninit(void);
@@ -165,6 +175,7 @@ public:
 		BOOL playerOperation,
 		CAttackManager *pAttackManager,
 		CThreadManager *pThreadManager,
+		CEffectManager *pEffectManager,
 		short sPlayerNumber,
 		bool *bPlayerControl);
 
@@ -288,6 +299,7 @@ private:
 	bool					m_bSlowSpeed;		// 鈍足状態になっているかどうかのフラグ
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
+	CEffectManager*			m_pEffectManager;	// エフェクトマネージャー
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
 	CMp*					m_pMp;				// MPゲージ
 

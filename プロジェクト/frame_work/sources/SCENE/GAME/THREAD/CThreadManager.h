@@ -30,6 +30,7 @@ enum ThreadType{
 // 前方宣言
 //=============================================================================
 class CThread;
+class CEffectManager;
 
 //*****************************************************************************
 // クラス定義
@@ -46,7 +47,7 @@ public:
 	void Update(void);
 
 	// 糸を作る関数(糸タイプ,プレイヤ番号,座標)
-	void CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerFacing);
+	void CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerFacing, CEffectManager *pEffectManager);
 
 	// 非公開メンバ
 private:

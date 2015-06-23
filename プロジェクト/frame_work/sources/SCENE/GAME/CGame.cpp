@@ -117,7 +117,7 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pThreadManager->Init();
 
 	// ÉvÉåÉCÉÑê∂ê¨
-	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager);
+	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager, m_pEffectManager);
 	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
 
 	// ïÛï®ê∂ê¨

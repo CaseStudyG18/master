@@ -8,6 +8,7 @@
 // インクルード
 //*****************************************************************************
 #include "CThreadSpecialAttack.h"
+#include "../PLAYER/CPlayer.h"
 #include "../../CSCENE/CSceneAnime.h"
 
 //*****************************************************************************
@@ -155,4 +156,16 @@ void CThreadSpecialAttack::Draw(void)
 {
 	CAttackBase::Draw();
 }
+
+//*****************************************************************************
+//
+//*****************************************************************************
+void CThreadSpecialAttack::HitPlayer(CPlayer* pPlayer)
+{
+	CSceneAnime::Create(
+		m_pD3DDevice,
+		pPlayer->GetPos(), 100, 100,
+		TEXTURE_FIRE_1, 10, 1, 40);
+}
+
 //----EOF-------

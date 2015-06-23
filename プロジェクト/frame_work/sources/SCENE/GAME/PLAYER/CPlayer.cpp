@@ -10,6 +10,7 @@
 #include "../../../TEXTURE/CTexture.h"
 #include "../ATTACK/CAttackManager.h"
 #include "../THREAD/CThreadManager.h"
+#include "../EFFECT/CEffectManager.h"
 #include "../TREASURE/CTreasure.h"
 #include "../UI/CMp.h"
 
@@ -115,6 +116,7 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	BOOL playerOperation,
 	CAttackManager *pAttackManager,
 	CThreadManager *pThreadManager,
+	CEffectManager *pEffectManager,
 	short sPlayerNumber,
 	bool *bPlayerControl)
 {
@@ -122,22 +124,7 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	CPlayer *temp = new CPlayer(pDevice);
 
 	// 作成したプレイヤー情報の初期化
-	temp->Init(pos, fWidth, fHeight, texture);
-
-	// 操作フラグを変更
-	temp->m_bOperation = playerOperation;
-
-	// プレイヤー番号のセット
-	temp->m_sNumber = sPlayerNumber;
-
-	// 攻撃マネージャの保持
-	temp->m_pAttackManager = pAttackManager;
-
-	// 糸マネージャの保持
-	temp->m_pThreadManager = pThreadManager;
-
-	// プレイヤがコントロールできるかフラグ
-	temp->m_bPlayerControl = bPlayerControl;
+	temp->Init(pos, fWidth, fHeight, texture, playerOperation, pAttackManager, pThreadManager, pEffectManager, sPlayerNumber, bPlayerControl);
 
 	// 作成したプレイヤーのポインタを返す
 	return temp;
@@ -148,13 +135,37 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 //	引数　　座標、幅、高さ、テクスチャの種類
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture)
+void CPlayer::Init(D3DXVECTOR3 pos,
+	float fWidth,
+	float fHeight,
+	TEXTURE_TYPE texture,
+	BOOL playerOperation,
+	CAttackManager *pAttackManager,
+	CThreadManager *pThreadManager,
+	CEffectManager *pEffectManager,
+	short sPlayerNumber,
+	bool *bPlayerControl)
 {
 	// テクスチャアニメーションの初期化
 	CAnimation::Init(pos, fWidth, fHeight, texture, 6, 3);
 
 	// 向きを正面のテクスチャに
 	SetIndex(5);
+
+	// 操作フラグを変更
+	m_bOperation = playerOperation;
+
+	// プレイヤー番号のセット
+	m_sNumber = sPlayerNumber;
+
+	// 攻撃マネージャの保持
+	m_pAttackManager = pAttackManager;
+
+	// 糸マネージャの保持
+	m_pThreadManager = pThreadManager;
+
+	// プレイヤがコントロールできるかフラグ
+	m_bPlayerControl = bPlayerControl;
 }
 
 //-----------------------------------------------------------------------------
@@ -165,6 +176,9 @@ void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE te
 void CPlayer::Uninit(void)
 {
 	CScene2D::Uninit();
+
+	SAFE_RELEASE(m_pPS);
+	SAFE_RELEASE(m_pPSC);
 }
 
 //-----------------------------------------------------------------------------
@@ -716,7 +730,8 @@ void CPlayer::SpidersThread(void)
 			THREAD_TYPE_NORMAL,
 			m_sNumber,
 			m_vPos,
-			m_PlayerFacing);
+			m_PlayerFacing,
+			m_pEffectManager);
 		break;
 		// 攻撃特化形態の糸
 	case PLAYER_MODE_ATTACK:
@@ -724,7 +739,8 @@ void CPlayer::SpidersThread(void)
 			THREAD_TYPE_ATTACK,
 			m_sNumber,
 			m_vPos,
-			m_PlayerFacing);
+			m_PlayerFacing,
+			m_pEffectManager);
 		break;
 		// 移動特化形態の糸
 	case PLAYER_MODE_SPEED:
@@ -732,7 +748,8 @@ void CPlayer::SpidersThread(void)
 			THREAD_TYPE_SPEED,
 			m_sNumber,
 			m_vPos,
-			m_PlayerFacing);
+			m_PlayerFacing,
+			m_pEffectManager);
 		break;
 		// 罠特化形態の糸
 	case PLAYER_MODE_TRAP:
@@ -740,7 +757,8 @@ void CPlayer::SpidersThread(void)
 			THREAD_TYPE_TRAP,
 			m_sNumber,
 			m_vPos,
-			m_PlayerFacing);
+			m_PlayerFacing,
+			m_pEffectManager);
 		break;
 	default:
 		break;
