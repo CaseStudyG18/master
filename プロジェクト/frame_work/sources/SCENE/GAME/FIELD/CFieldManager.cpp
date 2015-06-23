@@ -75,7 +75,7 @@ void CFieldManager::LoadField(LPDIRECT3DDEVICE9 *pDevice, FIELD_TYPE fieldType)
 			fscanf(fpr, "%f", &pos.x);
 			fscanf(fpr, "%f", &pos.y);
 			fscanf(fpr, "%f", &pos.z);
-
+			
 			// ROTŽæ“¾
 			D3DXVECTOR3 rot = D3DXVECTOR3(0.f, 0.f, 0.f);
 			fscanf(fpr, "%f", &rot.x);

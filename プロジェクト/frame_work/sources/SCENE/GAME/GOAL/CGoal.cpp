@@ -16,9 +16,8 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-static const float GOAL_WIDTH = 80;
-static const float GOAL_HEIGHT = 80;
-static const TEXTURE_TYPE GOAL_TEXTURE = TEXTURE_GOAL;
+static const float GOAL_WIDTH = 60;
+static const float GOAL_HEIGHT = 60;
 
 // 転送する時間（1段階目<first>の次は2段階目<second>）
 static const int TRANSE_INTERVAL_FIRST = 60;
@@ -113,9 +112,22 @@ CGoal* CGoal::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, short nPlayerN
 	// 作成
 	CGoal* p = new CGoal(pDevice);
 
-	// 初期化
-//	p->CScene2D::Init(pos, GOAL_WIDTH, GOAL_HEIGHT, GOAL_TEXTURE);
-	p->SetDrawFlag(false);
+	// プレイヤーの色に合わせたゴールの丸のテクスチャ
+	TEXTURE_TYPE tex  = TEXTURE_NULL;
+	if (nPlayerNum == 0){
+		tex = TEXTURE_SPAWN_YELLOW;
+	}
+	else if (nPlayerNum == 1){
+		tex = TEXTURE_SPAWN_RED;
+	}
+	else if (nPlayerNum == 2){
+		tex = TEXTURE_SPAWN_BLUE;
+	}
+	else if (nPlayerNum == 3){
+		tex = TEXTURE_SPAWN_GREEN;
+	}
+	p->CScene2D::Init(pos, GOAL_WIDTH, GOAL_HEIGHT, tex);
+	//	p->SetDrawFlag(false);
 
 	p->m_nPlayerNum = nPlayerNum;
 	p->m_pGame = pGame;

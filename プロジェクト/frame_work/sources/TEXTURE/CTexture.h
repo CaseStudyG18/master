@@ -34,6 +34,10 @@ typedef enum
 	TEXTURE_FIELD_02,
 	TEXTURE_FIELD_03,
 	TEXTURE_FIELD_04,
+	TEXTURE_SPAWN_YELLOW,
+	TEXTURE_SPAWN_RED,
+	TEXTURE_SPAWN_BLUE,
+	TEXTURE_SPAWN_GREEN,
 	TEXTURE_MAX					// テクスチャタイプ総数
 }TEXTURE_TYPE;
 
@@ -50,7 +54,7 @@ public:
 	~CTexture(void){};
 
 	// 終了
-	static void Uninit( void );
+	static void Uninit(void);
 
 	//============================================================
 	// クリエイト
@@ -78,7 +82,7 @@ private:
 	// 引数:デバイス
 	// 戻り値:成否
 	//============================================================
-	static	HRESULT Init( LPDIRECT3DDEVICE9 *pDevice );
+	static	HRESULT Init(LPDIRECT3DDEVICE9 *pDevice);
 
 	static	LPDIRECT3DTEXTURE9 m_pD3DTex[TEXTURE_MAX];				// テクスチャポインタ
 	static	bool m_bDoneCreateFlag;									// すでに作ったかのフラグ
