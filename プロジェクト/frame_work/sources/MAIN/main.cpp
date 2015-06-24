@@ -31,7 +31,7 @@ void Uninit(void);
 // グローバル変数:
 //*****************************************************************************
 static CManager					*g_pManager;
-
+static bool bDrawCounter = true;
 //=============================================================================
 // メイン関数
 //=============================================================================
@@ -52,7 +52,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	DWORD dwFPSLastTime;
 	DWORD dwCurrentTime;
 	DWORD dwFrameCount;
-	bool bDrawCounter = true;
 
 	WNDCLASSEX wcex =
 	{
@@ -251,5 +250,10 @@ void Update()
 void Draw()
 {
 	g_pManager->Draw();
+}
+
+bool GetDrawFlag(void)
+{
+	return bDrawCounter;
 }
 //----EOF----

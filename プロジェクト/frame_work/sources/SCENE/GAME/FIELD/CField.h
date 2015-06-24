@@ -54,6 +54,9 @@ public:
 	float GetHeight(void){ return m_fHeight; };
 	void SetHeight(float height){ m_fHeight = height; };
 
+	// 乗ってる
+	void Ride(bool ride);
+
 	//=======================================================================
 	// クリエイト関数
 	// 引数:デバイス、座標、幅、高さ、テクスチャの種類
@@ -69,6 +72,8 @@ private:
 	//=======================================================================
 	HRESULT Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock = 1, int hblock = 1);
 
+	D3DXVECTOR3 m_vDefaultPos;
+	D3DXVECTOR3 m_vDestPos;
 protected:
 	
 };

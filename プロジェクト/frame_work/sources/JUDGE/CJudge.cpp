@@ -19,6 +19,8 @@
 #include "../SCENE/GAME/TREASURE/CTreasure.h"
 #include "../SCENE/GAME/ATTACK/CAttackBase.h"
 #include "../SCENE/GAME/THREAD/CThreadBase.h"
+#include "../SCENE/GAME/FIELD/CField.h"
+#include "../SCENE/GAME/THREAD/CThreadSpecialSpeed.h"
 
 //=========================================================================
 // コンストラクタ
@@ -109,6 +111,19 @@ void CJudge::ColiFieldxPlayer(void)
 			// OBB情報作成
 			CreateOBBInfo(&fieldOBB, &pos, &rot, &width, &height);
 			
+			if (priority == TYPE_PRIORITY_FIELD)
+			{
+				// プレイヤー乗ってる情報初期化
+				CField* p = (CField*)pField;
+				p->Ride(false);
+			}
+			else if (priority == TYPE_PRIORITY_THREAD_OF_FOOTHOLD)
+			{
+				// プレイヤー乗ってる情報初期化
+				CThreadSpecialSpeed* p = (CThreadSpecialSpeed*)pField;
+				p->Ride(false);
+			}
+
 			// 当たり判定
 			for (int idx = 0; idx < playerNum; ++idx)
 			{
@@ -126,10 +141,18 @@ void CJudge::ColiFieldxPlayer(void)
 					// 最後に当たった場所更新
 					m_LastFieldColiPlayer[idx] = pField;
 
-					// 当たった時の処理
-					#ifdef _DEBUG
-					CDebugProc::Print("HIT!!\n");
-					#endif
+					if (priority == TYPE_PRIORITY_FIELD)
+					{
+						// プレイヤー乗ってる情報初期化
+						CField* p = (CField*)pField;
+						p->Ride(true);
+					}
+					else if (priority == TYPE_PRIORITY_THREAD_OF_FOOTHOLD)
+					{
+						// プレイヤー乗ってる情報初期化
+						CThreadSpecialSpeed* p = (CThreadSpecialSpeed*)pField;
+						p->Ride(true);
+					}
 				}
 			}
 
@@ -200,10 +223,9 @@ void CJudge::ColiFieldxPlayer(void)
 				}
 			}
 		}
-		pPlayer[idx]->SetPos(pPlayer[idx]->GetOldPos());
-		//pPlayer[idx]->SetPos(D3DXVECTOR3(hitPos.x, hitPos.y - pPlayer[idx]->GetHeight() * 0.25f, 0.f));
+		D3DXVECTOR3 setPlayerPos = pPlayer[idx]->GetOldPos();
+		pPlayer[idx]->SetPos(setPlayerPos);
 	}
-
 }
 
 //=========================================================================

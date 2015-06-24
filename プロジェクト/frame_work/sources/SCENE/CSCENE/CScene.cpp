@@ -170,7 +170,10 @@ void CScene ::UpdateAll(void)
 	}
 
 	// Zソート
-	CScene::ZSort();
+	if (!GetDrawFlag())
+	{
+		CScene::ZSort();
+	}
 }
 
 //*****************************************************************************
@@ -222,7 +225,10 @@ void CScene ::UpdateChoice(int priority)
 	}
 	
 	// Zソート
-	CScene::ZSort();
+	if (!GetDrawFlag())
+	{
+		CScene::ZSort();
+	}
 }
 
 //*****************************************************************************
@@ -449,7 +455,8 @@ void CScene::ZSort(void)
 			for(int j = m_nNumInList[priority] - 1; j > i; j--)
 			{
 				// 近ければ
-				if(apSortCulc[j].pos.y < apSortCulc[j - 1].pos.y)
+				float culc = apSortCulc[j].pos.y - apSortCulc[j - 1].pos.y;
+				if (culc < -5.0f)
 				{
 					// 入れ替え処理
 					SORT_INFO keep = apSortCulc[j - 1];

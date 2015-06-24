@@ -744,13 +744,17 @@ void CPlayer::SpidersThread(void)
 		break;
 		// ˆÚ“®“Á‰»Œ`‘Ô‚Ì…
 	case PLAYER_MODE_SPEED:
+	{
+		D3DXVECTOR3 pos = m_vPos;
+		pos.y += m_fHeight *0.5f;
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_SPEED,
 			m_sNumber,
-			m_vPos,
+			pos,
 			m_PlayerFacing,
 			m_pEffectManager);
 		break;
+	}
 		// ã©“Á‰»Œ`‘Ô‚Ì…
 	case PLAYER_MODE_TRAP:
 		m_pThreadManager->CreateThread(
