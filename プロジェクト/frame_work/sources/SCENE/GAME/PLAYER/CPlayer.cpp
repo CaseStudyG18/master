@@ -10,9 +10,9 @@
 #include "../../../TEXTURE/CTexture.h"
 #include "../ATTACK/CAttackManager.h"
 #include "../THREAD/CThreadManager.h"
-#include "../EFFECT/CEffectManager.h"
 #include "../TREASURE/CTreasure.h"
 #include "../UI/CMp.h"
+#include "../../../CONTROLLER/CControllerManager.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
@@ -20,8 +20,9 @@
 // プレイヤーの移動速度(仮)
 static const float PLAYER_SPEED = 8.0f;
 
-// プレイヤーが鈍足状態になった時の係数(仮)
-static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
+// 宝物アイコンの大きさ
+static const float TREASURE_ICON_WIDTH = 40;
+static const float TREASURE_ICON_HEIGHT = 30;
 
 // 宝物アイコンの表示位置
 static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
@@ -72,7 +73,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
 	m_bSpeedAttack = false;									// 移動形態の攻撃中か判定
-	m_bSlowSpeed = false;									// 鈍足フラグの初期設定
+	m_bDonashi = false;										// 鈍足フラグの初期設定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
 
@@ -116,7 +117,6 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	BOOL playerOperation,
 	CAttackManager *pAttackManager,
 	CThreadManager *pThreadManager,
-	CEffectManager *pEffectManager,
 	short sPlayerNumber,
 	bool *bPlayerControl)
 {
@@ -124,7 +124,22 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	CPlayer *temp = new CPlayer(pDevice);
 
 	// 作成したプレイヤー情報の初期化
-	temp->Init(pos, fWidth, fHeight, texture, playerOperation, pAttackManager, pThreadManager, pEffectManager, sPlayerNumber, bPlayerControl);
+	temp->Init(pos, fWidth, fHeight, texture);
+
+	// 操作フラグを変更
+	temp->m_bOperation = playerOperation;
+
+	// プレイヤー番号のセット
+	temp->m_sNumber = sPlayerNumber;
+
+	// 攻撃マネージャの保持
+	temp->m_pAttackManager = pAttackManager;
+
+	// 糸マネージャの保持
+	temp->m_pThreadManager = pThreadManager;
+
+	// プレイヤがコントロールできるかフラグ
+	temp->m_bPlayerControl = bPlayerControl;
 
 	// 作成したプレイヤーのポインタを返す
 	return temp;
@@ -135,37 +150,13 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 //	引数　　座標、幅、高さ、テクスチャの種類
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::Init(D3DXVECTOR3 pos,
-	float fWidth,
-	float fHeight,
-	TEXTURE_TYPE texture,
-	BOOL playerOperation,
-	CAttackManager *pAttackManager,
-	CThreadManager *pThreadManager,
-	CEffectManager *pEffectManager,
-	short sPlayerNumber,
-	bool *bPlayerControl)
+void CPlayer::Init(D3DXVECTOR3 pos, float fWidth, float fHeight, TEXTURE_TYPE texture)
 {
 	// テクスチャアニメーションの初期化
 	CAnimation::Init(pos, fWidth, fHeight, texture, 6, 3);
 
 	// 向きを正面のテクスチャに
 	SetIndex(5);
-
-	// 操作フラグを変更
-	m_bOperation = playerOperation;
-
-	// プレイヤー番号のセット
-	m_sNumber = sPlayerNumber;
-
-	// 攻撃マネージャの保持
-	m_pAttackManager = pAttackManager;
-
-	// 糸マネージャの保持
-	m_pThreadManager = pThreadManager;
-
-	// プレイヤがコントロールできるかフラグ
-	m_bPlayerControl = bPlayerControl;
 }
 
 //-----------------------------------------------------------------------------
@@ -177,8 +168,8 @@ void CPlayer::Uninit(void)
 {
 	CScene2D::Uninit();
 
-	SAFE_RELEASE(m_pPS);
 	SAFE_RELEASE(m_pPSC);
+	SAFE_RELEASE(m_pPS);
 }
 
 //-----------------------------------------------------------------------------
@@ -236,202 +227,146 @@ void CPlayer::Update(void)
 		/*WSADキーでそれぞれ上下左右への移動						*/
 		/*アクションの状態を全て歩行状態に変える					*/
 		/*----------------------------------------------------------*/
-		if (m_sNumber == 0)
+		
+		// Wで画面上方向への移動
+		if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_UP, m_sNumber))
 		{
-			// Wで画面上方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_W))
+			// 移動速度の変更
+			// プレイヤーの形態が速度重視だった場合速く移動する
+			if (m_Mode == PLAYER_MODE_SPEED)
 			{
-				// 移動速度の変更
-				// プレイヤーの形態が速度重視だった場合速く移動する
-				if (m_Mode == PLAYER_MODE_SPEED)
-				{
-					m_fMoveSpeedY = -PLAYER_SPEED * 1.5f;
-				}
-				else
-				{
-					m_fMoveSpeedY = -PLAYER_SPEED;
-				}
-
-				// 行動を移動状態に変える
-				m_Action = PLAYER_ACTION_WALK;
-
-				// プレイヤーの向いている方向を変える
-				SetFace(PLAYER_DIRECTION_UP);
+				m_fMoveSpeedY = -PLAYER_SPEED * 1.5f;
 			}
-			// Sで画面下方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_S))
+			else
 			{
-				// 移動速度の変更
-				// プレイヤーの形態が速度重視だった場合速く移動する
-				if (m_Mode == PLAYER_MODE_SPEED)
-				{
-					m_fMoveSpeedY = PLAYER_SPEED * 1.5f;
-				}
-				else
-				{
-					m_fMoveSpeedY = PLAYER_SPEED;
-				}
-
-				// 行動を移動状態に変える
-				m_Action = PLAYER_ACTION_WALK;
-
-				// プレイヤーの向いている方向を変える
-				SetFace(PLAYER_DIRECTION_DOWN);
-			}
-			// Aで画面左方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_A))
-			{
-				// 移動速度の変更
-				// プレイヤーの形態が速度重視だった場合速く移動する
-				if (m_Mode == PLAYER_MODE_SPEED)
-				{
-					m_fMoveSpeedX = -PLAYER_SPEED * 1.5f;
-				}
-				else
-				{
-					m_fMoveSpeedX = -PLAYER_SPEED;
-				}
-
-				// 行動を移動状態に変える
-				m_Action = PLAYER_ACTION_WALK;
-
-				// プレイヤーの向いている方向を変える
-				SetFace(PLAYER_DIRECTION_LEFT);
-			}
-			// Dで画面右方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_D))
-			{
-				// 移動速度の変更
-				// プレイヤーの形態が速度重視だった場合速く移動する
-				if (m_Mode == PLAYER_MODE_SPEED)
-				{
-					m_fMoveSpeedX = PLAYER_SPEED * 1.5f;
-				}
-				else
-				{
-					m_fMoveSpeedX = PLAYER_SPEED;
-				}
-
-				// 行動を移動状態に変える
-				m_Action = PLAYER_ACTION_WALK;
-
-				// プレイヤーの向いている方向を変える
-				SetFace(PLAYER_DIRECTION_RIGHT);
+				m_fMoveSpeedY = -PLAYER_SPEED;
 			}
 
-			/*----------------------------------------------------------*/
-			/*4キーでプレイヤーの攻撃									*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_4))
-			{
-				// アクションの状態を攻撃に変える
-				m_Action = PLAYER_ACTION_ATTACK;
-			}
+			// 行動を移動状態に変える
+			m_Action = PLAYER_ACTION_WALK;
 
-			/*----------------------------------------------------------*/
-			/*5キーで糸を出す											*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_5))
-			{
-				// アクションの状態を糸発射状態に変える
-				m_Action = PLAYER_ACTION_THREAD;
-			}
-
-			/*----------------------------------------------------------*/
-			/*6キーでプレイヤー変形開始	(Attack)						*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) && m_fMP>0.0f)
-			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_ATTACK;
-			}
-			/*----------------------------------------------------------*/
-			/*7キーでプレイヤー変形開始	(Speed)						*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_7) && m_fMP>0.0f)
-			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_SPEED;
-			}
-			/*----------------------------------------------------------*/
-			/*8キーでプレイヤー変形開始	(Trap)						*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_8) && m_fMP>0.0f)
-			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_TRAP;
-			}
-			/*----------------------------------------------------------*/
-			/*9キーでプレイヤー変形開始	(Normal)						*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_9) && m_fMP>0.0f)
-			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_NONE;
-			}
-
-			// debug
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
-				// 宝物を落とす
-				FallTreasure();
-			}
+			// プレイヤーの向いている方向を変える
+			SetFace(PLAYER_DIRECTION_UP);
 		}
-		/*----------------------------------------------------------*/
-		/*２体目の敵の動き											*/
-		/*----------------------------------------------------------*/
-		else if (m_sNumber == 1)
+		// Sで画面下方向への移動
+		else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_DOWN, m_sNumber))
 		{
-			// Iで画面上方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_I))
+			// 移動速度の変更
+			// プレイヤーの形態が速度重視だった場合速く移動する
+			if (m_Mode == PLAYER_MODE_SPEED)
 			{
-				m_fMoveSpeedY = -5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_UP);
+				m_fMoveSpeedY = PLAYER_SPEED * 1.5f;
 			}
-			// Kで画面下方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_K))
+			else
 			{
-				m_fMoveSpeedY = 5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_DOWN);
-			}
-			// Jで画面左方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_J))
-			{
-				m_fMoveSpeedX = -5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_LEFT);
-			}
-			// Lで画面右方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_L))
-			{
-				m_fMoveSpeedX = 5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_RIGHT);
+				m_fMoveSpeedY = PLAYER_SPEED;
 			}
 
-			/*----------------------------------------------------------*/
-			/*0キーでプレイヤーの攻撃									*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_0))
+			// 行動を移動状態に変える
+			m_Action = PLAYER_ACTION_WALK;
+
+			// プレイヤーの向いている方向を変える
+			SetFace(PLAYER_DIRECTION_DOWN);
+		}
+		// Aで画面左方向への移動
+		if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT, m_sNumber))
+		{
+			// 移動速度の変更
+			// プレイヤーの形態が速度重視だった場合速く移動する
+			if (m_Mode == PLAYER_MODE_SPEED)
 			{
-				// アクションの状態を攻撃に変える
-				m_Action = PLAYER_ACTION_ATTACK;
+				m_fMoveSpeedX = -PLAYER_SPEED * 1.5f;
 			}
+			else
+			{
+				m_fMoveSpeedX = -PLAYER_SPEED;
+			}
+
+			// 行動を移動状態に変える
+			m_Action = PLAYER_ACTION_WALK;
+
+			// プレイヤーの向いている方向を変える
+			SetFace(PLAYER_DIRECTION_LEFT);
+		}
+		// Dで画面右方向への移動
+		else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT, m_sNumber))
+		{
+			// 移動速度の変更
+			// プレイヤーの形態が速度重視だった場合速く移動する
+			if (m_Mode == PLAYER_MODE_SPEED)
+			{
+				m_fMoveSpeedX = PLAYER_SPEED * 1.5f;
+			}
+			else
+			{
+				m_fMoveSpeedX = PLAYER_SPEED;
+			}
+
+			// 行動を移動状態に変える
+			m_Action = PLAYER_ACTION_WALK;
+
+			// プレイヤーの向いている方向を変える
+			SetFace(PLAYER_DIRECTION_RIGHT);
 		}
 
+		/*----------------------------------------------------------*/
+		/*4キーでプレイヤーの攻撃									*/
+		/*----------------------------------------------------------*/
+		if (CControllerManager::GetTriggerKey(CInputGamePad::KEY_R, m_sNumber))
+		{
+			// アクションの状態を攻撃に変える
+			m_Action = PLAYER_ACTION_ATTACK;
+		}
 
 		/*----------------------------------------------------------*/
-		/*ここまでのものを最終的にはコントローラーで操作			*/
+		/*5キーで糸を出す											*/
 		/*----------------------------------------------------------*/
+		if (CControllerManager::GetTriggerKey(CInputGamePad::KEY_L, m_sNumber))
+		{
+			// アクションの状態を糸発射状態に変える
+			m_Action = PLAYER_ACTION_THREAD;
+		}
+
+		/*----------------------------------------------------------*/
+		/*6キーでプレイヤー変形開始	(Attack)						*/
+		/*----------------------------------------------------------*/
+		if (CControllerManager::GetTriggerKey(CInputGamePad::KEY_A, m_sNumber) && m_fMP>0.0f)
+		{
+			// アクションの状態を変形に変える
+			m_Action = PLAYER_ACTION_METAMORPHOSE;
+			// 次に変形する状態を変更する
+			m_ModeDest = PLAYER_MODE_ATTACK;
+		}
+		/*----------------------------------------------------------*/
+		/*7キーでプレイヤー変形開始	(Speed)						*/
+		/*----------------------------------------------------------*/
+		if (CControllerManager::GetTriggerKey(CInputGamePad::KEY_X, m_sNumber) && m_fMP>0.0f)
+		{
+			// アクションの状態を変形に変える
+			m_Action = PLAYER_ACTION_METAMORPHOSE;
+			// 次に変形する状態を変更する
+			m_ModeDest = PLAYER_MODE_SPEED;
+		}
+		/*----------------------------------------------------------*/
+		/*8キーでプレイヤー変形開始	(Trap)						*/
+		/*----------------------------------------------------------*/
+		if (CControllerManager::GetTriggerKey(CInputGamePad::KEY_Y, m_sNumber) && m_fMP>0.0f)
+		{
+			// アクションの状態を変形に変える
+			m_Action = PLAYER_ACTION_METAMORPHOSE;
+			// 次に変形する状態を変更する
+			m_ModeDest = PLAYER_MODE_TRAP;
+		}
+		/*----------------------------------------------------------*/
+		/*9キーでプレイヤー変形開始	(Normal)						*/
+		/*----------------------------------------------------------*/
+		if (CControllerManager::GetTriggerKey(CInputGamePad::KEY_B, m_sNumber) && m_fMP>0.0f)
+		{
+			// アクションの状態を変形に変える
+			m_Action = PLAYER_ACTION_METAMORPHOSE;
+			// 次に変形する状態を変更する
+			m_ModeDest = PLAYER_MODE_NONE;
+		}
 	}
 
 	// 無敵状態での処理
@@ -443,7 +378,7 @@ void CPlayer::Update(void)
 	// 変形している場合MPを減少させていく
 	if (m_bMetamorphose)
 	{
-		MPReduce();
+		MPGainAndLoss(-1.5f);
 
 		// MPが０になったら通常状態に戻す
 		if (m_fMP <= 0.0f)
@@ -562,27 +497,29 @@ void CPlayer::Draw(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Move(void)
 {
+	float fDiffPosX;		// 現在の座標と目的の座標の差分(X軸)
+	float fDiffPosY;		// 現在の座標と目的の座標の差分(Y軸)
+
+	// 目的の座標を決める
+	m_vPosDest.y += m_fMoveSpeedY;
+	m_vPosDest.x += m_fMoveSpeedX;
+
+	// 目的の座標と現在の座標を求める
+	fDiffPosX = m_vPosDest.x - m_vPos.x;
+	fDiffPosY = m_vPosDest.y - m_vPos.y;
+
 	// 現在の座標を更新する
-	if (!m_bSlowSpeed)
-	{
-		m_vPos.x += m_fMoveSpeedX * 0.5f;
-		m_vPos.y += m_fMoveSpeedY * 0.5f;
-	}
-	else
-	{
-		m_vPos.x += m_fMoveSpeedX * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
-		m_vPos.y += m_fMoveSpeedY * 0.5f * PLAYER_SLOW_SPEED_COEFFICIENT;
-	}
+	m_vPos.x += fDiffPosX * 0.5f;
+	m_vPos.y += fDiffPosY * 0.5f;
 
 	// プレイヤーの移動方向が変わったらテクスチャのU値を変える
 	if ((m_PlayerFacing == PLAYER_DIRECTION_LEFT || m_PlayerFacing == PLAYER_DIRECTION_RIGHT) &&
 		m_PlayerFacing != m_PlayerFacingOld)
 	{
 		ChangeTextureFaceU();
+
 		m_PlayerFacingOld = m_PlayerFacing;
 	}
-
-	m_Action = PLAYER_ACTION_NONE;
 }
 
 //-----------------------------------------------------------------------------
@@ -708,11 +645,29 @@ void CPlayer::MetamorphoseAnimation(void)
 //	引数　　無し
 //	戻り値　無し
 //-----------------------------------------------------------------------------
-void CPlayer::MPReduce(void)
+void CPlayer::MPGainAndLoss(float changeValue)
 {
 	// MPを減らしていく
-	// 数値は仮
-	m_fMP -= 1.5f;
+	m_fMP += changeValue;
+	if (m_fMP > PLAYER_DEFAULT_MP)
+	{
+		m_fMP = PLAYER_DEFAULT_MP;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// HPを減少させる関数
+//	引数　　無し
+//	戻り値　無し
+//-----------------------------------------------------------------------------
+void CPlayer::HPGainAndLoss(float changeValue)
+{
+	// MPを減らしていく
+	m_fHP += changeValue;
+	if (m_fHP > PLAYER_DEFAULT_HP)
+	{
+		m_fHP = PLAYER_DEFAULT_HP;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -730,8 +685,7 @@ void CPlayer::SpidersThread(void)
 			THREAD_TYPE_NORMAL,
 			m_sNumber,
 			m_vPos,
-			m_PlayerFacing,
-			m_pEffectManager);
+			m_PlayerFacing);
 		break;
 		// 攻撃特化形態の糸
 	case PLAYER_MODE_ATTACK:
@@ -739,20 +693,18 @@ void CPlayer::SpidersThread(void)
 			THREAD_TYPE_ATTACK,
 			m_sNumber,
 			m_vPos,
-			m_PlayerFacing,
-			m_pEffectManager);
+			m_PlayerFacing);
 		break;
 		// 移動特化形態の糸
 	case PLAYER_MODE_SPEED:
 	{
 		D3DXVECTOR3 pos = m_vPos;
-		pos.y += m_fHeight *0.5f;
+		pos.y += m_fHeight *0.35f;
 		m_pThreadManager->CreateThread(
-			THREAD_TYPE_SPEED,
-			m_sNumber,
-			pos,
-			m_PlayerFacing,
-			m_pEffectManager);
+		 THREAD_TYPE_SPEED,
+		 m_sNumber,
+		 pos,
+		 m_PlayerFacing);
 		break;
 	}
 		// 罠特化形態の糸
@@ -761,8 +713,7 @@ void CPlayer::SpidersThread(void)
 			THREAD_TYPE_TRAP,
 			m_sNumber,
 			m_vPos,
-			m_PlayerFacing,
-			m_pEffectManager);
+			m_PlayerFacing);
 		break;
 	default:
 		break;
@@ -943,8 +894,10 @@ void CPlayer::SetTreasure(CTreasure *pTreasure){
 	// ポインタ保存
 	m_pTreasure = pTreasure;
 
-	// 宝物をアイコンにする
-	m_pTreasure->SetIcon();
+	// テクスチャと大きさを変更
+	m_pTreasure->SetWidth(TREASURE_ICON_WIDTH);
+	m_pTreasure->SetHeight(TREASURE_ICON_HEIGHT);
+	m_pTreasure->ChangeTexture(TEXTURE_TREASURE_ICON);
 }
 
 //-----------------------------------------------------------------------------
@@ -1099,7 +1052,6 @@ void CPlayer::UpdatePlayerHpState(void){
 //-----------------------------------------------------------------------------
 void CPlayer::UpdatePlayerRed(void){
 
-#ifdef _DEBUG
 	if (CInputKeyboard::GetKeyboardPress(DIK_RCONTROL)){
 		AddHp(-2);
 	}
@@ -1119,7 +1071,6 @@ void CPlayer::UpdatePlayerRed(void){
 		CDebugProc::Print("プレイヤHP状態 = DIE\n");
 	}
 	CDebugProc::Print("count = %d\n", m_nRedCount);
-#endif
 
 	// 死んでいる or HPが十分あるなら更新しない
 	if (m_HpState == PLAYER_HP_STATE_DIE ||
