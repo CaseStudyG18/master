@@ -13,6 +13,7 @@
 #include "../EFFECT/CEffectManager.h"
 #include "../TREASURE/CTreasure.h"
 #include "../UI/CMp.h"
+#include "../../../CONTROLLER/CControllerManager.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
@@ -244,7 +245,8 @@ void CPlayer::Update(void)
 		if (m_sNumber == 0)
 		{
 			// Wで画面上方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_W))
+			if (CInputKeyboard::GetKeyboardPress(DIK_W) ||
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_UP, m_sNumber))
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -264,7 +266,8 @@ void CPlayer::Update(void)
 				SetFace(PLAYER_DIRECTION_UP);
 			}
 			// Sで画面下方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_S))
+			else if (CInputKeyboard::GetKeyboardPress(DIK_S) ||
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_DOWN, m_sNumber))
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -284,7 +287,8 @@ void CPlayer::Update(void)
 				SetFace(PLAYER_DIRECTION_DOWN);
 			}
 			// Aで画面左方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_A))
+			if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT, m_sNumber))
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -304,7 +308,8 @@ void CPlayer::Update(void)
 				SetFace(PLAYER_DIRECTION_LEFT);
 			}
 			// Dで画面右方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_D))
+			else if (CInputKeyboard::GetKeyboardPress(DIK_D) ||
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT, m_sNumber))
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -327,7 +332,8 @@ void CPlayer::Update(void)
 			/*----------------------------------------------------------*/
 			/*4キーでプレイヤーの攻撃									*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_4))
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_4) ||
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_R, m_sNumber))
 			{
 				// アクションの状態を攻撃に変える
 				m_Action = PLAYER_ACTION_ATTACK;
@@ -336,7 +342,8 @@ void CPlayer::Update(void)
 			/*----------------------------------------------------------*/
 			/*5キーで糸を出す											*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_5))
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_5) ||
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_L, m_sNumber))
 			{
 				// アクションの状態を糸発射状態に変える
 				m_Action = PLAYER_ACTION_THREAD;
@@ -345,42 +352,54 @@ void CPlayer::Update(void)
 			/*----------------------------------------------------------*/
 			/*6キーでプレイヤー変形開始	(Attack)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) && m_fMP > 0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) || 
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_A, m_sNumber))
 			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_ATTACK;
+				if (m_fMP > 0.0f){
+					// アクションの状態を変形に変える
+					m_Action = PLAYER_ACTION_METAMORPHOSE;
+					// 次に変形する状態を変更する
+					m_ModeDest = PLAYER_MODE_ATTACK;
+				}
 			}
 			/*----------------------------------------------------------*/
 			/*7キーでプレイヤー変形開始	(Speed)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_7) && m_fMP > 0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_7) ||
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_X, m_sNumber))
 			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_SPEED;
+				if (m_fMP > 0.0f){
+					// アクションの状態を変形に変える
+					m_Action = PLAYER_ACTION_METAMORPHOSE;
+					// 次に変形する状態を変更する
+					m_ModeDest = PLAYER_MODE_SPEED;
+				}
 			}
 			/*----------------------------------------------------------*/
 			/*8キーでプレイヤー変形開始	(Trap)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_8) && m_fMP > 0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_8) ||
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_Y, m_sNumber))
 			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_TRAP;
+				if (m_fMP > 0.0f){
+					// アクションの状態を変形に変える
+					m_Action = PLAYER_ACTION_METAMORPHOSE;
+					// 次に変形する状態を変更する
+					m_ModeDest = PLAYER_MODE_TRAP;
+				}
 			}
 			/*----------------------------------------------------------*/
 			/*9キーでプレイヤー変形開始	(Normal)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_9) && m_fMP > 0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_9) ||
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_B, m_sNumber))
 			{
-				// アクションの状態を変形に変える
-				m_Action = PLAYER_ACTION_METAMORPHOSE;
-				// 次に変形する状態を変更する
-				m_ModeDest = PLAYER_MODE_NONE;
+				if (m_fMP > 0.0f){
+					// アクションの状態を変形に変える
+					m_Action = PLAYER_ACTION_METAMORPHOSE;
+					// 次に変形する状態を変更する
+					m_ModeDest = PLAYER_MODE_NONE;
+				}
 			}
 
 			// debug
