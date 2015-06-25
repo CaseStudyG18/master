@@ -340,7 +340,7 @@ void CPlayer::Update(void)
 			/*----------------------------------------------------------*/
 			/*6キーでプレイヤー変形開始	(Attack)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) && m_fMP>0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) && m_fMP > 0.0f)
 			{
 				// アクションの状態を変形に変える
 				m_Action = PLAYER_ACTION_METAMORPHOSE;
@@ -350,7 +350,7 @@ void CPlayer::Update(void)
 			/*----------------------------------------------------------*/
 			/*7キーでプレイヤー変形開始	(Speed)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_7) && m_fMP>0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_7) && m_fMP > 0.0f)
 			{
 				// アクションの状態を変形に変える
 				m_Action = PLAYER_ACTION_METAMORPHOSE;
@@ -360,7 +360,7 @@ void CPlayer::Update(void)
 			/*----------------------------------------------------------*/
 			/*8キーでプレイヤー変形開始	(Trap)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_8) && m_fMP>0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_8) && m_fMP > 0.0f)
 			{
 				// アクションの状態を変形に変える
 				m_Action = PLAYER_ACTION_METAMORPHOSE;
@@ -370,7 +370,7 @@ void CPlayer::Update(void)
 			/*----------------------------------------------------------*/
 			/*9キーでプレイヤー変形開始	(Normal)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_9) && m_fMP>0.0f)
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_9) && m_fMP > 0.0f)
 			{
 				// アクションの状態を変形に変える
 				m_Action = PLAYER_ACTION_METAMORPHOSE;
@@ -531,7 +531,7 @@ void CPlayer::Update(void)
 
 	// 現在のMPを表示する
 #ifdef _DEBUG
-	CDebugProc::Print("%dプレイヤー残りMP %f\n", m_sNumber , m_fMP);
+	CDebugProc::Print("%dプレイヤー残りMP %f\n", m_sNumber, m_fMP);
 #endif
 
 }
@@ -744,13 +744,17 @@ void CPlayer::SpidersThread(void)
 		break;
 		// 移動特化形態の糸
 	case PLAYER_MODE_SPEED:
+	{
+		D3DXVECTOR3 pos = m_vPos;
+		pos.y += m_fHeight *0.5f;
 		m_pThreadManager->CreateThread(
 			THREAD_TYPE_SPEED,
 			m_sNumber,
-			m_vPos,
+			pos,
 			m_PlayerFacing,
 			m_pEffectManager);
 		break;
+	}
 		// 罠特化形態の糸
 	case PLAYER_MODE_TRAP:
 		m_pThreadManager->CreateThread(
@@ -948,7 +952,7 @@ void CPlayer::SetTreasure(CTreasure *pTreasure){
 // プレイヤが宝物を落としたときに呼ばれる
 //-----------------------------------------------------------------------------
 void CPlayer::FallTreasure(){
-	
+
 	if (m_pTreasure){
 		// 宝物のテクスチャや大きさをセット
 		m_pTreasure->Reset(m_vPos);

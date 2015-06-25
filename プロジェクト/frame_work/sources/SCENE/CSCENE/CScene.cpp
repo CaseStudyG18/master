@@ -22,14 +22,14 @@ typedef struct
 //*****************************************************************************
 // スタティックメンバ変数
 //*****************************************************************************
-CScene*		CScene::m_apTop[TYPE_PRIORITY_MAX] = {NULL};		// リストの先頭アドレス
-CScene*		CScene::m_apCur[TYPE_PRIORITY_MAX] = {NULL};		// リストの終端アドレス
-int			CScene::m_nNumInList[TYPE_PRIORITY_MAX] = {0};		// リストの中身の個数
+CScene*		CScene::m_apTop[TYPE_PRIORITY_MAX] = { NULL };		// リストの先頭アドレス
+CScene*		CScene::m_apCur[TYPE_PRIORITY_MAX] = { NULL };		// リストの終端アドレス
+int			CScene::m_nNumInList[TYPE_PRIORITY_MAX] = { 0 };		// リストの中身の個数
 
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CScene ::CScene(int nPriority, OBJTYPE objType)
+CScene::CScene(int nPriority, OBJTYPE objType)
 {
 	// オブジェタイプ設定
 	m_objType = objType;
@@ -41,16 +41,16 @@ CScene ::CScene(int nPriority, OBJTYPE objType)
 	m_bDelete = false;
 
 	// 個数カウント
-	if(m_nPriority >= 0 && m_nPriority < TYPE_PRIORITY_MAX)
+	if (m_nPriority >= 0 && m_nPriority < TYPE_PRIORITY_MAX)
 	{
 		m_nNumInList[m_nPriority]++;
 	}
 
 	// １個目のとき
-	if(CScene::m_apTop[nPriority] == NULL)
+	if (CScene::m_apTop[nPriority] == NULL)
 	{
-		CScene ::m_apTop[nPriority] = this;
-		CScene ::m_apCur[nPriority] = this;
+		CScene::m_apTop[nPriority] = this;
+		CScene::m_apCur[nPriority] = this;
 		m_pNext = NULL;
 		m_pPrev = NULL;
 	}
@@ -60,9 +60,9 @@ CScene ::CScene(int nPriority, OBJTYPE objType)
 	{
 		// １つ前のインスタンス保存用
 		CScene *prev = NULL;
-		
+
 		// １つ前のインスタンス保存
-		prev = CScene ::m_apCur[nPriority];
+		prev = CScene::m_apCur[nPriority];
 
 		// 現在が終端なのでNULL
 		m_pNext = NULL;
@@ -72,7 +72,7 @@ CScene ::CScene(int nPriority, OBJTYPE objType)
 
 		// 現在が終端
 		m_apCur[nPriority] = this;
-		
+
 		// 前ポインタの次ポインタを変更
 		prev->m_pNext = this;
 	}
@@ -88,7 +88,7 @@ CScene ::CScene(int nPriority, OBJTYPE objType)
 CScene ::~CScene(void)
 {
 	// 個数カウント
-	if(m_nPriority >= 0 && m_nPriority < TYPE_PRIORITY_MAX)
+	if (m_nPriority >= 0 && m_nPriority < TYPE_PRIORITY_MAX)
 	{
 		m_nNumInList[m_nPriority]--;
 	}
@@ -97,7 +97,7 @@ CScene ::~CScene(void)
 //*****************************************************************************
 // 初期化関数
 //*****************************************************************************
-HRESULT CScene :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock, int hblock)
+HRESULT CScene::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock, int hblock)
 {
 	return S_OK;
 }
@@ -105,7 +105,7 @@ HRESULT CScene :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE 
 //*****************************************************************************
 // 終了関数
 //*****************************************************************************
-void CScene ::Uninit(void)
+void CScene::Uninit(void)
 {
 
 }
@@ -113,7 +113,7 @@ void CScene ::Uninit(void)
 //*****************************************************************************
 // 更新関数
 //*****************************************************************************
-void CScene ::Update(void)
+void CScene::Update(void)
 {
 
 }
@@ -121,18 +121,18 @@ void CScene ::Update(void)
 //*****************************************************************************
 // 全て更新関数
 //*****************************************************************************
-void CScene ::UpdateAll(void)
+void CScene::UpdateAll(void)
 {
 	CScene *pScene;
 	CScene *pSceneNext;
 
-	for(int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
 	{
 		// 先頭を指定
 		pScene = m_apTop[priority];
 
 		// ポインタがNULLでなければ
-		while(pScene)
+		while (pScene)
 		{
 			// 現在対象としているインスタンスの次のインスタンスを保存
 			pSceneNext = pScene->m_pNext;
@@ -148,17 +148,17 @@ void CScene ::UpdateAll(void)
 		pScene = m_apTop[priority];
 
 		// ポインタがNULLでなければ
-		while(pScene)
+		while (pScene)
 		{
 			// 現在対象としているインスタンスの次のインスタンスを保存
 			pSceneNext = pScene->m_pNext;
 
 			// デスフラグONなら
-			if(pScene->m_bDelete)
+			if (pScene->m_bDelete)
 			{
 				// リストから除外
 				pScene->UnLinkList();
-				
+
 				// 削除
 				delete pScene;
 				pScene = NULL;
@@ -170,13 +170,16 @@ void CScene ::UpdateAll(void)
 	}
 
 	// Zソート
-	CScene::ZSort();
+	if (!GetDrawFlag())
+	{
+		CScene::ZSort();
+	}
 }
 
 //*****************************************************************************
 // 指定プライオリティ更新関数
 //*****************************************************************************
-void CScene ::UpdateChoice(int priority)
+void CScene::UpdateChoice(int priority)
 {
 	CScene *pScene;
 	CScene *pSceneNext;
@@ -185,7 +188,7 @@ void CScene ::UpdateChoice(int priority)
 	pScene = m_apTop[priority];
 
 	// ポインタがNULLでなければ
-	while(pScene)
+	while (pScene)
 	{
 		// 現在対象としているインスタンスの次のインスタンスを保存
 		pSceneNext = pScene->m_pNext;
@@ -201,17 +204,17 @@ void CScene ::UpdateChoice(int priority)
 	pScene = m_apTop[priority];
 
 	// ポインタがNULLでなければ
-	while(pScene)
+	while (pScene)
 	{
 		// 現在対象としているインスタンスの次のインスタンスを保存
 		pSceneNext = pScene->m_pNext;
 
 		// デスフラグONなら
-		if(pScene->m_bDelete)
+		if (pScene->m_bDelete)
 		{
 			// リストから除外
 			pScene->UnLinkList();
-			
+
 			// 削除
 			delete pScene;
 			pScene = NULL;
@@ -220,30 +223,33 @@ void CScene ::UpdateChoice(int priority)
 		// 次のインスタンスを対象のインスタンスにする
 		pScene = pSceneNext;
 	}
-	
+
 	// Zソート
-	CScene::ZSort();
+	if (!GetDrawFlag())
+	{
+		CScene::ZSort();
+	}
 }
 
 //*****************************************************************************
 // 描画関数
 //*****************************************************************************
-void CScene ::Draw(void)
+void CScene::Draw(void)
 {
 }
 
 //*****************************************************************************
 // 全て描画関数
 //*****************************************************************************
-void CScene ::DrawAll(void)
+void CScene::DrawAll(void)
 {
 	CScene *pScene;
 	CScene *pSceneNext;
-	
-	for(int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
 	{
 		pScene = m_apTop[priority];	// ポインタがNULLでなければ
-		while(pScene)
+		while (pScene)
 		{
 			// 現在対象としているインスタンスの次のインスタンスを保存
 			pSceneNext = pScene->m_pNext;
@@ -260,15 +266,15 @@ void CScene ::DrawAll(void)
 //*****************************************************************************
 // 指定プライオリティ描画関数
 //*****************************************************************************
-void CScene ::DrawChoice(int priority)
+void CScene::DrawChoice(int priority)
 {
 	CScene *pScene;
 	CScene *pSceneNext;
-	
+
 	pScene = m_apTop[priority];
 
 	// ポインタがNULLでなければ
-	while(pScene)
+	while (pScene)
 	{
 		// 現在対象としているインスタンスの次のインスタンスを保存
 		pSceneNext = pScene->m_pNext;
@@ -279,7 +285,7 @@ void CScene ::DrawChoice(int priority)
 		// 次のインスタンスを対象のインスタンスにする
 		pScene = pSceneNext;
 	}
-	
+
 }
 
 //*****************************************************************************
@@ -294,18 +300,18 @@ void CScene::Release(void)
 //*****************************************************************************
 // 全てリリース関数
 //*****************************************************************************
-void CScene ::ReleaseAll(void)
+void CScene::ReleaseAll(void)
 {
 	CScene *pScene;
 	CScene *pSceneNext;
-	
-	for(int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
 	{
 		// 先頭を指定
 		pScene = m_apTop[priority];
-		
+
 		// ポインタがNULLでなければ
-		while(pScene)
+		while (pScene)
 		{
 			// 現在対象としているインスタンスの次のインスタンスを保存
 			pSceneNext = pScene->m_pNext;
@@ -319,15 +325,15 @@ void CScene ::ReleaseAll(void)
 
 		// 先頭を指定
 		pScene = m_apTop[priority];
-		
+
 		// ポインタがNULLでなければ
-		while(pScene)
+		while (pScene)
 		{
 			// 現在対象としているインスタンスの次のインスタンスを保存
 			pSceneNext = pScene->m_pNext;
 
 			// デスフラグONなら
-			if(pScene->m_bDelete)
+			if (pScene->m_bDelete)
 			{
 				// 解放
 				delete pScene;
@@ -351,28 +357,28 @@ void CScene::UnLinkList(void)
 {
 	CScene* pScene = this;
 
-	if(this->m_pPrev && this->m_pNext)
+	if (this->m_pPrev && this->m_pNext)
 	{
 		CScene *pPrev = this->m_pPrev;
 		CScene *pNext = this->m_pNext;
 
 		// 前のインスタンスの次ポインタを変更
 		pPrev->m_pNext = this->m_pNext;
-		
+
 		// 次のインスタンスの前ポインタを変更
 		pNext->m_pPrev = this->m_pPrev;
-		
+
 	}
 
 	// 先頭なら
-	if(this->m_pPrev == NULL)
+	if (this->m_pPrev == NULL)
 	{
 		CScene *pNext = this->m_pNext;
 
 		// 先頭アドレス変更
 		m_apTop[this->m_nPriority] = NULL;
 
-		if(pNext)
+		if (pNext)
 		{
 			// 先頭アドレス変更
 			m_apTop[this->m_nPriority] = pNext;
@@ -383,14 +389,14 @@ void CScene::UnLinkList(void)
 	}
 
 	// 最後なら
-	if(this->m_pNext == NULL)
+	if (this->m_pNext == NULL)
 	{
 		CScene *pPrev = this->m_pPrev;
 
 		// 終端アドレス変更
 		m_apCur[this->m_nPriority] = NULL;
 
-		if(pPrev)
+		if (pPrev)
 		{
 			// 終端アドレス変更
 			m_apCur[this->m_nPriority] = pPrev;
@@ -414,10 +420,10 @@ void CScene::ZSort(void)
 {
 	CScene *pScene;
 	CScene *pSceneNext;
-	for(int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
 	{
 		// 中身がないなら次のプライオリティへ
-		if(m_nNumInList[priority] <= 0)
+		if (m_nNumInList[priority] <= 0)
 		{
 			continue;
 		}
@@ -427,7 +433,7 @@ void CScene::ZSort(void)
 		int culc = 0;
 
 		pScene = m_apTop[priority];	// ポインタがNULLでなければ
-		while(pScene)
+		while (pScene)
 		{
 			// 現在対象としているインスタンスの次のインスタンスを保存
 			pSceneNext = pScene->m_pNext;
@@ -444,12 +450,13 @@ void CScene::ZSort(void)
 		}
 
 		// ソート
-		for(int i = 0; i < m_nNumInList[priority]; i++)
+		for (int i = 0; i < m_nNumInList[priority]; i++)
 		{
-			for(int j = m_nNumInList[priority] - 1; j > i; j--)
+			for (int j = m_nNumInList[priority] - 1; j > i; j--)
 			{
 				// 近ければ
-				if(apSortCulc[j].pos.y < apSortCulc[j - 1].pos.y)
+				float culc = apSortCulc[j].pos.y - apSortCulc[j - 1].pos.y;
+				if (culc < -5.0f)
 				{
 					// 入れ替え処理
 					SORT_INFO keep = apSortCulc[j - 1];
@@ -465,15 +472,15 @@ void CScene::ZSort(void)
 
 		// リストの変更
 		pScene = m_apTop[priority];
-		for(int i = 0; i < m_nNumInList[priority]; i++)
+		for (int i = 0; i < m_nNumInList[priority]; i++)
 		{
-			if(!pScene)
+			if (!pScene)
 			{
 				continue;
 			}
 
 			// 次のアドレス変更
-			if(i < m_nNumInList[priority] - 1)
+			if (i < m_nNumInList[priority] - 1)
 			{
 				pScene->m_pNext = apSortCulc[i + 1].adrr;
 			}
@@ -483,7 +490,7 @@ void CScene::ZSort(void)
 			}
 
 			// 前のアドレス変更
-			if(i > 0)
+			if (i > 0)
 			{
 				pScene->m_pPrev = apSortCulc[i - 1].adrr;
 			}

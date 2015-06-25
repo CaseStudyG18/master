@@ -9,15 +9,18 @@
 //=============================================================================
 #include "CField.h"
 
-#ifdef _DEBUG
-#include "../../../INPUT/CInputKeyboard.h"
-#endif
+//=======================================================================
+// マクロ
+//=======================================================================
+static const float DOWN_POS_POW = 5.0f;
+static const float MOVE_POW = DOWN_POS_POW / 10.f;
+
 //=======================================================================
 // コンストラクタ
 //=======================================================================
 CField::CField(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE m_objType) :CScene2D(pDevice, nPriority, m_objType)
 {
-	
+
 }
 
 //=======================================================================
@@ -40,7 +43,14 @@ void CField::Uninit(void)
 //=======================================================================
 void CField::Update(void)
 {
-	CScene2D::Update();
+	if (m_vPos.y < m_vDestPos.y)
+	{
+		m_vPos.y += MOVE_POW;
+	}
+	else if (m_vPos.y > m_vDestPos.y)
+	{
+		m_vPos.y -= MOVE_POW * 0.5f;
+	}
 }
 
 //=======================================================================
@@ -69,12 +79,29 @@ CField* CField::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width,
 HRESULT CField::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock, int hblock)
 {
 	CScene2D::Init(pos, width, height, texType);
-	
-	m_fJudgeWidth = width;
+
+	m_fJudgeWidth = width * 0.8f;
 	m_fJudgeHeight = height * 0.5f;
 	m_vJudgePos = pos;
 	m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+	m_vDestPos = m_vDefaultPos = pos;
 
 	return TRUE;
 }
+
+//=======================================================================
+// 乗ってる
+//=======================================================================
+void CField::Ride(bool ride)
+{
+	if (ride)
+	{
+		m_vDestPos.y = m_vDefaultPos.y + DOWN_POS_POW;
+	}
+	else
+	{
+		m_vDestPos.y = m_vDefaultPos.y;
+	}
+}
+
 //----EOF----

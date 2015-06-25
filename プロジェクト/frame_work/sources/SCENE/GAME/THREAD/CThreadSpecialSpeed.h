@@ -47,7 +47,9 @@ public:
 
 	// デス関数
 	void Death(void);
-	
+
+	// ライド関数
+	void Ride(bool ride);
 private:
 	HRESULT Init(short nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerDirection);
 
@@ -57,10 +59,16 @@ private:
 	// フィールドアニメーション
 	void FieldAnim(void);
 
+	// 上下
+	void UpDown(void);
+
 	DIRECTION_PLAYER_FACING m_Direction;	// 方向
 	float					m_fAddPower;	// 伸びる大きさ
 	int						m_nAnimTimer;	// アニメーションのカウンター
-
+	float					m_fDefaultWidth;
+	float					m_fDestWidth;
+	float					m_fDefaultHeight;
+	float					m_fDestHeight;
 };
 
 #endif
