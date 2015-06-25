@@ -116,8 +116,16 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pThreadManager = new CThreadManager(pDevice);
 	m_pThreadManager->Init();
 
+	// 2015_06_23変更
+	// サトウ　リョウイチ
+	// エフェクトマネージャー
+	m_pEffectManager = new CEffectManager(m_pD3DDevice);
+	m_pEffectManager->Init();
+
+	// 2015_06_23変更
+	// サトウ　リョウイチ
 	// プレイヤ生成
-	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager);
+	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager, m_pEffectManager);
 	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
 
 	// 宝物生成
@@ -150,10 +158,6 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// カウントダウン
 	m_pCountDown = new CCountDown(m_pD3DDevice, &m_bPlayerControl);
 	m_pCountDown->Init();
-
-	// エフェクトマネージャー
-	m_pEffectManager = new CEffectManager(m_pD3DDevice);
-	m_pEffectManager->Init();
 }
 
 //*****************************************************************************
@@ -251,7 +255,7 @@ void CGame::Update(void)
 
 		// テストでエフェクトをクリエイト
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
-			m_pEffectManager->CreateEffect(D3DXVECTOR3(300, 200, 0), EFFECT_ATTACK_HIT);
+			m_pEffectManager->CreateEffect(D3DXVECTOR3(300, 200, 0), EFFECT_SPECIAL_ATTACK_SPEED , D3DXVECTOR3(0.0f,1.0f,0.0f));
 		}
 	
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))

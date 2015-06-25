@@ -25,7 +25,7 @@ CEffectBase::CEffectBase(LPDIRECT3DDEVICE9 *pDevice, int nPriority) : CScene2D(p
 {
 	// •`‰æ‚µ‚È‚¢
 	CScene2D::SetDrawFlag(false);
-
+	m_vVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //*****************************************************************************

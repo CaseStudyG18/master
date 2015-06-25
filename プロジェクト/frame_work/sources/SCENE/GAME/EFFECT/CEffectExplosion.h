@@ -1,56 +1,46 @@
 //=============================================================================
 //
-// CEffectManagerクラス [CEffectManager.h]
-// Author : 塚本　俊彦
+//	爆発エフェクト
 //
-// 宝物マネージャー　こいつを介して宝物を生成する
+//	Author : 佐藤　諒一
 //
 //=============================================================================
-#ifndef _CEFFECTMANAGER_H_
-#define _CEFFECTMANAGER_H_
+#ifndef __CEFFECT_EXPLOSION_H__
+#define __CEFFECT_EXPLOSION_H__
 
 //=============================================================================
 // インクルード
 //=============================================================================
-#include "../../../RENDERER/CRenderer.h"
+#include "../../../MAIN/main.h"
+#include "../../GAME/EFFECT/CEffectBase.h"
 
 //=============================================================================
 // 定数
 //=============================================================================
-enum EFFECT_TYPE{
-	EFFECT_ATTACK_HIT = 0,
-	EFFECT_EXPLOSION,
-	EFFECT_SPECIAL_ATTACK_ATTACK,
-	EFFECT_SPECIAL_ATTACK_SPEED,
-	EFFECT_SPECIAL_THREAD_ATTACK,
-
-	EFFECT_MAX,
-};
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CEffectManager
+class CEffectExplosion : public CEffectBase
 {
 	// 公開メンバ
 public:
-	CEffectManager(LPDIRECT3DDEVICE9 *pDevice);
-	~CEffectManager(void);
 
-	void Init(void);
+	CEffectExplosion(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT);
+	~CEffectExplosion(void);
+
+	void Init(D3DXVECTOR3 pos);
 	void Uninit(void);
 	void Update(void);
 
-	// エフェクト生成関数
-	// 座標とタイプを設定
-	void CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3 velocity);
+	// クリエイト関数
+	static CEffectExplosion *Create(
+		LPDIRECT3DDEVICE9 *pDevice,
+		D3DXVECTOR3 pos);
 
 	// 非公開メンバ
 private:
 
-	// デバイス
-	LPDIRECT3DDEVICE9 *m_pDevice;
 };
 
-#endif
-//----EOF----
+#endif // __EXPLOSION_H__

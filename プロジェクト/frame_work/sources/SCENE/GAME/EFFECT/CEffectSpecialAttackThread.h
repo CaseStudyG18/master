@@ -1,46 +1,49 @@
 //=============================================================================
 //
-// CEffectクラス [CEffect.h]
-// Author : 塚本　俊彦
+//	攻撃特化状態の糸攻撃エフェクト
+//
+//	Author : 佐藤　諒一
 //
 //=============================================================================
-#ifndef _CEFFECTBASE_H_
-#define _CEFFECTBASE_H_
+#ifndef __CEFFECT_SPECIAL_ATTACK_THREAD_H__
+#define __CEFFECT_SPECIAL_ATTACK_THREAD_H__
 
 //=============================================================================
 // インクルード
 //=============================================================================
 #include "../../../MAIN/main.h"
-#include "../../CSCENE/CScene2D.h"
+#include "../../GAME/EFFECT/CEffectBase.h"
 
 //=============================================================================
 // 定数
 //=============================================================================
 
+//=============================================================================
+//	前方宣言
+//=============================================================================
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CEffectBase : public CScene2D
+class CEffectSpecialAttackThread : public CEffectBase
 {
 	// 公開メンバ
 public:
+	CEffectSpecialAttackThread(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT);
+	~CEffectSpecialAttackThread(void);
 
-	CEffectBase(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT);
-	virtual ~CEffectBase(void);
-
-	void Init(void);
+	void Init(D3DXVECTOR3 pos , D3DXVECTOR3 velocity);
 	void Uninit(void);
 	void Update(void);
 
+	// クリエイト関数
+	static CEffectSpecialAttackThread *Create(
+		LPDIRECT3DDEVICE9 *pDevice,
+		D3DXVECTOR3 pos,
+		D3DXVECTOR3 velocity);
 
 	// 非公開メンバ
-protected:
-	D3DXVECTOR3 m_vPos;
-	D3DXVECTOR3 m_vVelocity;
-	int m_nCount;
-	int m_nCountMax;
-
+private:
 };
 
-#endif
-//----EOF----
+#endif // __EXPLOSION_H__
