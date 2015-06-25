@@ -19,7 +19,7 @@ static const int FFIR_CHUNK_DATA_SIZE = 4;							// エラー時のチャンクデータサイ
 // 各音素材のパラメータ
 static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 {
-	{"data/BGM/OP.wav", true},		// BGM0
+	{"data/BGM/bgm01.wav", true},		// BGM0
 	{"data/SE/SE000.wav", false},	// 決定音
 };
 

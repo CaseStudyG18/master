@@ -26,6 +26,11 @@ static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
 // 宝物アイコンの表示位置
 static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
 
+// 1フレーム当たりのMP消費量
+static const float MP_COST = 0.5f;
+// 1フレーム当たりのMP回復量
+static const float MP_REGAIN = 3.0f;
+
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -460,7 +465,7 @@ void CPlayer::Update(void)
 		// デフォルトMPまで回復させる
 		if (m_fMP < PLAYER_DEFAULT_MP)
 		{
-			m_fMP += 0.5f;
+			m_fMP += MP_REGAIN;
 
 			// 押し戻し処理追加
 			if (m_fMP > PLAYER_DEFAULT_MP){
@@ -711,8 +716,7 @@ void CPlayer::MetamorphoseAnimation(void)
 void CPlayer::MPReduce(void)
 {
 	// MPを減らしていく
-	// 数値は仮
-	m_fMP -= 1.5f;
+	m_fMP -= MP_COST;
 }
 
 //-----------------------------------------------------------------------------
