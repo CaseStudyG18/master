@@ -16,7 +16,6 @@
 static const char *TEXTURE_PATH[TEXTURE_MAX] =
 {
 	NULL,
-	"data/TEXTURE/witch3.tga",
 	"data/TEXTURE/bg_0.png",
 	"data/TEXTURE/bg_1.png",
 	"data/TEXTURE/fire0.png",
@@ -24,14 +23,12 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/thread.png",
 	"data/TEXTURE/Player.png",
 	"data/TEXTURE/figure.png",
-	"data/TEXTURE/goal.png",
 	"data/TEXTURE/treasure.png",
 	"data/TEXTURE/treasure_icon.png",
 	"data/TEXTURE/bg_title.png",
 	"data/TEXTURE/bg_result.png",
 	"data/TEXTURE/WinLogo.png",
 	"data/TEXTURE/DrawLogo.png",
-	"data/TEXTURE/test.jpg",
 	"data/TEXTURE/02.png",
 	"data/TEXTURE/03.png",
 	"data/TEXTURE/Spawn.png",
