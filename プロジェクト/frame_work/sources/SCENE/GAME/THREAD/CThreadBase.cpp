@@ -63,11 +63,6 @@ void CThreadBase::Update(void)
 {
 	m_nCount++;
 
-	// 寿命？
-	if (m_nCount > m_nEndTime){
-	//	Uninit();
-	}
-
 	// 当たり判定フラグ更新
 	if (m_nCount > m_nHitStartTime){
 		m_bHitFlg = true;

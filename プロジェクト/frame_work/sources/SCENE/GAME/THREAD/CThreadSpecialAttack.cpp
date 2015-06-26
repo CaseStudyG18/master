@@ -15,15 +15,15 @@
 // マクロ
 //*****************************************************************************
 // 寿命
-const short THREAD_ATTACK_END_TIME = 180;
+static const short THREAD_ATTACK_END_TIME = 180;
 // 当たり判定の始まる時間
-const short THREAD_ATTACK_HIT_START_TIME = 60;
+static const short THREAD_ATTACK_HIT_START_TIME = 60;
 // 当たり判定の終わる時間
-const short THREAD_ATTACK_HIT_END_TIME = 170;
+static const short THREAD_ATTACK_HIT_END_TIME = 170;
 
 // 当たり判 定幅,高さ
-const float THREAD_ATTACK_HIT_WIDTH = 50;
-const float THREAD_ATTACK_HIT_HEIGHT = 50;
+static const float THREAD_ATTACK_HIT_WIDTH = 50;
+static const float THREAD_ATTACK_HIT_HEIGHT = 50;
 
 // プレイヤと攻撃エフェクトの距離
 static const short THREAD_ATTACK_RANGE = 50;

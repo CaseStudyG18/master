@@ -139,7 +139,7 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pBackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
 
 	// ‰¹Ä¶
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 
 	// ƒWƒƒƒbƒWì¬
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);

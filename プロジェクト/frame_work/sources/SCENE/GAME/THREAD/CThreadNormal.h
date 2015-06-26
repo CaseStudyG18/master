@@ -28,7 +28,11 @@ class CThreadNormal : public CThreadBase
 	// 公開メンバ
 public:
 	// プライオリティとオブジェタイプはテスト
-	CThreadNormal(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_ATTACK, OBJTYPE type = OBJTYPE_THREAD);
+	CThreadNormal(
+		LPDIRECT3DDEVICE9 *pDevice,
+		int priority = TYPE_PRIORITY_ATTACK,
+		OBJTYPE type = OBJTYPE_THREAD);
+
 	~CThreadNormal(void);
 
 	HRESULT Init(void);
