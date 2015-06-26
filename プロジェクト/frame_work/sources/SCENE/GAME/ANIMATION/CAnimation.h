@@ -3,6 +3,8 @@
 // アニメーションクラス [CAnimation.h]
 // Author : 塚本　俊彦
 //
+// 数字のカウントダウンに使ってる。
+//
 //=============================================================================
 #ifndef _CANIMATION_H_
 #define _CANIMATION_H_
@@ -67,9 +69,14 @@ public:
 	// 落ないセット
 	void SetNonFall(D3DXVECTOR3 pos);
 	// フェードアウトセット
-	void SetFadeOut(float fFadeSpeed);
+	void SetFadeOut(float alpha, float fFadeSpeed);
 	// フェードアウトしないセット
 	void SetNonFadeOut();
+	// フェードインセット
+	void SetFadeIn(float alpha, float fFadeSpeed);
+	// フェードインしないセット
+	void SetNonFadeIn();
+
 
 	//======================================================
 	// クリエイト関数
@@ -98,11 +105,13 @@ protected:
 	int					m_nMaxIdx;				// idxの最大値
 	bool				m_bDraw;				// 描画するか
 
-	// 追加 06/01 塚本
+	// 落ちるアニメ―ション　デフォルトOFF
 	bool				m_bFall;				// 落下るフラグ
 	float				m_fGravity;				// 重力
 	float				m_fFloor;				// 落ちる時の床の位置
-	bool				m_bFadeOut;				// フェードするフラグ
+	// フェードアニメ―ション　デフォルトOFF
+	bool				m_bFadeOut;				// フェードアウトするフラグ
+	bool				m_bFadeIn;				// フェードインするフラグ
 	float				m_fAlpha;				// 2Dのアルファ値
 	float				m_fFadeSpeed;			// フェードするスピード
 };

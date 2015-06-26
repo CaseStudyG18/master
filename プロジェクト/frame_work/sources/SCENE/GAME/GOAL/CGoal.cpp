@@ -67,41 +67,53 @@ void CGoal::Uninit(void)
 void CGoal::Update(void)
 {
 	// 到着したとき
-	if(m_State == GOAL_STATE_ARRIVE){
+	if (m_State == GOAL_STATE_ARRIVE){
 		// 初期処理
 		m_nCount = 0;
 
 		// 転送一段階目にする
 		m_State = GOAL_STATE_TRANS_FIRST;
-
-		CDebugProc::Print("GOAL_STATE_ARRIVE\n");
 	}
 	else if (m_State == GOAL_STATE_TRANS_FIRST){
 		m_nCount++;
 		if (m_nCount == TRANSE_INTERVAL_FIRST){
 			m_State = GOAL_STATE_TRANS_SECOND;
 		}
-		CDebugProc::Print("GOAL_STATE_FIRST\n");
 	}
 	else if (m_State == GOAL_STATE_TRANS_SECOND){
 		m_nCount++;
 		if (m_nCount == TRANSE_INTERVAL_SECOND){
 			m_State = GOAL_STATE_TRANS_THIRD;
 		}
-		CDebugProc::Print("GOAL_STATE_SECOND\n");
 	}
 	else if (m_State == GOAL_STATE_TRANS_THIRD){
 		m_nCount++;
 		if (m_nCount == TRANSE_INTERVAL_THIRD){
 			m_State = GOAL_STATE_TRANSED;
 		}
+	}
+	else if (m_State == GOAL_STATE_TRANSED){
+		// ゲーム終了
+		m_pGame->SetGameOver();
+	}
+
+#ifdef _DEBUG
+	if (m_State == GOAL_STATE_ARRIVE){
+		CDebugProc::Print("GOAL_STATE_ARRIVE\n");
+	}
+	else if (m_State == GOAL_STATE_TRANS_FIRST){
+		CDebugProc::Print("GOAL_STATE_FIRST\n");
+	}
+	else if (m_State == GOAL_STATE_TRANS_SECOND){
+		CDebugProc::Print("GOAL_STATE_SECOND\n");
+	}
+	else if (m_State == GOAL_STATE_TRANS_THIRD){
 		CDebugProc::Print("GOAL_STATE_THIRD\n");
 	}
 	else if (m_State == GOAL_STATE_TRANSED){
 		CDebugProc::Print("GOAL_STATE_TRANSED\n");
-		// ゲーム終了
-		m_pGame->SetGameOver();
 	}
+#endif
 }
 
 //*****************************************************************************
@@ -113,7 +125,7 @@ CGoal* CGoal::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, short nPlayerN
 	CGoal* p = new CGoal(pDevice);
 
 	// プレイヤーの色に合わせたゴールの丸のテクスチャ
-	TEXTURE_TYPE tex  = TEXTURE_NULL;
+	TEXTURE_TYPE tex = TEXTURE_NULL;
 	if (nPlayerNum == 0){
 		tex = TEXTURE_SPAWN_YELLOW;
 	}
@@ -146,6 +158,7 @@ void CGoal::SetTrans(){
 	else{
 		// ゴールに着いた
 		m_State = GOAL_STATE_ARRIVE;
+		m_pGame->SetWinPlayer(m_nPlayerNum);
 		m_bTransFlg = true;
 	}
 }

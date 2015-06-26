@@ -135,6 +135,7 @@
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasureManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\UI\CCountDown.cpp" />
     <ClCompile Include="sources\SCENE\GAME\UI\CMp.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\UI\CWinDraw.cpp" />
     <ClCompile Include="sources\SCENE\OPTION\COption.cpp" />
     <ClCompile Include="sources\SCENE\PAUSE\CPause.cpp" />
     <ClCompile Include="sources\SCENE\RESULT\CResult.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasureManager.h" />
     <ClInclude Include="sources\SCENE\GAME\UI\CCountDown.h" />
     <ClInclude Include="sources\SCENE\GAME\UI\CMp.h" />
+    <ClInclude Include="sources\SCENE\GAME\UI\CWinDraw.h" />
     <ClInclude Include="sources\SCENE\OPTION\COption.h" />
     <ClInclude Include="sources\SCENE\PAUSE\CPause.h" />
     <ClInclude Include="sources\SCENE\RESULT\CResult.h" />

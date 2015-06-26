@@ -72,6 +72,8 @@ void CJudgeManager::Update(void)
 
 	// °‚ÆŽ…‚Æ‚Ì‚ ‚½‚è”»’è
 	m_pJudge->ColiFieldxThreadOfFoothold();
+
+	m_pJudge->ColiGoalxPlayer();
 }
 
 //=========================================================================

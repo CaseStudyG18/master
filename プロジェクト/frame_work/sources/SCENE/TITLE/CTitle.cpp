@@ -42,13 +42,15 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade = new CFade(pDevice);
 	m_pFade->Init(DEFFAULT_FADE_POS, DEFFAULT_FADE_WIDTH, DEFFAULT_FADE_HEIGHT, TEXTURE_NULL);
 
-	m_p2D = m_p2D->Create(m_pD3DDevice, D3DXVECTOR3(0,0,0), 100, 100, TEXTURE_WITCH);
+	m_p2D = m_p2D->Create(m_pD3DDevice, 
+		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
+		SCREEN_WIDTH, SCREEN_HEIGHT, TEXTURE_BG_TITLE);
 
 	// フェードイン開始
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ＢＧＭ再生
-	//CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************

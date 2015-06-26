@@ -25,6 +25,7 @@ CAnimation::CAnimation(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objTyp
 	m_bDraw = true;
 	m_bFall = false;
 	m_bFadeOut = false;
+	m_bFadeIn = false;
 	m_fGravity = 0;
 	m_fFloor = 0;
 	m_fAlpha = 1.0f;
@@ -89,6 +90,13 @@ void CAnimation ::Update(void)
 		m_fAlpha -= m_fFadeSpeed;
 		if (m_fAlpha < 0.0f){
 			m_fAlpha = 0.0f;
+		}
+		SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
+	}
+	if (m_bFadeIn){
+		m_fAlpha += m_fFadeSpeed;
+		if (m_fAlpha > 1.0f){
+			m_fAlpha = 1.0f;
 		}
 		SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
 	}
@@ -206,10 +214,10 @@ void CAnimation::SetNonFall(D3DXVECTOR3 pos){
 //=============================================================================
 // フェードアウトセット
 //=============================================================================
-void CAnimation::SetFadeOut(float fFadeSpeed){
+void CAnimation::SetFadeOut(float alpha, float fFadeSpeed){
 
 	m_bFadeOut = true;
-	m_fAlpha = 1.0f;
+	m_fAlpha = alpha;
 	m_fFadeSpeed = fFadeSpeed;
 	SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
 }
@@ -221,6 +229,27 @@ void CAnimation::SetNonFadeOut(){
 
 	m_bFadeOut = false;
 	m_fAlpha = 1.0f;
+	m_fFadeSpeed = 0.0f;
+	SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
+}
+//=============================================================================
+// フェードインセット
+//=============================================================================
+void CAnimation::SetFadeIn(float alpha, float fFadeSpeed){
+
+	m_bFadeIn = true;
+	m_fAlpha = alpha;
+	m_fFadeSpeed = fFadeSpeed;
+	SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
+}
+
+//=============================================================================
+// フェードインしないセット
+//=============================================================================
+void CAnimation::SetNonFadeIn(){
+
+	m_bFadeIn = false;
+	m_fAlpha = 0.0f;
 	m_fFadeSpeed = 0.0f;
 	SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
 }

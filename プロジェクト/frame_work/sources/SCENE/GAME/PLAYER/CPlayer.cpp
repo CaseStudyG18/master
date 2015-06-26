@@ -242,7 +242,7 @@ void CPlayer::Update(void)
 		/*WSADキーでそれぞれ上下左右への移動						*/
 		/*アクションの状態を全て歩行状態に変える					*/
 		/*----------------------------------------------------------*/
-		if (m_sNumber == 0)
+		//if (m_sNumber == 0)
 		{
 			// Wで画面上方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_W) ||
@@ -408,55 +408,14 @@ void CPlayer::Update(void)
 				FallTreasure();
 			}
 		}
-		/*----------------------------------------------------------*/
-		/*２体目の敵の動き											*/
-		/*----------------------------------------------------------*/
-		else if (m_sNumber == 1)
-		{
-			// Iで画面上方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_I))
-			{
-				m_fMoveSpeedY = -5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_UP);
-			}
-			// Kで画面下方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_K))
-			{
-				m_fMoveSpeedY = 5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_DOWN);
-			}
-			// Jで画面左方向への移動
-			if (CInputKeyboard::GetKeyboardPress(DIK_J))
-			{
-				m_fMoveSpeedX = -5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_LEFT);
-			}
-			// Lで画面右方向への移動
-			else if (CInputKeyboard::GetKeyboardPress(DIK_L))
-			{
-				m_fMoveSpeedX = 5.0f;
-				m_Action = PLAYER_ACTION_WALK;
-				SetFace(PLAYER_DIRECTION_RIGHT);
-			}
-
-			/*----------------------------------------------------------*/
-			/*0キーでプレイヤーの攻撃									*/
-			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_0))
-			{
-				// アクションの状態を攻撃に変える
-				m_Action = PLAYER_ACTION_ATTACK;
-			}
+		
 		}
 
 
 		/*----------------------------------------------------------*/
 		/*ここまでのものを最終的にはコントローラーで操作			*/
 		/*----------------------------------------------------------*/
-	}
+	//}
 
 	// 無敵状態での処理
 	if (m_bMatchless)
@@ -983,7 +942,6 @@ void CPlayer::FallTreasure(){
 		// ポインタ削除
 		m_pTreasure = NULL;
 	}
-
 }
 
 

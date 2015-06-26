@@ -98,7 +98,7 @@ void CCountDown::Update(void){
 			m_pFigure->SetFall(COUNTDOWN_FIGURE_APPEAR_POS, COUNTDOWN_FIGURE_FALL_POSY);
 		}
 		if (m_nCount == TIME[i] + TIME_START_TO_FADE){
-			m_pFigure->SetFadeOut(COUNTDOWN_FIGURE_FADE_SPEED);
+			m_pFigure->SetFadeOut(1.0f, COUNTDOWN_FIGURE_FADE_SPEED);
 			
 			if (i == 0){
 				*m_bPlayerControl = true;

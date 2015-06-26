@@ -22,6 +22,7 @@
 #include "UI\CCountDown.h"
 #include "../../BACKGROUND/CBackGroundManager.h"
 #include "EFFECT\CEffectManager.h"
+#include "UI\CWinDraw.h"
 
 //*****************************************************************************
 // マクロ
@@ -45,7 +46,7 @@ static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 };
 
 // プレイヤ人数
-static const short MANUAL_PLAYER_NUM = 2;
+static const short MANUAL_PLAYER_NUM = 4;
 static const short CPU_PLAYER_NUM = 0;
 
 // 背景のスクロールの速さ
@@ -69,6 +70,8 @@ CGame::CGame(void)
 	m_pJudgeManager = NULL;
 	m_pFieldManager = NULL;
 	m_pCountDown = NULL;
+
+	m_nResultCount = 0;
 
 	// プレイヤ操作可能フラグ
 	m_bPlayerControl = false;
@@ -139,7 +142,7 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pBackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
 
 	// 音再生
-//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 
 	// ジャッジ作成
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
@@ -154,6 +157,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// エフェクトマネージャー
 	m_pEffectManager = new CEffectManager(m_pD3DDevice);
 	m_pEffectManager->Init();
+
+	// 勝ち引き分けを表示するマネージャ
+	m_pWinDrawLogo = new CWinDraw(m_pD3DDevice);
+	m_pWinDrawLogo->Init();
 }
 
 //*****************************************************************************
@@ -161,6 +168,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
+	if (m_pWinDrawLogo){
+		m_pWinDrawLogo->Uninit();
+		SAFE_DELETE(m_pWinDrawLogo);
+	}
 	if (m_pEffectManager){
 		m_pEffectManager->Uninit();
 		SAFE_DELETE(m_pEffectManager);
@@ -220,6 +231,11 @@ void CGame::Update(void)
 	// 背景の更新
 	m_pBackGroundManager->Update();
 
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_G))
+	{
+		m_pWinDrawLogo->CreateWinLogo();
+	}
+
 	// Ｐが押されたら
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_P))
 	{
@@ -253,7 +269,7 @@ void CGame::Update(void)
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
 			m_pEffectManager->CreateEffect(D3DXVECTOR3(300, 200, 0), EFFECT_ATTACK_HIT);
 		}
-	
+
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 		{
 			// フェードアウト開始
@@ -267,10 +283,6 @@ void CGame::Update(void)
 		if (m_bGameOver)
 		{
 			Result();
-
-			// フェードアウト開始
-//			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-//			m_pManager->SetNextPhase(MODE_PHASE_TITLE);
 		}
 	}
 
@@ -289,10 +301,6 @@ void CGame::Update(void)
 	{
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-	}
-	//debug
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
-		SetDraw();
 	}
 }
 
@@ -321,6 +329,8 @@ void CGame::SetWinPlayer(short num){
 
 	m_bGameOver = true;
 
+	m_pWinDrawLogo->CreateWinLogo();
+
 }
 //*****************************************************************************
 // 引き分けにする 一回だけ呼ばれる
@@ -330,8 +340,7 @@ void CGame::SetDraw(){
 	m_bGameOver = true;
 
 	// ロゴの表示
-//	m_pLogoDraw = new CLogoDraw(m_pD3DDevice);
-//	m_pLogoDraw->Init();
+	m_pWinDrawLogo->CreateDrawLogo();
 }
 
 //*****************************************************************************
@@ -342,12 +351,20 @@ void CGame::Result(){
 	// 引き分け
 	if (m_nWinPlayerNum == -1){
 		// ＤＲＡＷロゴの更新（アニメーション）
+#ifdef _DEBUG
 		CDebugProc::Print("●引き分けシーン\n");
+#endif
+	}
+	m_nResultCount++;
+
+	if (m_nResultCount > 180){
+		// フェードアウト開始
+		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+		m_pManager->SetNextPhase(MODE_PHASE_RESULT);
 	}
 
-
-//	if (m_pLogoDraw)
-//		m_pLogoDraw->Update();
+	//	if (m_pLogoDraw)
+	//		m_pLogoDraw->Update();
 
 }
 //----EOF-------

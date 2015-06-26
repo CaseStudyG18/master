@@ -30,6 +30,7 @@ class CFieldManager;
 class CBackGroundManager;
 class CCountDown;
 class CEffectManager;
+class CWinDraw;
 
 //*****************************************************************************
 // クラス定義
@@ -106,12 +107,17 @@ private:
 	CEffectManager *m_pEffectManager;
 	// カウントダウン
 	CCountDown* m_pCountDown;
+	// 勝ち引き分けロゴ
+	CWinDraw *m_pWinDrawLogo;
+
 	// ゲーム開始フラグ(プレイヤを操作できるフラグ)
 	bool m_bPlayerControl;
 	// ゲームクリアフラグ
 	bool m_bGameOver;
 	// 勝ったプレイヤー番号
 	short m_nWinPlayerNum;
+
+	int m_nResultCount;
 };
 
 #endif

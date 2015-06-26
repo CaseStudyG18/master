@@ -9,7 +9,7 @@
 //*****************************************************************************
 #include "CResult.h"
 #include "../../MANAGER/CManager.h"
-#include "../../SCENE/CSCENE/CSceneAnime.h"
+#include "../../SCENE/CSCENE/CScene2D.h"
 
 
 //*****************************************************************************
@@ -49,21 +49,11 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// BGMçƒê∂
 	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 
-	int num = 0;
-	const TEXTURE_TYPE *tex = {};
-	const int kFireMax = 8;
+	m_pSprite = CScene2D::Create(
+		pDevice,
+		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
+		SCREEN_WIDTH, SCREEN_HEIGHT, TEXTURE_BG_RESULT);
 
-	for (int n = 0; n < kFireMax; n++){
-		num = rand() % 10;
-		for (int i = 0; i < num; i++){
-			D3DXVECTOR3 pos = D3DXVECTOR3(float(rand() % 400), float(rand() % 400), 0);
-			float size = 50 + float(rand() % 200);
-			CSceneAnime::Create(pDevice, pos, size, size, TEXTURE_FIRE_0, 10, 1, 1, -1);
-		}
-	}
-
-//	m_Fire = NULL;
-//	m_Fire = CSceneAnime::Create(pDevice, D3DXVECTOR3(200, 100, 0), 200, 300, TEXTURE_FIRE_0, 10, 1, 1, -1);
 }
 
 
@@ -75,7 +65,6 @@ void CResult::Uninit(void)
 	CManager::StopSound();
 	CPhase::Uninit();
 
-//	m_Fire->Release();
 }
 
 //*****************************************************************************

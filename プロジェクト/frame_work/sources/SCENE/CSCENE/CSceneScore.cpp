@@ -21,7 +21,7 @@ CNumber*			CSceneScore:: m_Number[MAX_SCORE_NUM] = {NULL};
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CSceneScore ::CSceneScore(LPDIRECT3DDEVICE9 *pDevice):CScene2D(pDevice)
+CSceneScore::CSceneScore(LPDIRECT3DDEVICE9 *pDevice, int nPriority) :CScene2D(pDevice, nPriority)
 {
 	m_pD3DDevice = pDevice;
 }

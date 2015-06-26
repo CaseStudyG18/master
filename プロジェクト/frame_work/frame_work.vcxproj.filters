@@ -289,6 +289,9 @@
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp">
       <Filter>SCENE\EFFECT</Filter>
     </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\UI\CWinDraw.cpp">
+      <Filter>SCENE\GAME\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\MAIN\main.h">
@@ -479,6 +482,9 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.h">
       <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\UI\CWinDraw.h">
+      <Filter>SCENE\GAME\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
