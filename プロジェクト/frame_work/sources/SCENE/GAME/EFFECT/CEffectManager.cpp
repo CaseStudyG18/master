@@ -10,6 +10,10 @@
 #include <Windows.h>
 #include "CEffectManager.h"
 #include "CEffectAttackHit.h"
+#include "CEffectExplosion.h"
+#include "CEffectSpecialAttack.h"
+#include "CEffectSpecialSpeedAttack.h"
+#include "CEffectSpecialAttackThread.h"
 
 //*****************************************************************************
 // マクロ
@@ -60,14 +64,32 @@ void CEffectManager::Update(void)
 //*****************************************************************************
 // エフェクト生成
 //*****************************************************************************
-void CEffectManager::CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type)
+void CEffectManager::CreateEffect(EFFECT_TYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 {
-	if (type == EFFECT_ATTACK_HIT){
+	switch (type)
+	{
+		// 攻撃がヒットした時のエフェクト
+	case EFFECT_ATTACK_HIT:
 		CEffectAttackHit::Create(m_pDevice, pos);
+		break;
+		// 爆発エフェクト
+	case EFFECT_EXPLOSION:
+		CEffectExplosion::Create(m_pDevice, pos);
+		break;
+		// 攻撃形態時の攻撃
+	case EFFECT_SPECIAL_ATTACK_ATTACK:
+		CEffectSpecialAttack::Create(m_pDevice, pos, velocity);
+		break;
+		// 移動形態時の攻撃
+	case EFFECT_SPECIAL_ATTACK_SPEED:
+		CEffectSpecialSpeedAttack::Create(m_pDevice, pos, velocity);
+		break;
+		// 攻撃形態時の糸攻撃
+	case EFFECT_SPECIAL_THREAD_ATTACK:
+		CEffectSpecialAttackThread::Create(m_pDevice, pos, velocity);
+		break;
+	default:
+		break;
 	}
-	else if (type == EFFECT_ATTACK_HIT){
-
-	}
-
 }
 //----EOF-------

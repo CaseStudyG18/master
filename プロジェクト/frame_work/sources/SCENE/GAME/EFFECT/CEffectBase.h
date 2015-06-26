@@ -36,6 +36,7 @@ public:
 	// ”ñŒöŠJƒƒ“ƒo
 protected:
 	D3DXVECTOR3 m_vPos;
+	D3DXVECTOR3 m_vVelocity;
 	int m_nCount;
 	int m_nCountMax;
 

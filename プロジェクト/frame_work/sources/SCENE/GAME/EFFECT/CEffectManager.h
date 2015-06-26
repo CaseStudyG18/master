@@ -19,7 +19,10 @@
 //=============================================================================
 enum EFFECT_TYPE{
 	EFFECT_ATTACK_HIT = 0,
-
+	EFFECT_EXPLOSION,
+	EFFECT_SPECIAL_ATTACK_ATTACK,
+	EFFECT_SPECIAL_ATTACK_SPEED,
+	EFFECT_SPECIAL_THREAD_ATTACK,
 	EFFECT_MAX,
 };
 
@@ -39,7 +42,7 @@ public:
 
 	// エフェクト生成関数
 	// 座標とタイプを設定
-	void CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type);
+	void CreateEffect(EFFECT_TYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 velocity);
 
 	// 非公開メンバ
 private:

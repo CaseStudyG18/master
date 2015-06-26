@@ -52,7 +52,8 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pSprite = CScene2D::Create(
 		pDevice,
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
-		SCREEN_WIDTH, SCREEN_HEIGHT, TEXTURE_BG_RESULT);
+		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
+		TEXTURE_BG_RESULT);
 
 }
 

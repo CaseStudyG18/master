@@ -118,7 +118,11 @@
     <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp" />
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectBase.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.cpp" />
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CField.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CFieldManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoal.cpp" />
@@ -184,7 +188,11 @@
     <ClInclude Include="sources\SCENE\GAME\CTimeManager.h" />
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.h" />
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectBase.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.h" />
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CField.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CFieldManager.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoal.h" />

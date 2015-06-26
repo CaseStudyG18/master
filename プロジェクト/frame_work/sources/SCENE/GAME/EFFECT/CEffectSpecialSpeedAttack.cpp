@@ -1,0 +1,104 @@
+//=============================================================================
+//
+//	移動特化状態の攻撃エフェクト
+//
+//	Author : 佐藤　諒一
+//
+//=============================================================================
+#include "CEffectSpecialSpeedAttack.h"
+
+#include "../../CSCENE/CSceneAnime.h"
+
+// デバッグしてみよう
+#ifdef _DEBUG
+#include "../../../DEBUG_PROC/CDebugProc.h"
+#endif
+
+//*****************************************************************************
+// 定数
+//*****************************************************************************
+static const int SPEED_ATTACK_COUNT_MAX = 100;
+static const float SPEED_ATTACK_WIDTH = 50;
+static const float SPEED_ATTACK_HEIGHT = 50;
+static const TEXTURE_TYPE SPEED_ATTACK_TEXTURE = TEXTURE_FIRE_1;
+static const int SPEED_ATTACK_TEXTURE_X = 10;
+static const int SPEED_ATTACK_TEXTURE_Y = 1;
+static const int SPEED_ATTACK_TEXTURE_LOOP = 100;
+
+//*****************************************************************************
+// コンストラクタ
+//*****************************************************************************
+CEffectSpecialSpeedAttack::CEffectSpecialSpeedAttack(LPDIRECT3DDEVICE9 *pDevice, int nPriority) : CEffectBase(pDevice)
+{
+	m_pD3DDevice = pDevice;
+	m_pAnim = NULL;
+}
+
+//*****************************************************************************
+// デストラクタ
+//*****************************************************************************
+CEffectSpecialSpeedAttack ::~CEffectSpecialSpeedAttack(void)
+{
+
+}
+
+//*****************************************************************************
+// 初期化
+//*****************************************************************************
+void CEffectSpecialSpeedAttack::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
+{
+	m_nCount = 0;
+	m_nCountMax = SPEED_ATTACK_COUNT_MAX;
+	m_vPos = pos;
+	m_vRot.z = 0.0f;
+	m_vVelocity = velocity;
+}
+
+//*****************************************************************************
+// 終了
+//*****************************************************************************
+void CEffectSpecialSpeedAttack::Uninit(void)
+{
+	m_pAnim = NULL;
+}
+
+//*****************************************************************************
+// 更新
+//*****************************************************************************
+void CEffectSpecialSpeedAttack::Update(void)
+{
+	if (m_nCount == 0){
+		m_pAnim = CSceneAnime::Create(
+					m_pD3DDevice,
+					m_vPos,
+					SPEED_ATTACK_WIDTH, SPEED_ATTACK_HEIGHT,
+					SPEED_ATTACK_TEXTURE, SPEED_ATTACK_TEXTURE_X, SPEED_ATTACK_TEXTURE_Y,
+					SPEED_ATTACK_TEXTURE_LOOP);
+	}
+
+	m_vPos += m_vVelocity * 1.0f;
+
+	m_pAnim->SetPos(m_vPos);
+
+	// 自殺の更新
+	CEffectBase::Update();
+
+#ifdef _DEBUG
+	CDebugProc::Print("移動特化状態の攻撃のエフェクトなう\n");
+#endif
+}
+
+//*****************************************************************************
+// クリエイト関数
+//*****************************************************************************
+CEffectSpecialSpeedAttack* CEffectSpecialSpeedAttack::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
+{
+	// 作成
+	CEffectSpecialSpeedAttack* p = new CEffectSpecialSpeedAttack(pDevice);
+
+	p->Init(pos, velocity);
+
+	return p;
+}
+
+//EOF

@@ -265,9 +265,30 @@ void CGame::Update(void)
 			m_pFieldManager->Update();
 		}
 
-		// テストでエフェクトをクリエイト
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
-			m_pEffectManager->CreateEffect(D3DXVECTOR3(300, 200, 0), EFFECT_ATTACK_HIT);
+		// エフェクトのテスト
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_EXPLOSION,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
+		}
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_X)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_SPECIAL_ATTACK_ATTACK,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
+		}
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_C)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_SPECIAL_ATTACK_SPEED,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
+		}
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_V)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_SPECIAL_THREAD_ATTACK,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
 		}
 
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))

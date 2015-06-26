@@ -44,7 +44,8 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 
 	m_p2D = m_p2D->Create(m_pD3DDevice, 
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
-		SCREEN_WIDTH, SCREEN_HEIGHT, TEXTURE_BG_TITLE);
+		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
+		TEXTURE_BG_TITLE);
 
 	// フェードイン開始
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
