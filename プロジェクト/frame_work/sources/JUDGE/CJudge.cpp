@@ -254,10 +254,10 @@ void CJudge::ColiAttackxPlayer(void){
 			continue;
 		}
 		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
-		pos.y += pPlayer[playerCount]->GetHeight();
+		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
 		float rot = pPlayer[playerCount]->GetRot().z;
 		float width = pPlayer[playerCount]->GetWidth();
-		float height = pPlayer[playerCount]->GetHeight();
+		float height = pPlayer[playerCount]->GetHeight() * 0.75f;
 
 		// OBB情報作成
 		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
@@ -354,10 +354,10 @@ void CJudge::ColiThreadxPlayer(void){
 			continue;
 		}
 		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
-		pos.y += pPlayer[playerCount]->GetHeight();
+		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
 		float rot = pPlayer[playerCount]->GetRot().z;
 		float width = pPlayer[playerCount]->GetWidth();
-		float height = pPlayer[playerCount]->GetHeight();
+		float height = pPlayer[playerCount]->GetHeight() * 0.75f;
 
 		// OBB情報作成
 		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
@@ -514,7 +514,7 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 								float lastCheckHeight = lastCheckField->GetJudgeHeight() * 1.5f;
 								// 最後に調べたフィールドのOBB情報作成
 								CreateOBBInfo(&lastCheckOBB, &lastCheckPos, &lastCheckRot, &lastCheckWidth, &lastCheckHeight);
-							
+
 								// 最後に調べた床と今の床が当たってるか
 								if (IsOBB(lastCheckOBB, fieldOBB))
 								{
@@ -645,14 +645,14 @@ void CJudge::ColiTreasurexPlayer(void)
 	}
 
 	// 当たり判定なんとなく見やすいかなと思ってここに分けた
-	if(pTreasure->GetTreasureState() != TREASURE_STATE_OWNED)
+	if (pTreasure->GetTreasureState() != TREASURE_STATE_OWNED)
 		for (int idx = 0; idx < playerNum; ++idx){
-			if (coli[idx]){
-				// プレイヤにお宝を渡す
-				pPlayer[idx]->SetTreasure(pTreasure);
-				pTreasure->SetTreasureState(TREASURE_STATE_OWNED);
-				break;
-			}
+		if (coli[idx]){
+			// プレイヤにお宝を渡す
+			pPlayer[idx]->SetTreasure(pTreasure);
+			pTreasure->SetTreasureState(TREASURE_STATE_OWNED);
+			break;
+		}
 		}
 
 }
@@ -827,7 +827,7 @@ bool CJudge::IsOBB(CJudge::OBB_INFO& rectA, CJudge::OBB_INFO& rectB)
 
 	baseAxis = rectB.axisX;
 
-//	V *= -1.f;
+	//	V *= -1.f;
 
 	A = rectB.lengthX;
 
