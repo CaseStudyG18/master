@@ -17,12 +17,18 @@
 static const D3DXVECTOR3 MP_POS_OFFSET = D3DXVECTOR3(0, -50, 0);
 // MPゲージの半径
 static const float MP_RADIUS = 20.0f;
-// MPゲージの色
-static const D3DCOLOR MP_COLOR = D3DCOLOR(0xbb0011ff);
 // MPが点滅する間隔
 static const short MP_FLASH_INTERVAL = 10;
 // 現在MPが何パーセントで点滅するか
 static const float MP_FLASH_RATIO = 0.3f;
+
+// MPゲージの色　プレイヤ番号に応じて色を変更
+static const D3DCOLOR MP_COLOR[] = {
+	D3DCOLOR(0xbbfbec35),
+	D3DCOLOR(0xbbf92500),
+	D3DCOLOR(0xbb1987e5),
+	D3DCOLOR(0xbb00ff41),
+};
 
 
 //*****************************************************************************
@@ -32,19 +38,10 @@ static const float MP_FLASH_RATIO = 0.3f;
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CMp::CMp(LPDIRECT3DDEVICE9* pDevice, float fMpMax)
+CMp::CMp(LPDIRECT3DDEVICE9* pDevice)
 {
-	m_Color = MP_COLOR;
-	m_fMpMax = fMpMax;
-	m_bLow = false;
-	m_nLowCount = 0;
+	m_pDevice = pDevice;
 
-	m_pCircle = CSceneCircle::Create(
-		pDevice,
-		m_vPos + MP_POS_OFFSET,
-		MP_RADIUS,
-		m_Color,
-		m_fMpMax);
 }
 
 //*****************************************************************************
@@ -57,9 +54,25 @@ CMp ::~CMp(void)
 //*****************************************************************************
 // 初期化
 //*****************************************************************************
-void CMp::Init()
+void CMp::Init(float fMpMax, short playerNum)
 {
+	if (playerNum < 0 || playerNum >= 4){
+		return;
+	}
 
+	// 変数初期化
+	m_bLow = false;
+	m_nLowCount = 0;
+	m_fMpMax = fMpMax;
+	m_Color = MP_COLOR[playerNum];
+	
+	// 円のポリゴン生成
+	m_pCircle = CSceneCircle::Create(
+		m_pDevice,
+		m_vPos + MP_POS_OFFSET,
+		MP_RADIUS,
+		m_Color,
+		m_fMpMax);
 }
 
 //*****************************************************************************

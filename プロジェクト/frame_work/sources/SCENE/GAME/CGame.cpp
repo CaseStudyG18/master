@@ -29,7 +29,7 @@
 //*****************************************************************************
 
 // ゲームの制限時間
-static const short GAME_TIME = 300;
+static const short GAME_TIME = 30;
 
 // 宝物の場所
 static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(647, 315, 0);
@@ -51,6 +51,9 @@ static const short CPU_PLAYER_NUM = 0;
 
 // 背景のスクロールの速さ
 static const float BG_SPEED = 2.0f;
+
+// リザルトロゴを表示してからフェードするまでのカウント数
+static const short RESULT_LOGO_TO_FADE_INTERVAL = 180;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -264,6 +267,10 @@ void CGame::Update(void)
 			m_pJudgeManager->Update();
 			m_pFieldManager->Update();
 		}
+		// 残り時間が0になったらDraw
+		if (m_pTimeManager->GetRemaining() == 0){
+			SetDraw();
+		}
 
 		// エフェクトのテスト
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
@@ -378,7 +385,7 @@ void CGame::Result(){
 	}
 	m_nResultCount++;
 
-	if (m_nResultCount > 180){
+	if (m_nResultCount > RESULT_LOGO_TO_FADE_INTERVAL){
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 		m_pManager->SetNextPhase(MODE_PHASE_RESULT);

@@ -25,10 +25,10 @@ class CSceneCircle;
 class CMp{
 
 public:
-	CMp(LPDIRECT3DDEVICE9* pDevice, float fMpMax);
+	CMp(LPDIRECT3DDEVICE9* pDevice);
 	~CMp(void);
 
-	void Init(void);
+	void Init(float fMpMax, short playerNum);
 	void Uninit(void);
 	// 更新
 	// プレイヤー座標、プレイヤのMPをセットする
@@ -51,6 +51,8 @@ private:
 	bool m_bLow;
 	// 一定状態少ない状態の時のカウント
 	int m_nLowCount;
+	// デバイス
+	LPDIRECT3DDEVICE9 *m_pDevice;
 };
 
 #endif

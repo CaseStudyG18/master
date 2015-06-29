@@ -43,6 +43,7 @@ CTimeManager::CTimeManager(LPDIRECT3DDEVICE9* pDevice, short nGameTime)
 	// ƒ^ƒCƒ}[‰Šú‰»
 	m_nTimeCur = 0;
 	m_TimeLast = 0;
+	m_nGameTimer = 0;
 
 	// ƒQ[ƒ€‚Ì§ŒÀŽžŠÔ
 	m_nGameTime = nGameTime;
@@ -85,10 +86,11 @@ void CTimeManager::Update(void)
 	m_nTimeCur = timeGetTime();
 	timeEndPeriod(1);
 
-	// ˆê•bŒo‰ßˆ—
+	// ‚P•bŒo‰ßˆ— 1000ƒ~•b = 1•b
 	if (m_nTimeCur - m_TimeLast > 1000){
 		m_TimeLast = m_nTimeCur;
 		m_pTimeNumber->Add(-1);
+		m_nGameTimer++;
 	}
 }
 

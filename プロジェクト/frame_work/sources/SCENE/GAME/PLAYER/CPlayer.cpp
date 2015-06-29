@@ -64,10 +64,6 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_nTextureIndex = 0;									// プレイヤの最初のインデックス
 	m_nTextureCount = 0;									// テクスチャを変更するためのカウント
 
-	// MP作る
-	m_pMp = new CMp(pDevice, PLAYER_DEFAULT_MP);
-	m_pMp->Init();
-
 	m_sAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
 	m_sKnockBackTime = 0;									// ノックバック時間
 	m_sDownTime = 0;										// ダウン時間
@@ -172,6 +168,10 @@ void CPlayer::Init(D3DXVECTOR3 pos,
 
 	// プレイヤがコントロールできるかフラグ
 	m_bPlayerControl = bPlayerControl;
+
+	// MP作る
+	m_pMp = new CMp(m_pD3DDevice);
+	m_pMp->Init(PLAYER_DEFAULT_MP, m_sNumber);
 }
 
 //-----------------------------------------------------------------------------
