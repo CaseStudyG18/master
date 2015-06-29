@@ -72,6 +72,9 @@ private:
 	//=======================================================================
 	HRESULT Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock = 1, int hblock = 1);
 
+	// 当たり判定ステータスセット関数
+	void SetJudgeParam(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
+
 	D3DXVECTOR3 m_vDefaultPos;
 	D3DXVECTOR3 m_vDestPos;
 protected:

@@ -80,10 +80,9 @@ HRESULT CField::Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE te
 {
 	CScene2D::Init(pos, width, height, texType);
 
-	m_fJudgeWidth = width * 0.8f;
-	m_fJudgeHeight = height * 0.5f;
-	m_vJudgePos = pos;
-	m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+	// 当たり判定ステータスセット
+	SetJudgeParam(pos, width, height, texType);
+	
 	m_vDestPos = m_vDefaultPos = pos;
 
 	return TRUE;
@@ -104,4 +103,42 @@ void CField::Ride(bool ride)
 	}
 }
 
+//=======================================================================
+// 当たり判定ステータスセット関数
+//=======================================================================
+void CField::SetJudgeParam(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType)
+{
+	switch (texType)
+	{
+		// 浮島
+	case TEXTURE_FIELD_01:
+		m_fJudgeWidth = width * 0.8f;
+		m_fJudgeHeight = height * 0.5f;
+		m_vJudgePos = pos;
+		m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+		break;
+
+		// 宝置くやつ
+	case TEXTURE_FIELD_02:
+		m_fJudgeWidth = width * 0.8f;
+		m_fJudgeHeight = height * 0.5f;
+		m_vJudgePos = pos;
+		m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+		break;
+
+		// スタート兼ゴール
+	case TEXTURE_FIELD_03:
+		m_fJudgeWidth = width * 0.9f;
+		m_fJudgeHeight = height * 0.75f;
+		m_vJudgePos = pos;
+		m_vJudgePos.y -= m_fJudgeHeight * 0.2f;
+		break;
+
+	default:
+		m_fJudgeWidth = width;
+		m_fJudgeHeight = height;
+		m_vJudgePos = pos;
+		break;
+	}
+}
 //----EOF----
