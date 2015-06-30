@@ -284,6 +284,12 @@ void CManager ::Draw(void)
 		return;
 	}
 
+	// フェーズ切り替え
+	if (m_CurPhase != m_NextPhase)
+	{
+		ChangePhase();
+	}
+
 	// ポーズ中じゃなければ
 	if(CPause::GetPauseFlag() == false)
 	{
@@ -295,13 +301,6 @@ void CManager ::Draw(void)
 		// ポーズとフェードのみ描画
 		m_pRenderer->Draw(TYPE_PRIORITY_PAUSE, TYPE_PRIORITY_FADE);
 	}
-
-	// フェーズ切り替え
-	if(m_CurPhase != m_NextPhase)
-	{
-		ChangePhase();
-	}
-	
 }
 
 //=============================================================================

@@ -23,6 +23,7 @@
 #include "../SCENE/GAME/THREAD/CThreadSpecialSpeed.h"
 #include "../SCENE/GAME/GOAL/CGoal.h"
 #include "../SCENE/GAME/GOAL/CGoalManager.h"
+#include "../CONTROLLER/CControllerManager.h"
 
 //=========================================================================
 // コンストラクタ
@@ -226,6 +227,45 @@ void CJudge::ColiFieldxPlayer(void)
 			}
 		}
 		D3DXVECTOR3 setPlayerPos = pPlayer[idx]->GetOldPos();
+		//D3DXVECTOR3 vecPlayer(0.f, 0.f, 0.f);
+		//D3DXVec2Normalize(&vertexSegment.v, &vertexSegment.v);
+		//D3DXVECTOR3 culcVec(fabs(vertexSegment.v.x)
+		//					, fabs(vertexSegment.v.y)
+		//					, 0.f);
+		//if (CInputGamePad::CheckConectPad(idx))
+		//{
+		//	if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_UP, idx))
+		//	{
+		//		vecPlayer = D3DXVECTOR3(-0.5f, -0.5f, 0.f);
+		//	}
+		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_DOWN, idx))
+		//	{
+		//		vecPlayer = D3DXVECTOR3(-0.5f, 0.5f, 0.f);
+		//	}
+		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_UP, idx))
+		//	{
+		//		vecPlayer = D3DXVECTOR3(0.5f, -0.5f, 0.f);
+		//	}
+		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_DOWN, idx))
+		//	{
+		//		vecPlayer = D3DXVECTOR3(0.5f, 0.5f, 0.f);
+		//	}
+		//}
+		//
+		//float ans = vecPlayer.x * culcVec.x;
+		//if (fabs(ans) < 1.0f)
+		//{
+		//	ans = 0.f;
+		//}
+		//setPlayerPos.x += ans * 3.f;
+		//ans = vecPlayer.y * culcVec.y;
+		//if (fabs(ans) < 1.0f)
+		//{
+		//	ans = 0.f;
+		//}
+		//setPlayerPos.y += ans * 3.f;
+		//setPlayerPos.y += vecPlayer.y * culcVec.y;
+
 		pPlayer[idx]->SetPos(setPlayerPos);
 	}
 }

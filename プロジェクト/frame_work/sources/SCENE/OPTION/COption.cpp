@@ -242,7 +242,7 @@ void COption::KeyConfig(void)
 
 			m_setButton = CInputGamePad::PAD_KEY_A;
 			// 繋がってるコントローラー全部セットしたら
-			if (m_nControllerID > CControllerManager::MAX_CONTROLLER_NUM)
+			if (m_nControllerID >= CControllerManager::MAX_CONTROLLER_NUM)
 			{
 				m_mode = OPTION_MODE_NEXT_SCENE;
 			}

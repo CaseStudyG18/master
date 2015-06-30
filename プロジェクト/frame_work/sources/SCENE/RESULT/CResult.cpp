@@ -77,7 +77,7 @@ void CResult::Update(void)
 
 	
 
-	if(CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) || CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0))
 	{
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
