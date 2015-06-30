@@ -36,6 +36,17 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/SpawnRed.png",
 	"data/TEXTURE/SpawnBlue.png",
 	"data/TEXTURE/SpawnGreen.png",
+	"data/TEXTURE/hit_effect_small.png",
+	"data/TEXTURE/hit_effect_big.png",
+	"data/TEXTURE/attack_around.png",
+	"data/TEXTURE/attack_tackle.png",
+	"data/TEXTURE/slow_effect.png",
+	"data/TEXTURE/trans_effect_yellow.png",
+	"data/TEXTURE/trans_effect_red.png",
+	"data/TEXTURE/trans_effect_blue.png",
+	"data/TEXTURE/trans_effect_green.png",
+	"data/TEXTURE/kirakira.png",
+	"data/TEXTURE/treasure_light.png",
 };
 
 //*****************************************************************************
