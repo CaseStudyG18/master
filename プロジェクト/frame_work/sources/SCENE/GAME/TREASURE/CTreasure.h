@@ -26,6 +26,11 @@ enum TreasureState{
 	TREASURE_STATE_MAX,
 };
 
+//=============================================================================
+// 前方宣言
+//=============================================================================
+class CSceneAnime;
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -69,6 +74,10 @@ public:
 	// 宝箱の状態をセット
 	void SetTreasureState(TreasureState State){ m_TreasureState = State; }
 
+	// 宝物の場所をセット エフェクトとかも一緒にセットする
+	void SetPos(D3DXVECTOR3 pos);
+
+
 	// 非公開メンバ
 private:
 
@@ -78,6 +87,10 @@ private:
 	// お宝の状態
 	TreasureState m_TreasureState;
 	short m_sOwnerPlayer;
+
+	// エフェクト
+	CSceneAnime *m_pKira;
+	CSceneAnime *m_pLight;
 };
 
 #endif
