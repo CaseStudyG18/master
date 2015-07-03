@@ -9,7 +9,6 @@
 //*****************************************************************************
 #include "CTreasure.h"
 
-
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
@@ -39,6 +38,30 @@ static const D3DXVECTOR3 TREASURE_LIGHT_SIZE = D3DXVECTOR3(100, 100, 0);
 static const int TREASURE_LIGHT_TEX_X = 10;
 static const int TREASURE_LIGHT_TEX_Y = 1;
 static const int TREASURE_LIGHT_ANIME_SPEED = 4;
+
+// 宝物がジャンプする時間（プレイヤが落としてから次にキャッチできるまでの時間）
+static const int TREASURE_JUMP_INTERVAL = 60;
+
+// 宝物を落とす距離
+static const float TREASURE_FALL_DIST = 10;
+
+// 宝物を落とす位置のテーブル
+static const int TREASURE_FALL_TABLE_NUM = 8;
+static const D3DXVECTOR3 TREASURE_FALL_VELOCITY[TREASURE_FALL_TABLE_NUM] = {
+	D3DXVECTOR3(TREASURE_FALL_DIST * +0.0f, -6, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +0.5f, -6, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +1.0f, -6, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +0.5f, -6, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +0.0f, -4, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * -0.5f, -4, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * -1.0f, -4, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * -0.5f, -4, 0),
+};
+
+// 移動量の減衰量
+static const float TREASURE_MOVE_RESIST = 0.9f;
+// 重力
+static const float TREASURE_GRAVITY = 0.2f;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -71,6 +94,8 @@ void CTreasure::Init(D3DXVECTOR3 pos)
 		TREASURE_TEXTURE_X, TREASURE_TEXTURE_Y, TREASURE_ANIME_SPEED, -1);
 
 	SetAutoUpdate(true);
+	m_nJumpCount = 0;
+	m_vVelocity = D3DXVECTOR3(0, 0, 0);
 }
 
 //*****************************************************************************
@@ -87,6 +112,31 @@ void CTreasure::Uninit(void)
 void CTreasure::Update(void)
 {
 	CSceneAnime::Update();
+
+	// jumpアニメーション更新
+	if (m_TreasureState == TREASURE_STATE_JUMPING){
+		
+		// jump減衰
+		m_vVelocity.y += TREASURE_GRAVITY;
+		m_vVelocity.x *= TREASURE_MOVE_RESIST;
+			
+		// カウント
+		m_nJumpCount++;
+		if (m_nJumpCount > TREASURE_JUMP_INTERVAL){
+			// 宝状態リセット
+			m_TreasureState = TREASURE_STATE_OWNER_NONE;
+			m_vVelocity = D3DXVECTOR3(0, 0, 0);
+			m_nJumpCount = 0;
+		}
+
+		// 加算
+		m_vPos += m_vVelocity;
+
+		// エフェクトに座標を適用
+		m_pKira->SetPos(m_vPos);
+		m_pLight->SetPos(m_vPos);
+	}
+
 }
 
 //*****************************************************************************
@@ -123,12 +173,9 @@ void CTreasure::Reset(D3DXVECTOR3 pos){
 	CScene2D::SetWidth(TREASURE_WIDTH);
 	CScene2D::SetHeight(TREASURE_HEIGHT);
 	SetAnimeSpeed(TREASURE_ANIME_SPEED);
-	m_TreasureState = TREASURE_STATE_OWNER_NONE;
-	
-	// 落とす処理仮
-	CScene2D::SetPos(pos + D3DXVECTOR3(100, 100, 0));
-	m_pKira->SetPos(pos + D3DXVECTOR3(100, 100, 0));
-	m_pLight->SetPos(pos + D3DXVECTOR3(100, 100, 0));
+
+	// 落とす処理
+	SetFall();
 }
 
 //*****************************************************************************
@@ -157,5 +204,14 @@ void CTreasure::SetPos(D3DXVECTOR3 pos){
 	m_vPos = pos;
 	m_pKira->SetPos(pos);
 	m_pLight->SetPos(pos + D3DXVECTOR3(0, 40, 0));
+}
+
+//*****************************************************************************
+// 宝物を落とす状態にする
+//*****************************************************************************
+void CTreasure::SetFall(){
+	int index = rand() % TREASURE_FALL_TABLE_NUM;
+	m_vVelocity = TREASURE_FALL_VELOCITY[index];
+	m_TreasureState = TREASURE_STATE_JUMPING;
 }
 //----EOF-------

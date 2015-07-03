@@ -628,7 +628,7 @@ void CJudge::ColiTreasurexPlayer(void)
 		playerNum++;
 	}
 
-	// フィールドとの当たり判定ループ
+	// 宝との当たり判定ループ
 	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
 	{
 		// 先頭を指定
@@ -647,13 +647,23 @@ void CJudge::ColiTreasurexPlayer(void)
 				continue;
 			}
 
-			// フィールド情報入れる
+			// 宝の情報入れる
 			pTreasure = (CTreasure*)pScene;
 			D3DXVECTOR2 pos(pTreasure->GetPos().x, pTreasure->GetPos().y);
 			float rot = pTreasure->GetRot().z;
 			float width = pTreasure->GetWidth();
 			float height = pTreasure->GetHeight();
 			CJudge::OBB_INFO treasureOBB;
+
+			// 宝を画面外にださない処理 by 塚本
+			if (pTreasure->GetTreasureState() != TREASURE_STATE_JUMPING){
+				pos.x = max(pos.x, width * 0.5f);
+				pos.x = min(pos.x, SCREEN_WIDTH - width * 0.5f);
+				pos.y = max(pos.y, height * 0.5f);
+				pos.y = min(pos.y, SCREEN_HEIGHT - height * 0.5f);
+				pTreasure->SetPos(D3DXVECTOR3(pos));
+			}
+
 			// OBB情報作成
 			CreateOBBInfo(&treasureOBB, &pos, &rot, &width, &height);
 
@@ -670,9 +680,6 @@ void CJudge::ColiTreasurexPlayer(void)
 				{
 					// ヒットフラグオン
 					coli[idx] = true;
-#ifdef _DEBUG
-					CDebugProc::Print("TREASURE x PLAYER!!\n");
-#endif
 					break;
 				}
 			}
@@ -685,16 +692,17 @@ void CJudge::ColiTreasurexPlayer(void)
 	}
 
 	// 当たり判定なんとなく見やすいかなと思ってここに分けた
-	if (pTreasure->GetTreasureState() != TREASURE_STATE_OWNED)
+	if (pTreasure->GetTreasureState() != TREASURE_STATE_OWNED &&
+		pTreasure->GetTreasureState() != TREASURE_STATE_JUMPING){
 		for (int idx = 0; idx < playerNum; ++idx){
-		if (coli[idx]){
-			// プレイヤにお宝を渡す
-			pPlayer[idx]->SetTreasure(pTreasure);
-			pTreasure->SetTreasureState(TREASURE_STATE_OWNED);
-			break;
+			if (coli[idx]){
+				// プレイヤにお宝を渡す
+				pPlayer[idx]->SetTreasure(pTreasure);
+				pTreasure->SetTreasureState(TREASURE_STATE_OWNED);
+				break;
+			}
 		}
-		}
-
+	}
 }
 
 //=========================================================================
@@ -815,6 +823,116 @@ void CJudge::ColiGoalxPlayer(void)
 		}
 	}
 
+}
+
+//=========================================================================
+// フィールドと宝箱のあたり判定
+//=========================================================================
+void CJudge::ColiFieldxTreasure(void)
+{
+	CScene *pScene;
+	CScene *pSceneNext;
+	CTreasure *pTreasure = NULL;
+	CScene2D *pField = NULL;
+	CJudge::OBB_INFO treasureOBB;
+	bool coli = false;
+
+	// フィールドとの当たり判定ループ
+	for (int priority = 0; priority < TYPE_PRIORITY_MAX; priority++)
+	{
+		// 先頭を指定
+		pScene = CScene::GetTopAddress(priority);
+
+		// ポインタがNULLでなければ
+		while (pScene)
+		{
+			// 現在対象としているインスタンスの次のインスタンスを保存
+			pSceneNext = pScene->GetNextAddress();
+
+			if (pScene->GetObjType() == CScene::OBJTYPE_TREASURE){
+				// 宝OBB情報作成
+				pTreasure = (CTreasure*)pScene;
+				D3DXVECTOR2 pos(pTreasure->GetPos().x, pTreasure->GetPos().y);
+				float rot = pTreasure->GetRot().z;
+				float width = pTreasure->GetWidth();
+				float height = pTreasure->GetHeight();
+				CreateOBBInfo(&treasureOBB, &pos, &rot, &width, &height);
+				// 宝物を見つけたら抜ける
+				break;
+			}
+			// 次のインスタンスを対象のインスタンスにする
+			pScene = pSceneNext;
+		}
+		// このプライオリティで宝を見つけていたら次にすすむ
+		if (pTreasure){
+			break;
+		}
+	}
+	// ここで宝物のインスタンスが取得失敗したらOUT
+	if (!pTreasure){
+		return;
+	}
+	// 宝が地面に落ちているときのみ判定をする
+	if (pTreasure->GetTreasureState() != TREASURE_STATE_OWNER_NONE){
+		return;
+	}
+	// フィールドとの当たり判定ループ
+	for (int priority = 0; priority < TYPE_PRIORITY_THREAD_OF_FOOTHOLD+1; priority++)
+	{
+		// 先頭を指定
+		pScene = CScene::GetTopAddress(priority);
+
+		// ポインタがNULLでなければ
+		while (pScene)
+		{
+			// 現在対象としているインスタンスの次のインスタンスを保存
+			pSceneNext = pScene->GetNextAddress();
+
+			CJudge::OBB_INFO fieldOBB;
+
+			if (pScene->GetObjType() == CScene::OBJTYPE_FIELD){
+				// フィールドOBB情報作成
+				pField = (CScene2D*)pScene;
+				D3DXVECTOR2 pos(pField->GetJudgePos().x, pField->GetJudgePos().y);
+				float rot = pField->GetRot().z;
+				float width = pField->GetJudgeWidth();
+				float height = pField->GetJudgeHeight();
+				CreateOBBInfo(&fieldOBB, &pos, &rot, &width, &height);
+			}
+			else{
+				// 次のインスタンスを対象のインスタンスにする
+				pScene = pSceneNext;
+				continue;
+			}
+
+			// すでにあたってか、宝物が落ちていなかったら判定しない
+			if (coli)
+			{
+				// 次のインスタンスを対象のインスタンスにする
+				pScene = pSceneNext;
+				continue;
+			}
+
+			if (IsOBB(treasureOBB, fieldOBB))
+			{
+				// ヒットフラグオン
+				coli = true;
+			}
+
+			// 次のインスタンスを対象のインスタンスにする
+			pScene = pSceneNext;
+		}
+	}
+
+	// 全フィールドと当たり判定をして当たらなかったら宝をはねさせる
+	if (!coli){
+		pTreasure->SetFall();
+	
+//		pTreasure->SetPos(pTreasure->GetPos() + D3DXVECTOR3(0, 1, 0));
+	}
+
+	// 次のインスタンスを対象のインスタンスにする
+	pScene = pSceneNext;
 }
 
 //=========================================================================

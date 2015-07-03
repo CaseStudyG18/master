@@ -29,7 +29,7 @@
 //*****************************************************************************
 
 // ゲームの制限時間
-static const short GAME_TIME = 30;
+static const short GAME_TIME = 200;
 
 // 宝物の場所
 static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(647, 315, 0);
@@ -145,7 +145,7 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pBackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
 
 	// 音再生
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 
 	// ジャッジ作成
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);

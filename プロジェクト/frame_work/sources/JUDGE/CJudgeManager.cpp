@@ -73,6 +73,9 @@ void CJudgeManager::Update(void)
 	// 床と糸とのあたり判定
 	m_pJudge->ColiFieldxThreadOfFoothold();
 
+	// 床とフィールドの当たり判定
+	m_pJudge->ColiFieldxTreasure();
+
 	m_pJudge->ColiGoalxPlayer();
 }
 

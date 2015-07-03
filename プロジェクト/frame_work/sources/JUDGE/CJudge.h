@@ -59,6 +59,9 @@ public:
 	// ゴールとプレイヤの当たり判定
 	void ColiGoalxPlayer(void);
 
+	// フィールドと宝箱の当たり判定
+	void ColiFieldxTreasure(void);
+
 private:
 	// 線分構造体
 	struct Segment {
