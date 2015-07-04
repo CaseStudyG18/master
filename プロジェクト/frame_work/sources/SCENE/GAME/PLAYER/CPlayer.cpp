@@ -14,24 +14,32 @@
 #include "../TREASURE/CTreasure.h"
 #include "../UI/CMp.h"
 #include "../../../CONTROLLER/CControllerManager.h"
+#include "../../CSCENE/CSceneAnime.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
 // プレイヤーの移動速度(仮)
 static const float PLAYER_SPEED = 8.0f;
-
 // プレイヤーが鈍足状態になった時の係数(仮)
 static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
-
+// 鈍足時間 鈍足効果が一定じゃなく攻撃によって違うなら攻撃側から取得するべき
+static const int PLAYER_SLOW_INTERVAL = 120;
+// 鈍足アイコンの表示位置（プレイヤから相対位置）右向きと左向き用意
+static const D3DXVECTOR3 PLAYER_SLOW_ICON_POS_R = D3DXVECTOR3(-20, -20, 0);
+static const D3DXVECTOR3 PLAYER_SLOW_ICON_POS_L = D3DXVECTOR3(20, -20, 0);
+// 鈍足アイコン2Dについて
+static const float PLAYER_SLOW_ICON_WIDTH = 40;
+static const float PLAYER_SLOW_ICON_HEIGHT = 40;
+static const int PLAYER_SLOW_ICON_TEX_X = 10;
+static const int PLAYER_SLOW_ICON_TEX_Y = 1;
+static const int PLAYER_SLOW_ICON_ANIME_SPEED = 7;
 // 宝物アイコンの表示位置
 static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
-
 // 1フレーム当たりのMP消費量
 static const float MP_COST = 0.5f;
 // 1フレーム当たりのMP回復量
 static const float MP_REGAIN = 3.0f;
-
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -63,7 +71,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_HpState = PLAYER_HP_STATE_NORMAL;						// HPの残り状態
 	m_nTextureIndex = 0;									// プレイヤの最初のインデックス
 	m_nTextureCount = 0;									// テクスチャを変更するためのカウント
-
+	m_nSlowCount = 0;										// 鈍足カウント
 	m_sAnimTime = 0;										// プレイヤー変形時のアニメーションの時間
 	m_sKnockBackTime = 0;									// ノックバック時間
 	m_sDownTime = 0;										// ダウン時間
@@ -77,6 +85,13 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_bSlowSpeed = false;									// 鈍足フラグの初期設定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
+	
+	// 鈍足状態の2D　基本描画なしで、鈍足になったら座標セットして描画
+	m_pSlow2D = CSceneAnime::Create(pDevice,
+		m_vPos, PLAYER_SLOW_ICON_WIDTH, PLAYER_SLOW_ICON_HEIGHT,
+		TEXTURE_SLOW, PLAYER_SLOW_ICON_TEX_X, PLAYER_SLOW_ICON_TEX_Y,
+		PLAYER_SLOW_ICON_ANIME_SPEED, -1);
+	m_pSlow2D->SetDrawFlag(false);
 
 	// シェーダーの初期化
 	LPD3DXBUFFER code;
@@ -198,12 +213,20 @@ void CPlayer::Update(void)
 	if (!(*m_bPlayerControl)){
 		return;
 	}
-
 	// 宝物を持っていたらアイコンの場所更新
 	if (m_pTreasure){
 		m_pTreasure->SetPos(m_vPos + TREASURE_ICON_POS_BUFF);
 	}
-
+	// 鈍足状態だったら描画して座標をセット
+	if (m_bSlowSpeed){
+		if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT ||
+			m_PlayerFacing == PLAYER_DIRECTION_UP)
+			m_pSlow2D->SetPos(m_vPos + PLAYER_SLOW_ICON_POS_R);
+		else
+			m_pSlow2D->SetPos(m_vPos + PLAYER_SLOW_ICON_POS_L);
+		m_pSlow2D->SetDrawFlag(true);
+	}
+	
 	CScene2D::Update();
 
 	// MP更新
@@ -212,6 +235,8 @@ void CPlayer::Update(void)
 	UpdatePlayerAnimation();
 	// 赤く点滅する間隔更新
 	UpdatePlayerRed();
+	// 鈍足状態更新(カウントして鈍足解除とか)
+	UpdateSlow();
 
 	// 移動量を０にする
 	m_fMoveSpeedY = 0.0f;
@@ -511,12 +536,6 @@ void CPlayer::Update(void)
 	default:
 		break;
 	}
-
-	// 現在のMPを表示する
-#ifdef _DEBUG
-	CDebugProc::Print("%dプレイヤー残りMP %f\n", m_sNumber, m_fMP);
-#endif
-
 }
 
 //-----------------------------------------------------------------------------
@@ -1117,4 +1136,21 @@ void CPlayer::UpdatePlayerRed(void){
 		m_nRedCount = 0;
 	}
 }
-// EOF
+
+//-----------------------------------------------------------------------------
+// プレイヤの鈍足状態管理
+//-----------------------------------------------------------------------------
+void CPlayer::UpdateSlow(void){
+	
+	// カウント
+	if (m_bSlowSpeed){
+		m_nSlowCount++;
+		// 鈍足効果の終了
+		if (m_nSlowCount > PLAYER_SLOW_INTERVAL){
+			m_nSlowCount = 0;
+			m_bSlowSpeed = false;
+			m_pSlow2D->SetDrawFlag(false);
+		}
+	}
+}
+	// EOF

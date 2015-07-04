@@ -129,6 +129,7 @@ class CThreadManager;
 class CTreasure;
 class CMp;
 class CEffectManager;
+class CSceneAnime;
 
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
@@ -267,6 +268,9 @@ private:
 	void UpdatePlayerHpState(void);
 	void UpdatePlayerRed(void);
 
+	// プレイヤの鈍足状態管理
+	void UpdateSlow();
+
 	//---------------------------------
 	// 変数
 	//---------------------------------
@@ -297,6 +301,8 @@ private:
 	bool					m_bSpeedAttack;		// 移動形態での攻撃中かどうかのフラグ
 	bool*					m_bPlayerControl;	// プレイヤがコントロールできるかフラグ
 	bool					m_bSlowSpeed;		// 鈍足状態になっているかどうかのフラグ
+	CSceneAnime*			m_pSlow2D;			// 鈍足状態のマーク
+	int						m_nSlowCount;		// 鈍足状態になったらカウントし始める
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
 	CEffectManager*			m_pEffectManager;	// エフェクトマネージャー
