@@ -13,6 +13,8 @@
 #include "../SCENE/CSCENE/CScene.h"
 #include "../SCENE/RESULT/CResult.h"
 #include "../SCENE/OPTION/COption.h"
+#include "../SCENE/CHARA_SELECT/CCharaSelect.h"
+#include "../SCENE/STAGE_SELECT/CStageSelect.h"
 #include "../MANAGER/CManager.h"
 
 //*****************************************************************************
@@ -72,6 +74,26 @@ CPhase* CPhase::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice, CManager* pM
 			CTitle* pTitle;
 			pTitle = CTitle::Create(mode, pDevice);
 			return pTitle;
+
+			break;
+		}
+		
+		// キャラ選択
+		case MODE_PHASE_CHARA_SELECT:
+		{
+			CCharaSelect* pCharaSelect;
+			pCharaSelect = CCharaSelect::Create(mode, pDevice);
+			return pCharaSelect;
+
+			break;
+		}
+		
+		// ステージ選択
+		case MODE_PHASE_STAGE_SELECT:
+		{
+			CStageSelect* pStageSelect;
+			pStageSelect = CStageSelect::Create(mode, pDevice);
+			return pStageSelect;
 
 			break;
 		}

@@ -101,6 +101,12 @@
     <Filter Include="SCENE\OPTION">
       <UniqueIdentifier>{ce11cd21-2574-485c-94a3-f6428501403c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\STAGE_SELECT">
+      <UniqueIdentifier>{bf159e53-87fb-453f-a2d1-d5696e93a13c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE\CHARA_SELECT">
+      <UniqueIdentifier>{a889646c-13a8-4302-b025-f2f3141c86ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -303,6 +309,12 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.cpp">
       <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\CHARA_SELECT\CCharaSelect.cpp">
+      <Filter>SCENE\CHARA_SELECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\STAGE_SELECT\CStageSelect.cpp">
+      <Filter>SCENE\STAGE_SELECT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -509,6 +521,12 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.h">
       <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\CHARA_SELECT\CCharaSelect.h">
+      <Filter>SCENE\CHARA_SELECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\STAGE_SELECT\CStageSelect.h">
+      <Filter>SCENE\STAGE_SELECT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

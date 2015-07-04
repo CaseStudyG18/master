@@ -51,7 +51,7 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ‚a‚f‚lÄ¶
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************
@@ -80,7 +80,7 @@ void CTitle::Update(void)
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 
 		// ƒQ[ƒ€ƒw
-		m_pManager->SetNextPhase(MODE_PHASE_GAME);
+		m_pManager->SetNextPhase(MODE_PHASE_CHARA_SELECT);
 	}
 }
 

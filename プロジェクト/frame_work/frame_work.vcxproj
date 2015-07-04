@@ -99,6 +99,7 @@
     <ClCompile Include="sources\MATH\vector.cpp" />
     <ClCompile Include="sources\PHASE\CPhase.cpp" />
     <ClCompile Include="sources\RENDERER\CRenderer.cpp" />
+    <ClCompile Include="sources\SCENE\CHARA_SELECT\CCharaSelect.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CScene.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CScene2D.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CSceneAnime.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="sources\SCENE\OPTION\COption.cpp" />
     <ClCompile Include="sources\SCENE\PAUSE\CPause.cpp" />
     <ClCompile Include="sources\SCENE\RESULT\CResult.cpp" />
+    <ClCompile Include="sources\SCENE\STAGE_SELECT\CStageSelect.cpp" />
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp" />
     <ClCompile Include="sources\SCENE\UI\CCursol.cpp" />
     <ClCompile Include="sources\SCENE\UI\CNumber.cpp" />
@@ -169,6 +171,7 @@
     <ClInclude Include="sources\MATH\vector.h" />
     <ClInclude Include="sources\PHASE\CPhase.h" />
     <ClInclude Include="sources\RENDERER\CRenderer.h" />
+    <ClInclude Include="sources\SCENE\CHARA_SELECT\CCharaSelect.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CScene.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CScene2D.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CSceneAnime.h" />
@@ -213,6 +216,7 @@
     <ClInclude Include="sources\SCENE\OPTION\COption.h" />
     <ClInclude Include="sources\SCENE\PAUSE\CPause.h" />
     <ClInclude Include="sources\SCENE\RESULT\CResult.h" />
+    <ClInclude Include="sources\SCENE\STAGE_SELECT\CStageSelect.h" />
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h" />
     <ClInclude Include="sources\SCENE\UI\CCursol.h" />
     <ClInclude Include="sources\SCENE\UI\CNumber.h" />
