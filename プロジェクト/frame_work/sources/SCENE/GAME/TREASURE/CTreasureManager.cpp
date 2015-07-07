@@ -65,4 +65,5 @@ void CTreasureManager::CreateTreasure(D3DXVECTOR3 pos)
 {
 	m_pTreasure = CTreasure::Create(m_pDevice, pos);
 }
+
 //----EOF-------

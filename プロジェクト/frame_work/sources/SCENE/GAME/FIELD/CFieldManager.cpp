@@ -10,15 +10,32 @@
 #include "CFieldManager.h"
 #include "CField.h"
 #include <stdio.h>
+#include "CNaviTile.h"
+
+
+//*****************************************************************************
+// 構造体定義
+//*****************************************************************************
+typedef struct
+{
+	char* fieldFile;
+	char* naviFile;
+}FIELD_INFO;
+
 
 //*****************************************************************************
 // 定数定義
 //*****************************************************************************
 // フィールドファイルのパス
-static const char *FIELD_FILE_PATH[CFieldManager::FIELD_MAX] =
+static const FIELD_INFO FIELD_INFO_FILE_PATH[CFieldManager::FIELD_MAX] =
 {
-	"data/FIELD/field.txt",
+	{ "data/FIELD/field.txt", "data/FIELD/NAVI_FILE/navi_01.txt" }
 };
+
+//=========================================================================
+// 静的メンバ変数
+//=========================================================================
+CNaviTile* CFieldManager::m_pNaviTile = NULL;
 
 //=========================================================================
 // コンストラクタ
@@ -55,7 +72,7 @@ void CFieldManager::LoadField(LPDIRECT3DDEVICE9 *pDevice, FIELD_TYPE fieldType)
 	char FieldName[MAX_PATH] = { 0 };
 
 	// 読み込み用ファイル
-	FILE* fpr = fopen(FIELD_FILE_PATH[fieldType], "r");
+	FILE* fpr = fopen(FIELD_INFO_FILE_PATH[fieldType].fieldFile, "r");
 
 	// 失敗したら
 	if (fpr == NULL)
@@ -142,6 +159,9 @@ void CFieldManager::LoadField(LPDIRECT3DDEVICE9 *pDevice, FIELD_TYPE fieldType)
 		}
 	}
 	fclose(fpr);
+
+	// ナビファイル読み込み
+	m_pNaviTile = CNaviTile::Create(FIELD_INFO_FILE_PATH[fieldType].naviFile);
 }
 
 //=========================================================================
@@ -149,7 +169,12 @@ void CFieldManager::LoadField(LPDIRECT3DDEVICE9 *pDevice, FIELD_TYPE fieldType)
 //=========================================================================
 void CFieldManager::Uninit(void)
 {
-	
+	if (m_pNaviTile)
+	{
+		m_pNaviTile->Uninit();
+		delete m_pNaviTile;
+		m_pNaviTile = NULL;
+	}
 }
 
 //=========================================================================

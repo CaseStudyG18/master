@@ -69,6 +69,7 @@ private:
 	float					m_fDestWidth;
 	float					m_fDefaultHeight;
 	float					m_fDestHeight;
+	bool					m_bSetNavi;
 };
 
 #endif
