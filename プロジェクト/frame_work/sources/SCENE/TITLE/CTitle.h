@@ -49,7 +49,15 @@ public:
 	static CTitle* Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
 private:
-	CScene2D*	m_p2D;
+	CScene2D* m_pBackGround;
+	CScene2D* m_pLogo;
+	CScene2D* m_pPushStart;
+	CScene2D* m_pMenu;
+	CScene2D* m_pCursol;
+
+	// 現在のカーソルの位置
+	int m_nCursol;
+
 };
 
 #endif

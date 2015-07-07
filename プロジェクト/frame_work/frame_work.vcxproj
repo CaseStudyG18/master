@@ -126,8 +126,11 @@
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CField.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CFieldManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\FIELD\CNaviTile.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoal.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoalManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\AI\C_CPU_AI.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\AI\mersenne_twister.cpp" />
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayer.cpp" />
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayerManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadBase.cpp" />
@@ -198,8 +201,11 @@
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CField.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CFieldManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\FIELD\CNaviTile.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoal.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoalManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\AI\C_CPU_AI.h" />
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\AI\mersenne_twister.h" />
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayer.h" />
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayerManager.h" />
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h" />

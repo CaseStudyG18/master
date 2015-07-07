@@ -9,7 +9,8 @@
 //*****************************************************************************
 #include "CThreadSpecialSpeed.h"
 #include "../../../SCENE/CSCENE/CSceneAnime.h"
-
+#include "../FIELD/CFieldManager.h"
+#include "../FIELD/CNaviTile.h"
 //*****************************************************************************
 // ƒ}ƒNƒ
 //*****************************************************************************
@@ -46,7 +47,7 @@ CThreadSpecialSpeed::CThreadSpecialSpeed(LPDIRECT3DDEVICE9 *pDevice, int priorit
 	m_fWidth = MIN_WIDTH;
 	m_fHeight = MIN_HEIGHT;
 	m_vRot = D3DXVECTOR3(0, 0, 0);
-
+	m_bSetNavi = false;
 	m_nAnimTimer = 0;
 }
 
@@ -97,6 +98,17 @@ void CThreadSpecialSpeed::Update(void)
 	}
 	else
 	{
+		if (!m_bSetNavi)
+		{
+			CNaviTile* navi = CFieldManager::GetNaviTileAdr();
+			if (navi)
+			{
+				D3DXVECTOR2 pos(m_vJudgePos.x, m_vJudgePos.y);
+				navi->SetCanMove(pos, m_fJudgeWidth, m_fJudgeHeight, true);
+			}
+			m_bSetNavi = true;
+		}
+
 		FieldAnim();
 	}
 	m_fJudgeWidth = m_fWidth * 0.6f;

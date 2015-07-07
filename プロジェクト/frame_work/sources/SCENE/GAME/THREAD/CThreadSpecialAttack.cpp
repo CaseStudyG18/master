@@ -91,10 +91,6 @@ void CThreadSpecialAttack::Update(void)
 {
 	CAttackBase::Update();
 
-#ifdef _DEBUG
-	CDebugProc::Print("攻撃特化形態の糸生成済\n");
-#endif
-
 	// カウントが10のとき（仮）エフェクトは発動
 	if (m_nCount == THREAD_FIRST_ATTACK_CREATE_TIME){
 		CSceneAnime::Create(

@@ -122,10 +122,6 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pThreadManager = new CThreadManager(pDevice);
 	m_pThreadManager->Init();
 
-	// プレイヤ生成
-	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager, m_pEffectManager);
-	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
-
 	// 宝物生成
 	m_pTreasureManager = new CTreasureManager(pDevice);
 	m_pTreasureManager->Init();
@@ -137,6 +133,14 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pGoalManager->CreateGoal(
 		const_cast<D3DXVECTOR3*>(GOAL_POS),
 		const_cast<short*>(GOAL_PLAYER_NUMBER), this);
+
+	// フィールド作成
+	m_pFieldManager = new CFieldManager;
+	m_pFieldManager->LoadField(m_pD3DDevice, CFieldManager::FIELD_TEST);
+
+	// プレイヤ生成
+	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager, m_pEffectManager);
+	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
 
 	// 背景作成
 	m_pBackGroundManager = new CBackGroundManager(pDevice);
@@ -150,9 +154,6 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// ジャッジ作成
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
 
-	// フィールド作成
-	m_pFieldManager = new CFieldManager;
-	m_pFieldManager->LoadField(m_pD3DDevice, CFieldManager::FIELD_TEST);
 	// カウントダウン
 	m_pCountDown = new CCountDown(m_pD3DDevice, &m_bPlayerControl);
 	m_pCountDown->Init();

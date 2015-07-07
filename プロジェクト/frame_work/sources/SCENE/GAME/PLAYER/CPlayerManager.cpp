@@ -53,6 +53,10 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer, bool *bPlayerContro
 	int nManual = 0;
 	int nCPU = 0;
 
+	// nojiri
+	// test
+	nManualPlayer = 4;
+		
 	// マニュアル操作のプレイヤーの作成
 	for (nManual = 0; nManual < nManualPlayer; nManual++)
 	{
@@ -61,28 +65,29 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer, bool *bPlayerContro
 			50.0f,
 			80.0f,
 			PLAYER_TEXTURE,
-			PLAYER_MANUAL,
+			/*PLAYER_MANUAL*/false,
 			m_pAttackManager,
 			m_pThreadManager,
 			m_pEffectManager,
 			(short)nManual,
-			bPlayerControl);
+			bPlayerControl,
+			this);
 	}
-	// CPUの作成
-	for (nCPU = nManual; nCPU < nNumPlayer; nCPU++)
-	{
-		m_apPlayer[nCPU] = CPlayer::Create(CRenderer::GetDevice(),
-			PLAYER_START_POS[nCPU],
-			1050.0f,
-			80.0f,
-			PLAYER_TEXTURE,
-			PLAYER_COMPUTER,
-			m_pAttackManager,
-			m_pThreadManager,
-			m_pEffectManager,
-			(short)nCPU,
-			bPlayerControl);
-	}
+	//// CPUの作成
+	//for (nCPU = nManual; nCPU < nNumPlayer; nCPU++)
+	//{
+	//	m_apPlayer[nCPU] = CPlayer::Create(CRenderer::GetDevice(),
+	//		PLAYER_START_POS[nCPU],
+	//		1050.0f,
+	//		80.0f,
+	//		PLAYER_TEXTURE,
+	//		PLAYER_COMPUTER,
+	//		m_pAttackManager,
+	//		m_pThreadManager,
+	//		m_pEffectManager,
+	//		(short)nCPU,
+	//		bPlayerControl);
+	//}
 }
 
 //-----------------------------------------------------------------------------

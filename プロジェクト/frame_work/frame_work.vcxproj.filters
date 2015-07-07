@@ -107,6 +107,9 @@
     <Filter Include="SCENE\CHARA_SELECT">
       <UniqueIdentifier>{a889646c-13a8-4302-b025-f2f3141c86ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\GAME\PLAYER\AI">
+      <UniqueIdentifier>{27d2c951-d480-49e6-9143-a96f1d845ca8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -315,6 +318,15 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\STAGE_SELECT\CStageSelect.cpp">
       <Filter>SCENE\STAGE_SELECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\AI\C_CPU_AI.cpp">
+      <Filter>SCENE\GAME\PLAYER\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\AI\mersenne_twister.cpp">
+      <Filter>SCENE\GAME\PLAYER\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\FIELD\CNaviTile.cpp">
+      <Filter>SCENE\GAME\FIELD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -527,6 +539,15 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\STAGE_SELECT\CStageSelect.h">
       <Filter>SCENE\STAGE_SELECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\AI\C_CPU_AI.h">
+      <Filter>SCENE\GAME\PLAYER\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\AI\mersenne_twister.h">
+      <Filter>SCENE\GAME\PLAYER\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\FIELD\CNaviTile.h">
+      <Filter>SCENE\GAME\FIELD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

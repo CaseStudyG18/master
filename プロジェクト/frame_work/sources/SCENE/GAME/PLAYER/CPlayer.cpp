@@ -15,7 +15,8 @@
 #include "../UI/CMp.h"
 #include "../../../CONTROLLER/CControllerManager.h"
 #include "../../CSCENE/CSceneAnime.h"
-
+#include "AI/C_CPU_AI.h"
+#include "../FIELD/CFieldManager.h"
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
@@ -85,6 +86,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CA
 	m_bSlowSpeed = false;									// 鈍足フラグの初期設定
 
 	m_pTreasure = NULL;										// 宝物ポインタ
+	m_pAI = NULL;
 	
 	// 鈍足状態の2D　基本描画なしで、鈍足になったら座標セットして描画
 	m_pSlow2D = CSceneAnime::Create(pDevice,
@@ -135,13 +137,14 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 *pDevice,
 	CThreadManager *pThreadManager,
 	CEffectManager *pEffectManager,
 	short sPlayerNumber,
-	bool *bPlayerControl)
+	bool *bPlayerControl,
+	CPlayerManager* pPlayerMnager)
 {
 	// プレイヤーポインタの作成
 	CPlayer *temp = new CPlayer(pDevice);
 
 	// 作成したプレイヤー情報の初期化
-	temp->Init(pos, fWidth, fHeight, texture, playerOperation, pAttackManager, pThreadManager, pEffectManager, sPlayerNumber, bPlayerControl);
+	temp->Init(pos, fWidth, fHeight, texture, playerOperation, pAttackManager, pThreadManager, pEffectManager, sPlayerNumber, bPlayerControl, pPlayerMnager);
 
 	// 作成したプレイヤーのポインタを返す
 	return temp;
@@ -161,7 +164,8 @@ void CPlayer::Init(D3DXVECTOR3 pos,
 	CThreadManager *pThreadManager,
 	CEffectManager *pEffectManager,
 	short sPlayerNumber,
-	bool *bPlayerControl)
+	bool *bPlayerControl,
+	CPlayerManager* pPlayerMnager)
 {
 	// テクスチャアニメーションの初期化
 	CAnimation::Init(pos, fWidth, fHeight, texture, 6, 3);
@@ -187,7 +191,18 @@ void CPlayer::Init(D3DXVECTOR3 pos,
 	// MP作る
 	m_pMp = new CMp(m_pD3DDevice);
 	m_pMp->Init(PLAYER_DEFAULT_MP, m_sNumber);
+
+	CNaviTile* navi = CFieldManager::GetNaviTileAdr();
+#ifdef _DEBUG
+	if (!navi)
+	{
+		MessageBox(NULL, "ナビタイル先作って\n", "エラー", MB_OK | MB_ICONERROR);
+	}
+#endif
+	m_pAI = C_CPU_AI::Create(navi, this);
+	m_pPlayerManager = pPlayerMnager;
 }
+
 
 //-----------------------------------------------------------------------------
 // 終了
@@ -200,6 +215,14 @@ void CPlayer::Uninit(void)
 
 	SAFE_RELEASE(m_pPS);
 	SAFE_RELEASE(m_pPSC);
+
+	if (m_pAI)
+	{
+		m_pAI->Uninit();
+		delete m_pAI;
+		m_pAI = NULL;
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -212,6 +235,11 @@ void CPlayer::Update(void)
 	// プレイヤがコントロールできないなら更新しない
 	if (!(*m_bPlayerControl)){
 		return;
+	}
+	// CPUならAI更新
+	if (!m_bOperation)
+	{
+		m_pAI->Update();
 	}
 	// 宝物を持っていたらアイコンの場所更新
 	if (m_pTreasure){
@@ -271,7 +299,8 @@ void CPlayer::Update(void)
 		{
 			// Wで画面上方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_W) ||
-				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_UP, m_sNumber))
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_UP, m_sNumber)
+				|| m_pAI->GetAIInputUp())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -292,7 +321,8 @@ void CPlayer::Update(void)
 			}
 			// Sで画面下方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_S) ||
-				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_DOWN, m_sNumber))
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_DOWN, m_sNumber)
+				|| m_pAI->GetAIInputDown())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -313,7 +343,8 @@ void CPlayer::Update(void)
 			}
 			// Aで画面左方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
-				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT, m_sNumber))
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT, m_sNumber)
+				|| m_pAI->GetAIInputLeft())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -334,7 +365,8 @@ void CPlayer::Update(void)
 			}
 			// Dで画面右方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_D) ||
-				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT, m_sNumber))
+				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT, m_sNumber)
+				|| m_pAI->GetAIInputRight())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
@@ -358,7 +390,8 @@ void CPlayer::Update(void)
 			/*4キーでプレイヤーの攻撃									*/
 			/*----------------------------------------------------------*/
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_4) ||
-				CControllerManager::GetTriggerKey(CInputGamePad::KEY_R, m_sNumber))
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_R, m_sNumber)
+				|| m_pAI->GetAIInputAtk())
 			{
 				// アクションの状態を攻撃に変える
 				m_Action = PLAYER_ACTION_ATTACK;
@@ -368,7 +401,8 @@ void CPlayer::Update(void)
 			/*5キーで糸を出す											*/
 			/*----------------------------------------------------------*/
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_5) ||
-				CControllerManager::GetTriggerKey(CInputGamePad::KEY_L, m_sNumber))
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_L, m_sNumber)
+				|| m_pAI->GetAIInputThread())
 			{
 				// アクションの状態を糸発射状態に変える
 				m_Action = PLAYER_ACTION_THREAD;
@@ -378,7 +412,8 @@ void CPlayer::Update(void)
 			/*6キーでプレイヤー変形開始	(Attack)						*/
 			/*----------------------------------------------------------*/
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) || 
-				CControllerManager::GetTriggerKey(CInputGamePad::KEY_A, m_sNumber))
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_A, m_sNumber)
+				|| m_pAI->GetAIInputChangeAtk())
 			{
 				if (m_fMP > 0.0f){
 					// アクションの状態を変形に変える
@@ -391,7 +426,8 @@ void CPlayer::Update(void)
 			/*7キーでプレイヤー変形開始	(Speed)						*/
 			/*----------------------------------------------------------*/
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_7) ||
-				CControllerManager::GetTriggerKey(CInputGamePad::KEY_X, m_sNumber))
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_X, m_sNumber)
+				|| m_pAI->GetAIInputChangeSpeed())
 			{
 				if (m_fMP > 0.0f){
 					// アクションの状態を変形に変える
@@ -404,7 +440,8 @@ void CPlayer::Update(void)
 			/*8キーでプレイヤー変形開始	(Trap)						*/
 			/*----------------------------------------------------------*/
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_8) ||
-				CControllerManager::GetTriggerKey(CInputGamePad::KEY_Y, m_sNumber))
+				CControllerManager::GetTriggerKey(CInputGamePad::KEY_Y, m_sNumber)
+				|| m_pAI->GetAIInputChangeJammer())
 			{
 				if (m_fMP > 0.0f){
 					// アクションの状態を変形に変える
@@ -658,7 +695,7 @@ void CPlayer::MetamorphoseAnimation(void)
 	// アニメーションの時間の増加
 	m_sAnimTime++;
 
-	if (m_sAnimTime > 60)
+//	if (m_sAnimTime > 60)
 	{
 		switch (m_ModeDest)
 		{

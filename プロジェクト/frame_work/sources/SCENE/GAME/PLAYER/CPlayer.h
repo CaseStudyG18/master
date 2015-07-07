@@ -129,8 +129,9 @@ class CThreadManager;
 class CTreasure;
 class CMp;
 class CEffectManager;
+class C_CPU_AI;
+class CPlayerManager;
 class CSceneAnime;
-
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
 //-----------------------------------------------------------------------------
@@ -155,7 +156,8 @@ public:
 		CThreadManager *pThreadManager,
 		CEffectManager *pEffectManager,
 		short sPlayerNumber,
-		bool *bPlayerControl);
+		bool *bPlayerControl,
+		CPlayerManager* pPlayerMnager);
 
 	// 終了
 	void Uninit(void);
@@ -178,11 +180,12 @@ public:
 		CThreadManager *pThreadManager,
 		CEffectManager *pEffectManager,
 		short sPlayerNumber,
-		bool *bPlayerControl);
+		bool *bPlayerControl,
+		CPlayerManager* pPlayerMnager);
 
 	// 現在の変形状態の取得
 	// 戻り値　プレイヤーの現在の状態
-	PLAYER_MODE GetPlayerMode(void);
+	PLAYER_MODE GetPlayerMode(void){ return m_Mode; };
 
 	// やられ状態へ移行
 	//  引数、戻り値　無し
@@ -228,6 +231,8 @@ public:
 	// 鈍足セット
 	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed; }
 
+	// プレイヤーマネージャーゲッター
+	CPlayerManager* GetPlayerManager(void){ return m_pPlayerManager; };
 
 private:
 	//---------------------------------
@@ -308,6 +313,8 @@ private:
 	CEffectManager*			m_pEffectManager;	// エフェクトマネージャー
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
 	CMp*					m_pMp;				// MPゲージ
+	C_CPU_AI*				m_pAI;				// AI
+	CPlayerManager*			m_pPlayerManager;	// プレイヤーマネージャー
 
 	// 赤くする系
 	short					m_nRedCount;		// 赤くするためにカウント
