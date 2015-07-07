@@ -450,7 +450,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 		}
 
 		// ゲームパッドボタン[1]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_A]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_ATK]])
 		{
 			m_aKeyStateGamePad[idx][KEY_A] = true;
 		}
@@ -459,7 +459,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_A] = false;
 		}
 		// ゲームパッドボタン[2]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_B]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_NORMAL]])
 		{
 			m_aKeyStateGamePad[idx][KEY_B] = true;
 		}
@@ -468,7 +468,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_B] = false;
 		}
 		// ゲームパッドボタン[3]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_Y]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_JAMMER]])
 		{
 			m_aKeyStateGamePad[idx][KEY_Y] = true;
 		}
@@ -477,7 +477,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_Y] = false;
 		}
 		// ゲームパッドボタン[4]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_X]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_SPD]])
 		{
 			m_aKeyStateGamePad[idx][KEY_X] = true;
 		}
@@ -486,7 +486,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_X] = false;
 		}
 		// ゲームパッドボタン[5]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_L]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_THREAD]])
 		{
 			m_aKeyStateGamePad[idx][KEY_L] = true;
 		}
@@ -495,7 +495,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_L] = false;
 		}
 		// ゲームパッドボタン[6]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_R]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_ATTACK]])
 		{
 			m_aKeyStateGamePad[idx][KEY_R] = true;
 		}
@@ -523,12 +523,12 @@ void CInputGamePad::SetKeyStateGamePad(void)
 		}
 
 		// ゲームパッドボタンA,Y,X,R,L,STARTのいずれか
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_A]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_Y]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_X]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_R]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_L]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_START]]
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_NORMAL]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_JAMMER]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_SPD]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_ATTACK]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_THREAD]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_ATK]]
 			)
 		{
 			m_aKeyStateGamePad[idx][KEY_DECIDE] = true;

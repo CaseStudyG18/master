@@ -24,7 +24,7 @@ public:
 	// コンストラクタ
 	// 引数: デバイス
 	//======================================================
-	CSceneNumber(LPDIRECT3DDEVICE9 *pDevice);
+	CSceneNumber(LPDIRECT3DDEVICE9 *pDevice, int nPriority = OBJTYPE_SCORE);
 
 	// デストラクタ
 	~CSceneNumber();
@@ -71,7 +71,7 @@ public:
 	// 引数: デバイス、座標、幅、高さ、数字、テクスチャタイプ
 	// 戻り値: 作ったやつのアドレス
 	//=================================================
-	CSceneNumber* CSceneNumber::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, int number, TEXTURE_TYPE texType);
+	static CSceneNumber* CSceneNumber::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, int number, TEXTURE_TYPE texType);
 private:
 	// 使ってない初期化
 	HRESULT		Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int wblock = 1, int hblock = 1){return E_FAIL;};

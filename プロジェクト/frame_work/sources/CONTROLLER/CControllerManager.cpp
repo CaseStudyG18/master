@@ -148,4 +148,13 @@ void CControllerManager::UpdateKeyCord(void)
 		m_pController[i]->UpdateKeyCord();
 	}
 }
+
+//======================================
+// キーコフィング情報のゲット
+//======================================
+int CControllerManager::GetKeyCord(int ID, CInputGamePad::PAD_BUTTON key)
+{
+	return m_pController[ID]->GetKeyCord(key);
+}
+
 //-----EOF-----

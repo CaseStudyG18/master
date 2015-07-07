@@ -27,12 +27,6 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/treasure_icon.png",
 	"data/TEXTURE/bg_title.png",
 	"data/TEXTURE/bg_result.png",
-	"data/TEXTURE/bg_chara_select.png",
-	"data/TEXTURE/bg_stage_select.png",
-	"data/TEXTURE/stage_0.png",
-	"data/TEXTURE/stage_1.png",
-	"data/TEXTURE/stage_2.png",
-	"data/TEXTURE/stage_3.png",
 	"data/TEXTURE/WinLogo.png",
 	"data/TEXTURE/DrawLogo.png",
 	"data/TEXTURE/02.png",
@@ -53,6 +47,13 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/trans_effect_green.png",
 	"data/TEXTURE/kirakira.png",
 	"data/TEXTURE/treasure_light.png",
+	//**ˆÈ‰º‰Á‚¦‚½******
+	"data/TEXTURE/option_menu.png",
+	"data/TEXTURE/option_BG.png",
+	"data/TEXTURE/cursol.png",
+	"data/TEXTURE/return.png",
+	"data/TEXTURE/player_num.png",
+	//******************
 };
 
 //*****************************************************************************
