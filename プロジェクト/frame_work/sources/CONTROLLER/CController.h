@@ -76,6 +76,13 @@ public:
 	void SetKeyCord(CInputGamePad::PAD_BUTTON key, int cord){ m_nButtonKeyCord[key] = cord; };
 
 	//======================================
+	// キーコフィングファイルのゲット
+	// 引数: どのボタンか
+	// 戻り値：キーコード
+	//======================================
+	int GetKeyCord(CInputGamePad::PAD_BUTTON key){ return m_nButtonKeyCord[key]; };
+
+	//======================================
 	// キーコフィング情報の更新
 	//======================================
 	void UpdateKeyCord(void);

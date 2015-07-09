@@ -242,10 +242,10 @@ void	CScene2D::SetColorPolygon(D3DXCOLOR color)
 //*****************************************************************************
 // クリエイト関数
 //*****************************************************************************
-CScene2D* CScene2D::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType)
+CScene2D* CScene2D::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int nPriority)
 {
 	// 作成
-	CScene2D* p = new CScene2D(pDevice);
+	CScene2D* p = new CScene2D(pDevice, nPriority);
 
 	// 初期化
 	p->Init(pos, width, height, texType);

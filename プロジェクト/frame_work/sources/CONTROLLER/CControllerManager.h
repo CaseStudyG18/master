@@ -84,6 +84,13 @@ public:
 	static void SetKeyCord(int ID, CInputGamePad::PAD_BUTTON key, int cord);
 
 	//======================================
+	// キーコフィング情報のゲット
+	// 引数: コントローラー番号,どのボタンか
+	// 戻り値: キーコード
+	//======================================
+	static int GetKeyCord(int ID, CInputGamePad::PAD_BUTTON key);
+
+	//======================================
 	// キーコフィング情報の更新
 	//======================================
 	static void UpdateKeyCord(void);

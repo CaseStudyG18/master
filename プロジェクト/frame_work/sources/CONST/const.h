@@ -33,7 +33,7 @@ static const float MAX_ALPHA = 1.0f;
 static const float MIN_ALPHA = 0.f;
 
 // プライオリティの初期値
-static const int DEFAULT_PRIORITY = 3;
+static const int DEFAULT_PRIORITY = 0;
 
 // 三角形作成ポリゴン数
 static const int NUM_POLYGON_CREATE_TRIANGLE = 3;

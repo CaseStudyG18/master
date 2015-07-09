@@ -58,6 +58,11 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/title_pushstart.png",
 	"data/TEXTURE/title_menu.png",
 	"data/TEXTURE/title_cursol.png",
+	"data/TEXTURE/option_menu.png",
+	"data/TEXTURE/option_BG.png",
+	"data/TEXTURE/cursol.png",
+	"data/TEXTURE/return.png",
+	"data/TEXTURE/player_num.png",
 };
 
 //*****************************************************************************
