@@ -7,7 +7,7 @@
 #ifndef __CPLAYER_H__
 #define __CPLAYER_H__
 
-#include "../../GAME/ANIMATION/CAnimation.h"
+#include "../../CSCENE/CSceneAnime.h"
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -120,6 +120,8 @@ static const short PLAYER_HP_STATE_FLASH_INTERVAL[] = {
 	12,	// PLAYER_VERY_LOW
 	-1	// PLAYER_DIE
 };
+static const int PLAYER_TEXTURE_SEP_X = 6;
+static const int PLAYER_TEXTURE_SEP_Y = 3;
 
 //-----------------------------------------------------------------------------
 // 前方宣言
@@ -135,7 +137,7 @@ class CSceneAnime;
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
 //-----------------------------------------------------------------------------
-class CPlayer : public CAnimation
+class CPlayer : public CSceneAnime
 {
 public:
 	// コンストラクタ

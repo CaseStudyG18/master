@@ -22,6 +22,8 @@
 //-----------------------------------------------------------------------------
 // プレイヤーの移動速度(仮)
 static const float PLAYER_SPEED = 8.0f;
+// プレイヤのアニメスピード
+static const int PLAYER_ANIME_SPEED = 10;
 // プレイヤーが鈍足状態になった時の係数(仮)
 static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
 // 鈍足時間 鈍足効果が一定じゃなく攻撃によって違うなら攻撃側から取得するべき
@@ -46,7 +48,7 @@ static const float MP_REGAIN = 3.0f;
 // コンストラクタ
 //	引数　　デバイス、プライオリティ、オブジェクトタイプ
 //-----------------------------------------------------------------------------
-CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CAnimation(pDevice, nPriority, objType)
+CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CSceneAnime(pDevice, nPriority, objType)
 {
 	m_pD3DDevice = pDevice;									// デバイスオブジェクト(描画に必要)
 	m_pD3DVtxBuff = NULL;									// 頂点座標情報を格納する場所のアドレスを確保する場所
@@ -168,8 +170,10 @@ void CPlayer::Init(D3DXVECTOR3 pos,
 	CPlayerManager* pPlayerMnager)
 {
 	// テクスチャアニメーションの初期化
-	CAnimation::Init(pos, fWidth, fHeight, texture, 6, 3);
+	CSceneAnime::Init(pos, fWidth, fHeight, texture, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y, PLAYER_ANIME_SPEED, -1);
 
+	// カウントダン中にどっか向かないように
+	CSceneAnime::SetAutoUpdate(false);
 	// 向きを正面のテクスチャに
 	SetIndex(5);
 
@@ -232,6 +236,9 @@ void CPlayer::Uninit(void)
 //-----------------------------------------------------------------------------
 void CPlayer::Update(void)
 {
+	// 自動アニメーションするように
+	CSceneAnime::SetAutoUpdate(true);
+
 	// プレイヤがコントロールできないなら更新しない
 	if (!(*m_bPlayerControl)){
 		return;
@@ -1029,7 +1036,7 @@ void CPlayer::UpdatePlayerAnimation(void){
 
 	if (m_PlayerFacing == PLAYER_DIRECTION_UP){
 		m_nTextureCount++;
-		if (m_nTextureCount > 10){
+		if (m_nTextureCount > PLAYER_ANIME_SPEED){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
@@ -1041,7 +1048,7 @@ void CPlayer::UpdatePlayerAnimation(void){
 	}
 	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
 		m_nTextureCount++;
-		if (m_nTextureCount > 10){
+		if (m_nTextureCount > PLAYER_ANIME_SPEED){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
@@ -1053,7 +1060,7 @@ void CPlayer::UpdatePlayerAnimation(void){
 	}
 	else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
 		m_nTextureCount++;
-		if (m_nTextureCount > 10){
+		if (m_nTextureCount > PLAYER_ANIME_SPEED){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
@@ -1065,7 +1072,7 @@ void CPlayer::UpdatePlayerAnimation(void){
 	}
 	else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
 		m_nTextureCount++;
-		if (m_nTextureCount > 10){
+		if (m_nTextureCount > PLAYER_ANIME_SPEED){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
@@ -1137,25 +1144,7 @@ void CPlayer::UpdatePlayerHpState(void){
 void CPlayer::UpdatePlayerRed(void){
 
 #ifdef _DEBUG
-	if (CInputKeyboard::GetKeyboardPress(DIK_RCONTROL)){
-		AddHp(-2);
-	}
-	if (CInputKeyboard::GetKeyboardPress(DIK_RSHIFT)){
-		AddHp(PLAYER_DEFAULT_HP);
-	}
-	if (m_HpState == PLAYER_HP_STATE_NORMAL){
-		CDebugProc::Print("プレイヤHP状態 = NORMAL\n");
-	}
-	else if (m_HpState == PLAYER_HP_STATE_LOW){
-		CDebugProc::Print("プレイヤHP状態 = LOW\n");
-	}
-	else if (m_HpState == PLAYER_HP_STATE_VERY_LOW){
-		CDebugProc::Print("プレイヤHP状態 = VERY_LOW\n");
-	}
-	else if (m_HpState == PLAYER_HP_STATE_DIE){
-		CDebugProc::Print("プレイヤHP状態 = DIE\n");
-	}
-	CDebugProc::Print("count = %d\n", m_nRedCount);
+	CDebugProc::Print("%d:HP = %d\n", m_sNumber, m_fHP);
 #endif
 
 	// 死んでいる or HPが十分あるなら更新しない

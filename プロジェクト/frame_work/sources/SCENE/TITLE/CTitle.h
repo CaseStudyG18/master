@@ -56,7 +56,7 @@ private:
 	CScene2D* m_pBackGround;
 	CScene2D* m_pLogo;
 	CScene2D* m_pPushStart;
-	CScene2D* m_pMenu;
+	CScene2D* m_pMenuBack;
 	CScene2D* m_pCursol;
 
 	// 現在のカーソルの位置

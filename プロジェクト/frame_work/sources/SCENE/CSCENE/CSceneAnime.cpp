@@ -183,10 +183,10 @@ CSceneAnime* CSceneAnime::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, fl
 //*****************************************************************************
 // クリエイト関数　ループVer
 //*****************************************************************************
-CSceneAnime* CSceneAnime::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum)
+CSceneAnime* CSceneAnime::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum, int priority)
 {
 	// 作成
-	CSceneAnime* p = new CSceneAnime(pDevice);
+	CSceneAnime* p = new CSceneAnime(pDevice, priority);
 
 	p->m_pD3DDevice = pDevice;
 
@@ -201,10 +201,10 @@ CSceneAnime* CSceneAnime::Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, fl
 //=============================================================================
 void CSceneAnime::SetIndex(int nIdx)
 {
-	float fU,fV;
+	float fU, fV;
 
 	// 値のチェック
-	if(nIdx < 0)
+	if (nIdx < 0)
 	{
 		return;
 	}
@@ -218,6 +218,40 @@ void CSceneAnime::SetIndex(int nIdx)
 	m_fRight = fU * ((m_nIdx % m_nSepalateNumX) + 1);
 	m_fTop = fV * (m_nIdx / m_nSepalateNumX);
 	m_fBottom = fV * ((m_nIdx / m_nSepalateNumX) + 1);
+
+	UV_INDEX uv = { m_fLeft, m_fRight, m_fTop, m_fBottom };
+	SetUV(&uv);
+}
+//=============================================================================
+// インデックスの設定
+//=============================================================================
+void CSceneAnime::SetIndex(int nIdx, bool reverse)
+{
+	float fU, fV;
+
+	// 値のチェック
+	if (nIdx < 0)
+	{
+		return;
+	}
+
+	m_nIdx = nIdx;
+
+	fU = MAX_UV_VALUE / m_nSepalateNumX;
+	fV = MAX_UV_VALUE / m_nSepalateNumY;
+
+	if (reverse){
+		m_fRight = fU * (m_nIdx % m_nSepalateNumX);
+		m_fLeft = fU * ((m_nIdx % m_nSepalateNumX) + 1);
+		m_fTop = fV * (m_nIdx / m_nSepalateNumX);
+		m_fBottom = fV * ((m_nIdx / m_nSepalateNumX) + 1);
+	}
+	else{
+		m_fLeft = fU * (m_nIdx % m_nSepalateNumX);
+		m_fRight = fU * ((m_nIdx % m_nSepalateNumX) + 1);
+		m_fTop = fV * (m_nIdx / m_nSepalateNumX);
+		m_fBottom = fV * ((m_nIdx / m_nSepalateNumX) + 1);
+	}
 
 	UV_INDEX uv = { m_fLeft, m_fRight, m_fTop, m_fBottom };
 	SetUV(&uv);

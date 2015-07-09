@@ -11,11 +11,13 @@
 //*****************************************************************************
 #include "../../MAIN/main.h"
 #include "../../PHASE/CPhase.h"
+#include "../../MANAGER/CManager.h"
 
 //*****************************************************************************
 // 前方宣言
 //*****************************************************************************
 class CScene2D;
+class CSceneAnime;
 
 //*****************************************************************************
 // クラス定義
@@ -49,7 +51,10 @@ public:
 	static CCharaSelect* Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
 private:
-	CScene2D*	m_p2D;
+	// BGの初期化
+	void InitializeBG();
+	// 背景
+	CScene2D* m_pBG;
 };
 
 #endif

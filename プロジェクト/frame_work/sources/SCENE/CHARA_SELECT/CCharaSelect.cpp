@@ -10,17 +10,19 @@
 #include "CCharaSelect.h"
 #include "../../MANAGER/CManager.h"
 #include "../CSCENE/CScene2D.h"
+#include "../CSCENE/CSceneAnime.h"
+#include "../GAME/PLAYER/CPlayer.h"
 
 //*****************************************************************************
-// É}ÉNÉç
+// íËêî
 //*****************************************************************************
+
 
 //*****************************************************************************
 // ÉRÉìÉXÉgÉâÉNÉ^
 //*****************************************************************************
-CCharaSelect ::CCharaSelect(void)
+CCharaSelect::CCharaSelect(void)
 {
-	m_p2D = NULL;
 }
 
 //*****************************************************************************
@@ -42,16 +44,14 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade = new CFade(pDevice);
 	m_pFade->Init(DEFFAULT_FADE_POS, DEFFAULT_FADE_WIDTH, DEFFAULT_FADE_HEIGHT, TEXTURE_NULL);
 
-	m_p2D = m_p2D->Create(m_pD3DDevice, 
-		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
-		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
-		TEXTURE_BG_CHARA_SELECT);
+	// îwåi
+	InitializeBG();
 
 	// ÉtÉFÅ[ÉhÉCÉìäJén
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ÇaÇfÇlçƒê∂
-//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************
@@ -82,6 +82,7 @@ void CCharaSelect::Update(void)
 		// ÉQÅ[ÉÄÉw
 		m_pManager->SetNextPhase(MODE_PHASE_STAGE_SELECT);
 	}
+
 }
 
 //*****************************************************************************
@@ -98,6 +99,16 @@ CCharaSelect* CCharaSelect::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	pTitle->Init(mode, pDevice);
 
 	return pTitle;
+}
+
+//-----------------------------------------------------------------------------
+// îwåièâä˙âª
+//-----------------------------------------------------------------------------
+void CCharaSelect::InitializeBG(void){
+	m_pBG = CScene2D::Create(m_pD3DDevice,
+		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
+		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
+		TEXTURE_BG_CHARA_SELECT, TYPE_PRIORITY_BG);
 }
 
 //----EOF----

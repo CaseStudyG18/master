@@ -159,9 +159,9 @@ void COption::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 			CuclDigit(&ten, &one, keyCord);
 			D3DXVECTOR3 pos = BASE_KEY_CORD_POS[j];
 			pos.x += i * (OPTION_MENU_WIDTH + KEY_CORD_WIDTH * 0.9f);
-			m_KeyNumber[i][j].DigitTen = CSceneNumber::Create(pDevice, pos, KEY_CORD_WIDTH, KEY_CORD_HEIGHT, ten, TEXTURE_NUMBER);
+			m_KeyNumber[i][j].DigitTen = CSceneNumber::Create(pDevice, pos, KEY_CORD_WIDTH, KEY_CORD_HEIGHT, ten, TEXTURE_NUMBER_WHITE);
 			pos.x += KEY_CORD_WIDTH;
-			m_KeyNumber[i][j].DigitOne = CSceneNumber::Create(pDevice, pos, KEY_CORD_WIDTH, KEY_CORD_HEIGHT, one, TEXTURE_NUMBER);
+			m_KeyNumber[i][j].DigitOne = CSceneNumber::Create(pDevice, pos, KEY_CORD_WIDTH, KEY_CORD_HEIGHT, one, TEXTURE_NUMBER_WHITE);
 		}
 	}
 

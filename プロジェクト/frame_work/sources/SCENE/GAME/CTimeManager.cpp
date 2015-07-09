@@ -23,7 +23,7 @@ const D3DXVECTOR3 TIMER_POSITION = D3DXVECTOR3(670, 30, 0);
 const float TIMER_WIDTH = 30;
 const float TIMER_HEIGHT = 48;
 // テクスチャ
-const TEXTURE_TYPE TIMER_TEXTURE = TEXTURE_NUMBER;
+const TEXTURE_TYPE TIMER_TEXTURE = TEXTURE_NUMBER_WHITE;
 
 
 //*****************************************************************************

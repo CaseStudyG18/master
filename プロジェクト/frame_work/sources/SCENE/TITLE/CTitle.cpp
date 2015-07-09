@@ -74,7 +74,7 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pBackGround = NULL;
 	m_pLogo = NULL;
 	m_pPushStart = NULL;
-	m_pMenu = NULL;
+	m_pMenuBack = NULL;
 	m_pCursol = NULL;
 
 	// フェード作成
@@ -86,7 +86,7 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pBackGround->Init(
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
 		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
-		TEXTURE_BG_TITLE);
+		TEXTURE_BG_0);
 	// Logo
 	m_pLogo = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_UI);
 	m_pLogo->Init(
@@ -242,8 +242,8 @@ CTitle* CTitle::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 void CTitle::PushStart(){
 
 	// メニュー
-	m_pMenu = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_UI);
-	m_pMenu->Init(
+	m_pMenuBack = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_UI);
+	m_pMenuBack->Init(
 		TITLE_MENU_POS, TITLE_MENU_WIDTH, TITLE_MENU_HEIGHT,
 		TEXTURE_TITLE_MENU);
 

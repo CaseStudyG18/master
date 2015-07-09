@@ -9,6 +9,7 @@
 //*****************************************************************************
 #include "CMp.h"
 #include "../../CSCENE/CSceneCircle.h"
+#include "../../../MANAGER/CManager.h"
 
 //*****************************************************************************
 // 定数
@@ -21,15 +22,6 @@ static const float MP_RADIUS = 20.0f;
 static const short MP_FLASH_INTERVAL = 10;
 // 現在MPが何パーセントで点滅するか
 static const float MP_FLASH_RATIO = 0.3f;
-
-// MPゲージの色　プレイヤ番号に応じて色を変更
-static const D3DCOLOR MP_COLOR[] = {
-	D3DCOLOR(0xbbfbec35),
-	D3DCOLOR(0xbbf92500),
-	D3DCOLOR(0xbb1987e5),
-	D3DCOLOR(0xbb00ff41),
-};
-
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -64,7 +56,7 @@ void CMp::Init(float fMpMax, short playerNum)
 	m_bLow = false;
 	m_nLowCount = 0;
 	m_fMpMax = fMpMax;
-	m_Color = MP_COLOR[playerNum];
+	m_Color = PLAYER_COLOR[playerNum];
 	
 	// 円のポリゴン生成
 	m_pCircle = CSceneCircle::Create(

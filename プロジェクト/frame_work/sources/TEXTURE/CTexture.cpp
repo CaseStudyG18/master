@@ -22,7 +22,9 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/fire1.png",
 	"data/TEXTURE/thread.png",
 	"data/TEXTURE/Player.png",
-	"data/TEXTURE/figure.png",
+	"data/TEXTURE/figure_black.png",
+	"data/TEXTURE/figure_white.png",
+	"data/TEXTURE/figure_green.png",
 	"data/TEXTURE/treasure.png",
 	"data/TEXTURE/treasure_icon.png",
 	"data/TEXTURE/bg_title.png",
@@ -63,6 +65,13 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/cursol.png",
 	"data/TEXTURE/return.png",
 	"data/TEXTURE/player_num.png",
+	"data/TEXTURE/result_push.png",
+	"data/TEXTURE/result_menu_back_0.png",
+	"data/TEXTURE/result_menu_back_1.png",
+	"data/TEXTURE/result_menu_back_2.png",
+	"data/TEXTURE/result_menu_moji_0.png",
+	"data/TEXTURE/result_menu_moji_1.png",
+	"data/TEXTURE/result_menu_moji_2.png",
 };
 
 //*****************************************************************************
