@@ -149,6 +149,7 @@
     <ClCompile Include="sources\SCENE\RESULT\CResult.cpp" />
     <ClCompile Include="sources\SCENE\STAGE_SELECT\CStageSelect.cpp" />
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp" />
+    <ClCompile Include="sources\SCENE\TUTORIAL\CTutorial.cpp" />
     <ClCompile Include="sources\SCENE\UI\CCursol.cpp" />
     <ClCompile Include="sources\SCENE\UI\CNumber.cpp" />
     <ClCompile Include="sources\SOUND\CSound.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="sources\SCENE\RESULT\CResult.h" />
     <ClInclude Include="sources\SCENE\STAGE_SELECT\CStageSelect.h" />
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h" />
+    <ClInclude Include="sources\SCENE\TUTORIAL\CTutorial.h" />
     <ClInclude Include="sources\SCENE\UI\CCursol.h" />
     <ClInclude Include="sources\SCENE\UI\CNumber.h" />
     <ClInclude Include="sources\SOUND\CSound.h" />

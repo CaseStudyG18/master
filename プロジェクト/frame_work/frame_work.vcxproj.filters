@@ -110,6 +110,9 @@
     <Filter Include="SCENE\GAME\PLAYER\AI">
       <UniqueIdentifier>{27d2c951-d480-49e6-9143-a96f1d845ca8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SCENE\TUTORIAL">
+      <UniqueIdentifier>{3b99b7bb-f9cb-4ed0-94a3-d4dc30699377}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MAIN\main.cpp">
@@ -327,6 +330,9 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\FIELD\CNaviTile.cpp">
       <Filter>SCENE\GAME\FIELD</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\TUTORIAL\CTutorial.cpp">
+      <Filter>SCENE\TUTORIAL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -548,6 +554,9 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\FIELD\CNaviTile.h">
       <Filter>SCENE\GAME\FIELD</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\TUTORIAL\CTutorial.h">
+      <Filter>SCENE\TUTORIAL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -49,6 +49,10 @@ public:
 	static CTitle* Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
 private:
+	// PUSH STARTしたときに呼ばれる
+	void PushStart();
+
+	// 必要な絵
 	CScene2D* m_pBackGround;
 	CScene2D* m_pLogo;
 	CScene2D* m_pPushStart;
@@ -57,7 +61,16 @@ private:
 
 	// 現在のカーソルの位置
 	int m_nCursol;
-
+	// タイトルシーン開始からPUSH STARTが出るまでのカウント
+	int m_nCount;
+	// PUSHSTARTを押したかどうか
+	bool m_bPushed;
+	// PUSHSTART点滅カウント
+	int m_nPushStartCount;
+	// PUSHSTART点滅フラグ
+	bool m_bPushStartFlg;
+	// ぷるぷるカウント
+	int m_nPuruCount = 0;
 };
 
 #endif

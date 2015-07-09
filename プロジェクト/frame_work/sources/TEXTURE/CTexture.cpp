@@ -26,6 +26,7 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/treasure.png",
 	"data/TEXTURE/treasure_icon.png",
 	"data/TEXTURE/bg_title.png",
+	"data/TEXTURE/bg_tutorial.png",
 	"data/TEXTURE/bg_result.png",
 	"data/TEXTURE/bg_chara_select.png",
 	"data/TEXTURE/bg_stage_select.png",
@@ -53,6 +54,10 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/trans_effect_green.png",
 	"data/TEXTURE/kirakira.png",
 	"data/TEXTURE/treasure_light.png",
+	"data/TEXTURE/title_logo.png",
+	"data/TEXTURE/title_pushstart.png",
+	"data/TEXTURE/title_menu.png",
+	"data/TEXTURE/title_cursol.png",
 };
 
 //*****************************************************************************

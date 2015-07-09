@@ -15,6 +15,7 @@
 #include "../SCENE/OPTION/COption.h"
 #include "../SCENE/CHARA_SELECT/CCharaSelect.h"
 #include "../SCENE/STAGE_SELECT/CStageSelect.h"
+#include "../SCENE/TUTORIAL/CTutorial.h"
 #include "../MANAGER/CManager.h"
 
 //*****************************************************************************
@@ -74,6 +75,15 @@ CPhase* CPhase::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice, CManager* pM
 			CTitle* pTitle;
 			pTitle = CTitle::Create(mode, pDevice);
 			return pTitle;
+
+			break;
+		}
+		// チュートリアル
+		case MODE_PHASE_TUTORIAL:
+		{
+			CTutorial* pTutorial;
+			pTutorial = CTutorial::Create(mode, pDevice);
+			return pTutorial;
 
 			break;
 		}
