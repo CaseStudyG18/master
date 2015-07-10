@@ -16,14 +16,22 @@
 //**********************************************
 static const char*	DEMO_FILE_PATH = "data/DEMO_KEY/demo_key.txt";	// デモ用のキーの保存パス
 static const int	JUDGE_TIME_REPEAT_KEY = 20;						// リピートキーの判定時間
-static const int	JUDGE_LEFT_MIN_STICK = 225 * 100;				// 左判定のスティックの最少傾き
-static const int	JUDGE_LEFT_MAX_STICK = 315 * 100;				// 左判定のスティックの最大傾き
-static const int	JUDGE_RIGHT_MIN_STICK = 45 * 100;				// 右判定のスティックの最少傾き
-static const int	JUDGE_RIGHT_MAX_STICK = 135 * 100;				// 右判定のスティックの最大傾き
 static const int	JUDGE_UP_MIN_STICK = 0 * 100;					// 上判定のスティックの最少傾き
 static const int	JUDGE_UP_MAX_STICK = 45 * 100;					// 上判定のスティックの最大傾き
+static const int	JUDGE_RIGHT_MIN_STICK = 45 * 100;				// 右判定のスティックの最少傾き
+static const int	JUDGE_RIGHT_MAX_STICK = 135 * 100;				// 右判定のスティックの最大傾き
 static const int	JUDGE_DOWN_MIN_STICK = 135 * 100;				// 下判定のスティックの最少傾き
 static const int	JUDGE_DOWN_MAX_STICK = 225 * 100;				// 下判定のスティックの最大傾き
+static const int	JUDGE_LEFT_MIN_STICK = 225 * 100;				// 左判定のスティックの最少傾き
+static const int	JUDGE_LEFT_MAX_STICK = 315 * 100;				// 左判定のスティックの最大傾き
+static const int	JUDGE_RIGHT_UP_MIN_STICK = 5 * 100;				// 右上判定のスティックの最少傾き
+static const int	JUDGE_RIGHT_UP_MAX_STICK = 85 * 100;			// 右上判定のスティックの最大傾き
+static const int	JUDGE_RIGHT_DOWN_MIN_STICK = 95 * 100;			// 右下判定のスティックの最少傾き
+static const int	JUDGE_RIGHT_DOWN_MAX_STICK = 175 * 100;			// 右下判定のスティックの最大傾き
+static const int	JUDGE_LEFT_DOWN_MIN_STICK = 185 * 100;			// 左下判定のスティックの最少傾き
+static const int	JUDGE_LEFT_DOWN_MAX_STICK = 265 * 100;			// 左下判定のスティックの最大傾き
+static const int	JUDGE_LEFT_UP_MIN_STICK = 275 * 100;			// 左上判定のスティックの最少傾き
+static const int	JUDGE_LEFT_UP_MAX_STICK = 355 * 100;			// 左上判定のスティックの最大傾き
 static const int	JUDGE_MAX_STICK = 360 * 100;					// スティックの最大傾き
 
 //**********************************************
@@ -357,6 +365,46 @@ void CInputGamePad::SetKeyStateGamePad(void)
 		{
 			m_aKeyStateGamePad[idx][LEFT_STICK_DOWN] = false;
 		}
+		// ゲームパッドボタン左スティック[右上]
+		if ((m_GamePad[idx].PadData.lX >= m_kInputDeep * 0.5 && m_GamePad[idx].PadData.lY <= -m_kInputDeep * 0.5)
+			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_RIGHT_UP_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_RIGHT_UP_MAX_STICK))
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_RIGHT_UP] = true;
+		}
+		else
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_RIGHT_UP] = false;
+		}
+		// ゲームパッドボタン左スティック[右下]
+		if ((m_GamePad[idx].PadData.lX >= m_kInputDeep * 0.5 && m_GamePad[idx].PadData.lY >= m_kInputDeep * 0.5)
+			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_RIGHT_DOWN_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_RIGHT_DOWN_MAX_STICK))
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_RIGHT_DOWN] = true;
+		}
+		else
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_RIGHT_DOWN] = false;
+		}
+		// ゲームパッドボタン左スティック[左上]
+		if ((m_GamePad[idx].PadData.lX <= -m_kInputDeep * 0.5 && m_GamePad[idx].PadData.lY <= -m_kInputDeep * 0.5)
+			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_LEFT_UP_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_LEFT_UP_MAX_STICK))
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_LEFT_UP] = true;
+		}
+		else
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_LEFT_UP] = false;
+		}
+		// ゲームパッドボタン左スティック[左下]
+		if ((m_GamePad[idx].PadData.lX <= -m_kInputDeep * 0.5 && m_GamePad[idx].PadData.lY >= m_kInputDeep * 0.5)
+			|| (m_GamePad[idx].PadData.rgdwPOV[0] >= JUDGE_LEFT_DOWN_MIN_STICK && m_GamePad[idx].PadData.rgdwPOV[0] <= JUDGE_LEFT_DOWN_MAX_STICK))
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_LEFT_DOWN] = true;
+		}
+		else
+		{
+			m_aKeyStateGamePad[idx][LEFT_STICK_LEFT_DOWN] = false;
+		}
 
 
 		// ゲームパッドボタン右スティック[右キー & スティック左]
@@ -402,7 +450,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 		}
 
 		// ゲームパッドボタン[1]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_A]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_ATK]])
 		{
 			m_aKeyStateGamePad[idx][KEY_A] = true;
 		}
@@ -411,7 +459,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_A] = false;
 		}
 		// ゲームパッドボタン[2]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_B]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_NORMAL]])
 		{
 			m_aKeyStateGamePad[idx][KEY_B] = true;
 		}
@@ -420,7 +468,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_B] = false;
 		}
 		// ゲームパッドボタン[3]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_Y]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_JAMMER]])
 		{
 			m_aKeyStateGamePad[idx][KEY_Y] = true;
 		}
@@ -429,7 +477,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_Y] = false;
 		}
 		// ゲームパッドボタン[4]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_X]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_SPD]])
 		{
 			m_aKeyStateGamePad[idx][KEY_X] = true;
 		}
@@ -438,7 +486,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_X] = false;
 		}
 		// ゲームパッドボタン[5]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_L]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_THREAD]])
 		{
 			m_aKeyStateGamePad[idx][KEY_L] = true;
 		}
@@ -447,7 +495,7 @@ void CInputGamePad::SetKeyStateGamePad(void)
 			m_aKeyStateGamePad[idx][KEY_L] = false;
 		}
 		// ゲームパッドボタン[6]
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_R]])
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_ATTACK]])
 		{
 			m_aKeyStateGamePad[idx][KEY_R] = true;
 		}
@@ -475,12 +523,12 @@ void CInputGamePad::SetKeyStateGamePad(void)
 		}
 
 		// ゲームパッドボタンA,Y,X,R,L,STARTのいずれか
-		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_A]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_Y]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_X]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_R]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_L]]
-			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_START]]
+		if (m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_NORMAL]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_JAMMER]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_SPD]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_ATTACK]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_THREAD]]
+			|| m_GamePad[idx].PadData.rgbButtons[m_aKeyConfig[idx][PAD_KEY_CHANGE_ATK]]
 			)
 		{
 			m_aKeyStateGamePad[idx][KEY_DECIDE] = true;
@@ -1158,6 +1206,11 @@ void CInputGamePad::SetKeyCofingInfo(int id, int* keyConfigInfo)
 //======================================
 bool CInputGamePad::CheckTriggerAnyKey(int ID, int* pCord)
 {
+	if (ID < 0 || ID >= MAX_PAD_NUM)
+	{
+		return false;
+	}
+
 	if (!m_GamePad[ID].pPadDevice)
 	{
 		return false;
@@ -1183,6 +1236,11 @@ bool CInputGamePad::CheckTriggerAnyKey(int ID, int* pCord)
 //======================================
 bool CInputGamePad::CheckConectPad(int ID)
 {
+	if (ID >= MAX_PAD_NUM || ID < 0)
+	{
+		return true;
+	}
+
 	if (!m_GamePad[ID].pPadDevice)
 	{
 		return false;

@@ -39,6 +39,12 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	// 残り何秒かゲッター
+	int GetRemaining(){
+		return m_nGameTime - m_nGameTimer;
+	}
+
+
 	// 非公開メンバ
 private:
 	// ゲームの制限時間

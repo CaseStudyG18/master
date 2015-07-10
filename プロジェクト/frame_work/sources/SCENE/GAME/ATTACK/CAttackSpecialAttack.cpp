@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialAttack.h"
-#include "../EFFECT/CEffect.h"
+#include "../../CSCENE/CSceneAnime.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -83,7 +83,7 @@ void CAttackSpecialAttack::Update(void)
 
 	// カウントが10のとき（仮）エフェクトは発動
 	if (m_nCount%2 == 0){
-		CEffect::Create(
+		CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos, 100, 100,
 			TEXTURE_FIRE_1, 10, 1, 20);

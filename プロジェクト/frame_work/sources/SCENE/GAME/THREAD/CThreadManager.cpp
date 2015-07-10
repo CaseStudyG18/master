@@ -15,7 +15,7 @@
 #include "CThreadSpecialSpeed.h"
 #include "CThreadSpecialTrap.h"
 
-//*****************************************************************************
+//********************************************** *******************************
 // マクロ
 //*****************************************************************************
 
@@ -63,8 +63,6 @@ void CThreadManager::Update(void)
 
 //*****************************************************************************
 // 糸を生成する
-// 2015_06_23変更
-// サトウ　リョウイチ
 //*****************************************************************************
 void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerFacing, CEffectManager *pEffectManager)
 {
@@ -72,7 +70,7 @@ void CThreadManager::CreateThread(ThreadType type, int nPlayerNum, D3DXVECTOR3 p
 	{
 		// 通常形態の糸
 	case THREAD_TYPE_NORMAL:
-		CThreadNormal::Create(m_pDevice, nPlayerNum, pos);
+		CThreadNormal::Create(m_pDevice, nPlayerNum, pos, PLAYER_DIRECTION_VECTOR[playerFacing]);
 		break;
 		// 攻撃特化形態の糸
 	case THREAD_TYPE_ATTACK:

@@ -18,14 +18,15 @@
 // 定数
 //*****************************************************************************
 static const int THREAD_ATTACK_COUNT_MAX = 100;
-static const float THREAD_ATTACK_WIDTH = 50;
-static const float THREAD_ATTACK_HEIGHT = 50;
-static const float THREAD_ATTACK_WIDTH_SECOND = 100;
-static const float THREAD_ATTACK_HEIGHT_SECOND = 100;
-static const TEXTURE_TYPE THREAD_ATTACK_TEXTURE = TEXTURE_FIRE_1;
-static const int THREAD_ATTACK_TEXTURE_X = 10;
-static const int THREAD_ATTACK_TEXTURE_Y = 1;
-static const int THREAD_ATTACK_TEXTURE_LOOP = 50;
+static const float THREAD_ATTACK_WIDTH = 100;
+static const float THREAD_ATTACK_HEIGHT = 40;
+static const float THREAD_ATTACK_WIDTH_SECOND = 220;
+static const float THREAD_ATTACK_HEIGHT_SECOND = 80;
+static const TEXTURE_TYPE THREAD_ATTACK_TEXTURE = TEXTURE_ATTACK_THUNDERBOLT;
+static const int THREAD_ATTACK_TEXTURE_X = 1;
+static const int THREAD_ATTACK_TEXTURE_Y = 8;
+static const int THREAD_ATTACK_TEXTURE_LOOP1 = 60;
+static const int THREAD_ATTACK_TEXTURE_LOOP = 40;
 
 //*****************************************************************************
 // コンストラクタ
@@ -67,28 +68,47 @@ void CEffectSpecialAttackThread::Uninit(void)
 //*****************************************************************************
 void CEffectSpecialAttackThread::Update(void)
 {
-	if (m_nCount == 50){
-		CSceneAnime::Create(
+	if (m_nCount == 0){
+		m_pAnim[0] = CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos,
 			THREAD_ATTACK_WIDTH, THREAD_ATTACK_HEIGHT,
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
-			THREAD_ATTACK_TEXTURE_LOOP);
+			THREAD_ATTACK_TEXTURE_LOOP1);
+		if (m_vVelocity.y == -1)
+		{
+			m_vRot.z = D3DX_PI*0.5f;
+			m_pAnim[0]->SetRot(m_vRot);
+		}
+		if (m_vVelocity.y == 1)
+		{
+			m_vRot.z = D3DX_PI*1.5f;
+			m_pAnim[0]->SetRot(m_vRot);
+		}
+		if (m_vVelocity.x == 1)
+		{
+			m_vRot.z = 0.0f;
+		}
+		if (m_vVelocity.x == -1)
+		{
+			m_vRot.z = D3DX_PI;
+			m_pAnim[0]->SetRot(m_vRot);
+		}
 	}
-	else if (m_nCount == 100)
+	else if (m_nCount == 50)
 	{
-		m_vPos += m_vVelocity * 50.0f;
-		CSceneAnime::Create(
+		//m_vPos += m_vVelocity * 50.0f;
+		m_pAnim[0] = CSceneAnime::Create(
 			m_pD3DDevice,
-			m_vPos,
+			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
 			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
 		m_vPos.x += m_vVelocity.x * 5.0f;
 		m_vPos.y += m_vVelocity.y * 5.0f;
-		CSceneAnime::Create(
+		m_pAnim[1] = CSceneAnime::Create(
 			m_pD3DDevice,
-			m_vPos,
+			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
 			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
@@ -96,9 +116,9 @@ void CEffectSpecialAttackThread::Update(void)
 		m_vPos.y += m_vVelocity.y * 5.0f;
 		m_vPos.y -= 5.0f;
 		m_vPos.x -= 5.0f;
-		CSceneAnime::Create(
+		m_pAnim[2] = CSceneAnime::Create(
 			m_pD3DDevice,
-			m_vPos,
+			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
 			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
@@ -106,12 +126,34 @@ void CEffectSpecialAttackThread::Update(void)
 		m_vPos.y += m_vVelocity.y * 5.0f;
 		m_vPos.y -= 10.0f;
 		m_vPos.x -= 10.0f;
-		CSceneAnime::Create(
+		m_pAnim[3] = CSceneAnime::Create(
 			m_pD3DDevice,
-			m_vPos,
+			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
 			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
+		for (int i = 0; i < 4; i++)
+		{
+			if (m_vVelocity.y == -1)
+			{
+				m_vRot.z = D3DX_PI*0.5f;
+				m_pAnim[i]->SetRot(m_vRot);
+			}
+			if (m_vVelocity.y == 1)
+			{
+				m_vRot.z = D3DX_PI*1.5f;
+				m_pAnim[i]->SetRot(m_vRot);
+			}
+			if (m_vVelocity.x == 1)
+			{
+				m_vRot.z = 0.0f;
+			}
+			if (m_vVelocity.x == -1)
+			{
+				m_vRot.z = D3DX_PI;
+				m_pAnim[i]->SetRot(m_vRot);
+			}
+		}
 	}
 
 	// 自殺の更新

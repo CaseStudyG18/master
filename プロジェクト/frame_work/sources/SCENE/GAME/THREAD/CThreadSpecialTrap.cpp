@@ -1,27 +1,31 @@
 //=============================================================================
 //
 // CThreadSpecialTrapクラス [CThreadSpecialTrap.cpp]
-// Author : 佐藤　諒一
+// Author : 塚本　俊彦
 //
 //=============================================================================
 //*****************************************************************************
 // インクルード
 //*****************************************************************************
 #include "CThreadSpecialTrap.h"
-
+#include "../../CSCENE/CSceneAnime.h"
+#include "../../../MANAGER/CManager.h"
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
 // 寿命
-const short THREAD_NORMAL_END_TIME = 180;
+static const short THREAD_TRAP_END_TIME = 80;
 // 当たり判定の始まる時間
-const short THREAD_NORMAL_HIT_START_TIME = 60;
+static const short THREAD_TRAP_HIT_START_TIME = 60;
 // 当たり判定の終わる時間
-const short THREAD_NORMAL_HIT_END_TIME = 120;
-
+static const short THREAD_TRAP_HIT_END_TIME = 120;
 // 当たり判 定幅,高さ
-const float THREAD_NORMAL_HIT_WIDTH = 50;
-const float THREAD_NORMAL_HIT_HEIGHT = 50;
+static const float THREAD_TRAP_HIT_WIDTH = 50;
+static const float THREAD_TRAP_HIT_HEIGHT = 50;
+
+// 弾の移動量
+static const float THREAD_TRAP_VEL = 1;
+
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -33,15 +37,21 @@ const float THREAD_NORMAL_HIT_HEIGHT = 50;
 CThreadSpecialTrap::CThreadSpecialTrap(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE type) : CThreadBase(pDevice, priority, type)
 {
 	// 変数初期化
-	m_ThreadType = THREAD_TYPE_NORMAL;
+	m_ThreadType = THREAD_TYPE_TRAP;
 
 	// この糸の固有ステータス初期化
-	m_fWidth = THREAD_NORMAL_HIT_WIDTH;
-	m_fHeight = THREAD_NORMAL_HIT_HEIGHT;
+	m_fWidth = THREAD_TRAP_HIT_WIDTH;
+	m_fHeight = THREAD_TRAP_HIT_HEIGHT;
 	m_vRot = D3DXVECTOR3(0, 0, 0);
-	m_nEndTime = THREAD_NORMAL_END_TIME;
-	m_nHitStartTime = THREAD_NORMAL_HIT_START_TIME;
-	m_nHitEndTime = THREAD_NORMAL_HIT_END_TIME;
+	m_nEndTime = THREAD_TRAP_END_TIME;
+	m_nHitStartTime = THREAD_TRAP_HIT_START_TIME;
+	m_nHitEndTime = THREAD_TRAP_HIT_END_TIME;
+
+	// 糸を作る
+	m_pBulletAnime = CSceneAnime::Create(
+		pDevice,
+		m_vPos, THREAD_TRAP_HIT_WIDTH, THREAD_TRAP_HIT_HEIGHT,
+		TEXTURE_THREAD, 1, 1, THREAD_TRAP_END_TIME);
 }
 
 //*****************************************************************************
@@ -56,9 +66,18 @@ CThreadSpecialTrap ::~CThreadSpecialTrap(void)
 //*****************************************************************************
 HRESULT CThreadSpecialTrap::Init()
 {
-	CThreadBase::Init(m_vPos, 100, 100, TEXTURE_THREAD);
+	CThreadBase::Init(m_vPos, THREAD_TRAP_HIT_WIDTH, THREAD_TRAP_HIT_HEIGHT, TEXTURE_THREAD);
 
-	return S_OK;
+	// 糸の位置をセット
+	m_pBulletAnime->SetPos(m_vPos);
+
+	// 糸の色を変える
+	if (m_nPlayerNum < 0 || m_nPlayerNum > 3){
+		return E_FAIL;
+	}
+	m_pBulletAnime->SetColorPolygon(PLAYER_COLOR[m_nPlayerNum]);
+
+	return S_OK;  
 }
 
 //*****************************************************************************
@@ -76,23 +95,18 @@ void CThreadSpecialTrap::Update(void)
 {
 	CThreadBase::Update();
 
-#ifdef _DEBUG
-	CDebugProc::Print("罠特化形態の糸生成済\n");
-#endif
-
-	//// カウントが10のとき（仮）エフェクトは発動
-	//if (m_nCount == 10){
-	//	CEffect::Create(
-	//		m_pD3DDevice,
-	//		m_vPos, 100, 100,
-	//		TEXTURE_THREAD, 10, 1, 20);
-	//}
+	// カウントで消す
+	if (m_nCount == THREAD_TRAP_END_TIME){
+		Release();
+	}
 }
 
 //*****************************************************************************
 // クリエイト関数
 //*****************************************************************************
-CThreadSpecialTrap* CThreadSpecialTrap::Create(LPDIRECT3DDEVICE9 *pDevice, short nPlayerNum, D3DXVECTOR3 pos)
+CThreadSpecialTrap* CThreadSpecialTrap::Create(
+	LPDIRECT3DDEVICE9 *pDevice,
+	short nPlayerNum, D3DXVECTOR3 pos)
 {
 	// 作成
 	CThreadSpecialTrap* p = new CThreadSpecialTrap(pDevice);
@@ -103,12 +117,28 @@ CThreadSpecialTrap* CThreadSpecialTrap::Create(LPDIRECT3DDEVICE9 *pDevice, short
 	// 初期化
 	p->Init();
 
-
 	return p;
 }
 
+//*****************************************************************************
+// 描画
+//*****************************************************************************
 void CThreadSpecialTrap::Draw(void)
 {
-	CThreadBase::Draw();
+	// Baseの表示を切ってm_pBulletAnimeの表示だけにする
+//	CThreadBase::Draw();
 }
+
+//*****************************************************************************
+// プレイヤに当たった時に呼ばれる関数
+//*****************************************************************************
+void CThreadSpecialTrap::HitPlayer(CPlayer* pPlayer)
+{
+#ifdef _DEBUG
+	CDebugProc::Print("罠形態の糸がプレイヤにヒット\n");
+#endif
+	// 鈍足
+	pPlayer->SetSlowSpeed(true);
+}
+
 //----EOF-------

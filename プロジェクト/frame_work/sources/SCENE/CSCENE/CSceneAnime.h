@@ -18,6 +18,8 @@
 // マクロ定義
 //*****************************************************************************
 static const short	INFINIT_LOOP = -1;					// 無限ループを示す
+
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -68,6 +70,12 @@ public:
 	void SetIndex(int nIdx);
 
 	//======================================================
+	// アニメーション番号設定
+	// 引数: アニメーション番号,反転するか
+	//======================================================
+	void SetIndex(int nIdx, bool reverse);
+
+	//======================================================
 	// 自動更新するか
 	// 引数: フラグ
 	//======================================================
@@ -91,8 +99,8 @@ public:
 	// 引数: デバイス、座標、幅、高さ、テクスチャータイプ、テクスチャ横分割数、テクスチャ縦分割数、ループ回数（-1で無限）
 	// 戻り値: 作ったやつのアドレス
 	//======================================================
-	static CSceneAnime* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX,int sepalateY, int animSpd, int loopNum);
-private:
+	static CSceneAnime* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX, int sepalateY, int animSpd, int loopNum, int priority = TYPE_PRIORITY_EFFECT);
+protected:
 	// ループなし更新
 	void Update_Normal(void);
 

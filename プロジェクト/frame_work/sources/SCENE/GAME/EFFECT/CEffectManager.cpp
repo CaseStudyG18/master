@@ -9,11 +9,21 @@
 //*****************************************************************************
 #include <Windows.h>
 #include "CEffectManager.h"
-#include "CEffectAttackHit.h"
-#include "CEffectExplosion.h"
-#include "CEffectSpecialAttack.h"
-#include "CEffectSpecialSpeedAttack.h"
-#include "CEffectSpecialAttackThread.h"
+#include "CEffectAttackHit.h"				// 攻撃ヒット
+#include "CEffectExplosion.h"				// 爆発
+#include "CEffectSpecialAttack.h"			// 攻撃特化攻撃
+#include "CEffectSpecialSpeedAttack.h"		// 移動特化攻撃
+#include "CEffectSpecialAttackThread.h"		// 攻撃特化糸攻撃
+#include "CEffectCaughtTrap.h"				// 罠にかかった時
+#include "CEffectCreateRoad.h"				// 道作成時
+#include "CEffectFlagGet.h"					// フラグ取得時
+#include "CEffectFlagHold.h"				// フラグ所持時
+#include "CEffectDead.h"					// プレイヤー体力０
+#include "CEffectMPAttack.h"				// MPダメージ時
+#include "CEffectNormalAttackCap.h"			// 帽子攻撃
+#include "CEffectNormalAttackThread.h"		// 通常糸発射
+#include "CEffectPlayerRevive.h"			// プレイヤー復活時
+#include "CEffectTrapFoundation.h"			// 罠設置時
 
 //*****************************************************************************
 // マクロ
@@ -87,6 +97,46 @@ void CEffectManager::CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3
 		// 攻撃形態時の糸攻撃
 	case EFFECT_SPECIAL_THREAD_ATTACK:
 		CEffectSpecialAttackThread::Create(m_pDevice, pos, velocity);
+		break;
+		// 罠にかかった時のエフェクト
+	case EFFECT_CAUGHT_TRAP:
+		CEffectCaughtTrap::Create(m_pDevice, pos);
+		break;
+		// 道作成時のエフェクト
+	case EFFECT_CREATE_ROAD:
+		CEffectCreateRoad::Create(m_pDevice, pos);
+		break;
+		// フラグ取得時
+	case EFFECT_FLAG_GET:
+		CEffectFlagGet::Create(m_pDevice, pos);
+		break;
+		// フラグ所持時
+	case EFFECT_FLAG_HOLD:
+		CEffectFlagHold::Create(m_pDevice, pos);
+		break;
+		// プレイヤーの体力０時のエフェクト
+	case EFFECT_PLAYER_DEAD:
+		CEffectDead::Create(m_pDevice, pos);
+		break;
+		// MP攻撃時のエフェクト
+	case EFFECT_MP_ATTACK:
+		CEffectMPAttack::Create(m_pDevice, pos);
+		break;
+		// 通常形態の帽子攻撃エフェクト
+	case EFFECT_NORMAL_ATTACK_CAP:
+		CEffectNormalAttackCap::Create(m_pDevice, pos);
+		break;
+		// 通常形態の糸発射エフェクト
+	case EFFECT_NORMAL_ATTACK_THREAD:
+		CEffectNormalAttackThread::Create(m_pDevice, pos);
+		break;
+		// プレイヤー復活エフェクト
+	case EFFECT_PLAYER_REVIAVE:
+		CEffectPlayerRevive::Create(m_pDevice, pos);
+		break;
+		// 罠設置エフェクト
+	case EFFECT_TRAP_FOUNDATION:
+		CEffectTrapFoundation::Create(m_pDevice, pos);
 		break;
 	default:
 		break;

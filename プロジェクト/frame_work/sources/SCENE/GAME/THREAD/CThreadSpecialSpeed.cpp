@@ -9,7 +9,8 @@
 //*****************************************************************************
 #include "CThreadSpecialSpeed.h"
 #include "../../../SCENE/CSCENE/CSceneAnime.h"
-
+#include "../FIELD/CFieldManager.h"
+#include "../FIELD/CNaviTile.h"
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
@@ -31,6 +32,9 @@ static const float	ADD_HEIGHT = MAX_HEIGHT / (float)GROW_THREAD_TIME;
 // 幅変更量
 static const float	ADD_WIDTH = MAX_WIDTH / (float)THREAD_FIELD_ANIM_TIME;
 
+static const float DOWN_POS_POW = 5.0f;
+static const float MOVE_POW = DOWN_POS_POW / 10.f;
+
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
@@ -43,7 +47,7 @@ CThreadSpecialSpeed::CThreadSpecialSpeed(LPDIRECT3DDEVICE9 *pDevice, int priorit
 	m_fWidth = MIN_WIDTH;
 	m_fHeight = MIN_HEIGHT;
 	m_vRot = D3DXVECTOR3(0, 0, 0);
-	
+	m_bSetNavi = false;
 	m_nAnimTimer = 0;
 }
 
@@ -64,7 +68,7 @@ HRESULT CThreadSpecialSpeed::Init(short nPlayerNum, D3DXVECTOR3 pos, DIRECTION_P
 	m_Direction = playerDirection;
 	CThreadBase::Init(m_vPos, m_fWidth, m_fHeight, TEXTURE_THREAD);
 
-	if (m_Direction == PLAYER_DIRECTION_UP || m_Direction == PLAYER_DIRECTION_DOWN)
+	if (m_Direction == PLAYER_DIRECTION_RIGHT || m_Direction == PLAYER_DIRECTION_LEFT)
 	{
 		Rot90_UV();
 	}
@@ -94,9 +98,20 @@ void CThreadSpecialSpeed::Update(void)
 	}
 	else
 	{
+		if (!m_bSetNavi)
+		{
+			CNaviTile* navi = CFieldManager::GetNaviTileAdr();
+			if (navi)
+			{
+				D3DXVECTOR2 pos(m_vJudgePos.x, m_vJudgePos.y);
+				navi->SetCanMove(pos, m_fJudgeWidth, m_fJudgeHeight, true);
+			}
+			m_bSetNavi = true;
+		}
+
 		FieldAnim();
 	}
-	m_fJudgeWidth = m_fWidth;
+	m_fJudgeWidth = m_fWidth * 0.6f;
 	m_fJudgeHeight = m_fHeight;
 	m_vJudgePos = m_vPos;
 }
@@ -178,6 +193,7 @@ void CThreadSpecialSpeed::FieldAnim(void)
 	m_nAnimTimer++;
 	if (m_nAnimTimer > THREAD_FIELD_ANIM_TIME)
 	{
+		UpDown();
 		return;
 	}
 
@@ -197,5 +213,80 @@ void CThreadSpecialSpeed::FieldAnim(void)
 	{
 		m_fHeight += ADD_WIDTH;
 	}
+	m_fDestWidth = m_fDefaultWidth = m_fWidth;
+	m_fDefaultHeight = m_fDestHeight = m_fHeight;
+}
+
+//*****************************************************************************
+// ライド関数
+//*****************************************************************************
+void CThreadSpecialSpeed::Ride(bool ride)
+{
+
+	if (ride)
+	{
+		if (m_Direction == PLAYER_DIRECTION_UP)
+		{
+			m_fDestHeight = m_fDefaultHeight + DOWN_POS_POW;
+		}
+		else if (m_Direction == PLAYER_DIRECTION_DOWN)
+		{
+			m_fDestHeight = m_fDefaultHeight + DOWN_POS_POW;
+		}
+		else if (m_Direction == PLAYER_DIRECTION_LEFT || m_Direction == PLAYER_DIRECTION_DOWNER_LEFT || m_Direction == PLAYER_DIRECTION_UPPER_LEFT)
+		{
+			m_fDestWidth = m_fDefaultWidth + DOWN_POS_POW;
+		}
+		else if (m_Direction == PLAYER_DIRECTION_RIGHT || m_Direction == PLAYER_DIRECTION_DOWNER_RIGHT || m_Direction == PLAYER_DIRECTION_UPPER_RIGHT)
+		{
+			m_fDestWidth = m_fDefaultWidth + DOWN_POS_POW;
+		}
+	}
+	else
+	{
+		m_fDestHeight = m_fDefaultHeight;
+		m_fDestWidth = m_fDefaultWidth;
+	}
+}
+
+//*****************************************************************************
+// 上下
+//*****************************************************************************
+void CThreadSpecialSpeed::UpDown(void)
+{
+	if (m_Direction == PLAYER_DIRECTION_UP || m_Direction == PLAYER_DIRECTION_DOWN)
+	{
+		if (m_fHeight < m_fDestHeight)
+		{
+			m_fHeight += MOVE_POW;
+			m_fWidth -= MOVE_POW;
+		}
+		else if (m_fHeight >= m_fDestHeight)
+		{
+			m_fHeight -= MOVE_POW * 0.5f;
+			m_fWidth += MOVE_POW * 0.5f;
+		}
+	}
+	else
+	{
+		if (m_fWidth < m_fDestWidth)
+		{
+			m_fHeight -= MOVE_POW;
+			m_fWidth += MOVE_POW;
+		}
+		else if (m_fWidth >= m_fDestWidth)
+		{
+			m_fHeight += MOVE_POW * 0.5f;
+			m_fWidth -= MOVE_POW * 0.5f;
+		}
+	}
+}
+
+//*****************************************************************************
+// プレイヤに当たった時に呼ばれる関数
+//*****************************************************************************
+void CThreadSpecialSpeed::HitPlayer(CPlayer* pPlayer)
+{
+	// プレイヤにはしない
 }
 //----EOF-------

@@ -9,21 +9,21 @@
 //*****************************************************************************
 #include "CThreadSpecialAttack.h"
 #include "../PLAYER/CPlayer.h"
-#include "../EFFECT/CEffectManager.h"
+#include "../../CSCENE/CSceneAnime.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
 // 寿命
-const short THREAD_ATTACK_END_TIME = 180;
+static const short THREAD_ATTACK_END_TIME = 180;
 // 当たり判定の始まる時間
-const short THREAD_ATTACK_HIT_START_TIME = 60;
+static const short THREAD_ATTACK_HIT_START_TIME = 60;
 // 当たり判定の終わる時間
-const short THREAD_ATTACK_HIT_END_TIME = 170;
+static const short THREAD_ATTACK_HIT_END_TIME = 170;
 
 // 当たり判 定幅,高さ
-const float THREAD_ATTACK_HIT_WIDTH = 50;
-const float THREAD_ATTACK_HIT_HEIGHT = 50;
+static const float THREAD_ATTACK_HIT_WIDTH = 50;
+static const float THREAD_ATTACK_HIT_HEIGHT = 50;
 
 // プレイヤと攻撃エフェクトの距離
 static const short THREAD_ATTACK_RANGE = 50;
@@ -91,13 +91,9 @@ void CThreadSpecialAttack::Update(void)
 {
 	CAttackBase::Update();
 
-#ifdef _DEBUG
-	CDebugProc::Print("攻撃特化形態の糸生成済\n");
-#endif
-
 	// カウントが10のとき（仮）エフェクトは発動
 	if (m_nCount == THREAD_FIRST_ATTACK_CREATE_TIME){
-		CEffect::Create(
+		CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos, 100, 100,
 			TEXTURE_FIRE_1, 10, 1, 40);
@@ -107,7 +103,7 @@ void CThreadSpecialAttack::Update(void)
 	if (m_nCount >= THREAD_SECOND_ATTACK_CREATE_TIME){
 		if (m_nCount % 11 == 0)
 		{
-			CEffect::Create(
+			CSceneAnime::Create(
 				m_pD3DDevice,
 				m_vPos, 100, 100,
 				TEXTURE_FIRE_0, 10, 1, 60);
@@ -162,7 +158,7 @@ void CThreadSpecialAttack::Draw(void)
 //*****************************************************************************
 void CThreadSpecialAttack::HitPlayer(CPlayer* pPlayer)
 {
-	CEffect::Create(
+	CSceneAnime::Create(
 		m_pD3DDevice,
 		pPlayer->GetPos(), 100, 100,
 		TEXTURE_FIRE_1, 10, 1, 40);

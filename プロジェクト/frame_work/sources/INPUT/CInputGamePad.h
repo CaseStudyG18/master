@@ -59,6 +59,10 @@ public:
 		LEFT_STICK_RIGHT,		// →
 		LEFT_STICK_UP,			// ↑
 		LEFT_STICK_DOWN,		// ↓
+		LEFT_STICK_LEFT_UP,		// ←↑
+		LEFT_STICK_LEFT_DOWN,	// ←↓
+		LEFT_STICK_RIGHT_UP,	// →↑
+		LEFT_STICK_RIGHT_DOWN,	// →↓
 		RIGHT_STICK_LEFT,		// ←
 		RIGHT_STICK_RIGHT,		// →
 		RIGHT_STICK_UP,			// ↑
@@ -78,12 +82,12 @@ public:
 	// キーの種類(キーコフィングできるやつ)
 	typedef enum
 	{
-		PAD_KEY_A = 0,
-		PAD_KEY_B,
-		PAD_KEY_Y,
-		PAD_KEY_X,
-		PAD_KEY_L,
-		PAD_KEY_R,
+		PAD_KEY_CHANGE_NORMAL = 0,
+		PAD_KEY_CHANGE_ATK,
+		PAD_KEY_CHANGE_SPD,
+		PAD_KEY_CHANGE_JAMMER,
+		PAD_KEY_THREAD,
+		PAD_KEY_ATTACK,
 		PAD_KEY_START,
 		PAD_KEY_SELECT,
 		PAD_KEY_MAX

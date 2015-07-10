@@ -7,7 +7,7 @@
 #ifndef __CPLAYER_H__
 #define __CPLAYER_H__
 
-#include "../../GAME/ANIMATION/CAnimation.h"
+#include "../../CSCENE/CSceneAnime.h"
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -120,6 +120,8 @@ static const short PLAYER_HP_STATE_FLASH_INTERVAL[] = {
 	12,	// PLAYER_VERY_LOW
 	-1	// PLAYER_DIE
 };
+static const int PLAYER_TEXTURE_SEP_X = 6;
+static const int PLAYER_TEXTURE_SEP_Y = 3;
 
 //-----------------------------------------------------------------------------
 // 前方宣言
@@ -128,14 +130,14 @@ class CAttackManager;
 class CThreadManager;
 class CTreasure;
 class CMp;
-// 2015_06_23追加
-// サトウ　リョウイチ
 class CEffectManager;
-
+class C_CPU_AI;
+class CPlayerManager;
+class CSceneAnime;
 //-----------------------------------------------------------------------------
 // プレイヤークラス定義
 //-----------------------------------------------------------------------------
-class CPlayer : public CAnimation
+class CPlayer : public CSceneAnime
 {
 public:
 	// コンストラクタ
@@ -154,9 +156,10 @@ public:
 		BOOL playerOperation,
 		CAttackManager *pAttackManager,
 		CThreadManager *pThreadManager,
-		CEffectManager *pEffectManager,	// 2015_06_23追加 サトウ　リョウイチ
+		CEffectManager *pEffectManager,
 		short sPlayerNumber,
-		bool *bPlayerControl);
+		bool *bPlayerControl,
+		CPlayerManager* pPlayerMnager);
 
 	// 終了
 	void Uninit(void);
@@ -177,13 +180,14 @@ public:
 		BOOL playerOperation,
 		CAttackManager *pAttackManager,
 		CThreadManager *pThreadManager,
-		CEffectManager *pEffectManager,	// 2015_06_23追加 サトウ　リョウイチ
+		CEffectManager *pEffectManager,
 		short sPlayerNumber,
-		bool *bPlayerControl);
+		bool *bPlayerControl,
+		CPlayerManager* pPlayerMnager);
 
 	// 現在の変形状態の取得
 	// 戻り値　プレイヤーの現在の状態
-	PLAYER_MODE GetPlayerMode(void);
+	PLAYER_MODE GetPlayerMode(void){ return m_Mode; };
 
 	// やられ状態へ移行
 	//  引数、戻り値　無し
@@ -229,6 +233,8 @@ public:
 	// 鈍足セット
 	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed; }
 
+	// プレイヤーマネージャーゲッター
+	CPlayerManager* GetPlayerManager(void){ return m_pPlayerManager; };
 
 private:
 	//---------------------------------
@@ -269,6 +275,9 @@ private:
 	void UpdatePlayerHpState(void);
 	void UpdatePlayerRed(void);
 
+	// プレイヤの鈍足状態管理
+	void UpdateSlow();
+
 	//---------------------------------
 	// 変数
 	//---------------------------------
@@ -299,13 +308,15 @@ private:
 	bool					m_bSpeedAttack;		// 移動形態での攻撃中かどうかのフラグ
 	bool*					m_bPlayerControl;	// プレイヤがコントロールできるかフラグ
 	bool					m_bSlowSpeed;		// 鈍足状態になっているかどうかのフラグ
+	CSceneAnime*			m_pSlow2D;			// 鈍足状態のマーク
+	int						m_nSlowCount;		// 鈍足状態になったらカウントし始める
 	CAttackManager*			m_pAttackManager;	// 攻撃マネージャー
 	CThreadManager*			m_pThreadManager;	// 糸マネージャー
-	// 2015_06_23追加
-	// サトウ　リョウイチ
 	CEffectManager*			m_pEffectManager;	// エフェクトマネージャー
 	CTreasure*				m_pTreasure;		// 宝物を拾った時の宝物ポインタ
 	CMp*					m_pMp;				// MPゲージ
+	C_CPU_AI*				m_pAI;				// AI
+	CPlayerManager*			m_pPlayerManager;	// プレイヤーマネージャー
 
 	// 赤くする系
 	short					m_nRedCount;		// 赤くするためにカウント

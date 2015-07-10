@@ -47,14 +47,20 @@ public:
 	// 宝とプレイヤーのあたり判定
 	void ColiTreasurexPlayer(void);
 
-	// 攻撃とプレイヤの当たり判定 by 塚本
+	// 攻撃とプレイヤの当たり判定
 	void ColiAttackxPlayer(void);
+
+	// 糸とプレイヤの当たり判定
+	void ColiThreadxPlayer(void);
 
 	// フィールドと足場になる糸のあたり判定
 	void ColiFieldxThreadOfFoothold(void);
 
 	// ゴールとプレイヤの当たり判定
 	void ColiGoalxPlayer(void);
+
+	// フィールドと宝箱の当たり判定
+	void ColiFieldxTreasure(void);
 
 private:
 	// 線分構造体

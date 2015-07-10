@@ -21,10 +21,14 @@
 enum TreasureState{
 	TREASURE_STATE_OWNER_NONE,
 	TREASURE_STATE_OWNED,
-	TREASURE_STATE_TRANS_READY,
-	TREASURE_STATE_TRANS_END,
+	TREASURE_STATE_JUMPING,
 	TREASURE_STATE_MAX,
 };
+
+//=============================================================================
+// 前方宣言
+//=============================================================================
+class CSceneAnime;
 
 //*****************************************************************************
 // クラス定義
@@ -58,7 +62,10 @@ public:
 	void SetIcon();
 
 	// 宝箱を持っているプレイヤーのIDをセット
-	void SetOwnerPlayerNumber(short sPlayerNumber){ m_sOwnerPlayer = sPlayerNumber; m_TreasureState = TREASURE_STATE_OWNED; }
+	void SetOwnerPlayerNumber(short sPlayerNumber){ 
+		m_sOwnerPlayer = sPlayerNumber; 
+		m_TreasureState = TREASURE_STATE_OWNED;
+	}
 
 	// 宝箱を持っているプレイヤーのIDをゲット
 	short GetOwnerPlayerNumber(void){ return m_sOwnerPlayer; }
@@ -69,6 +76,12 @@ public:
 	// 宝箱の状態をセット
 	void SetTreasureState(TreasureState State){ m_TreasureState = State; }
 
+	// 宝物の場所をセット エフェクトとかも一緒にセットする
+	void SetPos(D3DXVECTOR3 pos);
+
+	// 宝物を落とす処理
+	void SetFall();
+
 	// 非公開メンバ
 private:
 
@@ -78,6 +91,16 @@ private:
 	// お宝の状態
 	TreasureState m_TreasureState;
 	short m_sOwnerPlayer;
+
+	// エフェクト
+	CSceneAnime *m_pKira;
+	CSceneAnime *m_pLight;
+
+	// アニメーション用移動量
+	D3DXVECTOR3 m_vVelocity;
+	// jumpし始めてからのカウント
+	int m_nJumpCount;
+
 };
 
 #endif

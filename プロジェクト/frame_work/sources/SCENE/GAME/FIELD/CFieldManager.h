@@ -17,7 +17,7 @@
 // 前方宣言
 //*****************************************************************************
 class CField;
-
+class CNaviTile;
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -52,8 +52,10 @@ public:
 	// 更新
 	void Update(void);
 
-private:
+	static CNaviTile* GetNaviTileAdr(void){ return m_pNaviTile; };
 
+private:
+	static CNaviTile* m_pNaviTile;
 };
 
 #endif

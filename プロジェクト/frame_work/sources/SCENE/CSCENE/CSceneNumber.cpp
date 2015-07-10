@@ -18,7 +18,7 @@ static const int MAX_NUMBER_NUM = 10;			// 数字の数
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
-CSceneNumber ::CSceneNumber(LPDIRECT3DDEVICE9 *pDevice) : CScene()
+CSceneNumber::CSceneNumber(LPDIRECT3DDEVICE9 *pDevice, int nPriority) : CScene(nPriority)
 {
 	m_pD3DVtxBuff = NULL;
 	m_pD3DTexBuff = NULL;

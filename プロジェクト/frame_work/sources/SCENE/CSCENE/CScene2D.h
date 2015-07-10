@@ -124,7 +124,7 @@ public:
 	// 引数:デバイス、座標、幅、高さ、テクスチャの種類
 	// 戻り値:作成したアドレス
 	//=======================================================================
-	static CScene2D* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType);
+	static CScene2D* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int nPriority = TYPE_PRIORITY_0);
 
 	//=======================================================================
 	// 頂点座標取得関数

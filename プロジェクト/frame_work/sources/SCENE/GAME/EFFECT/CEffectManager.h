@@ -19,10 +19,20 @@
 //=============================================================================
 enum EFFECT_TYPE{
 	EFFECT_ATTACK_HIT = 0,
-	EFFECT_EXPLOSION,
-	EFFECT_SPECIAL_ATTACK_ATTACK,
-	EFFECT_SPECIAL_ATTACK_SPEED,
-	EFFECT_SPECIAL_THREAD_ATTACK,
+	EFFECT_EXPLOSION,				// 爆発
+	EFFECT_SPECIAL_ATTACK_ATTACK,	// 攻撃特化攻撃
+	EFFECT_SPECIAL_ATTACK_SPEED,	// 移動特化攻撃
+	EFFECT_SPECIAL_THREAD_ATTACK,	// 攻撃特化糸攻撃
+	EFFECT_CAUGHT_TRAP,				// 罠にかかったエフェクト
+	EFFECT_CREATE_ROAD,				// 道作成時のエフェクト
+	EFFECT_FLAG_GET,				// フラグ取得エフェクト
+	EFFECT_FLAG_HOLD,				// フラグ所持中エフェクト
+	EFFECT_PLAYER_DEAD,				// プレイヤー体力０エフェクト
+	EFFECT_MP_ATTACK,				// MPダメージエフェクト
+	EFFECT_NORMAL_ATTACK_CAP,		// 帽子攻撃エフェクト
+	EFFECT_NORMAL_ATTACK_THREAD,	// 通常糸発射攻撃
+	EFFECT_PLAYER_REVIAVE,			// プレイヤー復活エフェクト
+	EFFECT_TRAP_FOUNDATION,			// 罠設置エフェクト
 
 	EFFECT_MAX,
 };

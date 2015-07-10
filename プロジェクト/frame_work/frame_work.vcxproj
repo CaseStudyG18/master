@@ -41,6 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\</OutDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -97,6 +99,7 @@
     <ClCompile Include="sources\MATH\vector.cpp" />
     <ClCompile Include="sources\PHASE\CPhase.cpp" />
     <ClCompile Include="sources\RENDERER\CRenderer.cpp" />
+    <ClCompile Include="sources\SCENE\CHARA_SELECT\CCharaSelect.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CScene.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CScene2D.cpp" />
     <ClCompile Include="sources\SCENE\CSCENE\CSceneAnime.cpp" />
@@ -116,11 +119,18 @@
     <ClCompile Include="sources\SCENE\GAME\CTimeManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp" />
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectBase.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.cpp" />
     <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CField.cpp" />
     <ClCompile Include="sources\SCENE\GAME\FIELD\CFieldManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\FIELD\CNaviTile.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoal.cpp" />
     <ClCompile Include="sources\SCENE\GAME\GOAL\CGoalManager.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\AI\C_CPU_AI.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\PLAYER\AI\mersenne_twister.cpp" />
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayer.cpp" />
     <ClCompile Include="sources\SCENE\GAME\PLAYER\CPlayerManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\THREAD\CThreadBase.cpp" />
@@ -133,10 +143,13 @@
     <ClCompile Include="sources\SCENE\GAME\TREASURE\CTreasureManager.cpp" />
     <ClCompile Include="sources\SCENE\GAME\UI\CCountDown.cpp" />
     <ClCompile Include="sources\SCENE\GAME\UI\CMp.cpp" />
+    <ClCompile Include="sources\SCENE\GAME\UI\CWinDraw.cpp" />
     <ClCompile Include="sources\SCENE\OPTION\COption.cpp" />
     <ClCompile Include="sources\SCENE\PAUSE\CPause.cpp" />
     <ClCompile Include="sources\SCENE\RESULT\CResult.cpp" />
+    <ClCompile Include="sources\SCENE\STAGE_SELECT\CStageSelect.cpp" />
     <ClCompile Include="sources\SCENE\TITLE\CTitle.cpp" />
+    <ClCompile Include="sources\SCENE\TUTORIAL\CTutorial.cpp" />
     <ClCompile Include="sources\SCENE\UI\CCursol.cpp" />
     <ClCompile Include="sources\SCENE\UI\CNumber.cpp" />
     <ClCompile Include="sources\SOUND\CSound.cpp" />
@@ -162,6 +175,7 @@
     <ClInclude Include="sources\MATH\vector.h" />
     <ClInclude Include="sources\PHASE\CPhase.h" />
     <ClInclude Include="sources\RENDERER\CRenderer.h" />
+    <ClInclude Include="sources\SCENE\CHARA_SELECT\CCharaSelect.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CScene.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CScene2D.h" />
     <ClInclude Include="sources\SCENE\CSCENE\CSceneAnime.h" />
@@ -181,11 +195,18 @@
     <ClInclude Include="sources\SCENE\GAME\CTimeManager.h" />
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.h" />
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectBase.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.h" />
     <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.h" />
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CField.h" />
     <ClInclude Include="sources\SCENE\GAME\FIELD\CFieldManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\FIELD\CNaviTile.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoal.h" />
     <ClInclude Include="sources\SCENE\GAME\GOAL\CGoalManager.h" />
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\AI\C_CPU_AI.h" />
+    <ClInclude Include="sources\SCENE\GAME\PLAYER\AI\mersenne_twister.h" />
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayer.h" />
     <ClInclude Include="sources\SCENE\GAME\PLAYER\CPlayerManager.h" />
     <ClInclude Include="sources\SCENE\GAME\THREAD\CThreadBase.h" />
@@ -198,10 +219,13 @@
     <ClInclude Include="sources\SCENE\GAME\TREASURE\CTreasureManager.h" />
     <ClInclude Include="sources\SCENE\GAME\UI\CCountDown.h" />
     <ClInclude Include="sources\SCENE\GAME\UI\CMp.h" />
+    <ClInclude Include="sources\SCENE\GAME\UI\CWinDraw.h" />
     <ClInclude Include="sources\SCENE\OPTION\COption.h" />
     <ClInclude Include="sources\SCENE\PAUSE\CPause.h" />
     <ClInclude Include="sources\SCENE\RESULT\CResult.h" />
+    <ClInclude Include="sources\SCENE\STAGE_SELECT\CStageSelect.h" />
     <ClInclude Include="sources\SCENE\TITLE\CTitle.h" />
+    <ClInclude Include="sources\SCENE\TUTORIAL\CTutorial.h" />
     <ClInclude Include="sources\SCENE\UI\CCursol.h" />
     <ClInclude Include="sources\SCENE\UI\CNumber.h" />
     <ClInclude Include="sources\SOUND\CSound.h" />

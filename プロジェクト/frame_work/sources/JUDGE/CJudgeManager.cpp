@@ -67,8 +67,16 @@ void CJudgeManager::Update(void)
 	// プレイヤと攻撃の当たり判定
 	m_pJudge->ColiAttackxPlayer();
 
+	// プレイヤと糸の当たり判定
+	m_pJudge->ColiThreadxPlayer();
+
 	// 床と糸とのあたり判定
 	m_pJudge->ColiFieldxThreadOfFoothold();
+
+	// 床とフィールドの当たり判定
+	m_pJudge->ColiFieldxTreasure();
+
+	m_pJudge->ColiGoalxPlayer();
 }
 
 //=========================================================================

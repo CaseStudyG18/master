@@ -13,48 +13,89 @@
 // 定数定義
 //*****************************************************************************
 // テクスチャのパス
-static const char *TEXTURE_PATH[ TEXTURE_MAX ] = 
+static const char *TEXTURE_PATH[TEXTURE_MAX] =
 {
 	NULL,
-	"data/TEXTURE/witch3.tga",
 	"data/TEXTURE/bg_0.png",
 	"data/TEXTURE/bg_1.png",
 	"data/TEXTURE/fire0.png",
 	"data/TEXTURE/fire1.png",
 	"data/TEXTURE/thread.png",
 	"data/TEXTURE/Player.png",
-	"data/TEXTURE/figure.png",
-	"data/TEXTURE/goal.png",
+	"data/TEXTURE/figure_black.png",
+	"data/TEXTURE/figure_white.png",
+	"data/TEXTURE/figure_green.png",
 	"data/TEXTURE/treasure.png",
 	"data/TEXTURE/treasure_icon.png",
-	"data/TEXTURE/test.jpg",
+	"data/TEXTURE/bg_title.png",
+	"data/TEXTURE/bg_tutorial.png",
+	"data/TEXTURE/bg_result.png",
+	"data/TEXTURE/bg_chara_select.png",
+	"data/TEXTURE/bg_stage_select.png",
+	"data/TEXTURE/stage_0.png",
+	"data/TEXTURE/stage_1.png",
+	"data/TEXTURE/stage_2.png",
+	"data/TEXTURE/stage_3.png",
+	"data/TEXTURE/WinLogo.png",
+	"data/TEXTURE/DrawLogo.png",
 	"data/TEXTURE/02.png",
 	"data/TEXTURE/03.png",
 	"data/TEXTURE/Spawn.png",
+	"data/TEXTURE/SpawnYellow.png",
+	"data/TEXTURE/SpawnRed.png",
+	"data/TEXTURE/SpawnBlue.png",
+	"data/TEXTURE/SpawnGreen.png",
+	"data/TEXTURE/hit_effect_small.png",
+	"data/TEXTURE/hit_effect_big.png",
+	"data/TEXTURE/attack_around.png",
+	"data/TEXTURE/attack_tackle.png",
+	"data/TEXTURE/slow_effect.png",
+	"data/TEXTURE/trans_effect_yellow.png",
+	"data/TEXTURE/trans_effect_red.png",
+	"data/TEXTURE/trans_effect_blue.png",
+	"data/TEXTURE/trans_effect_green.png",
+	"data/TEXTURE/kirakira.png",
+	"data/TEXTURE/treasure_light.png",
+	"data/TEXTURE/title_logo.png",
+	"data/TEXTURE/title_pushstart.png",
+	"data/TEXTURE/title_menu.png",
+	"data/TEXTURE/title_cursol.png",
+	"data/TEXTURE/option_menu.png",
+	"data/TEXTURE/option_BG.png",
+	"data/TEXTURE/cursol.png",
+	"data/TEXTURE/return.png",
+	"data/TEXTURE/player_num.png",
+	"data/TEXTURE/result_push.png",
+	"data/TEXTURE/result_menu_back_0.png",
+	"data/TEXTURE/result_menu_back_1.png",
+	"data/TEXTURE/result_menu_back_2.png",
+	"data/TEXTURE/result_menu_moji_0.png",
+	"data/TEXTURE/result_menu_moji_1.png",
+	"data/TEXTURE/result_menu_moji_2.png",
 };
 
 //*****************************************************************************
 // スタティックメンバ変数宣言
 //*****************************************************************************
 bool CTexture::m_bDoneCreateFlag = false;
-LPDIRECT3DTEXTURE9 CTexture::m_pD3DTex[TEXTURE_MAX] = {NULL};
+LPDIRECT3DTEXTURE9 CTexture::m_pD3DTex[TEXTURE_MAX] = { NULL };
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CTexture::Init( LPDIRECT3DDEVICE9 *pDevice )
+HRESULT CTexture::Init(LPDIRECT3DDEVICE9 *pDevice)
 {
 	// ゲームで使う全テクスチャを作成
-	for( int TexCnt = 0; TexCnt < TEXTURE_MAX; TexCnt++ )
+	for (int TexCnt = 0; TexCnt < TEXTURE_MAX; TexCnt++)
 	{
-		if(TEXTURE_PATH[TexCnt] != NULL)
+		if (TEXTURE_PATH[TexCnt] != NULL)
 		{
 			// テクスチャ読み込み
-			if( FAILED( D3DXCreateTextureFromFile((*pDevice), TEXTURE_PATH[TexCnt], &m_pD3DTex[TexCnt])))
+			if (FAILED(D3DXCreateTextureFromFile((*pDevice), TEXTURE_PATH[TexCnt], &m_pD3DTex[TexCnt])))
 			{
-		#ifdef _DEBUG
-				MessageBox( NULL, "テクスチャの読み込みに失敗しました\n" , "エラー", MB_OK | MB_ICONERROR );
-		#endif
+#ifdef _DEBUG
+				MessageBox(NULL, "テクスチャの読み込みに失敗しました\n", "エラー", MB_OK | MB_ICONERROR);
+#endif
 				m_pD3DTex[TexCnt] = NULL;
 				return E_FAIL;
 			}
@@ -71,13 +112,13 @@ HRESULT CTexture::Init( LPDIRECT3DDEVICE9 *pDevice )
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CTexture::Uninit( void )
+void CTexture::Uninit(void)
 {
 	// 使った全テクスチャポインタを開放
-	for( int TexCnt = 0; TexCnt < TEXTURE_MAX; TexCnt++ )
+	for (int TexCnt = 0; TexCnt < TEXTURE_MAX; TexCnt++)
 	{
 		// テクスチャポインタが使われている場合
-		if(m_pD3DTex[TexCnt])
+		if (m_pD3DTex[TexCnt])
 		{
 			m_pD3DTex[TexCnt]->Release();
 			m_pD3DTex[TexCnt] = NULL;
@@ -89,7 +130,7 @@ void CTexture::Uninit( void )
 //=============================================================================
 // テクスチャ作成処理
 //=============================================================================
-void CTexture::CreateTexture( LPDIRECT3DDEVICE9 *pDevice)
+void CTexture::CreateTexture(LPDIRECT3DDEVICE9 *pDevice)
 {
 	CTexture::Init(pDevice);
 }
@@ -97,13 +138,13 @@ void CTexture::CreateTexture( LPDIRECT3DDEVICE9 *pDevice)
 //=============================================================================
 // テクスチャポインタ取得処理
 //=============================================================================
-LPDIRECT3DTEXTURE9 CTexture::GetTexture( const TEXTURE_TYPE type )
+LPDIRECT3DTEXTURE9 CTexture::GetTexture(const TEXTURE_TYPE type)
 {
 	// 正しいテクスチャタイプか判定
-	if( type < 0 || type > TEXTURE_MAX )
+	if (type < 0 || type > TEXTURE_MAX)
 	{
 #ifdef _DEBUG
-		MessageBox( NULL, "テクスチャタイプの番号が不適切です", "エラー", MB_OK | MB_ICONERROR );
+		MessageBox(NULL, "テクスチャタイプの番号が不適切です", "エラー", MB_OK | MB_ICONERROR);
 #endif
 		return NULL;
 	}

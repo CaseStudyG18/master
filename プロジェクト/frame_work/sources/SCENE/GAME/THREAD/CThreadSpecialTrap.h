@@ -1,9 +1,7 @@
 //=============================================================================
 //
 // CThreadSpecialAttackクラス [CThreadSpecialAttack.h]
-// Author : 佐藤　諒一
-//
-// 攻撃特化形態の糸
+// Author : 塚本俊彦
 //
 //=============================================================================
 #ifndef _CTHREAD_SPECIAL_TRAP_H_
@@ -15,6 +13,11 @@
 #include "../../../RENDERER/CRenderer.h"
 #include "CThreadBase.h"
 
+//=============================================================================
+// 前方宣言
+//=============================================================================
+class CSceneAnime;
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -23,13 +26,20 @@ class CThreadSpecialTrap : public CThreadBase
 	// 公開メンバ
 public:
 	// プライオリティとオブジェタイプはテスト
-	CThreadSpecialTrap(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_THREAD_OF_FOOTHOLD, OBJTYPE type = OBJTYPE_FIELD);
+	CThreadSpecialTrap(
+		LPDIRECT3DDEVICE9 *pDevice,
+		int priority = TYPE_PRIORITY_ATTACK,
+		OBJTYPE type = OBJTYPE_THREAD);
+
 	~CThreadSpecialTrap(void);
 
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
+	// プレイヤに当たった時に呼ばれる関数
+	void HitPlayer(CPlayer* pPlayer);
 
 	//=======================================================================
 	// クリエイト関数
@@ -43,6 +53,7 @@ public:
 
 	// 非公開メンバ
 private:
+	CSceneAnime *m_pBulletAnime;
 
 };
 

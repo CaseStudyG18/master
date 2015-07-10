@@ -22,13 +22,14 @@
 #include "UI\CCountDown.h"
 #include "../../BACKGROUND/CBackGroundManager.h"
 #include "EFFECT\CEffectManager.h"
+#include "UI\CWinDraw.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
 
 // ゲームの制限時間
-static const short GAME_TIME = 300;
+static const short GAME_TIME = 200;
 
 // 宝物の場所
 static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(647, 315, 0);
@@ -45,11 +46,14 @@ static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 };
 
 // プレイヤ人数
-static const short MANUAL_PLAYER_NUM = 2;
+static const short MANUAL_PLAYER_NUM = 4;
 static const short CPU_PLAYER_NUM = 0;
 
 // 背景のスクロールの速さ
 static const float BG_SPEED = 2.0f;
+
+// リザルトロゴを表示してからフェードするまでのカウント数
+static const short RESULT_LOGO_TO_FADE_INTERVAL = 180;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -69,6 +73,8 @@ CGame::CGame(void)
 	m_pJudgeManager = NULL;
 	m_pFieldManager = NULL;
 	m_pCountDown = NULL;
+
+	m_nResultCount = 0;
 
 	// プレイヤ操作可能フラグ
 	m_bPlayerControl = false;
@@ -116,18 +122,6 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pThreadManager = new CThreadManager(pDevice);
 	m_pThreadManager->Init();
 
-	// 2015_06_23変更
-	// サトウ　リョウイチ
-	// エフェクトマネージャー
-	m_pEffectManager = new CEffectManager(m_pD3DDevice);
-	m_pEffectManager->Init();
-
-	// 2015_06_23変更
-	// サトウ　リョウイチ
-	// プレイヤ生成
-	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager, m_pEffectManager);
-	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
-
 	// 宝物生成
 	m_pTreasureManager = new CTreasureManager(pDevice);
 	m_pTreasureManager->Init();
@@ -139,6 +133,14 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pGoalManager->CreateGoal(
 		const_cast<D3DXVECTOR3*>(GOAL_POS),
 		const_cast<short*>(GOAL_PLAYER_NUMBER), this);
+
+	// フィールド作成
+	m_pFieldManager = new CFieldManager;
+	m_pFieldManager->LoadField(m_pD3DDevice, CFieldManager::FIELD_TEST);
+
+	// プレイヤ生成
+	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager, m_pEffectManager);
+	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
 
 	// 背景作成
 	m_pBackGroundManager = new CBackGroundManager(pDevice);
@@ -152,12 +154,17 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// ジャッジ作成
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
 
-	// フィールド作成
-	m_pFieldManager = new CFieldManager;
-	m_pFieldManager->LoadField(m_pD3DDevice, CFieldManager::FIELD_TEST);
 	// カウントダウン
 	m_pCountDown = new CCountDown(m_pD3DDevice, &m_bPlayerControl);
 	m_pCountDown->Init();
+
+	// エフェクトマネージャー
+	m_pEffectManager = new CEffectManager(m_pD3DDevice);
+	m_pEffectManager->Init();
+
+	// 勝ち引き分けを表示するマネージャ
+	m_pWinDrawLogo = new CWinDraw(m_pD3DDevice);
+	m_pWinDrawLogo->Init();
 }
 
 //*****************************************************************************
@@ -165,6 +172,10 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::Uninit(void)
 {
+	if (m_pWinDrawLogo){
+		m_pWinDrawLogo->Uninit();
+		SAFE_DELETE(m_pWinDrawLogo);
+	}
 	if (m_pEffectManager){
 		m_pEffectManager->Uninit();
 		SAFE_DELETE(m_pEffectManager);
@@ -224,6 +235,11 @@ void CGame::Update(void)
 	// 背景の更新
 	m_pBackGroundManager->Update();
 
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_G))
+	{
+		m_pWinDrawLogo->CreateWinLogo();
+	}
+
 	// Ｐが押されたら
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_P))
 	{
@@ -252,12 +268,37 @@ void CGame::Update(void)
 			m_pJudgeManager->Update();
 			m_pFieldManager->Update();
 		}
-
-		// テストでエフェクトをクリエイト
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_SPACE)){
-			m_pEffectManager->CreateEffect(D3DXVECTOR3(300, 200, 0), EFFECT_SPECIAL_ATTACK_SPEED , D3DXVECTOR3(0.0f,1.0f,0.0f));
+		// 残り時間が0になったらDraw
+		if (m_pTimeManager->GetRemaining() == 0){
+			SetDraw();
 		}
-	
+
+		// エフェクトのテスト
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_EXPLOSION,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
+		}
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_X)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_SPECIAL_ATTACK_ATTACK,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
+		}
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_C)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_SPECIAL_ATTACK_SPEED,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
+		}
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_V)){
+			m_pEffectManager->CreateEffect(
+				EFFECT_SPECIAL_THREAD_ATTACK,
+				m_pPlayerManager->GetPlayer(0)->GetPos(),
+				D3DXVECTOR3(0, 0, 0));
+		}
+
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 		{
 			// フェードアウト開始
@@ -271,10 +312,6 @@ void CGame::Update(void)
 		if (m_bGameOver)
 		{
 			Result();
-
-			// フェードアウト開始
-//			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-//			m_pManager->SetNextPhase(MODE_PHASE_TITLE);
 		}
 	}
 
@@ -293,10 +330,6 @@ void CGame::Update(void)
 	{
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-	}
-	//debug
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
-		SetDraw();
 	}
 }
 
@@ -325,6 +358,8 @@ void CGame::SetWinPlayer(short num){
 
 	m_bGameOver = true;
 
+	m_pWinDrawLogo->CreateWinLogo();
+
 }
 //*****************************************************************************
 // 引き分けにする 一回だけ呼ばれる
@@ -334,8 +369,7 @@ void CGame::SetDraw(){
 	m_bGameOver = true;
 
 	// ロゴの表示
-//	m_pLogoDraw = new CLogoDraw(m_pD3DDevice);
-//	m_pLogoDraw->Init();
+	m_pWinDrawLogo->CreateDrawLogo();
 }
 
 //*****************************************************************************
@@ -346,12 +380,20 @@ void CGame::Result(){
 	// 引き分け
 	if (m_nWinPlayerNum == -1){
 		// ＤＲＡＷロゴの更新（アニメーション）
+#ifdef _DEBUG
 		CDebugProc::Print("●引き分けシーン\n");
+#endif
+	}
+	m_nResultCount++;
+
+	if (m_nResultCount > RESULT_LOGO_TO_FADE_INTERVAL){
+		// フェードアウト開始
+		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+		m_pManager->SetNextPhase(MODE_PHASE_RESULT);
 	}
 
-
-//	if (m_pLogoDraw)
-//		m_pLogoDraw->Update();
+	//	if (m_pLogoDraw)
+	//		m_pLogoDraw->Update();
 
 }
 //----EOF-------

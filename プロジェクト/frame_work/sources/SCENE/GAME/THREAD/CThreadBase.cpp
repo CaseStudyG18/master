@@ -63,11 +63,6 @@ void CThreadBase::Update(void)
 {
 	m_nCount++;
 
-	// 寿命？
-	if (m_nCount > m_nEndTime){
-	//	Uninit();
-	}
-
 	// 当たり判定フラグ更新
 	if (m_nCount > m_nHitStartTime){
 		m_bHitFlg = true;
@@ -77,8 +72,19 @@ void CThreadBase::Update(void)
 	}
 }
 
-void CThreadBase::Draw (void)
+//*****************************************************************************
+// 描画
+//*****************************************************************************
+void CThreadBase::Draw(void)
 {
 	CScene2D::Draw();
 }
+
+//*****************************************************************************
+//	攻撃がヒットした際に呼び出される関数
+//*****************************************************************************
+void CThreadBase::HitPlayer(CPlayer* pPlayer)
+{
+}
+
 //----EOF-------

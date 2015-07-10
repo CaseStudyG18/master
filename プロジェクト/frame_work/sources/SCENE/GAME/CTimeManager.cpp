@@ -23,7 +23,7 @@ const D3DXVECTOR3 TIMER_POSITION = D3DXVECTOR3(670, 30, 0);
 const float TIMER_WIDTH = 30;
 const float TIMER_HEIGHT = 48;
 // ƒeƒNƒXƒ`ƒƒ
-const TEXTURE_TYPE TIMER_TEXTURE = TEXTURE_NUMBER;
+const TEXTURE_TYPE TIMER_TEXTURE = TEXTURE_NUMBER_WHITE;
 
 
 //*****************************************************************************
@@ -43,6 +43,7 @@ CTimeManager::CTimeManager(LPDIRECT3DDEVICE9* pDevice, short nGameTime)
 	// ƒ^ƒCƒ}[‰Šú‰»
 	m_nTimeCur = 0;
 	m_TimeLast = 0;
+	m_nGameTimer = 0;
 
 	// ƒQ[ƒ€‚Ì§ŒÀŽžŠÔ
 	m_nGameTime = nGameTime;
@@ -85,10 +86,11 @@ void CTimeManager::Update(void)
 	m_nTimeCur = timeGetTime();
 	timeEndPeriod(1);
 
-	// ˆê•bŒo‰ßˆ—
+	// ‚P•bŒo‰ßˆ— 1000ƒ~•b = 1•b
 	if (m_nTimeCur - m_TimeLast > 1000){
 		m_TimeLast = m_nTimeCur;
 		m_pTimeNumber->Add(-1);
+		m_nGameTimer++;
 	}
 }
 

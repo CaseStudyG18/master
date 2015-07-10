@@ -11,12 +11,14 @@
 //*****************************************************************************
 #include "../../MAIN/main.h"
 #include "../../PHASE/CPhase.h"
+#include "../../CONTROLLER/CControllerManager.h"
+#include "../../INPUT/CInputGamePad.h"
 
 //*****************************************************************************
 // 前方宣言
 //*****************************************************************************
 class CScene2D;
-
+class CSceneNumber;
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -60,12 +62,40 @@ private:
 	//=================================================================
 	// キーコンフィグ関数
 	//=================================================================
-	void KeyConfig(void);
+	void KeyConfig(int padID, CInputGamePad::PAD_BUTTON button);
 
+	//=================================================================
+	// 桁割出関数
+	// 引数:(out)１０の位、(out)１の位、元の数字
+	//=================================================================
+	void CuclDigit(int* ten, int* one, int org);
+
+	//=================================================================
+	// カーソル更新関数
+	//=================================================================
+	void UpdateCursol(void);
+
+	// 動く背景の数
+	static const int MOVE_BG_NUM = 2;
+
+	// キーコード表示用
+	typedef struct
+	{
+		CSceneNumber* DigitTen;	// 10の位
+		CSceneNumber* DigitOne;	// 1の位
+	}PRINT_KEY_CORD;
 
 	OPTION_MODE					m_mode;
-	CInputGamePad::PAD_BUTTON	m_setButton;		// 何のボタンか
-	int							m_nControllerID;	// コントローラー番号
+	CInputGamePad::PAD_BUTTON	m_setButton;											// 何のボタンか
+	int							m_nControllerID;										// コントローラー番号
+	CScene2D*					m_pOptionMenu[CControllerManager::MAX_CONTROLLER_NUM];	// オプションメニュー
+	CScene2D*					m_pOptionBG;											// オプションBG
+	CScene2D*					m_pOptionBGMove[MOVE_BG_NUM];							// オプション動くBG
+	PRINT_KEY_CORD				m_KeyNumber[CControllerManager::MAX_CONTROLLER_NUM][CInputGamePad::PAD_KEY_MAX];
+	CScene2D*					m_pCursol[CControllerManager::MAX_CONTROLLER_NUM];		// カーソル
+	float						m_fCursolAlfaRad;										// カーソルの透明値
+	int							m_nSelectCounter[CControllerManager::MAX_CONTROLLER_NUM];// どこを選んでいるか
+	CScene2D*					m_pReturn;												// 戻る
 };
 
 #endif

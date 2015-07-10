@@ -39,7 +39,7 @@ public:
 	void Draw(void);
 
 	// 描画フラグセッター
-	void SetDrawFlag(bool flag){m_bDraw = flag;};
+	void SetDrawFlag(bool flag){ m_bDraw = flag; };
 
 	//==================================================================
 	// 大きさと場所変更関数

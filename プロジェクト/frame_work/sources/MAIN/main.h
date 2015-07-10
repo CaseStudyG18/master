@@ -70,5 +70,7 @@ typedef struct
 	D3DCOLOR	diffuse;
 	D3DXVECTOR2	tex;
 } VERTEX_3D;
+
+bool GetDrawFlag(void);
 #endif
 //----EOF----

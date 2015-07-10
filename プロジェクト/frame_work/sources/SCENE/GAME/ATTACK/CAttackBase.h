@@ -3,12 +3,6 @@
 // CAttackBaseクラス [CAttackBase.h]
 // Author : 塚本　俊彦
 //
-// 攻撃の基底クラス
-// CSceneポインタで当たり判定を行うためCScene2Dを継承。
-// 座標や半径などの大きさはCScene2Dが持っているけど、
-// Baseの継承先からだとGetPosとしないと取得できないため、
-// さらに自分で持つ
-//
 //=============================================================================
 #ifndef _CATTACKBASE_H_
 #define _CATTACKBASE_H_
