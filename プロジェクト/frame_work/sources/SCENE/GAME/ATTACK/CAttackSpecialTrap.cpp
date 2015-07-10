@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialTrap.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -80,14 +80,6 @@ void CAttackSpecialTrap::Uninit(void)
 void CAttackSpecialTrap::Update(void)
 {
 	CAttackBase::Update();
-
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount == 10){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos, ATTACK_TRAP_HIT_WIDTH, ATTACK_TRAP_HIT_HEIGHT,
-			TEXTURE_FIRE_1, 10, 1, m_nEndTime);
-	}
 }
 
 //*****************************************************************************
@@ -108,6 +100,8 @@ CAttackSpecialTrap* CAttackSpecialTrap::Create(
 	// 初期化
 	p->Init();
 
+	// エフェクト生成
+	CEffectManager::CreateEffect(pos,EFFECT_TRAP_FOUNDATION,velocity);
 
 	return p;
 }
@@ -118,6 +112,9 @@ CAttackSpecialTrap* CAttackSpecialTrap::Create(
 void CAttackSpecialTrap::HitPlayer(CPlayer* pPlayer)
 {
 	pPlayer->AddHp(-10.0f);
+
+	// 罠にかかったエフェクト生成
+	CEffectManager::CreateEffect(pPlayer->GetPos(), EFFECT_CAUGHT_TRAP,D3DXVECTOR3(0.0f,0.0f,0.0f));
 }
 
 //----EOF-------

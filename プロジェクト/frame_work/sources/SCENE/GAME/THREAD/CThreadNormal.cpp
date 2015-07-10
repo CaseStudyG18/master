@@ -9,6 +9,7 @@
 //*****************************************************************************
 #include "CThreadNormal.h"
 #include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -114,6 +115,9 @@ CThreadNormal* CThreadNormal::Create(
 
 	// 初期化
 	p->Init();
+
+	// エフェクト生成
+	CEffectManager::CreateEffect(pos, EFFECT_NORMAL_ATTACK_THREAD, direction);
 
 	return p;
 }

@@ -8,7 +8,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackNormal.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -79,14 +79,6 @@ void CAttackNormal::Uninit(void)
 void CAttackNormal::Update(void)
 {
 	CAttackBase::Update();
-
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount == 10){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos, 100, 100,
-			TEXTURE_FIRE_1, 10, 1, 20);
-	}
 }
 
 //*****************************************************************************
@@ -107,6 +99,8 @@ CAttackNormal* CAttackNormal::Create(
 	// 初期化
 	p->Init();
 
+	// エフェクト生成
+	CEffectManager::CreateEffect(pos,EFFECT_NORMAL_ATTACK_CAP,velocity);
 
 	return p;
 }
@@ -117,7 +111,10 @@ CAttackNormal* CAttackNormal::Create(
 //*****************************************************************************
 void CAttackNormal::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->SetSlowSpeed(true);
+	pPlayer->AddHp(-5.0f);
+
+	//エフェクト生成
+	CEffectManager::CreateEffect(pPlayer->GetPos(), EFFECT_ATTACK_HIT, D3DXVECTOR3(0.0f,0.0f,0.0f));
 }
 
 //----EOF-------

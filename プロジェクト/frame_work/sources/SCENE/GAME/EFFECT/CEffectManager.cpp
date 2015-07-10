@@ -24,6 +24,7 @@
 #include "CEffectNormalAttackThread.h"		// 通常糸発射
 #include "CEffectPlayerRevive.h"			// プレイヤー復活時
 #include "CEffectTrapFoundation.h"			// 罠設置時
+#include "CEffectMetamorphose.h"			// 変身
 
 //*****************************************************************************
 // マクロ
@@ -33,7 +34,7 @@
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
-
+LPDIRECT3DDEVICE9* CEffectManager::m_pDevice;
 
 //*****************************************************************************
 // コンストラクタ
@@ -141,5 +142,14 @@ void CEffectManager::CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3
 	default:
 		break;
 	}
+}
+
+//*****************************************************************************
+// エフェクト生成
+//*****************************************************************************
+void CEffectManager::CreateEffectMeta(D3DXVECTOR3 pos, short playerNum)
+{
+	// 変身エフェクト
+	CEffectMetamorphose::Create(m_pDevice,pos,playerNum);
 }
 //----EOF-------

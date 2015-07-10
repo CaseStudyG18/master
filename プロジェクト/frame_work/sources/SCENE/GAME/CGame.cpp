@@ -273,32 +273,6 @@ void CGame::Update(void)
 			SetDraw();
 		}
 
-		// エフェクトのテスト
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_EXPLOSION,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
-		}
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_X)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_SPECIAL_ATTACK_ATTACK,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
-		}
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_C)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_SPECIAL_ATTACK_SPEED,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
-		}
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_V)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_SPECIAL_THREAD_ATTACK,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
-		}
-
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
 		{
 			// フェードアウト開始

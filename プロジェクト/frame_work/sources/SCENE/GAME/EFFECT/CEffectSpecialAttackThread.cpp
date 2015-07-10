@@ -101,37 +101,41 @@ void CEffectSpecialAttackThread::Update(void)
 		m_pAnim[0] = CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
-			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
+			THREAD_ATTACK_WIDTH_SECOND + (abs(m_vVelocity.x) * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (abs(m_vVelocity.y) * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
 		m_vPos.x += m_vVelocity.x * 5.0f;
 		m_vPos.y += m_vVelocity.y * 5.0f;
+
 		m_pAnim[1] = CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
-			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
+			THREAD_ATTACK_WIDTH_SECOND + (abs(m_vVelocity.x) * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (abs(m_vVelocity.y) * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
 		m_vPos.x += m_vVelocity.x * 5.0f;
 		m_vPos.y += m_vVelocity.y * 5.0f;
 		m_vPos.y -= 5.0f;
 		m_vPos.x -= 5.0f;
+
 		m_pAnim[2] = CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
-			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
+			THREAD_ATTACK_WIDTH_SECOND + (abs(m_vVelocity.x) * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (abs(m_vVelocity.y) * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
 		m_vPos.x += m_vVelocity.x * 5.0f;
 		m_vPos.y += m_vVelocity.y * 5.0f;
 		m_vPos.y -= 10.0f;
 		m_vPos.x -= 10.0f;
+
 		m_pAnim[3] = CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos + D3DXVECTOR3(m_vVelocity.x * 100.0f, (m_vVelocity.y * 100.0f), 0.0f),
-			THREAD_ATTACK_WIDTH_SECOND + (m_vVelocity.x * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (m_vVelocity.y * 100.0f),
+			THREAD_ATTACK_WIDTH_SECOND + (abs(m_vVelocity.x) * 100.0f), THREAD_ATTACK_HEIGHT_SECOND + (abs(m_vVelocity.y) * 100.0f),
 			THREAD_ATTACK_TEXTURE, THREAD_ATTACK_TEXTURE_X, THREAD_ATTACK_TEXTURE_Y,
 			THREAD_ATTACK_TEXTURE_LOOP);
+
 		for (int i = 0; i < 4; i++)
 		{
 			if (m_vVelocity.y == -1)
@@ -158,10 +162,6 @@ void CEffectSpecialAttackThread::Update(void)
 
 	// 自殺の更新
 	CEffectBase::Update();
-
-#ifdef _DEBUG
-	CDebugProc::Print("攻撃特化状態の糸のエフェクトなう\n");
-#endif
 }
 
 //*****************************************************************************
@@ -175,6 +175,10 @@ CEffectSpecialAttackThread* CEffectSpecialAttackThread::Create(LPDIRECT3DDEVICE9
 	p->Init(pos, velocity);
 
 	return p;
+
+#ifdef _DEBUG
+	CDebugProc::Print("攻撃特化状態の糸のエフェクト作ったよ\n");
+#endif
 }
 
 //EOF

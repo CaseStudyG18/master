@@ -17,6 +17,8 @@
 #include "../../CSCENE/CSceneAnime.h"
 #include "AI/C_CPU_AI.h"
 #include "../FIELD/CFieldManager.h"
+#include "../EFFECT/CEffectManager.h"
+
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
@@ -251,6 +253,8 @@ void CPlayer::Update(void)
 	// 宝物を持っていたらアイコンの場所更新
 	if (m_pTreasure){
 		m_pTreasure->SetPos(m_vPos + TREASURE_ICON_POS_BUFF);
+		// 宝物所持時のエフェクト
+		CEffectManager::CreateEffect(m_vPos, EFFECT_FLAG_HOLD,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	}
 	// 鈍足状態だったら描画して座標をセット
 	if (m_bSlowSpeed){
@@ -702,6 +706,8 @@ void CPlayer::MetamorphoseAnimation(void)
 	// アニメーションの時間の増加
 	m_sAnimTime++;
 
+	CEffectManager::CreateEffectMeta(m_vPos,m_sNumber);
+
 //	if (m_sAnimTime > 60)
 	{
 		switch (m_ModeDest)
@@ -868,6 +874,9 @@ void CPlayer::PlayerDown(void)
 		m_bMatchless = true;
 
 		m_sDownTime = 0;
+
+		// プレイヤー復活エフェクト生成
+		CEffectManager::CreateEffect(m_vPos, EFFECT_PLAYER_REVIAVE, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 }
 
@@ -944,6 +953,9 @@ void CPlayer::SetPlayerDown(void)
 			m_Action = PLAYER_ACTION_DOWN;
 
 			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
+
+			// 体力０エフェクト生成
+			CEffectManager::CreateEffect(m_vPos, EFFECT_PLAYER_DEAD, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 			// 宝を持っていたら落とす
 			if (m_pTreasure)

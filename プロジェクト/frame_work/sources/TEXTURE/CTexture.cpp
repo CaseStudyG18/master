@@ -49,6 +49,7 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/hit_effect_big.png",
 	"data/TEXTURE/attack_around.png",
 	"data/TEXTURE/attack_tackle.png",
+	"data/TEXTURE/dengeki.png",	// “dŒ‚
 	"data/TEXTURE/slow_effect.png",
 	"data/TEXTURE/trans_effect_yellow.png",
 	"data/TEXTURE/trans_effect_red.png",

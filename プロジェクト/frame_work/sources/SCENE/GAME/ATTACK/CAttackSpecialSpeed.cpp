@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialSpeed.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -83,13 +83,6 @@ void CAttackSpecialSpeed::Update(void)
 {
 	CAttackBase::Update();
 
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount == 9){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos, 100, 100,
-			TEXTURE_FIRE_1, 10, 1, m_nEndTime);
-	}
 	//m_vPos += (m_vVelocity * ATTACK_SPEED_RANGE);
 }
 
@@ -112,6 +105,8 @@ CAttackSpecialSpeed* CAttackSpecialSpeed::Create(
 	// 初期化
 	p->Init();
 
+	// エフェクト生成
+	CEffectManager::CreateEffect(pos,EFFECT_SPECIAL_ATTACK_SPEED,velocity);
 
 	return p;
 }

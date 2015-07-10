@@ -20,19 +20,20 @@
 enum EFFECT_TYPE{
 	EFFECT_ATTACK_HIT = 0,
 	EFFECT_EXPLOSION,				// 爆発
-	EFFECT_SPECIAL_ATTACK_ATTACK,	// 攻撃特化攻撃
-	EFFECT_SPECIAL_ATTACK_SPEED,	// 移動特化攻撃
-	EFFECT_SPECIAL_THREAD_ATTACK,	// 攻撃特化糸攻撃
-	EFFECT_CAUGHT_TRAP,				// 罠にかかったエフェクト
-	EFFECT_CREATE_ROAD,				// 道作成時のエフェクト
-	EFFECT_FLAG_GET,				// フラグ取得エフェクト
-	EFFECT_FLAG_HOLD,				// フラグ所持中エフェクト
+	EFFECT_SPECIAL_ATTACK_ATTACK,	// 攻撃特化攻撃○
+	EFFECT_SPECIAL_ATTACK_SPEED,	// 移動特化攻撃○
+	EFFECT_SPECIAL_THREAD_ATTACK,	// 攻撃特化糸攻撃○
+	EFFECT_CAUGHT_TRAP,				// 罠にかかったエフェクト○
+	EFFECT_CREATE_ROAD,				// 道作成時のエフェクト○
+	EFFECT_FLAG_GET,				// フラグ取得エフェクト○
+	EFFECT_FLAG_HOLD,				// フラグ所持中エフェクト○
 	EFFECT_PLAYER_DEAD,				// プレイヤー体力０エフェクト
-	EFFECT_MP_ATTACK,				// MPダメージエフェクト
-	EFFECT_NORMAL_ATTACK_CAP,		// 帽子攻撃エフェクト
-	EFFECT_NORMAL_ATTACK_THREAD,	// 通常糸発射攻撃
+	EFFECT_MP_ATTACK,				// MPダメージエフェクト○
+	EFFECT_NORMAL_ATTACK_CAP,		// 帽子攻撃エフェクト○
+	EFFECT_NORMAL_ATTACK_THREAD,	// 通常糸発射攻撃○
 	EFFECT_PLAYER_REVIAVE,			// プレイヤー復活エフェクト
-	EFFECT_TRAP_FOUNDATION,			// 罠設置エフェクト
+	EFFECT_TRAP_FOUNDATION,			// 罠設置エフェクト○
+	EFFECT_METAMORPHORSE,			// 変形エフェクト
 
 	EFFECT_MAX,
 };
@@ -53,13 +54,17 @@ public:
 
 	// エフェクト生成関数
 	// 座標とタイプを設定
-	void CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3 velocity);
+	static void CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3 velocity);
+
+	// エフェクト生成関数
+	// 座標とタイプとプレイヤーナンバーを設定
+	static void CreateEffectMeta(D3DXVECTOR3 pos, short playerNum);
 
 	// 非公開メンバ
 private:
 
 	// デバイス
-	LPDIRECT3DDEVICE9 *m_pDevice;
+	static LPDIRECT3DDEVICE9 *m_pDevice;
 };
 
 #endif

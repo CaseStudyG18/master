@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialAttack.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -81,14 +81,6 @@ void CAttackSpecialAttack::Update(void)
 {
 	CAttackBase::Update();
 
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount%2 == 0){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos, 100, 100,
-			TEXTURE_FIRE_1, 10, 1, 20);
-	}
-
 	m_vRot.z += D3DX_PI*2.0f;
 
 	m_vPos.x += ATTACK_ATTACK_RANGE * cosf(m_vRot.z * D3DX_PI);
@@ -115,6 +107,8 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 	// 初期化
 	p->Init();
 
+	// 攻撃エフェクト生成
+	CEffectManager::CreateEffect(pos, EFFECT_SPECIAL_ATTACK_ATTACK, velocity);
 
 	return p;
 }
