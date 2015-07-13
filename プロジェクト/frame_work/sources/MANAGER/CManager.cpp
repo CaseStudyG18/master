@@ -30,6 +30,9 @@ MODE_PHASE		CManager::m_CurPhase = MODE_PHASE_NULL;
 MODE_PHASE		CManager::m_NextPhase = MODE_PHASE_NULL;
 volatile bool	CManager::m_bEndload = false;
 int				CManager::m_nWinPlayerNum = -1;
+short			CManager::m_nPlayerNumManual;
+short			CManager::m_nPlayerNumCpu;
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -65,6 +68,8 @@ HRESULT CManager ::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	m_sendParam.hWnd = hWnd;
 	m_sendParam.bWindow = bWindow;
 	m_nWinPlayerNum = 0;
+	m_nPlayerNumManual = 0;
+	m_nPlayerNumCpu = 0;
 
 	m_pRenderer = new CRenderer;
 	if(m_pRenderer->Init(hWnd, bWindow) == E_FAIL)

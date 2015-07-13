@@ -9,7 +9,7 @@
 //*****************************************************************************
 #include "CThreadSpecialAttack.h"
 #include "../PLAYER/CPlayer.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -90,44 +90,6 @@ void CThreadSpecialAttack::Uninit(void)
 void CThreadSpecialAttack::Update(void)
 {
 	CAttackBase::Update();
-
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount == THREAD_FIRST_ATTACK_CREATE_TIME){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos, 100, 100,
-			TEXTURE_FIRE_1, 10, 1, 40);
-	}
-
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount >= THREAD_SECOND_ATTACK_CREATE_TIME){
-		if (m_nCount % 11 == 0)
-		{
-			CSceneAnime::Create(
-				m_pD3DDevice,
-				m_vPos, 100, 100,
-				TEXTURE_FIRE_0, 10, 1, 60);
-		}
-		if (m_nCount % 4 == 0)
-		{
-			m_vPos += m_vVelocity*50.0f;
-		}
-
-		else if (m_nCount % 4 == 1)
-		{
-			m_vPos -= m_vVelocity*50.0f;
-		}
-
-		else if (m_nCount % 4 == 2)
-		{
-			m_vPos += m_vVelocity*80.0f;
-		}
-
-		else if (m_nCount % 4 == 3)
-		{
-			m_vPos -= m_vVelocity*75.0f;
-		}
-	}
 }
 
 //*****************************************************************************
@@ -141,6 +103,8 @@ CThreadSpecialAttack* CThreadSpecialAttack::Create(LPDIRECT3DDEVICE9 *pDevice, s
 	// 初期化
 	p->Init(pos, nPlayerNum, velocity);
 
+	// エフェクト生成
+	CEffectManager::CreateEffect(pos, EFFECT_SPECIAL_THREAD_ATTACK, velocity);
 
 	return p;
 }

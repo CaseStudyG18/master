@@ -45,10 +45,6 @@ static const short GOAL_PLAYER_NUMBER[GOAL_MAX] = {
 	0, 1, 2, 3
 };
 
-// プレイヤ人数
-static const short MANUAL_PLAYER_NUM = 4;
-static const short CPU_PLAYER_NUM = 0;
-
 // 背景のスクロールの速さ
 static const float BG_SPEED = 2.0f;
 
@@ -138,9 +134,13 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFieldManager = new CFieldManager;
 	m_pFieldManager->LoadField(m_pD3DDevice, CFieldManager::FIELD_TEST);
 
+	// 生成するプレイヤの数を取得
+	m_nPlayerNumManual = CManager::GetPlayerManualNum();
+	m_nPlayerNumCpu = PLAYER_MAX - m_nPlayerNumManual;
+
 	// プレイヤ生成
 	m_pPlayerManager = new CPlayerManager(m_pAttackManager, m_pThreadManager, m_pEffectManager);
-	m_pPlayerManager->Init(CPU_PLAYER_NUM, MANUAL_PLAYER_NUM, &m_bPlayerControl);
+	m_pPlayerManager->Init(m_nPlayerNumCpu, m_nPlayerNumManual, &m_bPlayerControl);
 
 	// 背景作成
 	m_pBackGroundManager = new CBackGroundManager(pDevice);
@@ -271,32 +271,6 @@ void CGame::Update(void)
 		// 残り時間が0になったらDraw
 		if (m_pTimeManager->GetRemaining() == 0){
 			SetDraw();
-		}
-
-		// エフェクトのテスト
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_Z)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_EXPLOSION,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
-		}
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_X)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_SPECIAL_ATTACK_ATTACK,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
-		}
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_C)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_SPECIAL_ATTACK_SPEED,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
-		}
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_V)){
-			m_pEffectManager->CreateEffect(
-				EFFECT_SPECIAL_THREAD_ATTACK,
-				m_pPlayerManager->GetPlayer(0)->GetPos(),
-				D3DXVECTOR3(0, 0, 0));
 		}
 
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))

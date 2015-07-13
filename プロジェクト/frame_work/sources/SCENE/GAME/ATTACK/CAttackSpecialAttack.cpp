@@ -9,7 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "CAttackSpecialAttack.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
@@ -115,6 +115,8 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 	// 初期化
 	p->Init();
 
+	// 攻撃エフェクト生成
+	CEffectManager::CreateEffect(pos, EFFECT_SPECIAL_ATTACK_ATTACK, velocity);
 
 	return p;
 }

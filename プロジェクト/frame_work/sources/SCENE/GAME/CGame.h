@@ -118,6 +118,10 @@ private:
 	short m_nWinPlayerNum;
 
 	int m_nResultCount;
+
+	// ƒvƒŒƒCƒ„”
+	short m_nPlayerNumManual;
+	short m_nPlayerNumCpu;
 };
 
 #endif

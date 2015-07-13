@@ -17,12 +17,12 @@
 // 定数
 //*****************************************************************************
 static const int ATTACK_HIT_COUNT_MAX = 180;
-static const float ATTACK_HIT_WIDTH = 50;
-static const float ATTACK_HIT_HEIGHT = 50;
-static const TEXTURE_TYPE ATTACK_HIT_TEXTURE = TEXTURE_TREASURE;
-static const int ATTACK_HIT_TEXTURE_X = 13;
+static const float ATTACK_HIT_WIDTH = 100;
+static const float ATTACK_HIT_HEIGHT = 100;
+static const TEXTURE_TYPE ATTACK_HIT_TEXTURE = TEXTURE_HIT_SMALL;
+static const int ATTACK_HIT_TEXTURE_X = 10;
 static const int ATTACK_HIT_TEXTURE_Y = 1;
-static const int ATTACK_HIT_TEXTURE_LOOP = 13;
+static const int ATTACK_HIT_TEXTURE_LOOP = 10;
 
 //*****************************************************************************
 // コンストラクタ
@@ -70,19 +70,9 @@ void CEffectAttackHit::Update(void)
 			ATTACK_HIT_TEXTURE, ATTACK_HIT_TEXTURE_X, ATTACK_HIT_TEXTURE_Y,
 			ATTACK_HIT_TEXTURE_LOOP);
 	}
-	else if (m_nCount == 30){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos,
-			ATTACK_HIT_WIDTH, ATTACK_HIT_HEIGHT,
-			ATTACK_HIT_TEXTURE, ATTACK_HIT_TEXTURE_X, ATTACK_HIT_TEXTURE_Y,
-			ATTACK_HIT_TEXTURE_LOOP);
-	}
 
 	// 自殺の更新
 	CEffectBase::Update();
-
-	CDebugProc::Print("\n○●○●○●\n");
 }
 
 //*****************************************************************************

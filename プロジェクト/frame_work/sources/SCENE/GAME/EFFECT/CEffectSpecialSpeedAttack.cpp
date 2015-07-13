@@ -17,13 +17,13 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-static const int SPEED_ATTACK_COUNT_MAX = 100;
-static const float SPEED_ATTACK_WIDTH = 50;
-static const float SPEED_ATTACK_HEIGHT = 50;
-static const TEXTURE_TYPE SPEED_ATTACK_TEXTURE = TEXTURE_FIRE_1;
-static const int SPEED_ATTACK_TEXTURE_X = 10;
-static const int SPEED_ATTACK_TEXTURE_Y = 1;
-static const int SPEED_ATTACK_TEXTURE_LOOP = 100;
+static const int SPEED_ATTACK_COUNT_MAX = 70;
+static const float SPEED_ATTACK_WIDTH = 180;
+static const float SPEED_ATTACK_HEIGHT = 180;
+static const TEXTURE_TYPE SPEED_ATTACK_TEXTURE = TEXTURE_ATTACK_TACKLE;
+static const int SPEED_ATTACK_TEXTURE_X = 1;
+static const int SPEED_ATTACK_TEXTURE_Y = 7;
+static const int SPEED_ATTACK_TEXTURE_LOOP = 70;
 
 //*****************************************************************************
 // コンストラクタ
@@ -50,7 +50,7 @@ void CEffectSpecialSpeedAttack::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 	m_nCount = 0;
 	m_nCountMax = SPEED_ATTACK_COUNT_MAX;
 	m_vPos = pos;
-	m_vRot.z = 0.0f;
+	m_vRot = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_vVelocity = velocity;
 }
 
@@ -74,18 +74,34 @@ void CEffectSpecialSpeedAttack::Update(void)
 					SPEED_ATTACK_WIDTH, SPEED_ATTACK_HEIGHT,
 					SPEED_ATTACK_TEXTURE, SPEED_ATTACK_TEXTURE_X, SPEED_ATTACK_TEXTURE_Y,
 					SPEED_ATTACK_TEXTURE_LOOP);
+
+		if (m_vVelocity.y == -1)
+		{
+			m_vRot.z = D3DX_PI*0.5f;
+			m_pAnim->SetRot(m_vRot);
+		}
+		if (m_vVelocity.y == 1)
+		{
+			m_vRot.z = D3DX_PI*1.5f;
+			m_pAnim->SetRot(m_vRot);
+		}
+		if (m_vVelocity.x == 1)
+		{
+			m_vRot.z = 0.0f;
+		}
+		if (m_vVelocity.x == -1)
+		{
+			m_vRot.z = D3DX_PI;
+			m_pAnim->SetRot(m_vRot);
+		}
 	}
 
-	m_vPos += m_vVelocity * 1.0f;
+	m_vPos += m_vVelocity * 100.0f;
 
-	m_pAnim->SetPos(m_vPos);
+	//m_pAnim->SetPos(m_vPos);
 
 	// 自殺の更新
 	CEffectBase::Update();
-
-#ifdef _DEBUG
-	CDebugProc::Print("移動特化状態の攻撃のエフェクトなう\n");
-#endif
 }
 
 //*****************************************************************************

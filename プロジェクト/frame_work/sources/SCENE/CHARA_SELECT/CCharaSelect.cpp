@@ -102,6 +102,8 @@ static const D3DXVECTOR3 CHARASELECT_READY_POS[PLAYER_MAX] = {
 };
 // 準備完了テクスチャの色（透過度設定）
 static const D3DXCOLOR CHARASELECT_READY_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
+// 全員が準備完了してから次のシーンに移行するまでの時間 なんんとなく入れたよ
+static const int CHARASELECT_NEXT_PHASE_INTERVAL = 60;
 
 //*****************************************************************************
 // コンストラクタ
@@ -154,6 +156,10 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	}
 	m_pConfig = NULL;
 	m_pStart2D = NULL;
+	m_bNextPhaseOnece = false;
+	m_nNextPhaseCount = 0;
+	m_nPlayerManualNum = 0;
+	m_nPlayerReadylNum = 0;
 
 	// 背景
 	InitializeBG();
@@ -244,7 +250,7 @@ void CCharaSelect::Update(void)
 	// なんかの入力があったらプレイヤー参戦
 	UpdateInputJoin();
 
-	// カーソルアニメーション
+	// カーソルについての更新
 	UpdateCursol();
 
 	// 準備完了の点滅アニメーション これみにくい！
@@ -252,6 +258,27 @@ void CCharaSelect::Update(void)
 
 	// 入力でテクスチャアニメーション
 	UpdateInput();
+
+	// 全員が準備完了だったらステージセレクトに移動
+	if (!m_bNextPhaseOnece){
+		// 参加したプレイヤ人数が全員準備完了を押したら
+		if (m_nPlayerReadylNum == m_nPlayerManualNum){
+			// 一回のみ実行
+			m_bNextPhaseOnece = true;
+			// プレイヤの人数を送る
+			CManager::SetPlayerNum(m_nPlayerManualNum);
+		}
+	}
+	// 一回全員準備完了したから一定カウントしたらシーン遷移
+	else{
+		m_nNextPhaseCount++;
+		if (m_nNextPhaseCount > CHARASELECT_NEXT_PHASE_INTERVAL){
+			// フェードアウト開始
+			m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+			// コンフィグヘ
+			m_pManager->SetNextPhase(MODE_PHASE_STAGE_SELECT);
+		}
+	}
 }
 
 //*****************************************************************************
@@ -290,9 +317,15 @@ void CCharaSelect::Join(int playerNum){
 		return;
 	}
 
+	// 押したフラグ
 	m_bPush[playerNum] = true;
+	
+	// ＰＵＳＨ2D消す
 	SAFE_RELEASE(m_pPush2DBG[playerNum]);
 	SAFE_RELEASE(m_pPush2D[playerNum]);
+
+	// 操作できるプレイヤ人数インクリメント
+	m_nPlayerManualNum++;
 
 	// りも2D
 	m_pRimo[playerNum] = CSceneAnime::Create(m_pD3DDevice,
@@ -303,7 +336,7 @@ void CCharaSelect::Join(int playerNum){
 
 	// 自動でテクスチャアニメーションしない
 	m_pRimo[playerNum]->SetAutoUpdate(false);
-	// 正面を向かせる
+	// 正面の歩きモーション
 	m_nRimoTextureIndex[playerNum] = PLAYER_WALK_TEXTURE_MIN;
 	m_pRimo[playerNum]->SetIndex(m_nRimoTextureIndex[playerNum]);
 	m_nRimoTextureMin[playerNum] = PLAYER_WALK_TEXTURE_MIN;
@@ -361,15 +394,15 @@ void CCharaSelect::UpdateRimoAnimation(void){
 void CCharaSelect::UpdateInputJoin(void){
 
 	// 各コントローラーで参加させる 0はすでに参加している
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_1) ||
 		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 1)){
 		Join(1);
 	}
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_2) ||
 		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 2)){
 		Join(2);
 	}
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_3) ||
 		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 3)){
 		Join(3);
 	}
@@ -468,6 +501,8 @@ void CCharaSelect::UpdateCursol(void){
 				// 準備完了ボタン
 				if (m_nCursol[i] == 1){
 					m_pReady2D[i]->SetDrawFlag(true);
+					m_bReady[i] = true;
+					m_nPlayerReadylNum++;
 				}
 				// コンフィグボタン
 				else if (m_nCursol[i] == 2){

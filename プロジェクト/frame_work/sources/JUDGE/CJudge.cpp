@@ -24,6 +24,7 @@
 #include "../SCENE/GAME/GOAL/CGoal.h"
 #include "../SCENE/GAME/GOAL/CGoalManager.h"
 #include "../CONTROLLER/CControllerManager.h"
+#include "../SCENE/GAME/EFFECT/CEffectManager.h"
 
 //=========================================================================
 // コンストラクタ
@@ -570,6 +571,9 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 							// フィールドにタイプ変更
 							pThread->SetObjType(CScene::OBJTYPE_FIELD);
 
+							// 道作成エフェクト生成
+							CEffectManager::CreateEffect(pThread->GetPos(), EFFECT_CREATE_ROAD, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 							hit = true;
 							break;
 						}
@@ -699,6 +703,7 @@ void CJudge::ColiTreasurexPlayer(void)
 				// プレイヤにお宝を渡す
 				pPlayer[idx]->SetTreasure(pTreasure);
 				pTreasure->SetTreasureState(TREASURE_STATE_OWNED);
+				CEffectManager::CreateEffect(pPlayer[idx]->GetPos(), EFFECT_FLAG_GET, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 				break;
 			}
 		}

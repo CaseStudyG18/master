@@ -106,6 +106,15 @@ public:
 	static void SetWinPlayerNum(int num){ m_nWinPlayerNum = num; }
 	static int GetWinPlayerNum(){ return m_nWinPlayerNum; }
 
+	// プレイヤ人数のセッタゲッタ
+	static void SetPlayerNum(short manual){
+		m_nPlayerNumManual = manual;
+		m_nPlayerNumCpu = PLAYER_MAX - m_nPlayerNumManual;
+	}
+	static short GetPlayerManualNum(){
+		return m_nPlayerNumManual;
+	}
+
 private:
 	// NOW LOADINGのスレッドに渡す情報構造体
 	typedef struct
@@ -135,7 +144,9 @@ private:
 	HANDLE					m_ThreadHandle;				// スレッドのハンドル
 	CNowLoading				*m_pNowLoading;				// NowLoading
 	static int				m_nWinPlayerNum;			// 勝ったプレイヤb番号
-	#ifdef _DEBUG
+	static short			m_nPlayerNumManual;			// 操作するプレイヤ数
+	static short			m_nPlayerNumCpu;			// ＣＰＵプレイヤ数
+#ifdef _DEBUG
 	CDebugProc				*m_pDebugProc;				// デバッグプロック
 	#endif
 };

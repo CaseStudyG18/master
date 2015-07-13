@@ -8,7 +8,7 @@
 // インクルード
 //*****************************************************************************
 #include "CThreadNormal.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 
 //*****************************************************************************
 // マクロ
@@ -115,6 +115,9 @@ CThreadNormal* CThreadNormal::Create(
 	// 初期化
 	p->Init();
 
+	// エフェクト生成
+	CEffectManager::CreateEffect(pos, EFFECT_NORMAL_ATTACK_THREAD, direction);
+
 	return p;
 }
 
@@ -131,9 +134,6 @@ void CThreadNormal::Draw(void)
 //*****************************************************************************
 void CThreadNormal::HitPlayer(CPlayer* pPlayer)
 {
-#ifdef _DEBUG
-	CDebugProc::Print("通常形態の糸がプレイヤにヒット\n");
-#endif
 	// 鈍足にしてダメージは無し
 	pPlayer->SetSlowSpeed(true);
 }

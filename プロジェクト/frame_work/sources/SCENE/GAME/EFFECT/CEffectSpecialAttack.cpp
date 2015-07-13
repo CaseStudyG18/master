@@ -20,10 +20,10 @@
 static const int ATTACK_ATTACK_COUNT_MAX = 360;
 static const float ATTACK_ATTACK_WIDTH = 50;
 static const float ATTACK_ATTACK_HEIGHT = 50;
-static const TEXTURE_TYPE ATTACK_ATTACK_TEXTURE = TEXTURE_FIRE_1;
-static const int ATTACK_ATTACK_TEXTURE_X = 10;
+static const TEXTURE_TYPE ATTACK_ATTACK_TEXTURE = TEXTURE_ATTACK_AROUND;
+static const int ATTACK_ATTACK_TEXTURE_X = 5;
 static const int ATTACK_ATTACK_TEXTURE_Y = 1;
-static const int ATTACK_ATTACK_TEXTURE_LOOP = 50;
+static const int ATTACK_ATTACK_TEXTURE_LOOP = 10;
 static const float ATTACK_ATTACK_RADIUS = 50;
 
 //*****************************************************************************
@@ -66,7 +66,7 @@ void CEffectSpecialAttack::Uninit(void)
 //*****************************************************************************
 void CEffectSpecialAttack::Update(void)
 {
-	if (m_nCount % 6 == 0){
+	if (m_nCount % 3 == 0){
 		CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos,
@@ -82,10 +82,6 @@ void CEffectSpecialAttack::Update(void)
 
 	// 自殺の更新
 	CEffectBase::Update();
-
-#ifdef _DEBUG
-	CDebugProc::Print("攻撃状態の攻撃のエフェクトなう\n");
-#endif
 }
 
 //*****************************************************************************

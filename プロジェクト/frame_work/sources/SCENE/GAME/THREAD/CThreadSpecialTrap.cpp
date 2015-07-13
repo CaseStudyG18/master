@@ -8,8 +8,9 @@
 // インクルード
 //*****************************************************************************
 #include "CThreadSpecialTrap.h"
-#include "../../CSCENE/CSceneAnime.h"
+#include "../EFFECT/CEffectManager.h"
 #include "../../../MANAGER/CManager.h"
+
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
@@ -117,6 +118,8 @@ CThreadSpecialTrap* CThreadSpecialTrap::Create(
 	// 初期化
 	p->Init();
 
+	CEffectManager::CreateEffect(pos, EFFECT_TRAP_FOUNDATION, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 	return p;
 }
 
@@ -134,9 +137,6 @@ void CThreadSpecialTrap::Draw(void)
 //*****************************************************************************
 void CThreadSpecialTrap::HitPlayer(CPlayer* pPlayer)
 {
-#ifdef _DEBUG
-	CDebugProc::Print("罠形態の糸がプレイヤにヒット\n");
-#endif
 	// 鈍足
 	pPlayer->SetSlowSpeed(true);
 }

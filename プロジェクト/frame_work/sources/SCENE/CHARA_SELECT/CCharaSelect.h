@@ -130,6 +130,15 @@ private:
 	// リモの変身状態
 	PLAYER_MODE m_PlayerMode[PLAYER_MAX];
 
+	// 全員準備完了から遷移までのカウント
+	int m_nNextPhaseCount;
+	// 全員準備完了から遷移するかの１回だけのフラグ
+	bool m_bNextPhaseOnece;
+	// 参加するプレイヤの人数
+	short m_nPlayerManualNum;
+	// 準備完了した人数
+	short m_nPlayerReadylNum;
+
 };
 
 #endif

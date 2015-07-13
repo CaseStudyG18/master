@@ -292,29 +292,8 @@
     <ClCompile Include="sources\SCENE\CSCENE\CSceneAnime.cpp">
       <Filter>SCENE\CSCENE</Filter>
     </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectManager.cpp">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectBase.cpp">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClCompile>
     <ClCompile Include="sources\SCENE\GAME\UI\CWinDraw.cpp">
       <Filter>SCENE\GAME\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.cpp">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.cpp">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.cpp">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.cpp">
-      <Filter>SCENE\EFFECT</Filter>
     </ClCompile>
     <ClCompile Include="sources\SCENE\CHARA_SELECT\CCharaSelect.cpp">
       <Filter>SCENE\CHARA_SELECT</Filter>
@@ -333,6 +312,60 @@
     </ClCompile>
     <ClCompile Include="sources\SCENE\TUTORIAL\CTutorial.cpp">
       <Filter>SCENE\TUTORIAL</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectCreateRoad.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectDead.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectFlagGet.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectFlagHold.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectManager.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectMetamorphose.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectMPAttack.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectNormalAttackCap.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectNormalAttackThread.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectPlayerRevive.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectTrapFoundation.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectBase.cpp">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\SCENE\GAME\EFFECT\CEffectCaughtTrap.cpp">
+      <Filter>SCENE\EFFECT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -516,29 +549,8 @@
     <ClInclude Include="sources\SCENE\CSCENE\CSceneAnime.h">
       <Filter>SCENE\CSCENE</Filter>
     </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectManager.h">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectBase.h">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.h">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClInclude>
     <ClInclude Include="sources\SCENE\GAME\UI\CWinDraw.h">
       <Filter>SCENE\GAME\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.h">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.h">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.h">
-      <Filter>SCENE\EFFECT</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.h">
-      <Filter>SCENE\EFFECT</Filter>
     </ClInclude>
     <ClInclude Include="sources\SCENE\CHARA_SELECT\CCharaSelect.h">
       <Filter>SCENE\CHARA_SELECT</Filter>
@@ -557,6 +569,60 @@
     </ClInclude>
     <ClInclude Include="sources\SCENE\TUTORIAL\CTutorial.h">
       <Filter>SCENE\TUTORIAL</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectCreateRoad.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectDead.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectExplosion.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectFlagGet.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectFlagHold.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectManager.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectMetamorphose.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectMPAttack.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectNormalAttackCap.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectNormalAttackThread.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectPlayerRevive.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectTrapFoundation.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectAttackHit.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectBase.h">
+      <Filter>SCENE\EFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\SCENE\GAME\EFFECT\CEffectCaughtTrap.h">
+      <Filter>SCENE\EFFECT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
