@@ -32,6 +32,7 @@ volatile bool	CManager::m_bEndload = false;
 int				CManager::m_nWinPlayerNum = -1;
 short			CManager::m_nPlayerNumManual;
 short			CManager::m_nPlayerNumCpu;
+int				CManager::m_nStageNum;
 
 //=============================================================================
 // コンストラクタ

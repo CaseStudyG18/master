@@ -115,6 +115,14 @@ public:
 		return m_nPlayerNumManual;
 	}
 
+	// 選択したステージ選択番号
+	static void SetStageNum(int num){
+		m_nStageNum = num;
+	}
+	static int SetStageNum(){
+		return m_nStageNum;
+	}
+
 private:
 	// NOW LOADINGのスレッドに渡す情報構造体
 	typedef struct
@@ -146,6 +154,7 @@ private:
 	static int				m_nWinPlayerNum;			// 勝ったプレイヤb番号
 	static short			m_nPlayerNumManual;			// 操作するプレイヤ数
 	static short			m_nPlayerNumCpu;			// ＣＰＵプレイヤ数
+	static int				m_nStageNum;				// 選択したステージ番号
 #ifdef _DEBUG
 	CDebugProc				*m_pDebugProc;				// デバッグプロック
 	#endif

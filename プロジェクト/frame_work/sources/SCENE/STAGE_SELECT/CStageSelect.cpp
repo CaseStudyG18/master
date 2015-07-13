@@ -124,18 +124,21 @@ void CStageSelect::Update(void)
 	// フェイズの更新
 	CPhase::Update();
 
+	// 選択の更新
+	UpdateSelect();
+
+	// 決定ボタンを押したら
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
-		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0))
-	{
+		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0)){
+
+		// 選択したステージ番号をセット
+		CManager::SetStageNum(m_nSelectNum);
+
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-
 		// ゲームヘ
 		m_pManager->SetNextPhase(MODE_PHASE_GAME);
 	}
-
-	// 選択の更新
-	UpdateSelect();
 }
 
 //*****************************************************************************

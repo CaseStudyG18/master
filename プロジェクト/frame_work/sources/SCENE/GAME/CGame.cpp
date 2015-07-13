@@ -70,6 +70,7 @@ CGame::CGame(void)
 	m_pFieldManager = NULL;
 	m_pCountDown = NULL;
 
+	// 簡易リザルトから次のシーン遷移までのカウンター
 	m_nResultCount = 0;
 
 	// プレイヤ操作可能フラグ
@@ -130,9 +131,12 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		const_cast<D3DXVECTOR3*>(GOAL_POS),
 		const_cast<short*>(GOAL_PLAYER_NUMBER), this);
 
+	// 生成するフィールド番号取得
+	m_nStageNum = CManager::SetStageNum();
+
 	// フィールド作成
 	m_pFieldManager = new CFieldManager;
-	m_pFieldManager->LoadField(m_pD3DDevice, CFieldManager::FIELD_TEST);
+	m_pFieldManager->LoadField(m_pD3DDevice, (CFieldManager::FIELD_TYPE)m_nStageNum);
 
 	// 生成するプレイヤの数を取得
 	m_nPlayerNumManual = CManager::GetPlayerManualNum();
@@ -328,8 +332,13 @@ CGame* CGame::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CGame::SetWinPlayer(short num){
 
+	// すでにゲームが終わっていたら何もしない
+	if (m_bGameOver){
+		return;
+	}
 	m_nWinPlayerNum = num;
 
+	// ゲーム中簡易リザルトの更新フラグをON
 	m_bGameOver = true;
 
 	m_pWinDrawLogo->CreateWinLogo();
@@ -340,6 +349,12 @@ void CGame::SetWinPlayer(short num){
 //*****************************************************************************
 void CGame::SetDraw(){
 
+	// すでにゲームが終わっていたら何もしない
+	if (m_bGameOver){
+		return;
+	}
+
+	// ゲーム中簡易リザルトの更新フラグをON
 	m_bGameOver = true;
 
 	// ロゴの表示
@@ -360,6 +375,7 @@ void CGame::Result(){
 	if (m_nResultCount > RESULT_LOGO_TO_FADE_INTERVAL){
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+		// リザルトへ
 		m_pManager->SetNextPhase(MODE_PHASE_RESULT);
 		// 勝ったプレイヤ番号をリザルトに送るためManagerに送る
 		m_pManager->SetWinPlayerNum(m_nWinPlayerNum);

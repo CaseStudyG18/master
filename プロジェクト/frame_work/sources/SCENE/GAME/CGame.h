@@ -117,11 +117,15 @@ private:
 	// 勝ったプレイヤー番号
 	short m_nWinPlayerNum;
 
+	// ゲーム上の簡易リザルトを出してからシーン遷移するまでのカウント
 	int m_nResultCount;
 
-	// プレイヤ数
+	// 生成するプレイヤ数
 	short m_nPlayerNumManual;
 	short m_nPlayerNumCpu;
+
+	// 生成するステージ番号
+	int m_nStageNum;
 };
 
 #endif
