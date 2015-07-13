@@ -78,8 +78,8 @@ void CJudge::ColiFieldxPlayer(void)
 		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
 		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
 		float rot = pPlayer[playerCount]->GetRot().z;
-		float width = pPlayer[playerCount]->GetWidth() * 0.5f;
-		float height = pPlayer[playerCount]->GetHeight() * 0.25f;
+		float width = pPlayer[playerCount]->GetWidth() * 0.25f;
+		float height = pPlayer[playerCount]->GetHeight() * 0.125f;
 
 		// OBBî•ñì¬
 		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
@@ -227,48 +227,32 @@ void CJudge::ColiFieldxPlayer(void)
 				}
 			}
 		}
-		D3DXVECTOR3 setPlayerPos = pPlayer[idx]->GetOldPos();
-		//D3DXVECTOR3 vecPlayer(0.f, 0.f, 0.f);
-		//D3DXVec2Normalize(&vertexSegment.v, &vertexSegment.v);
-		//D3DXVECTOR3 culcVec(fabs(vertexSegment.v.x)
-		//					, fabs(vertexSegment.v.y)
-		//					, 0.f);
-		//if (CInputGamePad::CheckConectPad(idx))
-		//{
-		//	if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_UP, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(-0.5f, -0.5f, 0.f);
-		//	}
-		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_DOWN, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(-0.5f, 0.5f, 0.f);
-		//	}
-		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_UP, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(0.5f, -0.5f, 0.f);
-		//	}
-		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_DOWN, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(0.5f, 0.5f, 0.f);
-		//	}
-		//}
-		//
-		//float ans = vecPlayer.x * culcVec.x;
-		//if (fabs(ans) < 1.0f)
-		//{
-		//	ans = 0.f;
-		//}
-		//setPlayerPos.x += ans * 3.f;
-		//ans = vecPlayer.y * culcVec.y;
-		//if (fabs(ans) < 1.0f)
-		//{
-		//	ans = 0.f;
-		//}
-		//setPlayerPos.y += ans * 3.f;
-		//setPlayerPos.y += vecPlayer.y * culcVec.y;
+
+		D3DXVECTOR3 oldPlayerPos = pPlayer[idx]->GetOldPos();
+		D3DXVECTOR3 currentPlayerPos = pPlayer[idx]->GetPos();
+		D3DXVECTOR3 setPlayerPos = oldPlayerPos;
+		D3DXVECTOR2 playerVec = (D3DXVECTOR2)(currentPlayerPos - oldPlayerPos);
+		D3DXVec2Normalize(&playerVec, &playerVec);
+		playerVec.x = fabs(playerVec.x);
+		playerVec.y = fabs(playerVec.y);
+		D3DXVECTOR2 vertexVec = vertexSegment.v;
+		D3DXVec2Normalize(&vertexVec, &vertexVec);
+		vertexVec.x = fabs(vertexVec.x);
+		vertexVec.y = fabs(vertexVec.y);
+
+		if (D3DXVec2Dot(&playerVec, &vertexVec) > 0.5f)
+		{
+			playerSegment.s = (D3DXVECTOR2)oldPlayerPos;
+			playerSegment.v = (D3DXVECTOR2)(currentPlayerPos - oldPlayerPos);
+			ColiRayxRay(playerSegment, vertexSegment, &hitPos);
+			setPlayerPos.x = hitPos.x;
+			setPlayerPos.y = hitPos.y - pPlayer[idx]->GetHeight() * 0.25f;
+			pPlayer[idx]->SetPos(setPlayerPos);
+		}
 
 		pPlayer[idx]->SetPos(setPlayerPos);
 	}
+}
 }
 
 //=========================================================================
