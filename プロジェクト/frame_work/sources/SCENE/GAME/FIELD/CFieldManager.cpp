@@ -29,7 +29,10 @@ typedef struct
 // フィールドファイルのパス
 static const FIELD_INFO FIELD_INFO_FILE_PATH[CFieldManager::FIELD_MAX] =
 {
-	{ "data/FIELD/field.txt", "data/FIELD/NAVI_FILE/navi_01.txt" }
+	{ "data/FIELD/field01.txt", "data/FIELD/NAVI_FILE/navi_01.txt" },
+	{ "data/FIELD/field02.txt", "data/FIELD/NAVI_FILE/navi_02.txt" },
+	{ "data/FIELD/field03.txt", "data/FIELD/NAVI_FILE/navi_03.txt" },
+	{ "data/FIELD/field04.txt", "data/FIELD/NAVI_FILE/navi_04.txt" }
 };
 
 //=========================================================================

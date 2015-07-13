@@ -253,7 +253,6 @@ void CJudge::ColiFieldxPlayer(void)
 		pPlayer[idx]->SetPos(setPlayerPos);
 	}
 }
-}
 
 //=========================================================================
 // 攻撃とプレイヤーのあたり判定
@@ -343,9 +342,6 @@ void CJudge::ColiAttackxPlayer(void){
 					// これでいいのかな？
 					pPlayer[idx]->SetPlyerKnockBack();
 
-#ifdef _DEBUG
-					CDebugProc::Print("攻撃ヒット\n");
-#endif
 				}
 			}
 

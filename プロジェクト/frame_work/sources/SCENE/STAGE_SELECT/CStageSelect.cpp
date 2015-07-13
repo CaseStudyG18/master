@@ -32,10 +32,10 @@ static const D3DXVECTOR3 STAGE_SELECT_POS[] = {
 };
 // ステージ絵のテクスチャ（左上、右上、左下、右下）
 static const TEXTURE_TYPE STAGE_SELECT_TEX[] = {
-	TEXTURE_STAGE_0,
 	TEXTURE_STAGE_1,
 	TEXTURE_STAGE_2,
 	TEXTURE_STAGE_3,
+	TEXTURE_STAGE_4,
 };
 // 選択枠の大きさ、色
 static const float STAGE_SELECT_FRAME_WIDTH = STAGE_SELECT_WIDTH + 20;

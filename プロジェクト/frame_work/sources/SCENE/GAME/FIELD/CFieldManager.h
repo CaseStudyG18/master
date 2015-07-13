@@ -26,7 +26,10 @@ class CFieldManager
 public:
 	typedef enum
 	{
-		FIELD_TEST = 0,
+		FIELD_01 = 0,
+		FIELD_02,
+		FIELD_03,
+		FIELD_04,
 		FIELD_MAX
 	}FIELD_TYPE;
 
