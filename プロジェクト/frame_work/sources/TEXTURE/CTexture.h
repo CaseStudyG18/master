@@ -83,6 +83,9 @@ typedef enum
 	TEXTURE_CHARA_SELECT_CONFIG,	// キャラクタ選択のコンフィグボタン
 	TEXTURE_CHARA_SELECT_CURSOL,	// キャラクタ選択のカーソル
 	TEXTURE_CHARA_SELECT_READY,		// キャラクタ選択の準備完了
+	TEXTURE_CHARA_SELECT_LOGO,		// キャラクタ選択のロゴ
+	TEXTURE_STAGE_SELECT_LOGO,		// ステージ選択のロゴ
+	TEXTURE_RESULT_LOGO,			// リザルトのロゴ
 
 	TEXTURE_MAX				// テクスチャタイプ総数
 }TEXTURE_TYPE;

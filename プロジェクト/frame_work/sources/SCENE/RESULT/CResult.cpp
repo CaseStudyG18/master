@@ -77,6 +77,12 @@ static const D3DXVECTOR3 RESULT_MENU_MOJI_POS[RESULT_MENU_MAX] = {
 	D3DXVECTOR2(SCREEN_WIDTH * 0.5f, 360),	// キャラセレクト
 	D3DXVECTOR2(SCREEN_WIDTH * 0.5f, 550),	// ステージセレクト
 };
+
+// ロゴの大きさ
+static const D3DXVECTOR2 RESULT_LOGO_SIZE = D3DXVECTOR2(800, 150);
+// ロゴの座標
+static const D3DXVECTOR3 RESULT_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 75, 0);
+
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
@@ -396,10 +402,17 @@ void CResult::UpdateWinAnimation(void){
 // 背景初期化
 //-----------------------------------------------------------------------------
 void CResult::InitializeBG(void){
+	// 背景
 	m_pBG = CScene2D::Create(m_pD3DDevice,
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
 		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
 		TEXTURE_BG_RESULT, TYPE_PRIORITY_BG);
+
+	// キャラ選択っていうロゴ表示
+	m_pLogo = CScene2D::Create(m_pD3DDevice,
+		RESULT_LOGO_POS,
+		RESULT_LOGO_SIZE.x, RESULT_LOGO_SIZE.y,
+		TEXTURE_RESULT_LOGO, TYPE_PRIORITY_FIELD);
 }
 
 //----EOF----

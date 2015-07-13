@@ -60,6 +60,8 @@ private:
 
 	// 背景
 	CScene2D* m_pBG;
+	// ロゴ
+	CScene2D* m_pLogo;
 	// 表示するステージ
 	CScene2D* m_pStage2D[STAGE_MAX];
 	// 選択中の枠

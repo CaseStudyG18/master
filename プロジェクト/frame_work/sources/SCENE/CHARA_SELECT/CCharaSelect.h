@@ -52,7 +52,7 @@ public:
 	static CCharaSelect* Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
 private:
-	// BGの初期化
+	// BGの初期化　ロゴも初期化してる
 	void InitializeBG();
 	// 参戦
 	void Join(int playerNum);
@@ -76,6 +76,8 @@ private:
 
 	// 背景
 	CScene2D* m_pBG;
+	// キャラクター選択って表示する
+	CScene2D* m_pLogo;
 	// プレイヤ背景
 	CScene2D* m_pPlayerBG[PLAYER_MAX];
 

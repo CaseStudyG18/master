@@ -70,9 +70,11 @@ private:
 	void InitializeWinAnimation();
 	// リモの勝者アニメーション更新
 	void UpdateWinAnimation();
-	
+
 	// 背景
 	CScene2D* m_pBG;
+	// ロゴ
+	CScene2D* m_pLogo;
 	// プッシュ文字
 	CScene2D *m_pPush2D[PLAYER_MAX];
 	// メニュー文字

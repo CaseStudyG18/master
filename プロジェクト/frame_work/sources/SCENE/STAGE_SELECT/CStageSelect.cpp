@@ -15,16 +15,20 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
+// ロゴの大きさ
+static const D3DXVECTOR2 STAGE_SELECT_LOGO_SIZE = D3DXVECTOR2(800, 150);
+// ロゴの座標
+static const D3DXVECTOR3 STAGE_SELECT_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 75, 0);
 // ステージ絵の大きさ
-static const float STAGE_SELECT_WIDTH = 400;
-static const float STAGE_SELECT_HEIGHT = 250;
+static const float STAGE_SELECT_WIDTH = 300;
+static const float STAGE_SELECT_HEIGHT = 200;
 // ステージ絵の座標（左上、右上、左下、右下）
 static const float STAGE_SELECT_WIDTH_ONE = SCREEN_WIDTH / 4;
 static const D3DXVECTOR3 STAGE_SELECT_POS[] = {
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 200, 0),
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 200, 0),
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 500, 0),
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 500, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 550, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 550, 0),
 };
 // ステージ絵のテクスチャ（左上、右上、左下、右下）
 static const TEXTURE_TYPE STAGE_SELECT_TEX[] = {
@@ -34,8 +38,8 @@ static const TEXTURE_TYPE STAGE_SELECT_TEX[] = {
 	TEXTURE_STAGE_3,
 };
 // 選択枠の大きさ、色
-static const float STAGE_SELECT_FRAME_WIDTH = 420;
-static const float STAGE_SELECT_FRAME_HEIGHT = 270;
+static const float STAGE_SELECT_FRAME_WIDTH = STAGE_SELECT_WIDTH + 20;
+static const float STAGE_SELECT_FRAME_HEIGHT = STAGE_SELECT_HEIGHT + 20;
 static const D3DXCOLOR STAGE_SELECT_FRAME_COLOR = D3DXCOLOR(0.9f, 0.1f, 0.0f, 0.0f);
 // 選択枠のアルファ変更スピード
 static const float STAGE_SELECT_FRAME_AALPHA_SPEED = 0.05f;
@@ -70,27 +74,30 @@ void CStageSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// 背景
-	m_pBG = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_BG);
-	m_pBG->Init(
+	m_pBG = CScene2D::Create(m_pD3DDevice,
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
 		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
-		TEXTURE_BG_STAGE_SELECT);
+		TEXTURE_BG_STAGE_SELECT, TYPE_PRIORITY_BG);
+
+	// ロゴ
+	m_pLogo = CScene2D::Create(m_pD3DDevice,
+		STAGE_SELECT_LOGO_POS,
+		STAGE_SELECT_LOGO_SIZE.x, STAGE_SELECT_LOGO_SIZE.y,
+		TEXTURE_STAGE_SELECT_LOGO, TYPE_PRIORITY_FIELD);
 
 	// 各ステージの絵
 	for (int i = 0; i < STAGE_MAX; i++){
-		m_pStage2D[i] = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_UI);
-		m_pStage2D[i]->Init(
+		m_pStage2D[i] = CScene2D::Create(m_pD3DDevice,
 			STAGE_SELECT_POS[i],
 			STAGE_SELECT_WIDTH, STAGE_SELECT_HEIGHT,
-			STAGE_SELECT_TEX[i]);
+			STAGE_SELECT_TEX[i], TYPE_PRIORITY_UI);
 	}
 
 	// 選択中の枠 PRIORITY_UIよりも前に表示したいからEFFECTにした
-	m_pFrame2D = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_EFFECT);
-	m_pFrame2D->Init(
+	m_pFrame2D = CScene2D::Create(m_pD3DDevice,
 		STAGE_SELECT_POS[0],
 		STAGE_SELECT_FRAME_WIDTH, STAGE_SELECT_FRAME_HEIGHT,
-		TEXTURE_NULL);
+		TEXTURE_NULL, TYPE_PRIORITY_EFFECT);
 
 	// 選択中の枠に色設定
 	m_FrameColor = STAGE_SELECT_FRAME_COLOR;

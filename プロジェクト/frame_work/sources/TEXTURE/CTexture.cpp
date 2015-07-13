@@ -80,6 +80,9 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/chara_select_conifing.png",
 	"data/TEXTURE/chara_select_cursol.png",
 	"data/TEXTURE/chara_select_ready.png",
+	"data/TEXTURE/chara_select_logo.png",
+	"data/TEXTURE/stage_select_logo.png",
+	"data/TEXTURE/result_logo.png",
 };
 
 //*****************************************************************************

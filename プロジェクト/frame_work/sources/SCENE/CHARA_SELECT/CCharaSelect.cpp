@@ -16,13 +16,16 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-
+// ロゴの大きさ
+static const D3DXVECTOR2 CHARASELECT_LOGO_SIZE = D3DXVECTOR2(800, 150);
+// ロゴの座標
+static const D3DXVECTOR3 CHARASELECT_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 75, 0);
 // プレイヤ背景の大きさ
-static const D3DXVECTOR2 CHARASELECT_PLAYER_BG_SIZE = D3DXVECTOR2(400, 250);
+static const D3DXVECTOR2 CHARASELECT_PLAYER_BG_SIZE = D3DXVECTOR2(320, 200);
 // プレイヤ背景の座標
 static const D3DXVECTOR3 CHARASELECT_PLAYER_BG_POS[PLAYER_MAX] = {
-	D3DXVECTOR3(330, 180, 0),
-	D3DXVECTOR3(950, 180, 0),
+	D3DXVECTOR3(330, 280, 0),
+	D3DXVECTOR3(950, 280, 0),
 	D3DXVECTOR3(330, 510, 0),
 	D3DXVECTOR3(950, 510, 0),
 };
@@ -38,24 +41,24 @@ static const D3DXCOLOR CHARASELECT_PUSH_ADDCOLOR = D3DXCOLOR(0.3f, 0.3f, 0.3f, 0
 static const D3DXVECTOR2 CHARASELECT_RIMO_SIZE = D3DXVECTOR2(100, 160);
 // リモの座標
 static const D3DXVECTOR3 CHARASELECT_RIMO_POS[PLAYER_MAX] = {
-	D3DXVECTOR3(370, 200, 0),
-	D3DXVECTOR3(990, 200, 0),
-	D3DXVECTOR3(370, 530, 0),
-	D3DXVECTOR3(990, 530, 0),
+	D3DXVECTOR3(390, 300, 0),
+	D3DXVECTOR3(1010, 300, 0),
+	D3DXVECTOR3(390, 530, 0),
+	D3DXVECTOR3(1010, 530, 0),
 };
 // 参戦2D大きさ
 static const D3DXVECTOR2 CHARASELECT_JOIN_SIZE = D3DXVECTOR2(180, 80);
 // 参戦2D座標
 static const D3DXVECTOR3 CHARASELECT_JOIN_POS[PLAYER_MAX] = {
-	D3DXVECTOR3(240, 120, 0),
-	D3DXVECTOR3(860, 120, 0),
-	D3DXVECTOR3(240, 450, 0),
-	D3DXVECTOR3(860, 450, 0),
+	D3DXVECTOR3(260, 230, 0),
+	D3DXVECTOR3(880, 230, 0),
+	D3DXVECTOR3(260, 460, 0),
+	D3DXVECTOR3(880, 460, 0),
 };
 // ボタン系大きさ
 static const D3DXVECTOR2 CHARASELECT_BUTTON_SIZE = D3DXVECTOR2(200, 80);
 // STARTボタンの位置
-static const D3DXVECTOR3 CHARASELECT_START_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 300, 0);
+static const D3DXVECTOR3 CHARASELECT_START_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 400, 0);
 // キーコンフィグボタンの位置
 static const D3DXVECTOR3 CHARASELECT_CONFIG_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 610, 0);
 // カーソルのマックス
@@ -66,17 +69,17 @@ static const D3DXVECTOR2 CHARASELECT_CURSOL_SIZE = D3DXVECTOR2(50, 50);
 static const D3DXVECTOR3 CHARASELECT_CURSOLR_POS[CHARASELECT_CURSOL_MAX][PLAYER_MAX] = {
 	// カーソル０番目(自分自身)
 		{
-			D3DXVECTOR3(420, 120, 0),
-			D3DXVECTOR3(1040, 120, 0),
-			D3DXVECTOR3(420, 450, 0),
-			D3DXVECTOR3(1040, 450, 0),
+			D3DXVECTOR3(440, 220, 0),
+			D3DXVECTOR3(1060, 220, 0),
+			D3DXVECTOR3(440, 450, 0),
+			D3DXVECTOR3(1060, 450, 0),
 		},
 		// カーソル１番目（READY）
 		{
-			D3DXVECTOR3(560, 260, 0),
-			D3DXVECTOR3(730, 260, 0),
-			D3DXVECTOR3(560, 320, 0),
-			D3DXVECTOR3(730, 320, 0),
+			D3DXVECTOR3(560, 360, 0),
+			D3DXVECTOR3(730, 360, 0),
+			D3DXVECTOR3(560, 420, 0),
+			D3DXVECTOR3(730, 420, 0),
 		},
 		// カーソル２番目（CONFING）
 		{
@@ -301,10 +304,16 @@ CCharaSelect* CCharaSelect::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 // 背景初期化
 //-----------------------------------------------------------------------------
 void CCharaSelect::InitializeBG(void){
+	// 全体の背景
 	m_pBG = CScene2D::Create(m_pD3DDevice,
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
 		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
 		TEXTURE_BG_CHARA_SELECT, TYPE_PRIORITY_BG);
+	// キャラ選択っていうロゴ表示
+	m_pLogo = CScene2D::Create(m_pD3DDevice,
+		CHARASELECT_LOGO_POS,
+		CHARASELECT_LOGO_SIZE.x, CHARASELECT_LOGO_SIZE.y,
+		TEXTURE_CHARA_SELECT_LOGO, TYPE_PRIORITY_FIELD);
 }
 
 //-----------------------------------------------------------------------------
@@ -319,7 +328,7 @@ void CCharaSelect::Join(int playerNum){
 
 	// 押したフラグ
 	m_bPush[playerNum] = true;
-	
+
 	// ＰＵＳＨ2D消す
 	SAFE_RELEASE(m_pPush2DBG[playerNum]);
 	SAFE_RELEASE(m_pPush2D[playerNum]);
@@ -506,10 +515,13 @@ void CCharaSelect::UpdateCursol(void){
 				}
 				// コンフィグボタン
 				else if (m_nCursol[i] == 2){
-					// フェードアウト開始
-					m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-					// コンフィグヘ
-					m_pManager->SetNextPhase(MODE_PHASE_OPTION);
+					// フェーズ移動していなければ
+					if (!m_bNextPhaseOnece){
+						// フェードアウト開始
+						m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
+						// コンフィグヘ
+						m_pManager->SetNextPhase(MODE_PHASE_OPTION);
+					}
 				}
 			}
 		}
