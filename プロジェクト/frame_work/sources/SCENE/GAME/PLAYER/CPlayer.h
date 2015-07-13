@@ -120,9 +120,23 @@ static const short PLAYER_HP_STATE_FLASH_INTERVAL[] = {
 	12,	// PLAYER_VERY_LOW
 	-1	// PLAYER_DIE
 };
-static const int PLAYER_TEXTURE_SEP_X = 6;
-static const int PLAYER_TEXTURE_SEP_Y = 3;
+// プレイヤのテクスチャ分け数
+static const int PLAYER_WALK_TEXTURE_SEP_X = 6;
+static const int PLAYER_WALK_TEXTURE_SEP_Y = 3;
+static const int PLAYER_ATTACK_TEXTURE_SEP_X = 6;
+static const int PLAYER_ATTACK_TEXTURE_SEP_Y = 4;
+// プレイヤの正面テクスチャインデックス キャラセレクトとかでもつかう
+static const int PLAYER_STOP_TEXTURE_MIN = 5;
+static const int PLAYER_STOP_TEXTURE_MAX = 5;
+static const int PLAYER_WALK_TEXTURE_MIN = 6;
+static const int PLAYER_WALK_TEXTURE_MAX = 9;
+static const int PLAYER_ATTACK_TEXTURE_MIN = 0;
+static const int PLAYER_ATTACK_TEXTURE_MAX = 3;
+static const int PLAYER_THREAD_TEXTURE_MIN = 12;
+static const int PLAYER_THREAD_TEXTURE_MAX = 14;
 
+// プレイヤのアニメスピード
+static const int PLAYER_ANIME_SPEED = 10;
 //-----------------------------------------------------------------------------
 // 前方宣言
 //-----------------------------------------------------------------------------

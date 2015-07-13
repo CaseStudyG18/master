@@ -22,8 +22,6 @@
 //-----------------------------------------------------------------------------
 // プレイヤーの移動速度(仮)
 static const float PLAYER_SPEED = 8.0f;
-// プレイヤのアニメスピード
-static const int PLAYER_ANIME_SPEED = 10;
 // プレイヤーが鈍足状態になった時の係数(仮)
 static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
 // 鈍足時間 鈍足効果が一定じゃなく攻撃によって違うなら攻撃側から取得するべき
@@ -170,7 +168,7 @@ void CPlayer::Init(D3DXVECTOR3 pos,
 	CPlayerManager* pPlayerMnager)
 {
 	// テクスチャアニメーションの初期化
-	CSceneAnime::Init(pos, fWidth, fHeight, texture, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y, PLAYER_ANIME_SPEED, -1);
+	CSceneAnime::Init(pos, fWidth, fHeight, texture, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y, PLAYER_ANIME_SPEED, -1);
 
 	// カウントダン中にどっか向かないように
 	CSceneAnime::SetAutoUpdate(false);

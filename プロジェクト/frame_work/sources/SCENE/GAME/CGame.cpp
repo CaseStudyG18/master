@@ -380,9 +380,6 @@ void CGame::Result(){
 	// 引き分け
 	if (m_nWinPlayerNum == -1){
 		// ＤＲＡＷロゴの更新（アニメーション）
-#ifdef _DEBUG
-		CDebugProc::Print("●引き分けシーン\n");
-#endif
 	}
 	m_nResultCount++;
 
@@ -390,6 +387,8 @@ void CGame::Result(){
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 		m_pManager->SetNextPhase(MODE_PHASE_RESULT);
+		// 勝ったプレイヤ番号をリザルトに送るためManagerに送る
+		m_pManager->SetWinPlayerNum(m_nWinPlayerNum);
 	}
 
 	//	if (m_pLogoDraw)

@@ -22,6 +22,7 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/fire1.png",
 	"data/TEXTURE/thread.png",
 	"data/TEXTURE/Player.png",
+	"data/TEXTURE/PlayerAttack.png",
 	"data/TEXTURE/figure_black.png",
 	"data/TEXTURE/figure_white.png",
 	"data/TEXTURE/figure_green.png",
@@ -72,6 +73,12 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/result_menu_moji_0.png",
 	"data/TEXTURE/result_menu_moji_1.png",
 	"data/TEXTURE/result_menu_moji_2.png",
+	"data/TEXTURE/chara_select_player_bg.png",
+	"data/TEXTURE/chara_select_join.png",
+	"data/TEXTURE/chara_select_start.png",
+	"data/TEXTURE/chara_select_conifing.png",
+	"data/TEXTURE/chara_select_cursol.png",
+	"data/TEXTURE/chara_select_ready.png",
 };
 
 //*****************************************************************************

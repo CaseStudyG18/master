@@ -102,6 +102,10 @@ public:
 	// 次のフェーズセット
 	void SetNextPhase(MODE_PHASE phase){m_NextPhase = phase;};
 
+	// 勝ったプレイヤアクセサ
+	static void SetWinPlayerNum(int num){ m_nWinPlayerNum = num; }
+	static int GetWinPlayerNum(){ return m_nWinPlayerNum; }
+
 private:
 	// NOW LOADINGのスレッドに渡す情報構造体
 	typedef struct
@@ -130,6 +134,7 @@ private:
 	SEND_LOAD_THRED_PARAM	m_sendParam;				// ロードスレッドに渡す情報
 	HANDLE					m_ThreadHandle;				// スレッドのハンドル
 	CNowLoading				*m_pNowLoading;				// NowLoading
+	static int				m_nWinPlayerNum;			// 勝ったプレイヤb番号
 	#ifdef _DEBUG
 	CDebugProc				*m_pDebugProc;				// デバッグプロック
 	#endif

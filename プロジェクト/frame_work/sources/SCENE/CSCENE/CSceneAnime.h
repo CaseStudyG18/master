@@ -63,6 +63,13 @@ public:
 		m_nChangeTime = value;
 	}
 
+	// テクスチャのセッタ
+	void SetTexture(TEXTURE_TYPE tex, int x, int y){
+		m_pD3DTexBuff = CTexture::GetTexture(tex);
+		m_nSepalateNumX = x;
+		m_nSepalateNumY = y;
+	}
+
 	//======================================================
 	// アニメーション番号設定
 	// 引数: アニメーション番号
@@ -100,6 +107,7 @@ public:
 	// 戻り値: 作ったやつのアドレス
 	//======================================================
 	static CSceneAnime* Create(LPDIRECT3DDEVICE9 *pDevice, D3DXVECTOR3 pos, float width, float height, TEXTURE_TYPE texType, int sepalateX, int sepalateY, int animSpd, int loopNum, int priority = TYPE_PRIORITY_EFFECT);
+
 protected:
 	// ループなし更新
 	void Update_Normal(void);

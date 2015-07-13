@@ -85,7 +85,7 @@ private:
 	int m_nWinPlayerNum;
 	// プレイヤーアニメーションのテクスチャ番号
 	int m_nTextureIndex[PLAYER_MAX];
-	// プレイヤアニメーションの手k数茶変更するためのカウント
+	// プレイヤアニメーションのテクスチャ変更するためのカウント
 	int m_nTextureCount[PLAYER_MAX];
 	// アニメーションから自動で遷移するカウント
 	int m_nCount;

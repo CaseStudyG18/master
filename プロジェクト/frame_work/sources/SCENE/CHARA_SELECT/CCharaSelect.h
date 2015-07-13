@@ -12,6 +12,7 @@
 #include "../../MAIN/main.h"
 #include "../../PHASE/CPhase.h"
 #include "../../MANAGER/CManager.h"
+#include "../GAME/PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // 前方宣言
@@ -53,8 +54,82 @@ public:
 private:
 	// BGの初期化
 	void InitializeBG();
+	// 参戦
+	void Join(int playerNum);
+	// PUSHの点滅更新
+	void UpdatePushAnimation();
+	// READYの点滅更新
+	void UpdateReadyAnimation();
+	// リモのアニメーション更新
+	void UpdateRimoAnimation();
+	// 入力で参戦する更新
+	void UpdateInputJoin();
+	// カーソルの更新　アニメーションや入力で移動など
+	void UpdateCursol();
+	// 入力でテクスチャアニメーション
+	void UpdateInput();
+	// リモ2Dにテクスチャのループをセットする関数
+	void SetRimoTextureIndex(int index, int min, int max){
+		m_nRimoTextureMin[index] = min;
+		m_nRimoTextureMax[index] = max;
+	}
+
 	// 背景
 	CScene2D* m_pBG;
+	// プレイヤ背景
+	CScene2D* m_pPlayerBG[PLAYER_MAX];
+
+	// PUSH文字の背景
+	CScene2D *m_pPush2DBG[PLAYER_MAX];
+	// PUSH文字
+	CScene2D *m_pPush2D[PLAYER_MAX];
+	// PUSHしたか
+	bool m_bPush[PLAYER_MAX];
+	// PUSHの点滅アニメーショ用カウント
+	int m_nPushFlashCount[PLAYER_MAX];
+	// PUSHの点滅アニメーショ用フラグ
+	bool m_bPushFlash[PLAYER_MAX];
+
+	// リモ２Ｄ
+	CSceneAnime *m_pRimo[PLAYER_MAX];
+	// リモ２Ｄのテクスチャ番号
+	int m_nRimoTextureIndex[PLAYER_MAX];
+	// リモ２Ｄのテクスチャ変更するためのカウント
+	int m_nRimoTextureCount[PLAYER_MAX];
+	// リモ２Ｄのテクスチャループインデックスの番号
+	int m_nRimoTextureMax[PLAYER_MAX];
+	int m_nRimoTextureMin[PLAYER_MAX];
+
+	// 参戦2D
+	CScene2D *m_pJoin2D[PLAYER_MAX];
+
+	// Startボタン
+	CScene2D *m_pStart2D;
+
+	// キーコンフィグボタン
+	CScene2D *m_pConfig;
+
+	// カーソル位置
+	int m_nCursol[PLAYER_MAX];
+	// カーソル2D
+	CScene2D *m_pCursol2D[PLAYER_MAX];
+	// カーソルの角度
+	float m_fCursolRad[PLAYER_MAX];
+	// カーソルアニメーションのフラグ
+	bool m_bCursolFlg[PLAYER_MAX];
+
+	// 準備完了フラグ
+	bool m_bReady[PLAYER_MAX];
+	// 準備完了2D
+	CScene2D *m_pReady2D[PLAYER_MAX];
+	// 準備完了の点滅アニメーショ用カウント
+	int m_nReadyFlashCount[PLAYER_MAX];
+	// 準備完了の点滅アニメーショ用フラグ
+	bool m_bReadyFlash[PLAYER_MAX];
+
+	// リモの変身状態
+	PLAYER_MODE m_PlayerMode[PLAYER_MAX];
+
 };
 
 #endif

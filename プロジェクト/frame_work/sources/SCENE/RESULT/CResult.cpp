@@ -104,7 +104,7 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Init(DEFFAULT_FADE_POS, DEFFAULT_FADE_WIDTH, DEFFAULT_FADE_HEIGHT, TEXTURE_NULL);
 
 	// 変数の初期化
-	m_nWinPlayerNum = 2;
+	m_nWinPlayerNum = 0;
 	m_nCount = 0;
 	m_pMenuBack = NULL;
 	m_nMenuCursol = 0;
@@ -122,6 +122,9 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	for (int i = 0; i < RESULT_MENU_MAX; i++){
 		m_pMenuMoji[i] = NULL;
 	}
+
+	// 勝ったプレイヤ番号取得
+	m_nWinPlayerNum = CManager::GetWinPlayerNum();
 
 	// 背景
 	InitializeBG();
@@ -318,7 +321,7 @@ void CResult::InitializeWinAnimation(void){
 			m_pPlayerAnime[i] = CSceneAnime::Create(m_pD3DDevice,
 				RESULT_RIMO_POS[i],
 				RESULT_RIMO_SIZE[DRAW].x, RESULT_RIMO_SIZE[DRAW].y,
-				TEXTURE_PLAYER, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y,
+				TEXTURE_PLAYER, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
 				RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_BG);
 		}
 
@@ -331,7 +334,7 @@ void CResult::InitializeWinAnimation(void){
 				m_pPlayerAnime[i] = CSceneAnime::Create(m_pD3DDevice,
 					RESULT_RIMO_POS[i],
 					RESULT_RIMO_SIZE[WIN].x, RESULT_RIMO_SIZE[WIN].y,
-					TEXTURE_PLAYER, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y,
+					TEXTURE_PLAYER, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
 					RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_BG);
 			}
 			// 負けた人のアニメ
@@ -339,7 +342,7 @@ void CResult::InitializeWinAnimation(void){
 				m_pPlayerAnime[i] = CSceneAnime::Create(m_pD3DDevice,
 					RESULT_RIMO_POS[i],
 					RESULT_RIMO_SIZE[LOSE].x, RESULT_RIMO_SIZE[LOSE].y,
-					TEXTURE_PLAYER, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y,
+					TEXTURE_PLAYER, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
 					RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_BG);
 			}
 		}
