@@ -57,6 +57,7 @@ void CEffectNormalAttackCap::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectNormalAttackCap::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

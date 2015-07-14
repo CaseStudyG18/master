@@ -61,6 +61,7 @@ void CEffectSpecialAttackThread::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 //*****************************************************************************
 void CEffectSpecialAttackThread::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

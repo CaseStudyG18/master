@@ -55,6 +55,7 @@ void CEffectTrapFoundation::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectTrapFoundation::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

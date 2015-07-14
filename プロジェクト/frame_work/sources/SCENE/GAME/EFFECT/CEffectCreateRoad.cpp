@@ -57,6 +57,7 @@ void CEffectCreateRoad::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectCreateRoad::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

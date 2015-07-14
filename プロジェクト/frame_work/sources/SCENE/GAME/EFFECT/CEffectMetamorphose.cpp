@@ -73,6 +73,7 @@ void CEffectMetamorphose::Init(D3DXVECTOR3 pos, short playerNum)
 //*****************************************************************************
 void CEffectMetamorphose::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

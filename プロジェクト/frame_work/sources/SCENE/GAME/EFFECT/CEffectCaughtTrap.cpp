@@ -57,6 +57,7 @@ void CEffectCaughtTrap::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectCaughtTrap::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

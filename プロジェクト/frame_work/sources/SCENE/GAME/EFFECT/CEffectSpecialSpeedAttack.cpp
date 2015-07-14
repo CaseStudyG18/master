@@ -60,6 +60,7 @@ void CEffectSpecialSpeedAttack::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 void CEffectSpecialSpeedAttack::Uninit(void)
 {
 	m_pAnim = NULL;
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

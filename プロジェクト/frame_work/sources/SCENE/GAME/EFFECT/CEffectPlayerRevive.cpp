@@ -55,6 +55,7 @@ void CEffectPlayerRevive::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectPlayerRevive::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************
