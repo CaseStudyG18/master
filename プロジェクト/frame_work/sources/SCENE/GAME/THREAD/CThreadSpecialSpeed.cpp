@@ -20,9 +20,6 @@ static const float	MIN_HEIGHT = 20.f;
 static const float	MAX_WIDTH = 40.f;
 static const float	MAX_HEIGHT = 400.f;
 
-// 糸が伸び縮みする最大時間
-static const int	GROW_THREAD_TIME = 60;
-
 // 糸が床になるまでのアニメーション時間
 static const int	THREAD_FIELD_ANIM_TIME = 30;
 
@@ -111,7 +108,7 @@ void CThreadSpecialSpeed::Update(void)
 
 		FieldAnim();
 	}
-	m_fJudgeWidth = m_fWidth * 0.6f;
+	m_fJudgeWidth = m_fWidth * 0.8f;
 	m_fJudgeHeight = m_fHeight;
 	m_vJudgePos = m_vPos;
 }

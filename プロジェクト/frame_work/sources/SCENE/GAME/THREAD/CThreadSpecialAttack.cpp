@@ -14,25 +14,19 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-// 寿命
-static const short THREAD_ATTACK_END_TIME = 180;
 // 当たり判定の始まる時間
 static const short THREAD_ATTACK_HIT_START_TIME = 60;
 // 当たり判定の終わる時間
-static const short THREAD_ATTACK_HIT_END_TIME = 170;
+static const short THREAD_ATTACK_HIT_END_TIME = 100;
 
 // 当たり判 定幅,高さ
-static const float THREAD_ATTACK_HIT_WIDTH = 50;
-static const float THREAD_ATTACK_HIT_HEIGHT = 50;
+static const float THREAD_ATTACK_HIT_WIDTH = 220;
+static const float THREAD_ATTACK_HIT_HEIGHT = 80;
 
 // プレイヤと攻撃エフェクトの距離
 static const short THREAD_ATTACK_RANGE = 50;
 
-// 最初のエフェクトを出す時間
-static const short THREAD_FIRST_ATTACK_CREATE_TIME = 60;
-
-// 2回目のエフェクトを出す時間
-static const short THREAD_SECOND_ATTACK_CREATE_TIME = 120;
+static const float ATTACK_DAMAGE = -400.f;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -47,8 +41,8 @@ CThreadSpecialAttack::CThreadSpecialAttack(LPDIRECT3DDEVICE9 *pDevice, int prior
 	m_AttackType = ATTACK_TYPE_ATTACK_THREAD;
 
 	// この糸の固有ステータス初期化
-	m_fWidth = THREAD_ATTACK_HIT_WIDTH;
-	m_fHeight = THREAD_ATTACK_HIT_HEIGHT;
+	m_fWidth = 0;
+	m_fHeight = 0;
 	m_vRot = D3DXVECTOR3(0, 0, 0);
 	m_nEndTime = THREAD_ATTACK_END_TIME;
 	m_nHitStartTime = THREAD_ATTACK_HIT_START_TIME;
@@ -73,6 +67,34 @@ HRESULT CThreadSpecialAttack::Init(D3DXVECTOR3 pos, short playerNumber , D3DXVEC
 	m_vPos = pos + (velocity * THREAD_ATTACK_RANGE);
 	m_vVelocity = velocity;
 
+	for (int i = 0; i < 4; i++)
+	{
+		if (m_vVelocity.y == -1)
+		{
+			m_vRot.z = D3DX_PI*0.5f;
+			SetRot(m_vRot);
+		}
+		if (m_vVelocity.y == 1)
+		{
+			m_vRot.z = D3DX_PI*1.5f;
+			SetRot(m_vRot);
+		}
+		if (m_vVelocity.x == 1)
+		{
+			m_vRot.z = 0.0f;
+			SetRot(m_vRot);
+		}
+		if (m_vVelocity.x == -1)
+		{
+			m_vRot.z = D3DX_PI;
+			SetRot(m_vRot);
+		}
+	}
+	m_bHitFlg = false;
+
+	// エフェクト生成
+	CEffectManager::CreateEffect(m_vPos, EFFECT_SPECIAL_THREAD_ATTACK, velocity);
+
 	return S_OK;
 }
 
@@ -90,6 +112,11 @@ void CThreadSpecialAttack::Uninit(void)
 void CThreadSpecialAttack::Update(void)
 {
 	CAttackBase::Update();
+	if (m_bHitFlg)
+	{
+		m_fWidth = THREAD_ATTACK_HIT_WIDTH;
+		m_fHeight = THREAD_ATTACK_HIT_HEIGHT;
+	}
 }
 
 //*****************************************************************************
@@ -102,9 +129,6 @@ CThreadSpecialAttack* CThreadSpecialAttack::Create(LPDIRECT3DDEVICE9 *pDevice, s
 
 	// 初期化
 	p->Init(pos, nPlayerNum, velocity);
-
-	// エフェクト生成
-	CEffectManager::CreateEffect(pos, EFFECT_SPECIAL_THREAD_ATTACK, velocity);
 
 	return p;
 }
@@ -122,6 +146,9 @@ void CThreadSpecialAttack::Draw(void)
 //*****************************************************************************
 void CThreadSpecialAttack::HitPlayer(CPlayer* pPlayer)
 {
+	CAttackBase::HitPlayer(pPlayer);
+	pPlayer->AddHp(ATTACK_DAMAGE);
+
 	CSceneAnime::Create(
 		m_pD3DDevice,
 		pPlayer->GetPos(), 100, 100,

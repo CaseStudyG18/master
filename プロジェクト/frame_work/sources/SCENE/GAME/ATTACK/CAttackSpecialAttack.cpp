@@ -15,19 +15,19 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-// 寿命
-const short ATTACK_ATTACK_END_TIME = 50;
 // 当たり判定の始まる時間
-const short ATTACK_ATTACK_HIT_START_TIME = 20;
+static const short ATTACK_ATTACK_HIT_START_TIME = 10;
 // 当たり判定の終わる時間
-const short ATTACK_ATTACK_HIT_END_TIME = 40;
+static const short ATTACK_ATTACK_HIT_END_TIME = 30;
 
 // 当たり判 定幅,高さ
-const float ATTACK_ATTACK_HIT_WIDTH = 50;
-const float ATTACK_ATTACK_HIT_HEIGHT = 50;
+static const float ATTACK_ATTACK_HIT_WIDTH = 75;
+static const float ATTACK_ATTACK_HIT_HEIGHT = 75;
 
 // プレイヤと攻撃エフェクトの距離
 static const float ATTACK_ATTACK_RANGE = 50;
+
+static const float ATTACK_DAMAGE = -200;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -80,19 +80,6 @@ void CAttackSpecialAttack::Uninit(void)
 void CAttackSpecialAttack::Update(void)
 {
 	CAttackBase::Update();
-
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount%2 == 0){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos, 100, 100,
-			TEXTURE_FIRE_1, 10, 1, 20);
-	}
-
-	m_vRot.z += D3DX_PI*2.0f;
-
-	m_vPos.x += ATTACK_ATTACK_RANGE * cosf(m_vRot.z * D3DX_PI);
-	m_vPos.y -= ATTACK_ATTACK_RANGE * sinf(m_vRot.z * D3DX_PI);
 }
 
 //*****************************************************************************
@@ -108,15 +95,15 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 	CAttackSpecialAttack* p = new CAttackSpecialAttack(pDevice);
 
 	p->m_nPlayerNum = nPlayerNum;
-	//p->m_vPos = pos;// +(velocity * ATTACK_ATTACK_RANGE);
-	p->m_vPos.y = pos.y + ATTACK_ATTACK_RANGE;
-	p->m_vPos.x = pos.x + 25.0f;
+	p->m_vPos = pos;// +(velocity * ATTACK_ATTACK_RANGE);
+	//p->m_vPos.y = pos.y + ATTACK_ATTACK_RANGE;
+	//p->m_vPos.x = pos.x + 25.0f;
 
 	// 初期化
 	p->Init();
 
 	// 攻撃エフェクト生成
-	CEffectManager::CreateEffect(pos, EFFECT_SPECIAL_ATTACK_ATTACK, velocity);
+	CEffectManager::CreateEffect(p->m_vPos, EFFECT_SPECIAL_ATTACK_ATTACK, velocity);
 
 	return p;
 }
@@ -126,7 +113,8 @@ CAttackSpecialAttack* CAttackSpecialAttack::Create(
 //=============================================================================
 void CAttackSpecialAttack::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->AddHp(-20.0f);
+	pPlayer->AddHp(ATTACK_DAMAGE);
+	CAttackBase::HitPlayer(pPlayer);
 }
 
 //----EOF-------

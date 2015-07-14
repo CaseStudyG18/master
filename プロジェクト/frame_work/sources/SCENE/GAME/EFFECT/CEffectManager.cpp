@@ -121,7 +121,7 @@ void CEffectManager::CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3
 		break;
 		// MP攻撃時のエフェクト
 	case EFFECT_MP_ATTACK:
-		CEffectMPAttack::Create(m_pDevice, pos);
+		CEffectMPAttack::Create(m_pDevice, pos, velocity);
 		break;
 		// 通常形態の帽子攻撃エフェクト
 	case EFFECT_NORMAL_ATTACK_CAP:

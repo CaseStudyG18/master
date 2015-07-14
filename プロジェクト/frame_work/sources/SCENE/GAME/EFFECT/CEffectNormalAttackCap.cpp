@@ -20,10 +20,10 @@
 static const int NORMAL_ATTACK_CAP_COUNT_MAX = 1;
 static const float NORMAL_ATTACK_CAP_WIDTH = 100;
 static const float NORMAL_ATTACK_CAP_HEIGHT = 100;
-static const TEXTURE_TYPE NORMAL_ATTACK_CAP_TEXTURE = TEXTURE_TREASURE_KIRAKIRA;
-static const int NORMAL_ATTACK_CAP_TEXTURE_X = 8;
+static const TEXTURE_TYPE NORMAL_ATTACK_CAP_TEXTURE = TEXTURE_ATTACK_AROUND;
+static const int NORMAL_ATTACK_CAP_TEXTURE_X = 5;
 static const int NORMAL_ATTACK_CAP_TEXTURE_Y = 1;
-static const int NORMAL_ATTACK_CAP_TEXTURE_LOOP = 100;
+static const int NORMAL_ATTACK_CAP_TEXTURE_LOOP = 30;
 
 //*****************************************************************************
 // コンストラクタ

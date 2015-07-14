@@ -13,18 +13,16 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-// 寿命
-static const short THREAD_NORMAL_END_TIME = 80;
 // 当たり判定の始まる時間
-static const short THREAD_NORMAL_HIT_START_TIME = 60;
+static const short THREAD_NORMAL_HIT_START_TIME = 1;
 // 当たり判定の終わる時間
-static const short THREAD_NORMAL_HIT_END_TIME = 120;
+static const short THREAD_NORMAL_HIT_END_TIME = 30;
 // 当たり判 定幅,高さ
 static const float THREAD_NORMAL_HIT_WIDTH = 50;
 static const float THREAD_NORMAL_HIT_HEIGHT = 50;
 
 // 弾の移動量
-static const float THREAD_NORMAL_VEL = 1;
+static const float THREAD_NORMAL_VEL = 10.f;
 
 
 //*****************************************************************************

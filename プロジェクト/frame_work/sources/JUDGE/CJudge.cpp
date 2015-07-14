@@ -265,7 +265,6 @@ void CJudge::ColiAttackxPlayer(void){
 	CScene2D *pAttack;
 	CJudge::OBB_INFO playerOBB[MAXIMUM_NUMBER_OF_PLAYER];
 	int playerNum = 0;
-	bool coli[MAXIMUM_NUMBER_OF_PLAYER] = { false };
 
 	// プレイヤー情報入れる
 	CPlayerManager* playerManager = m_pJudgeManager->GetPlayerManager();
@@ -321,8 +320,9 @@ void CJudge::ColiAttackxPlayer(void){
 			// 当たり判定
 			for (int idx = 0; idx < playerNum; ++idx)
 			{
-				// すでにあたってるなら判定しない
-				if (coli[idx])
+				// 既にそのプレイヤーにあったてるならやらない
+				bool hit = pAttackBase->GetHitFlag(idx);
+				if (hit == true)
 				{
 					continue;
 				}
@@ -335,13 +335,8 @@ void CJudge::ColiAttackxPlayer(void){
 
 				if (IsOBB(playerOBB[idx], attackOBB))
 				{
-					// ヒットフラグオン
-					coli[idx] = true;
-
 					// 当たった時の処理
-					// これでいいのかな？
-					pPlayer[idx]->SetPlyerKnockBack();
-
+					pAttackBase->HitPlayer(pPlayer[idx]);
 				}
 			}
 
@@ -481,8 +476,8 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 			pThread = (CScene2D*)pSceneThread;
 			D3DXVECTOR2 pos(pThread->GetPos().x, pThread->GetPos().y);
 			float rot = pThread->GetRot().z;
-			float width = pThread->GetWidth();
-			float height = pThread->GetHeight();
+			float width = pThread->GetWidth() * 0.8f;
+			float height = pThread->GetHeight() * 0.8f;
 			CThreadBase* threadBase = (CThreadBase*)pSceneThread;
 			int playerNum = threadBase->GetPlayerNum();
 			lastCheckField = m_LastFieldColiPlayer[playerNum];

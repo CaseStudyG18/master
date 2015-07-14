@@ -227,7 +227,7 @@ void CScene::UpdateChoice(int priority)
 	// ZÉ\Å[Ég
 	if (!GetDrawFlag())
 	{
-		CScene::ZSort();
+	//	CScene::ZSort();
 	}
 }
 
