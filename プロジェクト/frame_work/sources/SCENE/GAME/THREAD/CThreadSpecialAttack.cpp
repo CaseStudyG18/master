@@ -20,13 +20,13 @@ static const short THREAD_ATTACK_HIT_START_TIME = 60;
 static const short THREAD_ATTACK_HIT_END_TIME = 100;
 
 // 当たり判 定幅,高さ
-static const float THREAD_ATTACK_HIT_WIDTH = 220;
-static const float THREAD_ATTACK_HIT_HEIGHT = 80;
+static const float THREAD_ATTACK_HIT_WIDTH = 320.f;
+static const float THREAD_ATTACK_HIT_HEIGHT = 180.f;
 
 // プレイヤと攻撃エフェクトの距離
 static const short THREAD_ATTACK_RANGE = 50;
 
-static const float ATTACK_DAMAGE = -400.f;
+static const float ATTACK_DAMAGE = -600.f;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -116,6 +116,11 @@ void CThreadSpecialAttack::Update(void)
 	{
 		m_fWidth = THREAD_ATTACK_HIT_WIDTH;
 		m_fHeight = THREAD_ATTACK_HIT_HEIGHT;
+
+		m_vPos.x += m_vVelocity.x * 5.0f + m_vVelocity.x * 100.0f;
+		m_vPos.y += m_vVelocity.y * 5.0f + m_vVelocity.y * 100.0f;
+		m_vVelocity.x = 0;
+		m_vVelocity.y = 0;
 	}
 }
 

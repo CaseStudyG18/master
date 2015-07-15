@@ -113,23 +113,23 @@ void CField::SetJudgeParam(D3DXVECTOR3 pos, float width, float height, TEXTURE_T
 		// 浮島
 	case TEXTURE_FIELD_01:
 		m_fJudgeWidth = width * 0.8f;
-		m_fJudgeHeight = height * 0.5f;
+		m_fJudgeHeight = height * 0.6f;
 		m_vJudgePos = pos;
-		m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+		m_vJudgePos.y -= m_fJudgeHeight * 0.4f;
 		break;
 
 		// 宝置くやつ
 	case TEXTURE_FIELD_02:
 		m_fJudgeWidth = width * 0.8f;
-		m_fJudgeHeight = height * 0.5f;
+		m_fJudgeHeight = height * 0.6f;
 		m_vJudgePos = pos;
-		m_vJudgePos.y -= m_fJudgeHeight * 0.5f;
+		m_vJudgePos.y -= m_fJudgeHeight * 0.4f;
 		break;
 
 		// スタート兼ゴール
 	case TEXTURE_FIELD_03:
 		m_fJudgeWidth = width * 0.9f;
-		m_fJudgeHeight = height * 0.75f;
+		m_fJudgeHeight = height * 0.8f;
 		m_vJudgePos = pos;
 		m_vJudgePos.y -= m_fJudgeHeight * 0.2f;
 		break;

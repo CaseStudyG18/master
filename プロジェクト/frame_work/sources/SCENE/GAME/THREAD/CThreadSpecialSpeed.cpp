@@ -61,7 +61,7 @@ CThreadSpecialSpeed ::~CThreadSpecialSpeed(void)
 HRESULT CThreadSpecialSpeed::Init(short nPlayerNum, D3DXVECTOR3 pos, DIRECTION_PLAYER_FACING playerDirection)
 {
 	m_nPlayerNum = nPlayerNum;
-	m_vPos = pos;
+	m_vPos = pos - PLAYER_DIRECTION_VECTOR[playerDirection] * 5.f;
 	m_Direction = playerDirection;
 	CThreadBase::Init(m_vPos, m_fWidth, m_fHeight, TEXTURE_THREAD);
 

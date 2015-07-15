@@ -79,7 +79,7 @@ void CJudge::ColiFieldxPlayer(void)
 		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
 		float rot = pPlayer[playerCount]->GetRot().z;
 		float width = pPlayer[playerCount]->GetWidth() * 0.25f;
-		float height = pPlayer[playerCount]->GetHeight() * 0.125f;
+		float height = pPlayer[playerCount]->GetHeight() * 0.15f;
 
 		// OBBî•ñì¬
 		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
