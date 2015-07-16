@@ -229,8 +229,8 @@ void CJudge::ColiFieldxPlayer(void)
 		}
 
 		D3DXVECTOR3 oldPlayerPos = pPlayer[idx]->GetOldPos();
-		D3DXVECTOR3 currentPlayerPos = pPlayer[idx]->GetPos();
 		D3DXVECTOR3 setPlayerPos = oldPlayerPos;
+		D3DXVECTOR3 currentPlayerPos = pPlayer[idx]->GetPos();
 		D3DXVECTOR2 playerVec = (D3DXVECTOR2)(currentPlayerPos - oldPlayerPos);
 		D3DXVec2Normalize(&playerVec, &playerVec);
 		playerVec.x = fabs(playerVec.x);
@@ -240,7 +240,7 @@ void CJudge::ColiFieldxPlayer(void)
 		vertexVec.x = fabs(vertexVec.x);
 		vertexVec.y = fabs(vertexVec.y);
 
-		if (D3DXVec2Dot(&playerVec, &vertexVec) > 0.5f)
+		if (D3DXVec2Dot(&playerVec, &vertexVec) >= 0.5f)
 		{
 			playerSegment.s = (D3DXVECTOR2)oldPlayerPos;
 			playerSegment.v = (D3DXVECTOR2)(currentPlayerPos - oldPlayerPos);
@@ -644,6 +644,8 @@ void CJudge::ColiTreasurexPlayer(void)
 			}
 
 			// OBBî•ñì¬
+			pos.y += pTreasure->GetHeight() * 0.25f;
+			height *= 0.5f;
 			CreateOBBInfo(&treasureOBB, &pos, &rot, &width, &height);
 
 			// “–‚½‚è”»’è
