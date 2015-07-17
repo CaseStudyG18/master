@@ -10,6 +10,7 @@
 #include "CTutorial.h"
 #include "../../MANAGER/CManager.h"
 #include "../CSCENE/CScene2D.h"
+#include "../CSCENE/CSceneAnime.h"
 #include "../../CONTROLLER/CControllerManager.h"
 
 //*****************************************************************************
@@ -26,15 +27,37 @@ static const D3DXVECTOR3 TUTORIAL_PICT_POS[TUTORIAL_PICT_MAX] = {
 	D3DXVECTOR3(SCREEN_WIDTH * 0.5f + SCREEN_WIDTH, SCREEN_HEIGHT * 0.5f, 0),
 };
 // ページ数に対応したテクスチャ
+static const TEXTURE_TYPE TUTORIAL_PICT_TEXTURE[TUTORIAL_PAGE_MAX] = {
+	TEXTURE_TUTORIAL_0,
+	TEXTURE_TUTORIAL_1,
+	TEXTURE_TUTORIAL_2,
+	TEXTURE_TUTORIAL_3,
+};
+// 矢印アニメーション
+static const D3DXVECTOR3 TUTORIAL_ARROR_POS_R = D3DXVECTOR3(50, SCREEN_HEIGHT * 0.5f, 0);
+static const D3DXVECTOR3 TUTORIAL_ARROR_POS_L = D3DXVECTOR3(SCREEN_WIDTH - 50, SCREEN_HEIGHT * 0.5f, 0);
+static const float TUTORIAL_ARROR_WIDTH = 100;
+static const float TUTORIAL_ARROR_HEIGHT = 100;
+static const int TUTORIAL_ARROW_ANIME_SPEED = 10;
+static const int TUTORIAL_ARROR_TEXTURE_SEP_X = 1;
+static const int TUTORIAL_ARROR_TEXTURE_SEP_Y = 1;
+// 矢印の拡縮値
+static const float TUTORIAL_ARROW_SCALE = 1.3f;
+// 矢印が拡大と縮小を切り替えるインターバル
+static const int TUTORIAL_ARROW_SCALE_INTERVAL = 40;
+// 矢印のUV反転用の値
+static UV_INDEX TUTORIAL_ARROW_UV = { 1, 0, 0, 1 };
+// ページ表示の座標
+static const D3DXVECTOR3 TUTORIAL_PAGE_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT -50, 0);
+// ページ表示のおおきさ
+static const float TUTORIAL_PAGE_WIDTH = 100;
+static const float TUTORIAL_PAGE_HEIGHT = 100;
+// ページ表示のテクスチャ（ページ数に対応している）
 static const TEXTURE_TYPE TUTORIAL_PAGE_TEXTURE[TUTORIAL_PAGE_MAX] = {
-//	TEXTURE_TUTORIAL_0,
-//	TEXTURE_TUTORIAL_1,
-//	TEXTURE_TUTORIAL_2,
-//	TEXTURE_TUTORIAL_3,
-	TEXTURE_STAGE_1,
-	TEXTURE_STAGE_2,
-	TEXTURE_STAGE_3,
-	TEXTURE_STAGE_4,
+	TEXTURE_TUTORIAL_PAGE_1_4,
+	TEXTURE_TUTORIAL_PAGE_2_4,
+	TEXTURE_TUTORIAL_PAGE_3_4,
+	TEXTURE_TUTORIAL_PAGE_4_4,
 };
 
 //*****************************************************************************
@@ -64,6 +87,14 @@ void CTutorial::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_vVelo = D3DXVECTOR3(0, 0, 0);
 	m_nPage = 0;
 	m_bRight = true;
+	m_nPictNumLeft = 0;
+	m_nPictNumCenter = 1;
+	m_nPictNumRight = 2;
+	m_pArrowRight = NULL;
+	m_pArrowLeft = NULL;
+	m_bArrowScale = true;
+	m_nArrowCount = 0;
+	m_pPage2D = NULL;
 
 	// フェード作成
 	m_pFade = new CFade(pDevice);
@@ -82,6 +113,25 @@ void CTutorial::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 			static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
 			TEXTURE_TUTORIAL_0, TYPE_PRIORITY_FIELD);
 	}
+
+	// 矢印アニメーション
+	m_pArrowLeft = CSceneAnime::Create(m_pD3DDevice,
+		TUTORIAL_ARROR_POS_L,
+		TUTORIAL_ARROR_WIDTH, TUTORIAL_ARROR_HEIGHT,
+		TEXTURE_TUTORIAL_ARROW, TUTORIAL_ARROR_TEXTURE_SEP_X, TUTORIAL_ARROR_TEXTURE_SEP_Y,
+		TUTORIAL_ARROW_ANIME_SPEED, -1);
+
+	m_pArrowRight = CSceneAnime::Create(m_pD3DDevice,
+		TUTORIAL_ARROR_POS_R,
+		TUTORIAL_ARROR_WIDTH, TUTORIAL_ARROR_HEIGHT,
+		TEXTURE_TUTORIAL_ARROW, TUTORIAL_ARROR_TEXTURE_SEP_X, TUTORIAL_ARROR_TEXTURE_SEP_Y,
+		TUTORIAL_ARROW_ANIME_SPEED, -1);
+
+	// ページ表示２D
+	m_pPage2D = CScene2D::Create(m_pD3DDevice,
+		TUTORIAL_PAGE_POS,
+		TUTORIAL_PAGE_WIDTH, TUTORIAL_PAGE_HEIGHT,
+		TUTORIAL_PAGE_TEXTURE[m_nPage], TYPE_PRIORITY_FIELD);
 
 	// フェードイン開始
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
@@ -110,6 +160,9 @@ void CTutorial::Update(void)
 	// フェイズの更新
 	CPhase::Update();
 
+	// 矢印のアニメーション
+	UpdateArrow();
+
 	// フェードアウトしてタイトルヘもどる
 	// 入力されたらPUSH START実行
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
@@ -118,7 +171,6 @@ void CTutorial::Update(void)
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 		m_pManager->SetNextPhase(MODE_PHASE_TITLE);
 	}
-
 
 	// 絵が止まっているときのみ動かせる
 	if (m_vVelo.x == 0){
@@ -136,7 +188,7 @@ void CTutorial::Update(void)
 					m_nPage = TUTORIAL_PAGE_MAX - 1;
 	  			}
 				// テクスチャ切り替え
-				m_p2D[0]->ChangeTexture(TUTORIAL_PAGE_TEXTURE[m_nPage]);
+				m_p2D[m_nPictNumLeft]->ChangeTexture(TUTORIAL_PICT_TEXTURE[m_nPage]);
 				// 一回だけ通る
 				break;
 			}
@@ -153,7 +205,7 @@ void CTutorial::Update(void)
 					m_nPage = 0;
 				}
 				// テクスチャ切り替え
-				m_p2D[2]->ChangeTexture(TUTORIAL_PAGE_TEXTURE[m_nPage]);
+				m_p2D[m_nPictNumRight]->ChangeTexture(TUTORIAL_PICT_TEXTURE[m_nPage]);
 				// 一回だけ通る
 				break;
 			}
@@ -168,39 +220,43 @@ void CTutorial::Update(void)
 
 	// 端っこ当たり判定
 	if (m_bRight){
-		if (m_p2D[0]->GetPos().x >= SCREEN_WIDTH * 0.5f){
+		if (m_p2D[m_nPictNumLeft]->GetPos().x >= SCREEN_WIDTH * 0.5f){
 			// 移動量初期化
 			m_vVelo = D3DXVECTOR3(0, 0, 0);
 
-			// 絵のポインタの入れ替え
-			CScene2D *t;
-			t = m_p2D[0];
-			m_p2D[0] = m_p2D[1];
-			m_p2D[1] = m_p2D[2];
-			m_p2D[2] = t;
+			// 対応添え字の入れ替え
+			short t = m_nPictNumRight;
+			m_nPictNumRight = m_nPictNumCenter;
+			m_nPictNumCenter = m_nPictNumLeft;
+			m_nPictNumLeft = t;
 
 			// 全位置調整
-			for (int n = 0; n < TUTORIAL_PICT_MAX; n++){
-				m_p2D[n]->SetPos(TUTORIAL_PICT_POS[n]);
-			}
+			m_p2D[m_nPictNumLeft]->SetPos(TUTORIAL_PICT_POS[0]);
+			m_p2D[m_nPictNumCenter]->SetPos(TUTORIAL_PICT_POS[1]);
+			m_p2D[m_nPictNumRight]->SetPos(TUTORIAL_PICT_POS[2]);
+
+			// ページ表示の切り替え
+			m_pPage2D->ChangeTexture(TUTORIAL_PAGE_TEXTURE[m_nPage]);
 		}
 	}
 	else{
-		if (m_p2D[2]->GetPos().x <= SCREEN_WIDTH * 0.5f){
+		if (m_p2D[m_nPictNumRight]->GetPos().x <= SCREEN_WIDTH * 0.5f){
 			// 移動量初期化
 			m_vVelo = D3DXVECTOR3(0, 0, 0);
 
-			// 絵のポインタの入れ替え
-			CScene2D *t;
-			t = m_p2D[2];
-			m_p2D[2] = m_p2D[1];
-			m_p2D[1] = m_p2D[0];
-			m_p2D[0] = t;
+			// 対応添え字の入れ替え
+			short t = m_nPictNumLeft;
+			m_nPictNumLeft = m_nPictNumCenter;
+			m_nPictNumCenter = m_nPictNumRight;
+			m_nPictNumRight = t;
 
 			// 全位置調整
-			for (int n = 0; n < TUTORIAL_PICT_MAX; n++){
-				m_p2D[n]->SetPos(TUTORIAL_PICT_POS[n]);
-			}
+			m_p2D[m_nPictNumLeft]->SetPos(TUTORIAL_PICT_POS[0]);
+			m_p2D[m_nPictNumCenter]->SetPos(TUTORIAL_PICT_POS[1]);
+			m_p2D[m_nPictNumRight]->SetPos(TUTORIAL_PICT_POS[2]);
+
+			// ページ表示の切り替え
+			m_pPage2D->ChangeTexture(TUTORIAL_PAGE_TEXTURE[m_nPage]);
 		}
 	}
 
@@ -220,6 +276,34 @@ CTutorial* CTutorial::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	pTitle->Init(mode, pDevice);
 
 	return pTitle;
+}
+
+//*****************************************************************************
+// 矢印アニメーション更新
+//*****************************************************************************
+void CTutorial::UpdateArrow(){
+
+	m_nArrowCount++;
+
+	if (m_nArrowCount > TUTORIAL_ARROW_SCALE_INTERVAL){
+		m_nArrowCount = 0;
+		m_bArrowScale = !m_bArrowScale;
+	}
+
+	if (m_bArrowScale){
+		m_pArrowLeft->AddHeight_BaseBottom(-TUTORIAL_ARROW_SCALE);
+		m_pArrowLeft->AddHeight_BaseTop(-TUTORIAL_ARROW_SCALE);
+		m_pArrowRight->AddHeight_BaseBottom(-TUTORIAL_ARROW_SCALE);
+		m_pArrowRight->AddHeight_BaseTop(-TUTORIAL_ARROW_SCALE);
+		m_pArrowRight->SetUV(&TUTORIAL_ARROW_UV);
+	}
+	else{
+		m_pArrowLeft->AddHeight_BaseBottom(TUTORIAL_ARROW_SCALE);
+		m_pArrowLeft->AddHeight_BaseTop(TUTORIAL_ARROW_SCALE);
+		m_pArrowRight->AddHeight_BaseBottom(TUTORIAL_ARROW_SCALE);
+		m_pArrowRight->AddHeight_BaseTop(TUTORIAL_ARROW_SCALE);
+		m_pArrowRight->SetUV(&TUTORIAL_ARROW_UV);
+	}
 }
 
 //----EOF----

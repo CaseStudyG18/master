@@ -16,6 +16,7 @@
 // 前方宣言
 //*****************************************************************************
 class CScene2D;
+class CSceneAnime;
 
 //*****************************************************************************
 // 定数
@@ -56,21 +57,32 @@ public:
 
 private:
 
+	// 矢印アニメーション更新
+	void UpdateArrow();
+
 	// 背景
 	CScene2D* m_pBackGround;
-
 	// チュートリアルの絵
 	CScene2D* m_p2D[TUTORIAL_PICT_MAX];
-
 	// 絵の移動量
 	D3DXVECTOR3 m_vVelo;
-	
 	// 左右どっちに動いてるのフラグ
 	bool m_bRight;
-
 	// ページ数
 	short m_nPage;
-
+	// 画面の横にある絵の添え字番号
+	short m_nPictNumLeft;
+	short m_nPictNumCenter;
+	short m_nPictNumRight;
+	// 矢印のアニメーション　本当はテクスチャアニメーションでやろうかと思ったけどやっぱやめた
+	CSceneAnime *m_pArrowRight;
+	CSceneAnime *m_pArrowLeft;
+	// 矢印の拡大フラグ
+	bool m_bArrowScale;
+	// 矢印拡大までのカウント
+	int m_nArrowCount;
+	// ページ表示の絵
+	CScene2D *m_pPage2D;
 };
 
 #endif
