@@ -35,6 +35,7 @@ public:
 	void Update(void);
 	void Draw(void){};
 	short GetPlayerNumber(void){ return m_nPlayerNum; };
+	bool GetHitFlag(int playerID);
 
 	// 攻撃がヒットした時に呼び出す関数
 	// 引数　この攻撃に当たったプレイヤーのプレイヤー番号
@@ -54,7 +55,7 @@ protected:
 	// 当たり判定をするフラグ
 	bool m_bHitFlg;
 	// 当たったプレイヤー管理配列
-	short m_nHitPlayer[MAXIMUM_NUMBER_OF_PLAYER];
+	bool m_bHitPlayer[MAXIMUM_NUMBER_OF_PLAYER];
 	// 攻撃の種類
 	AttackType m_AttackType;
 

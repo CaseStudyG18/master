@@ -32,7 +32,11 @@ static const FIELD_INFO FIELD_INFO_FILE_PATH[CFieldManager::FIELD_MAX] =
 	{ "data/FIELD/field01.txt", "data/FIELD/NAVI_FILE/navi_01.txt" },
 	{ "data/FIELD/field02.txt", "data/FIELD/NAVI_FILE/navi_02.txt" },
 	{ "data/FIELD/field03.txt", "data/FIELD/NAVI_FILE/navi_03.txt" },
-	{ "data/FIELD/field04.txt", "data/FIELD/NAVI_FILE/navi_04.txt" }
+	{ "data/FIELD/field04.txt", "data/FIELD/NAVI_FILE/navi_04.txt" },
+	{ "data/FIELD/field05.txt", "data/FIELD/NAVI_FILE/navi_05.txt" },
+	{ "data/FIELD/field06.txt", "data/FIELD/NAVI_FILE/navi_06.txt" },
+	{ "data/FIELD/field07.txt", "data/FIELD/NAVI_FILE/navi_07.txt" },
+	{ "data/FIELD/field08.txt", "data/FIELD/NAVI_FILE/navi_08.txt" },
 };
 
 //=========================================================================

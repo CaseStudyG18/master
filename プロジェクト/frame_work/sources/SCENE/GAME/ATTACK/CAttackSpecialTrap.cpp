@@ -15,19 +15,21 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-// 寿命
-const short ATTACK_TRAP_END_TIME = 1000;
+
 // 当たり判定の始まる時間
-const short ATTACK_TRAP_HIT_START_TIME = 100;
+static const short ATTACK_TRAP_HIT_START_TIME = 1;
 // 当たり判定の終わる時間
-const short ATTACK_TRAP_HIT_END_TIME = 950;
+static const short ATTACK_TRAP_HIT_END_TIME = 30;
+
 
 // 当たり判 定幅,高さ
-const float ATTACK_TRAP_HIT_WIDTH = 30;
-const float ATTACK_TRAP_HIT_HEIGHT = 30;
+static const float ATTACK_TRAP_HIT_WIDTH = 30;
+static const float ATTACK_TRAP_HIT_HEIGHT = 30;
 
-// プレイヤと攻撃エフェクトの距離
-static const float ATTACK_TRAP_RANGE = 0;
+// 速度
+static const float ATTACK_JAMMER_SPD = 10;
+
+static const float ATTACK_DAMAGE = -150;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -80,6 +82,9 @@ void CAttackSpecialTrap::Uninit(void)
 void CAttackSpecialTrap::Update(void)
 {
 	CAttackBase::Update();
+
+	// 弾の移動
+	m_vPos += m_vDirection * ATTACK_JAMMER_SPD;
 }
 
 //*****************************************************************************
@@ -95,13 +100,13 @@ CAttackSpecialTrap* CAttackSpecialTrap::Create(
 	CAttackSpecialTrap* p = new CAttackSpecialTrap(pDevice);
 
 	p->m_nPlayerNum = nPlayerNum;
-	p->m_vPos = pos; // -(velocity * ATTACK_TRAP_RANGE);
-
+	p->m_vPos = pos + velocity * ATTACK_JAMMER_SPD;
+	p->m_vDirection = velocity;
 	// 初期化
 	p->Init();
 
 	// エフェクト生成
-	CEffectManager::CreateEffect(pos, EFFECT_TRAP_FOUNDATION, velocity);
+	CEffectManager::CreateEffect(pos, EFFECT_MP_ATTACK, velocity);
 
 
 	return p;
@@ -112,7 +117,8 @@ CAttackSpecialTrap* CAttackSpecialTrap::Create(
 //=============================================================================
 void CAttackSpecialTrap::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->AddHp(-10.0f);
+	pPlayer->AddMp(ATTACK_DAMAGE);
+	CAttackBase::HitPlayer(pPlayer);
 }
 
 //----EOF-------

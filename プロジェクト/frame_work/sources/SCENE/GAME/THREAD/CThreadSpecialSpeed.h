@@ -16,6 +16,8 @@
 #include "CThreadBase.h"
 #include "../PLAYER/CPlayer.h"
 
+// 糸が伸び縮みする最大時間
+static const int	GROW_THREAD_TIME = 60;
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -23,7 +25,7 @@ class CThreadSpecialSpeed : public CThreadBase
 {
 	// 公開メンバ
 public:
-	// プライオリティとオブジェタイプはテスト
+	
 	CThreadSpecialSpeed(LPDIRECT3DDEVICE9 *pDevice, int priority = TYPE_PRIORITY_THREAD_OF_FOOTHOLD, OBJTYPE type = OBJTYPE_2D);
 	~CThreadSpecialSpeed(void);
 

@@ -14,20 +14,19 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-// 寿命
-const short ATTACK_NORMAL_END_TIME = 180;
 // 当たり判定の始まる時間
-const short ATTACK_NORMAL_HIT_START_TIME = 60;
+static const short ATTACK_NORMAL_HIT_START_TIME = 5;
 // 当たり判定の終わる時間
-const short ATTACK_NORMAL_HIT_END_TIME = 120;
+static const short ATTACK_NORMAL_HIT_END_TIME = 30;
 
 // 当たり判 定幅,高さ
-const float ATTACK_NORMAL_HIT_WIDTH = 50;
-const float ATTACK_NORMAL_HIT_HEIGHT = 50;
+static const float ATTACK_NORMAL_HIT_WIDTH = 50;
+static const float ATTACK_NORMAL_HIT_HEIGHT = 50;
 
 // プレイヤと攻撃エフェクトの距離
-static const float ATTACK_NORMAL_RANGE = 100;
+static const float ATTACK_NORMAL_RANGE = 50;
 
+static const float ATTACK_DAMAGE = -50.f;
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
@@ -100,7 +99,7 @@ CAttackNormal* CAttackNormal::Create(
 	p->Init();
 
 	// エフェクト生成
-	CEffectManager::CreateEffect(pos, EFFECT_NORMAL_ATTACK_CAP, velocity);
+	CEffectManager::CreateEffect(p->m_vPos, EFFECT_NORMAL_ATTACK_CAP, velocity);
 
 	return p;
 }
@@ -111,7 +110,8 @@ CAttackNormal* CAttackNormal::Create(
 //*****************************************************************************
 void CAttackNormal::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->SetSlowSpeed(true);
+	pPlayer->AddHp(ATTACK_DAMAGE);
+	CAttackBase::HitPlayer(pPlayer);
 }
 
 //----EOF-------

@@ -10,24 +10,25 @@
 //*****************************************************************************
 #include "CAttackSpecialSpeed.h"
 #include "../EFFECT/CEffectManager.h"
+#include "../PLAYER/CPlayerManager.h"
 #include "../PLAYER/CPlayer.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-// 寿命
-const short ATTACK_SPEED_END_TIME = 10;
 // 当たり判定の始まる時間
-const short ATTACK_SPEED_HIT_START_TIME = 1;
+static const short ATTACK_SPEED_HIT_START_TIME = 1;
 // 当たり判定の終わる時間
-const short ATTACK_SPEED_HIT_END_TIME = 9;
+static const short ATTACK_SPEED_HIT_END_TIME = 10;
 
 // 当たり判 定幅,高さ
-const float ATTACK_SPEED_HIT_WIDTH = 50;
-const float ATTACK_SPEED_HIT_HEIGHT = 50;
+static const float ATTACK_SPEED_HIT_WIDTH = 50;
+static const float ATTACK_SPEED_HIT_HEIGHT = 50;
 
 // プレイヤと攻撃エフェクトの距離
 static const float ATTACK_SPEED_RANGE = 4.0f;
+
+static const float ATTACK_SPEED_DAMAGE = -50.0f;
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -83,14 +84,7 @@ void CAttackSpecialSpeed::Update(void)
 {
 	CAttackBase::Update();
 
-	// カウントが10のとき（仮）エフェクトは発動
-	if (m_nCount == 9){
-		CSceneAnime::Create(
-			m_pD3DDevice,
-			m_vPos, 100, 100,
-			TEXTURE_FIRE_1, 10, 1, m_nEndTime);
-	}
-	//m_vPos += (m_vVelocity * ATTACK_SPEED_RANGE);		
+	m_vPos = CPlayerManager::GetPlayer(m_nPlayerNum)->GetPos();
 	
 }
 
@@ -108,7 +102,7 @@ CAttackSpecialSpeed* CAttackSpecialSpeed::Create(
 
 	p->m_nPlayerNum = nPlayerNum;
 	p->m_vPos = pos; // -(velocity * ATTACK_SPEED_RANGE);
-	//p->m_vVelocity = velocity;
+	p->m_vVelocity = velocity;
 
 	// 初期化
 	p->Init();
@@ -124,7 +118,8 @@ CAttackSpecialSpeed* CAttackSpecialSpeed::Create(
 //=============================================================================
 void CAttackSpecialSpeed::HitPlayer(CPlayer* pPlayer)
 {
-	pPlayer->AddHp(-10.0f);
+	pPlayer->AddHp(ATTACK_SPEED_DAMAGE);
+	CAttackBase::HitPlayer(pPlayer);
 }
 
 //----EOF-------

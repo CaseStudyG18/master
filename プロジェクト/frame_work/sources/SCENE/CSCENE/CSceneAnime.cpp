@@ -83,6 +83,7 @@ HRESULT CSceneAnime :: Init(D3DXVECTOR3 pos, float width, float height, TEXTURE_
 void CSceneAnime ::Uninit(void)
 {
 	CScene2D :: Uninit();
+	//Release();
 
 }
 

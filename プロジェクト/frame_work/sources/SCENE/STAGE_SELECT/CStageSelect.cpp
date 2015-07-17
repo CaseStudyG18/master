@@ -20,15 +20,19 @@ static const D3DXVECTOR2 STAGE_SELECT_LOGO_SIZE = D3DXVECTOR2(800, 150);
 // ロゴの座標
 static const D3DXVECTOR3 STAGE_SELECT_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 75, 0);
 // ステージ絵の大きさ
-static const float STAGE_SELECT_WIDTH = 300;
+static const float STAGE_SELECT_WIDTH = 200;
 static const float STAGE_SELECT_HEIGHT = 200;
 // ステージ絵の座標（左上、右上、左下、右下）
-static const float STAGE_SELECT_WIDTH_ONE = SCREEN_WIDTH / 4;
+static const float STAGE_SELECT_WIDTH_ONE = SCREEN_WIDTH / 5;
 static const D3DXVECTOR3 STAGE_SELECT_POS[] = {
 	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 2, 300, 0),
 	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 4, 300, 0),
 	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 550, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 2, 550, 0),
 	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 550, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 4, 550, 0),
 };
 // ステージ絵のテクスチャ（左上、右上、左下、右下）
 static const TEXTURE_TYPE STAGE_SELECT_TEX[] = {
@@ -36,6 +40,10 @@ static const TEXTURE_TYPE STAGE_SELECT_TEX[] = {
 	TEXTURE_STAGE_2,
 	TEXTURE_STAGE_3,
 	TEXTURE_STAGE_4,
+	TEXTURE_STAGE_5,
+	TEXTURE_STAGE_6,
+	TEXTURE_STAGE_7,
+	TEXTURE_STAGE_8,
 };
 // 選択枠の大きさ、色
 static const float STAGE_SELECT_FRAME_WIDTH = STAGE_SELECT_WIDTH + 20;
@@ -173,38 +181,32 @@ void CStageSelect::UpdateSelect(){
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_A) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_LEFT, 0)){
 		if (m_nSelectNum == 0)
-			m_nSelectNum = 1;
-		else if (m_nSelectNum == 2)
 			m_nSelectNum = 3;
+		else if (m_nSelectNum == 4)
+			m_nSelectNum = 7;
 		else
 			m_nSelectNum--;
 	}
 	else if (CInputKeyboard::GetKeyboardTrigger(DIK_D) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_RIGHT, 0)){
-		if (m_nSelectNum == 1)
+		if (m_nSelectNum == 3)
 			m_nSelectNum = 0;
-		else if (m_nSelectNum == 3)
-			m_nSelectNum = 2;
+		else if (m_nSelectNum == 7)
+			m_nSelectNum = 4;
 		else
 			m_nSelectNum++;
 	}
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_W) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_UP, 0)){
-		if (m_nSelectNum == 0)
-			m_nSelectNum = 2;
-		else if (m_nSelectNum == 1)
-			m_nSelectNum = 3;
-		else
-			m_nSelectNum -= 2;
+			m_nSelectNum -= 4;
+			if (m_nSelectNum < 0)
+				m_nSelectNum += STAGE_MAX;
 	}
 	else if (CInputKeyboard::GetKeyboardTrigger(DIK_S) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_DOWN, 0)){
-		if (m_nSelectNum == 2)
-			m_nSelectNum = 0;
-		else if (m_nSelectNum == 3)
-			m_nSelectNum = 1;
-		else
-			m_nSelectNum += 2;
+		m_nSelectNum += 4;
+		if (m_nSelectNum >= STAGE_MAX)
+			m_nSelectNum -= STAGE_MAX;
 	}
 
 	// 移動の入力があったら

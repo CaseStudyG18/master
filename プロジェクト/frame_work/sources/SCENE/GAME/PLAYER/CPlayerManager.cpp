@@ -23,6 +23,7 @@ static const D3DXVECTOR3 PLAYER_START_POS[] = {
 	D3DXVECTOR3(1230, 670, 0),
 };
 
+CPlayer* CPlayerManager::m_apPlayer[MAXIMUM_NUMBER_OF_PLAYER];
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
