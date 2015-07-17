@@ -75,27 +75,53 @@ static const D3DXVECTOR3 PLAYER_DIRECTION_VECTOR[] = {
 };
 
 // プレイヤの向きに対してのテクスチャインデックスの最小と最大
-static const short PLAYER_TEXTURE_INDEX_MIN[] = {
-	0,	// なし
-	10,	// 上
-	6,	// 下
-	1,	// 右
-	1,	// 左
-	10,	// 右上
-	10,	// 左上
-	6,	// 右下
-	6	// 左下
+static const short PLAYER_TEXTURE_INDEX_MIN[2][9] = {
+		{
+			0,	// なし
+			10,	// 上
+			6,	// 下
+			1,	// 右
+			1,	// 左
+			10,	// 右上
+			10,	// 左上
+			6,	// 右下
+			6	// 左下
+		},
+		{
+			0,	// なし
+			12,	// 上
+			0,	// 下
+			6,	// 右
+			6,	// 左
+			12,	// 右上
+			12,	// 左上
+			0,	// 右下
+			0	// 左下
+		},
 };
-static const short PLAYER_TEXTURE_INDEX_MAX[] = {
-	0,	// なし
-	13,	// 上
-	9,	// 下
-	4,	// 右
-	4,	// 左
-	13,	// 右上
-	13,	// 左上
-	9,	// 右下
-	9,	// 左下
+static const short PLAYER_TEXTURE_INDEX_MAX[2][9] = {
+		{
+			0,	// なし
+			13,	// 上
+			9,	// 下
+			4,	// 右
+			4,	// 左
+			13,	// 右上
+			13,	// 左上
+			9,	// 右下
+			9,	// 左下
+		},
+		{
+			0,	// なし
+			15,	// 上
+			3,	// 下
+			9,	// 右
+			9,	// 左
+			15,	// 右上
+			15,	// 左上
+			3,	// 右下
+			3,	// 左下
+		},
 };
 
 // プレイヤのHPの残り状態
@@ -125,6 +151,8 @@ static const int PLAYER_WALK_TEXTURE_SEP_X = 6;
 static const int PLAYER_WALK_TEXTURE_SEP_Y = 3;
 static const int PLAYER_ATTACK_TEXTURE_SEP_X = 6;
 static const int PLAYER_ATTACK_TEXTURE_SEP_Y = 4;
+static const int PLAYER_SPEED_TEXTURE_SEP_X = 6;
+static const int PLAYER_SPEED_TEXTURE_SEP_Y = 5;
 // プレイヤの正面テクスチャインデックス キャラセレクトとかでもつかう
 static const int PLAYER_STOP_TEXTURE_MIN = 5;
 static const int PLAYER_STOP_TEXTURE_MAX = 5;
@@ -292,6 +320,9 @@ private:
 	// プレイヤの鈍足状態管理
 	void UpdateSlow();
 
+	// プレイヤのテクスチャを変更する＋カウントとかリセットする
+	void SetPlayerTexture(TEXTURE_TYPE type);
+
 	//---------------------------------
 	// 変数
 	//---------------------------------
@@ -339,6 +370,9 @@ private:
 	// シェーダー
 	IDirect3DPixelShader9 *m_pPS;
 	LPD3DXCONSTANTTABLE m_pPSC;
+	// プレイヤのテクスチャ番号　形態でてくすちゃを変えるため
+	// 0だとPlayer.pngで1だとPlayerSpeed.pngのテクスチャ番号を採用
+	int m_nTextureNum;
 
 };
 

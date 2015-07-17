@@ -80,7 +80,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_sMatchlessTime = 0;									// 無敵状態の時間
 	m_sKnockBackCount = 0;									// やられ状態になった回数
 	m_sRushTime = 0;
-
+	m_nTextureNum = 0;										// プレイヤのテクスチャ指定
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
 	m_bSpeedAttack = false;									// 移動形態の攻撃中か判定
@@ -709,33 +709,29 @@ void CPlayer::MetamorphoseAnimation(void)
 	{
 		switch (m_ModeDest)
 		{
-			// 攻撃形態だったら赤くする
+			// 攻撃形態
 		case PLAYER_MODE_ATTACK:
-			// 色変更
-			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 			// フラグ変更
 			m_bMetamorphose = true;
 			break;
-			// 移動形態だったら青くする
+			// 移動形態
 		case PLAYER_MODE_SPEED:
-			// 色変更
-			CScene2D::SetColorPolygon(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 			// フラグ変更
 			m_bMetamorphose = true;
+			// テクスチャ変更
+			SetPlayerTexture(TEXTURE_PLAYER_SPEED);
 			break;
-			// 罠形態だったら緑にする
+			// 罠形態
 		case PLAYER_MODE_TRAP:
-			// 色変更
-			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 			// フラグ変更
 			m_bMetamorphose = true;
 			break;
-			// 通常状態だったら通常の色にする
+			// 通常状態
 		case PLAYER_MODE_NONE:
-			// 色変更
-			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			// フラグ変更
 			m_bMetamorphose = false;
+			// テクスチャ変更
+			SetPlayerTexture(TEXTURE_PLAYER);
 			break;
 		default:
 			break;
@@ -1016,7 +1012,6 @@ void CPlayer::FallTreasure(){
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 // プレイヤの向きをセットする関数
 //-----------------------------------------------------------------------------
@@ -1031,7 +1026,7 @@ void CPlayer::SetFace(DIRECTION_PLAYER_FACING value){
 	m_PlayerFacing = value;
 
 	// プレイヤの向きに対応したテクスチャをセット
-	m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[value];
+	m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureNum][value];
 
 	// プレイヤのテクスチャアニメーション用カウントをリセット
 	m_nTextureCount = 0;
@@ -1049,8 +1044,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_UP]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_UP];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureNum][PLAYER_DIRECTION_UP]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureNum][PLAYER_DIRECTION_UP];
 			}
 		}
 		SetIndex(m_nTextureIndex);
@@ -1061,8 +1056,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_DOWN]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_DOWN];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureNum][PLAYER_DIRECTION_DOWN]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureNum][PLAYER_DIRECTION_DOWN];
 			}
 		}
 		SetIndex(m_nTextureIndex);
@@ -1073,8 +1068,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_RIGHT]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_RIGHT];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureNum][PLAYER_DIRECTION_RIGHT]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureNum][PLAYER_DIRECTION_RIGHT];
 			}
 		}
 		SetIndex(m_nTextureIndex, true);
@@ -1085,8 +1080,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_LEFT]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_LEFT];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureNum][PLAYER_DIRECTION_LEFT]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureNum][PLAYER_DIRECTION_LEFT];
 			}
 		}
 		SetIndex(m_nTextureIndex, false);
@@ -1176,7 +1171,7 @@ void CPlayer::UpdatePlayerRed(void){
 // プレイヤの鈍足状態管理
 //-----------------------------------------------------------------------------
 void CPlayer::UpdateSlow(void){
-	
+
 	// カウント
 	if (m_bSlowSpeed){
 		m_nSlowCount++;
@@ -1188,4 +1183,24 @@ void CPlayer::UpdateSlow(void){
 		}
 	}
 }
-	// EOF
+
+//-----------------------------------------------------------------------------
+// プレイヤのテクスチャを変更する＋カウントとかリセットする
+//-----------------------------------------------------------------------------
+void CPlayer::SetPlayerTexture(TEXTURE_TYPE type){
+
+	if (type == TEXTURE_PLAYER){
+		// テクスチャ変更
+		SetTexture(type, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y);
+		m_nTextureNum = 0;
+		m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureNum][PLAYER_DIRECTION_DOWN];
+	}
+	else if (type == TEXTURE_PLAYER_SPEED){
+		// テクスチャ変更
+		SetTexture(type, PLAYER_SPEED_TEXTURE_SEP_X, PLAYER_SPEED_TEXTURE_SEP_Y);
+		m_nTextureNum = 1;
+		m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureNum][PLAYER_DIRECTION_DOWN];
+	}
+	m_nTextureCount = 0;
+}
+// EOF
