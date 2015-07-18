@@ -18,8 +18,8 @@
 // íËêî
 //*****************************************************************************
 static const int ATTACK_ATTACK_COUNT_MAX = 30;
-static const float ATTACK_ATTACK_WIDTH = 35;
-static const float ATTACK_ATTACK_HEIGHT = 35;
+static const float ATTACK_ATTACK_WIDTH = 50;
+static const float ATTACK_ATTACK_HEIGHT = 50;
 static const TEXTURE_TYPE ATTACK_ATTACK_TEXTURE = TEXTURE_FIRE_1;
 static const int ATTACK_ATTACK_TEXTURE_X = 10;
 static const int ATTACK_ATTACK_TEXTURE_Y = 1;

@@ -73,6 +73,9 @@ static const int COOL_TIME_TABALE[COOL_TIME_MAX]
 	THREAD_TRAP_HIT_START_TIME					// COOL_TIME_JAMMER_THREAD
 };
 
+// ヒットストップの時間
+static const int HIT_STOP_TIME = 30;
+
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //	引数　　デバイス、プライオリティ、オブジェクトタイプ
@@ -277,7 +280,7 @@ void CPlayer::Update(void)
 	// CPUならAI更新
 	if (!m_bOperation)
 	{
-		//m_pAI->Update();
+		m_pAI->Update();
 	}
 	// 宝物を持っていたらアイコンの場所更新
 	if (m_pTreasure){
@@ -1203,7 +1206,11 @@ void CPlayer::AddHp(float fPoint){
 	// ダメージなら
 	if (fPoint < 0)
 	{
-		CEffectManager::CreateEffect(m_vPos, EFFECT_ATTACK_HIT, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		if (m_nCoolTime < HIT_STOP_TIME && fPoint < -30)
+		{
+			m_nCoolTime = HIT_STOP_TIME;
+			CEffectManager::CreateEffect(m_vPos, EFFECT_ATTACK_HIT, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		}
 	}
 
 	// HP残り状態を更新
