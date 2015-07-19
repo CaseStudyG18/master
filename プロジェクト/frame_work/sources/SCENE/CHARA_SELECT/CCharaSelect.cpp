@@ -22,6 +22,7 @@ static const D3DXVECTOR2 CHARASELECT_LOGO_SIZE = D3DXVECTOR2(800, 150);
 static const D3DXVECTOR3 CHARASELECT_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 75, 0);
 // プレイヤ背景の大きさ
 static const D3DXVECTOR2 CHARASELECT_PLAYER_BG_SIZE = D3DXVECTOR2(320, 200);
+static const D3DXVECTOR2 CHARASELECT_PLAYER_BG_SIZE_HALF = D3DXVECTOR2(160, 100);
 // プレイヤ背景の座標
 static const D3DXVECTOR3 CHARASELECT_PLAYER_BG_POS[PLAYER_MAX] = {
 	D3DXVECTOR3(330, 280, 0),
@@ -57,7 +58,8 @@ static const D3DXVECTOR3 CHARASELECT_JOIN_POS[PLAYER_MAX] = {
 };
 // ボタン系大きさ
 static const D3DXVECTOR2 CHARASELECT_BUTTON_SIZE = D3DXVECTOR2(200, 80);
-// STARTボタンの位置
+static const D3DXVECTOR2 CHARASELECT_BUTTON_SIZE_HALF = D3DXVECTOR2(100, 40);
+// 準備完了ボタンの位置
 static const D3DXVECTOR3 CHARASELECT_START_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 400, 0);
 // キーコンフィグボタンの位置
 static const D3DXVECTOR3 CHARASELECT_CONFIG_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 610, 0);
@@ -66,34 +68,21 @@ static const int CHARASELECT_CURSOL_MAX = 3;
 // カーソルの大きさ
 static const D3DXVECTOR2 CHARASELECT_CURSOL_SIZE = D3DXVECTOR2(50, 50);
 // プレイヤーごとのカーソルの初期位置
-static const D3DXVECTOR3 CHARASELECT_CURSOLR_POS[CHARASELECT_CURSOL_MAX][PLAYER_MAX] = {
-	// カーソル０番目(自分自身)
-		{
-			D3DXVECTOR3(440, 220, 0),
-			D3DXVECTOR3(1060, 220, 0),
-			D3DXVECTOR3(440, 450, 0),
-			D3DXVECTOR3(1060, 450, 0),
-		},
-		// カーソル１番目（READY）
-		{
-			D3DXVECTOR3(560, 360, 0),
-			D3DXVECTOR3(730, 360, 0),
-			D3DXVECTOR3(560, 420, 0),
-			D3DXVECTOR3(730, 420, 0),
-		},
-		// カーソル２番目（CONFING）
-		{
-			D3DXVECTOR3(560, 570, 0),
-			D3DXVECTOR3(730, 570, 0),
-			D3DXVECTOR3(560, 630, 0),
-			D3DXVECTOR3(730, 630, 0),
-		},
+static const D3DXVECTOR3 CHARASELECT_CURSOLR_POS[PLAYER_MAX] = {
+	D3DXVECTOR3(440, 220, 0),
+	D3DXVECTOR3(1060, 220, 0),
+	D3DXVECTOR3(440, 450, 0),
+	D3DXVECTOR3(1060, 450, 0),
 };
 // カーソルの角度
 static const float CHARASELECT_CURSOL_RAD_MAX = D3DX_PI / 4;
 static const float CHARASELECT_CURSOL_ADDRAD = 0.07f;
 // カーソルの色
 static const D3DXCOLOR CHARASELECT_CURSOL_ADDCOLOR = D3DXCOLOR(0.3f, 0.3f, 0.3f, 0.1f);
+// カーソルの移動量
+static const float CHARASELECT_CURSOL_VELO = 4;
+// カーソルの当たり判定を取るときの調整位置
+static const D3DXVECTOR3 CHARASELECT_CURSOL_COLI_DIST = D3DXVECTOR3(-10, 10, 0);
 // 準備完了2Dの大きさ
 static const D3DXVECTOR2 CHARASELECT_READY_SIZE = D3DXVECTOR2(250, 100);
 // プレイヤ背景の座標
@@ -371,10 +360,49 @@ void CCharaSelect::Join(int playerNum){
 
 	// カーソルを初期化
 	m_pCursol2D[playerNum] = CScene2D::Create(m_pD3DDevice,
-		CHARASELECT_CURSOLR_POS[m_nCursol[playerNum]][playerNum],
+		CHARASELECT_CURSOLR_POS[playerNum],
 		CHARASELECT_CURSOL_SIZE.x, CHARASELECT_CURSOL_SIZE.y,
 		TEXTURE_CHARA_SELECT_CURSOL, TYPE_PRIORITY_UI);
 	m_pCursol2D[playerNum]->SetColorPolygon(PLAYER_COLOR[playerNum] + CHARASELECT_CURSOL_ADDCOLOR);
+
+	// 準備状態初期化
+	UnReady(playerNum);
+}
+
+//-----------------------------------------------------------------------------
+// 指定したプレイヤを不参加
+//-----------------------------------------------------------------------------
+void CCharaSelect::UnJoin(int playerNum){
+
+	// すでに不参加なら抜ける
+	if (!m_bPush[playerNum]){
+		return;
+	}
+
+	// 押したフラグ
+	m_bPush[playerNum] = false;
+
+	// ＰＵＳＨボタン背景
+	m_pPush2DBG[playerNum] = CScene2D::Create(m_pD3DDevice,
+		CHARASELECT_PLAYER_BG_POS[playerNum],
+		CHARASELECT_PUSH_BG_SIZE.x, CHARASELECT_PUSH_BG_SIZE.y,
+		TEXTURE_RESULT_PUSH, TYPE_PRIORITY_GOAL);
+	// プレイヤの色に合わせる
+	m_pPush2DBG[playerNum]->SetColorPolygon(CHARASELECT_PUSH_BG_COLOR);
+	// ＰＵＳＨボタン
+	m_pPush2D[playerNum] = CScene2D::Create(m_pD3DDevice,
+		CHARASELECT_PLAYER_BG_POS[playerNum],
+		CHARASELECT_PUSH_SIZE.x, CHARASELECT_PUSH_SIZE.y,
+		TEXTURE_RESULT_PUSH, TYPE_PRIORITY_GOAL);
+	// プレイヤの色に合わせる
+	m_pPush2D[playerNum]->SetColorPolygon(PLAYER_COLOR[playerNum] + CHARASELECT_PUSH_ADDCOLOR);
+
+	// 操作できるプレイヤ人数インクリメント
+	m_nPlayerManualNum--;
+
+	SAFE_RELEASE(m_pRimo[playerNum]);
+	SAFE_RELEASE(m_pJoin2D[playerNum]);
+	SAFE_RELEASE(m_pCursol2D[playerNum]);
 }
 
 //-----------------------------------------------------------------------------
@@ -410,18 +438,22 @@ void CCharaSelect::UpdateRimoAnimation(void){
 void CCharaSelect::UpdateInputJoin(void){
 
 	// 各コントローラーで参加させる 0はすでに参加している
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_1) ||
-		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 1)){
+	if (CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 1)){
 		Join(1);
 	}
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_2) ||
-		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 2)){
+	if (CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 2)){
 		Join(2);
 	}
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_3) ||
-		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 3)){
+	if (CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 3)){
 		Join(3);
 	}
+	// デバッグ操作
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_1))	Join(1);
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_2))	Join(2);
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_3))	Join(3);
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_4))	UnJoin(1);
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_5))	UnJoin(2);
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_6))	UnJoin(3);
 }
 
 //-----------------------------------------------------------------------------
@@ -489,39 +521,58 @@ void CCharaSelect::UpdateCursol(void){
 			m_pCursol2D[i]->SetRot(D3DXVECTOR3(0, 0, m_fCursolRad[i]));
 
 			// 矢印キー
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_W) ||
-				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_UP, i)){
-				m_nCursol[i]--;
-				if (m_nCursol[i] < 0){
-					m_nCursol[i] = CHARASELECT_CURSOL_MAX - 1;
-				}
+			if (CInputKeyboard::GetKeyboardPress(DIK_W) ||
+				CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_UP, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.y -= CHARASELECT_CURSOL_VELO;
+				m_pCursol2D[i]->SetPos(pos);
 			}
-			else if (CInputKeyboard::GetKeyboardTrigger(DIK_S) ||
-				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_DOWN, i)){
-				m_nCursol[i]++;
-				if (m_nCursol[i] >= CHARASELECT_CURSOL_MAX){
-					m_nCursol[i] = 0;
-				}
+			else if (CInputKeyboard::GetKeyboardPress(DIK_S) ||
+				CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_DOWN, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.y += CHARASELECT_CURSOL_VELO;
+				m_pCursol2D[i]->SetPos(pos);
 			}
-			// 矢印の入力があったら
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_W) ||
-				CInputKeyboard::GetKeyboardTrigger(DIK_S) ||
-				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_UP, i) ||
-				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_DOWN, i)){
-				// カーソルの座標セット
-				m_pCursol2D[i]->SetPos(CHARASELECT_CURSOLR_POS[m_nCursol[i]][i]);
+			if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
+				CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_LEFT, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.x -= CHARASELECT_CURSOL_VELO;
+				m_pCursol2D[i]->SetPos(pos);
+			}
+			else if (CInputKeyboard::GetKeyboardPress(DIK_D) ||
+				CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_RIGHT, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.x += CHARASELECT_CURSOL_VELO;
+				m_pCursol2D[i]->SetPos(pos);
 			}
 			// 決定ボタンを押したら
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 				CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, i)){
+				// カーソルとボタンの当たり判定
+				ButtonNumber hitButtonNum = CollisionButton(i, m_pCursol2D[i]->GetPos());
+
+				// キャラクタを選択ボタン
+				if (hitButtonNum == BUTTON_CHARA){
+					// 参戦するしないの切り替え
+					if (m_bPush[i])
+						UnJoin(i);
+					else
+						Join(i);
+				}
 				// 準備完了ボタン
-				if (m_nCursol[i] == 1){
-					m_pReady2D[i]->SetDrawFlag(true);
-					m_bReady[i] = true;
-					m_nPlayerReadylNum++;
+				else if (hitButtonNum == BUTTON_READY){
+					// 準備完了状態の切り替え（参戦しているプレイヤのみ）
+					if (m_bPush[i]){
+						if (m_bReady[i]){
+							UnReady(i);
+						}
+						else{
+							Ready(i);
+						}
+					}
 				}
 				// コンフィグボタン
-				else if (m_nCursol[i] == 2){
+				else if (hitButtonNum == BUTTON_CONFIG){
 					// フェーズ移動していなければ
 					if (!m_bNextPhaseOnece){
 						// 今参戦している人数を保存
@@ -626,5 +677,61 @@ void CCharaSelect::UpdateInput(void){
 			m_PlayerMode[i] = PLAYER_MODE_NONE;
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// 引数のposと当たっているボタン番号を返す
+//-----------------------------------------------------------------------------
+CCharaSelect::ButtonNumber CCharaSelect::CollisionButton(int playerNum, D3DXVECTOR3 vCursolPos){
+	// デフォルト
+	CCharaSelect::ButtonNumber num = BUTTON_NONE;
+
+	// 指先に当たり判定を調整
+	vCursolPos += CHARASELECT_CURSOL_COLI_DIST;
+
+	// キャラボタンとの当たり判定
+	if (
+		((CHARASELECT_PLAYER_BG_POS[playerNum].x - CHARASELECT_PLAYER_BG_SIZE_HALF.x) < vCursolPos.x) &&
+		((CHARASELECT_PLAYER_BG_POS[playerNum].x + CHARASELECT_PLAYER_BG_SIZE_HALF.x) > vCursolPos.x) &&
+		((CHARASELECT_PLAYER_BG_POS[playerNum].y - CHARASELECT_PLAYER_BG_SIZE_HALF.y) < vCursolPos.y) &&
+		((CHARASELECT_PLAYER_BG_POS[playerNum].y + CHARASELECT_PLAYER_BG_SIZE_HALF.y) > vCursolPos.y)){
+		num = BUTTON_CHARA;
+	}
+	// 準備完了ボタンとの当たり判定
+	else if (
+		((CHARASELECT_START_POS.x - CHARASELECT_BUTTON_SIZE_HALF.x) < vCursolPos.x) &&
+		((CHARASELECT_START_POS.x + CHARASELECT_BUTTON_SIZE_HALF.x) > vCursolPos.x) &&
+		((CHARASELECT_START_POS.y - CHARASELECT_BUTTON_SIZE_HALF.y) < vCursolPos.y) &&
+		((CHARASELECT_START_POS.y + CHARASELECT_BUTTON_SIZE_HALF.y) > vCursolPos.y)){
+		num = BUTTON_READY;
+	}
+	// コンフィグボタンとの当たり判定
+	else if (
+		(CHARASELECT_CONFIG_POS.x - CHARASELECT_BUTTON_SIZE_HALF.x < vCursolPos.x) &&
+		(CHARASELECT_CONFIG_POS.x + CHARASELECT_BUTTON_SIZE_HALF.x > vCursolPos.x) &&
+		(CHARASELECT_CONFIG_POS.y - CHARASELECT_BUTTON_SIZE_HALF.y < vCursolPos.y) &&
+		(CHARASELECT_CONFIG_POS.y + CHARASELECT_BUTTON_SIZE_HALF.y > vCursolPos.y)){
+		num = BUTTON_CONFIG;
+	}
+
+	// ボタン番号
+	return num;
+}
+
+//-----------------------------------------------------------------------------
+// 準備完了
+//-----------------------------------------------------------------------------
+void CCharaSelect::Ready(int playerNum){
+	m_pReady2D[playerNum]->SetDrawFlag(true);
+	m_bReady[playerNum] = true;
+	m_nPlayerReadylNum++;
+}
+//-----------------------------------------------------------------------------
+// 準備完了じゃない
+//-----------------------------------------------------------------------------
+void CCharaSelect::UnReady(int playerNum){
+	m_pReady2D[playerNum]->SetDrawFlag(false);
+	m_bReady[playerNum] = false;
+	m_nPlayerReadylNum--;
 }
 //----EOF----

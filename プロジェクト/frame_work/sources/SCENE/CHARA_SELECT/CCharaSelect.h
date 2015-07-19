@@ -52,10 +52,24 @@ public:
 	static CCharaSelect* Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice);
 
 private:
+	// ボタン
+	enum ButtonNumber{
+		// この番号の時はボタンじゃない
+		BUTTON_NONE = -1,
+		// キャラを選択しているボタン
+		BUTTON_CHARA,
+		// 準備完了のボタン
+		BUTTON_READY,
+		// コンフィグのボタン
+		BUTTON_CONFIG,
+	};
+
 	// BGの初期化　ロゴも初期化してる
 	void InitializeBG();
 	// 参戦
 	void Join(int playerNum);
+	// 不参戦
+	void UnJoin(int playerNum);
 	// PUSHの点滅更新
 	void UpdatePushAnimation();
 	// READYの点滅更新
@@ -73,6 +87,12 @@ private:
 		m_nRimoTextureMin[index] = min;
 		m_nRimoTextureMax[index] = max;
 	}
+	// 引数のposと当たっているボタン番号を返す indexはプレイヤ番号
+	ButtonNumber CollisionButton(int playerNum, D3DXVECTOR3 vCursolPos);
+	// 準備完了を押したとき
+	void Ready(int playerNum);
+	// 準備完了じゃない
+	void UnReady(int playerNum);
 
 	// 背景
 	CScene2D* m_pBG;
