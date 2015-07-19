@@ -24,6 +24,9 @@ enum RESULT_MENU{
 	RESULT_MENU_MAX
 };
 
+// くるくるライトの数
+static const int RESULT_CIRCLE_LIGHT_MAX = 50;
+
 //*****************************************************************************
 // 前方宣言
 //*****************************************************************************
@@ -105,6 +108,14 @@ private:
 	bool m_bMojiScale;
 	// CPUの数
 	short m_nCpuNum;
+	// 勝者に当てるライト
+	CScene2D* m_pLight;
+	// くるくるライト
+	CScene2D* m_pCircleLight[RESULT_CIRCLE_LIGHT_MAX];
+	// くるくるらいとの移動量
+	D3DXVECTOR2 m_vCircleVelo[RESULT_CIRCLE_LIGHT_MAX];
+	// くるくるライトの大きさ
+	float m_vCircleSizeHalf[RESULT_CIRCLE_LIGHT_MAX];
 
 };
 

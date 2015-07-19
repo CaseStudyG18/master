@@ -72,6 +72,8 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/cursol.png",
 	"data/TEXTURE/return.png",
 	"data/TEXTURE/player_num.png",
+	"data/TEXTURE/result_circle_light.png",
+	"data/TEXTURE/result_light.png",
 	"data/TEXTURE/result_push.png",
 	"data/TEXTURE/result_menu_back_0.png",
 	"data/TEXTURE/result_menu_back_1.png",

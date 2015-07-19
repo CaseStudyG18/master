@@ -378,6 +378,13 @@ void CCharaSelect::UnJoin(int playerNum){
 	if (!m_bPush[playerNum]){
 		return;
 	}
+	// €”õŠ®—¹‚µ‚Ä‚¢‚½‚çÁ‚·
+	if (m_bReady[playerNum]){
+		m_bReady[playerNum] = false;
+		SAFE_RELEASE(m_pReady2D[playerNum]);
+		m_nReadyFlashCount[playerNum] = 0;
+		m_bReadyFlash[playerNum] = false;
+	}
 
 	// ‰Ÿ‚µ‚½ƒtƒ‰ƒO
 	m_bPush[playerNum] = false;
