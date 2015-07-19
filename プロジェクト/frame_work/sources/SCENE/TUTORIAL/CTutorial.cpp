@@ -45,8 +45,6 @@ static const int TUTORIAL_ARROR_TEXTURE_SEP_Y = 1;
 static const float TUTORIAL_ARROW_SCALE = 1.3f;
 // 矢印が拡大と縮小を切り替えるインターバル
 static const int TUTORIAL_ARROW_SCALE_INTERVAL = 40;
-// 矢印のUV反転用の値
-static UV_INDEX TUTORIAL_ARROW_UV = { 1, 0, 0, 1 };
 // ページ表示の座標
 static const D3DXVECTOR3 TUTORIAL_PAGE_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT -50, 0);
 // ページ表示のおおきさ
@@ -126,6 +124,7 @@ void CTutorial::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		TUTORIAL_ARROR_WIDTH, TUTORIAL_ARROR_HEIGHT,
 		TEXTURE_TUTORIAL_ARROW, TUTORIAL_ARROR_TEXTURE_SEP_X, TUTORIAL_ARROR_TEXTURE_SEP_Y,
 		TUTORIAL_ARROW_ANIME_SPEED, -1);
+	m_pArrowRight->SetRot(D3DXVECTOR3(0, 0, D3DX_PI));
 
 	// ページ表示２D
 	m_pPage2D = CScene2D::Create(m_pD3DDevice,
@@ -283,26 +282,25 @@ CTutorial* CTutorial::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 //*****************************************************************************
 void CTutorial::UpdateArrow(){
 
+	// 一定カウントで拡縮フラグ切り替え
 	m_nArrowCount++;
-
 	if (m_nArrowCount > TUTORIAL_ARROW_SCALE_INTERVAL){
 		m_nArrowCount = 0;
 		m_bArrowScale = !m_bArrowScale;
 	}
-
+	// 拡大する
 	if (m_bArrowScale){
 		m_pArrowLeft->AddHeight_BaseBottom(-TUTORIAL_ARROW_SCALE);
 		m_pArrowLeft->AddHeight_BaseTop(-TUTORIAL_ARROW_SCALE);
 		m_pArrowRight->AddHeight_BaseBottom(-TUTORIAL_ARROW_SCALE);
 		m_pArrowRight->AddHeight_BaseTop(-TUTORIAL_ARROW_SCALE);
-		m_pArrowRight->SetUV(&TUTORIAL_ARROW_UV);
 	}
+	// 縮小する
 	else{
 		m_pArrowLeft->AddHeight_BaseBottom(TUTORIAL_ARROW_SCALE);
 		m_pArrowLeft->AddHeight_BaseTop(TUTORIAL_ARROW_SCALE);
 		m_pArrowRight->AddHeight_BaseBottom(TUTORIAL_ARROW_SCALE);
 		m_pArrowRight->AddHeight_BaseTop(TUTORIAL_ARROW_SCALE);
-		m_pArrowRight->SetUV(&TUTORIAL_ARROW_UV);
 	}
 }
 
