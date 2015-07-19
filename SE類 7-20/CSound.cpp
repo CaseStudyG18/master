@@ -22,17 +22,17 @@ static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 	{ "data/BGM/bgm01.wav", true },		// BGM0
 	{ "data/SE/Enter.wav", false },		// Œˆ’è‰¹	
 	{ "data/SE/Start.wav", false },		// ƒXƒ^[ƒg‰¹
-	{ "data/SE/SE000.wav", false },		// I—¹‰¹
-	{ "data/SE/NormalAttack.wav", false },		// ’ÊíUŒ‚‰¹
-	{ "data/SE/NormalThread.wav", false },		// ’Êí…UŒ‚‰¹
-	{ "data/SE/ThunderBolt1.wav", false },		// UŒ‚Œ`‘Ô‚Ì…UŒ‚‚Ì‰’e‚Ì‰¹
-	{ "data/SE/ThunderBolt2.wav", false },		// UŒ‚Œ`‘Ô‚Ì…UŒ‚‚Ì“ñ’e‚Ì‰¹
-	{ "data/SE/AroundAttack.wav", false },		// UŒ‚Œ`‘Ô‚ÌüˆÍUŒ‚‚Ì‰¹
-	{ "data/SE/SE000.wav", false },		// ˆÚ“®Œ`‘Ô‚Ì“¹ì¬‰¹
-	{ "data/SE/Tackle.wav", false },		// ˆÚ“®Œ`‘Ô‚Ìƒ^ƒbƒNƒ‹‚Ì‰¹
-	{ "data/SE/SE000.wav", false },		// –WŠQŒ`‘Ô‚Ìã©İ’u‰¹
-	{ "data/SE/SE000.wav", false },		// –WŠQŒ`‘Ô‚ÌUŒ‚‰¹
-	{ "data/SE/GetTreasure.wav", false },		// •ó•¨‚ğE‚Á‚½‰¹
+	{ "data/SE/Finish.wav", false },	// I—¹‰¹
+	{ "data/SE/NormalAttack.wav", false },	// ’ÊíUŒ‚‰¹
+	{ "data/SE/NormalThread.wav", false },	// ’Êí…UŒ‚‰¹
+	{ "data/SE/ThunderBolt1.wav", false },	// UŒ‚Œ`‘Ô‚Ì…UŒ‚‚Ì‰’e‚Ì‰¹
+	{ "data/SE/ThunderBolt2.wav", false },	// UŒ‚Œ`‘Ô‚Ì…UŒ‚‚Ì“ñ’e‚Ì‰¹
+	{ "data/SE/AroundAttack.wav", false },	// UŒ‚Œ`‘Ô‚ÌüˆÍUŒ‚‚Ì‰¹
+	{ "data/SE/MakeRoad.wav", false },	// ˆÚ“®Œ`‘Ô‚Ì“¹ì¬‰¹
+	{ "data/SE/Tackle.wav", false },	// ˆÚ“®Œ`‘Ô‚Ìƒ^ƒbƒNƒ‹‚Ì‰¹
+	{ "data/SE/Trap.wav", false },		// –WŠQŒ`‘Ô‚Ìã©İ’u‰¹
+	{ "data/SE/JummerAttack.wav", false },	// –WŠQŒ`‘Ô‚ÌUŒ‚‰¹
+	{ "data/SE/GetTreasure.wav", false },	// •ó•¨‚ğE‚Á‚½‰¹
 };
 
 //*****************************************************************************
