@@ -970,7 +970,7 @@ void C_CPU_AI::MakeFootStep(void)
 		}
 	}
 	// •ÏŒ`
-	else if (m_nTimer == BEFORE_MOVE_MAKE_FOOT_STEP_TIME)
+	else if (m_nTimer < BEFORE_MOVE_MAKE_FOOT_STEP_TIME + 5)
 	{
 		m_AIInput.changeSpeed = true;
 	}

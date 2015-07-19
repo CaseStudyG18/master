@@ -26,7 +26,7 @@ static const float ATTACK_NORMAL_HIT_HEIGHT = 50;
 // プレイヤと攻撃エフェクトの距離
 static const float ATTACK_NORMAL_RANGE = 50;
 
-static const float ATTACK_DAMAGE = -50.f;
+static const float ATTACK_DAMAGE = -200.f;
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************

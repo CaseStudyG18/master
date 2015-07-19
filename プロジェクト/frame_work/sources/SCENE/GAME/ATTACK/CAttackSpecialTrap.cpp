@@ -29,7 +29,7 @@ static const float ATTACK_TRAP_HIT_HEIGHT = 30;
 // ‘¬“x
 static const float ATTACK_JAMMER_SPD = 10;
 
-static const float ATTACK_DAMAGE = -150;
+static const float ATTACK_DAMAGE = -240;
 
 //*****************************************************************************
 // Ã“Iƒƒ“ƒo•Ï”

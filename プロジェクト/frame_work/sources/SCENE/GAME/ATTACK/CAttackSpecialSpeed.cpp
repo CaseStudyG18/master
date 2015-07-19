@@ -28,7 +28,7 @@ static const float ATTACK_SPEED_HIT_HEIGHT = 50;
 // プレイヤと攻撃エフェクトの距離
 static const float ATTACK_SPEED_RANGE = 4.0f;
 
-static const float ATTACK_SPEED_DAMAGE = -50.0f;
+static const float ATTACK_SPEED_DAMAGE = -100.0f;
 
 //*****************************************************************************
 // 静的メンバ変数
