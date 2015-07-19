@@ -909,8 +909,6 @@ void CJudge::ColiFieldxTreasure(void)
 	// 全フィールドと当たり判定をして当たらなかったら宝をはねさせる
 	if (!coli){
 		pTreasure->SetFall();
-	
-//		pTreasure->SetPos(pTreasure->GetPos() + D3DXVECTOR3(0, 1, 0));
 	}
 
 	// 次のインスタンスを対象のインスタンスにする

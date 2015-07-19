@@ -8,6 +8,7 @@
 // インクルード
 //*****************************************************************************
 #include "CTreasure.h"
+#include "../PLAYER/AI/mersenne_twister.h"
 
 //*****************************************************************************
 // マクロ
@@ -48,14 +49,14 @@ static const float TREASURE_FALL_DIST = 10;
 // 宝物を落とす位置のテーブル
 static const int TREASURE_FALL_TABLE_NUM = 8;
 static const D3DXVECTOR3 TREASURE_FALL_VELOCITY[TREASURE_FALL_TABLE_NUM] = {
-	D3DXVECTOR3(TREASURE_FALL_DIST * +0.0f, -6, 0),
-	D3DXVECTOR3(TREASURE_FALL_DIST * +0.5f, -6, 0),
-	D3DXVECTOR3(TREASURE_FALL_DIST * +1.0f, -6, 0),
-	D3DXVECTOR3(TREASURE_FALL_DIST * +0.5f, -6, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +0.0f, -8, 0),
 	D3DXVECTOR3(TREASURE_FALL_DIST * +0.0f, -4, 0),
-	D3DXVECTOR3(TREASURE_FALL_DIST * -0.5f, -4, 0),
-	D3DXVECTOR3(TREASURE_FALL_DIST * -1.0f, -4, 0),
-	D3DXVECTOR3(TREASURE_FALL_DIST * -0.5f, -4, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +1.0f, -6, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * -1.0f, -6, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +0.5f, -7, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * +0.5f, -7, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * -0.5f, -5, 0),
+	D3DXVECTOR3(TREASURE_FALL_DIST * -0.5f, -5, 0),
 };
 
 // 移動量の減衰量
@@ -136,7 +137,6 @@ void CTreasure::Update(void)
 		m_pKira->SetPos(m_vPos);
 		m_pLight->SetPos(m_vPos);
 	}
-
 }
 
 //*****************************************************************************
@@ -210,7 +210,7 @@ void CTreasure::SetPos(D3DXVECTOR3 pos){
 // 宝物を落とす状態にする
 //*****************************************************************************
 void CTreasure::SetFall(){
-	int index = rand() % TREASURE_FALL_TABLE_NUM;
+	int index = mersenne_twister_int(0, TREASURE_FALL_TABLE_NUM - 1);
 	m_vVelocity = TREASURE_FALL_VELOCITY[index];
 	m_TreasureState = TREASURE_STATE_JUMPING;
 }

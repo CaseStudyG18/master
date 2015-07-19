@@ -18,7 +18,7 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-static const MODE_PHASE INIT_MODE = MODE_PHASE_TUTORIAL;	// 最初のフェイズ
+static const MODE_PHASE INIT_MODE = MODE_PHASE_GAME;	// 最初のフェイズ
 
 //*****************************************************************************
 // スタティックメンバ変数
@@ -32,6 +32,7 @@ volatile bool	CManager::m_bEndload = false;
 int				CManager::m_nWinPlayerNum = -1;
 short			CManager::m_nPlayerNumManual;
 short			CManager::m_nPlayerNumCpu;
+short			CManager::m_nJoinNum;
 int				CManager::m_nStageNum;
 
 //=============================================================================
@@ -71,6 +72,7 @@ HRESULT CManager ::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	m_nWinPlayerNum = 0;
 	m_nPlayerNumManual = 0;
 	m_nPlayerNumCpu = 0;
+	m_nJoinNum = 0;
 
 	m_pRenderer = new CRenderer;
 	if(m_pRenderer->Init(hWnd, bWindow) == E_FAIL)

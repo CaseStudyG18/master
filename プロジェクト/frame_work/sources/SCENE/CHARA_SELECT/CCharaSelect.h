@@ -141,6 +141,9 @@ private:
 	// 準備完了した人数
 	short m_nPlayerReadylNum;
 
+	// 前のシーンで参加していた人数
+	short m_nPlayerJoinedNum;
+
 };
 
 #endif

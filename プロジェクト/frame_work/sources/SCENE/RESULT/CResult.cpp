@@ -132,6 +132,9 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// 勝ったプレイヤ番号取得
 	m_nWinPlayerNum = CManager::GetWinPlayerNum();
 
+	// CPU人数を取得
+	m_nCpuNum = PLAYER_MAX - CManager::GetPlayerManualNum();
+
 	// 背景
 	InitializeBG();
 	// リモの勝者アニメーション初期化
@@ -184,7 +187,12 @@ void CResult::Update(void)
 			// プレイヤの色に合わせる
 			m_pPush2D[i]->SetColorPolygon(PLAYER_COLOR[i]);
 		}
-
+		// CPUがいた時はPUSHを押す
+		if (m_nCpuNum > 0){
+			for (int i = 0; i < m_nCpuNum; i++){
+				m_bPush[PLAYER_MAX - 1 - i] = true;
+			}
+		}
 	}
 	// プッシュがでてる
 	else{
@@ -202,19 +210,19 @@ void CResult::Update(void)
 		// 入力受け受け
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0)){
-			m_bPush[0] = !m_bPush[0];
+			m_bPush[0] = true;
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 1)){
-			m_bPush[1] = !m_bPush[1];
+			m_bPush[1] = true;
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 2)){
-			m_bPush[2] = !m_bPush[2];
+			m_bPush[2] = true;
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 3)){
-			m_bPush[3] = !m_bPush[3];
+			m_bPush[3] = true;
 		}
 
 		// すべてＰＵＳＨされた + メニューが出ていない状態（一回だけ通るように）

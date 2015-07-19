@@ -103,6 +103,8 @@ private:
 	D3DXVECTOR2 m_vMojiSize;
 	// ‚»‚Ìƒtƒ‰ƒO
 	bool m_bMojiScale;
+	// CPU‚Ì”
+	short m_nCpuNum;
 
 };
 

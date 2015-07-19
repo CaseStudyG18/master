@@ -132,7 +132,7 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		const_cast<short*>(GOAL_PLAYER_NUMBER), this);
 
 	// 生成するフィールド番号取得
-	m_nStageNum = CManager::SetStageNum();
+	m_nStageNum = CManager::GetStageNum();
 
 	// フィールド作成
 	m_pFieldManager = new CFieldManager;

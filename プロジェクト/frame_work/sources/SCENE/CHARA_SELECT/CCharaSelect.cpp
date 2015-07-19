@@ -164,6 +164,9 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_nPlayerManualNum = 0;
 	m_nPlayerReadylNum = 0;
 
+	// 参戦していた数を取得する
+	m_nPlayerJoinedNum = CManager::GetJoinNum();
+
 	// 背景
 	InitializeBG();
 
@@ -214,8 +217,12 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pPush2D[0]->SetDrawFlag(false);
 	m_pPush2DBG[0]->SetDrawFlag(false);
 
-	// 0番目のプレイヤは最初から参戦
+	// 1Pと参戦していた数だけ参戦
 	Join(0);
+	for (int i = 1; i < m_nPlayerJoinedNum; i++){
+		Join(i);
+	}
+
 
 	// フェードイン開始
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
@@ -517,6 +524,8 @@ void CCharaSelect::UpdateCursol(void){
 				else if (m_nCursol[i] == 2){
 					// フェーズ移動していなければ
 					if (!m_bNextPhaseOnece){
+						// 今参戦している人数を保存
+						CManager::SetJoinNum(m_nPlayerManualNum);
 						// フェードアウト開始
 						m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 						// コンフィグヘ
