@@ -38,6 +38,11 @@ static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 	{ "data/SE/StartOK.wav", false },	// 準備完了　　　　　// 追加
 	{ "data/SE/TitleZingle.wav", false },	// タイトルのジングル// 追加
 	{ "data/SE/ResultZingle.wav", false },	// リザルトのジングル// 追加
+	{ "data/SE/GageDown.wav", false },	// ゲージ減少　　　　// 追加
+	{ "data/SE/SpeedDown.wav", false },	// スピード減少　　　// 追加
+	{ "data/SE/ModeChange.wav", false },	// 変形　　　　　    // 追加
+	{ "data/SE/Damage.wav", false },	// ダメージ          // 追加
+	{ "data/SE/DestTreasure.wav", false },	// 宝物を失った音    // 追加
 };
 
 //*****************************************************************************

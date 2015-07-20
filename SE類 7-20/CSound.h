@@ -42,6 +42,11 @@ typedef enum
 	SOUND_LABEL_SE_CURSOL_ZYUNBIKANRYOU,	// 準備完了　　　　　// 追加
 	SOUND_LABEL_ZINGLE_TITLE,		// タイトルのジングル// 追加	
 	SOUND_LABEL_ZINGLE_RESULT,		// リザルトのジングル// 追加	
+	SOUND_LABEL_SE_GAGE_DOWN,		// ゲージ減少        // 追加
+	SOUND_LABEL_SE_SPEED_DOWN,		// スピード減少      // 追加
+	SOUND_LABEL_SE_TRANSREATION,		// 変形              // 追加
+	SOUND_LABEL_SE_DAMAGE,			// ダメージ          // 追加
+	SOUND_LABEL_SE_DEST_TREASURE,		// 宝物を失った音    // 追加
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 
