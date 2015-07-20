@@ -531,7 +531,33 @@ void CCharaSelect::UpdateCursol(void){
 			m_pCursol2D[i]->SetRot(D3DXVECTOR3(0, 0, m_fCursolRad[i]));
 
 			// –îˆóƒL[
-			if (CInputKeyboard::GetKeyboardPress(DIK_W) ||
+
+			// ‚±‚Á‚©‚çŽÎ‚ßˆÚ“®
+			if (CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_LEFT_UP, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.x -= CHARASELECT_CURSOL_VELO * 0.75f;
+				pos.y -= CHARASELECT_CURSOL_VELO * 0.75f;
+				m_pCursol2D[i]->SetPos(pos);
+			}
+			else if (CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_LEFT_DOWN, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.x -= CHARASELECT_CURSOL_VELO * 0.75f;
+				pos.y += CHARASELECT_CURSOL_VELO * 0.75f;
+				m_pCursol2D[i]->SetPos(pos);
+			}
+			else if (CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_RIGHT_DOWN, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.x += CHARASELECT_CURSOL_VELO * 0.75f;
+				pos.y += CHARASELECT_CURSOL_VELO * 0.75f;
+				m_pCursol2D[i]->SetPos(pos);
+			}
+			else if (CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_RIGHT_UP, i)){
+				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
+				pos.x += CHARASELECT_CURSOL_VELO * 0.75f;
+				pos.y -= CHARASELECT_CURSOL_VELO * 0.75f;
+				m_pCursol2D[i]->SetPos(pos);
+			}
+			else if (CInputKeyboard::GetKeyboardPress(DIK_W) ||
 				CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_UP, i)){
 				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
 				pos.y -= CHARASELECT_CURSOL_VELO;
@@ -543,7 +569,7 @@ void CCharaSelect::UpdateCursol(void){
 				pos.y += CHARASELECT_CURSOL_VELO;
 				m_pCursol2D[i]->SetPos(pos);
 			}
-			if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
+			else if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
 				CInputGamePad::GetGamePadPress(CInputGamePad::LEFT_STICK_LEFT, i)){
 				D3DXVECTOR3 pos = m_pCursol2D[i]->GetPos();
 				pos.x -= CHARASELECT_CURSOL_VELO;

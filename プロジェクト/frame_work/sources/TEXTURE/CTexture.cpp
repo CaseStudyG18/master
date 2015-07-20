@@ -99,6 +99,7 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/tutorial_page_2_4.png",
 	"data/TEXTURE/tutorial_page_3_4.png",
 	"data/TEXTURE/tutorial_page_4_4.png",
+	"data/TEXTURE/game_start.png",
 };
 
 //*****************************************************************************

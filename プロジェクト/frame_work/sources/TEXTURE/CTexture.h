@@ -102,6 +102,7 @@ typedef enum
 	TEXTURE_TUTORIAL_PAGE_2_4,		// チュートリアルのページテクスチャ
 	TEXTURE_TUTORIAL_PAGE_3_4,		// チュートリアルのページテクスチャ
 	TEXTURE_TUTORIAL_PAGE_4_4,		// チュートリアルのページテクスチャ
+	TEXTURE_GAME_START,				// ゲームスタートのカウントテクスチャ（4,1）
 	TEXTURE_MAX				// テクスチャタイプ総数
 }TEXTURE_TYPE;
 
