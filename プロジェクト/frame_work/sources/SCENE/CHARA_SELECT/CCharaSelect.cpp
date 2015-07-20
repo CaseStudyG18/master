@@ -151,7 +151,7 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_bNextPhaseOnece = false;
 	m_nNextPhaseCount = 0;
 	m_nPlayerManualNum = 0;
-	m_nPlayerReadylNum = 0;
+	m_nPlayerReadyNum = 0;
 
 	// 参戦していた数を取得する
 	m_nPlayerJoinedNum = CManager::GetJoinNum();
@@ -261,7 +261,7 @@ void CCharaSelect::Update(void)
 	// 全員が準備完了だったらステージセレクトに移動
 	if (!m_bNextPhaseOnece){
 		// 参加したプレイヤ人数が全員準備完了を押したら
-		if (m_nPlayerReadylNum == m_nPlayerManualNum){
+		if (m_nPlayerReadyNum == m_nPlayerManualNum){
 			// 一回のみ実行
 			m_bNextPhaseOnece = true;
 			// プレイヤの人数を送る
@@ -366,7 +366,9 @@ void CCharaSelect::Join(int playerNum){
 	m_pCursol2D[playerNum]->SetColorPolygon(PLAYER_COLOR[playerNum] + CHARASELECT_CURSOL_ADDCOLOR);
 
 	// 準備状態初期化
-	UnReady(playerNum);
+	if (m_pReady2D[playerNum])
+		m_pReady2D[playerNum]->SetDrawFlag(false);
+	m_bReady[playerNum] = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -381,9 +383,10 @@ void CCharaSelect::UnJoin(int playerNum){
 	// 準備完了していたら消す
 	if (m_bReady[playerNum]){
 		m_bReady[playerNum] = false;
-		SAFE_RELEASE(m_pReady2D[playerNum]);
+		m_pReady2D[playerNum]->SetDrawFlag(false);
 		m_nReadyFlashCount[playerNum] = 0;
 		m_bReadyFlash[playerNum] = false;
+		m_nPlayerReadyNum--;
 	}
 
 	// 押したフラグ
@@ -404,7 +407,7 @@ void CCharaSelect::UnJoin(int playerNum){
 	// プレイヤの色に合わせる
 	m_pPush2D[playerNum]->SetColorPolygon(PLAYER_COLOR[playerNum] + CHARASELECT_PUSH_ADDCOLOR);
 
-	// 操作できるプレイヤ人数インクリメント
+	// 操作できるプレイヤ人数
 	m_nPlayerManualNum--;
 
 	SAFE_RELEASE(m_pRimo[playerNum]);
@@ -552,22 +555,18 @@ void CCharaSelect::UpdateCursol(void){
 				pos.x += CHARASELECT_CURSOL_VELO;
 				m_pCursol2D[i]->SetPos(pos);
 			}
-			// 決定ボタンを押したら
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
-				CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, i)){
+		}
+		// 決定ボタンを押したら
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
+			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, i)){
+			
+			// 参加していてカーソルがある場合
+			if (m_pCursol2D[i]){
 				// カーソルとボタンの当たり判定
 				ButtonNumber hitButtonNum = CollisionButton(i, m_pCursol2D[i]->GetPos());
 
-				// キャラクタを選択ボタン
-				if (hitButtonNum == BUTTON_CHARA){
-					// 参戦するしないの切り替え
-					if (m_bPush[i])
-						UnJoin(i);
-					else
-						Join(i);
-				}
 				// 準備完了ボタン
-				else if (hitButtonNum == BUTTON_READY){
+				if (hitButtonNum == BUTTON_READY){
 					// 準備完了状態の切り替え（参戦しているプレイヤのみ）
 					if (m_bPush[i]){
 						if (m_bReady[i]){
@@ -589,6 +588,21 @@ void CCharaSelect::UpdateCursol(void){
 						// コンフィグヘ
 						m_pManager->SetNextPhase(MODE_PHASE_OPTION);
 					}
+				}
+				// キャラクタを選択ボタン
+				else if (hitButtonNum == BUTTON_CHARA){
+					// 参戦するしないの切り替え
+					if (m_bPush[i]){
+						UnJoin(i);
+						continue;
+					}
+				}
+			}
+			// 不参加でカーソルがない場合
+			else{
+				if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
+					CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, i)){
+					Join(i);
 				}
 			}
 		}
@@ -729,16 +743,18 @@ CCharaSelect::ButtonNumber CCharaSelect::CollisionButton(int playerNum, D3DXVECT
 // 準備完了
 //-----------------------------------------------------------------------------
 void CCharaSelect::Ready(int playerNum){
-	m_pReady2D[playerNum]->SetDrawFlag(true);
+	if (m_pReady2D[playerNum])
+		m_pReady2D[playerNum]->SetDrawFlag(true);
 	m_bReady[playerNum] = true;
-	m_nPlayerReadylNum++;
+	m_nPlayerReadyNum++;
 }
 //-----------------------------------------------------------------------------
 // 準備完了じゃない
 //-----------------------------------------------------------------------------
 void CCharaSelect::UnReady(int playerNum){
-	m_pReady2D[playerNum]->SetDrawFlag(false);
+	if (m_pReady2D[playerNum])
+		m_pReady2D[playerNum]->SetDrawFlag(false);
 	m_bReady[playerNum] = false;
-	m_nPlayerReadylNum--;
+	m_nPlayerReadyNum--;
 }
 //----EOF----

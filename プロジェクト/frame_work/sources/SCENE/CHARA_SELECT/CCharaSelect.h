@@ -159,7 +159,7 @@ private:
 	// 参加するプレイヤの人数
 	short m_nPlayerManualNum;
 	// 準備完了した人数
-	short m_nPlayerReadylNum;
+	short m_nPlayerReadyNum;
 
 	// 前のシーンで参加していた人数
 	short m_nPlayerJoinedNum;

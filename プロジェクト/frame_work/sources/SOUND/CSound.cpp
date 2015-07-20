@@ -19,8 +19,20 @@ static const int FFIR_CHUNK_DATA_SIZE = 4;							// エラー時のチャンクデータサイ
 // 各音素材のパラメータ
 static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 {
-	{"data/BGM/bgm01.wav", true},		// BGM0
-	{"data/SE/SE000.wav", false},	// 決定音
+	{ "data/BGM/bgm01.wav", true },			// BGM0
+	{ "data/SE/Enter.wav", false },			// 決定音	
+	{ "data/SE/Start.wav", false },			// スタート音
+	{ "data/SE/Finish.wav", false },		// 終了音
+	{ "data/SE/NormalAttack.wav", false },	// 通常攻撃音
+	{ "data/SE/NormalThread.wav", false },	// 通常糸攻撃音
+	{ "data/SE/ThunderBolt1.wav", false },	// 攻撃形態の糸攻撃の初弾の音
+	{ "data/SE/ThunderBolt2.wav", false },	// 攻撃形態の糸攻撃の二弾の音
+	{ "data/SE/AroundAttack.wav", false },	// 攻撃形態の周囲攻撃の音
+	{ "data/SE/MakeRoad.wav", false },		// 移動形態の道作成音
+	{ "data/SE/Tackle.wav", false },		// 移動形態のタックルの音
+	{ "data/SE/Trap.wav", false },			// 妨害形態の罠設置音
+	{ "data/SE/JummerAttack.wav", false },	// 妨害形態の攻撃音
+	{ "data/SE/GetTreasure.wav", false },	// 宝物を拾った音
 };
 
 //*****************************************************************************
