@@ -63,6 +63,7 @@ CAttackSpecialAttack ::~CAttackSpecialAttack(void)
 HRESULT CAttackSpecialAttack::Init()
 {
 	CAttackBase::Init();
+	CManager::PlaySoundA(SOUND_LABEL_SE_AROUND_ATTACK);
 	return S_OK;
 }
 

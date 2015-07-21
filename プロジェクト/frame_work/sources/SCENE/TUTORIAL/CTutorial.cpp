@@ -136,7 +136,7 @@ void CTutorial::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ‚a‚f‚lÄ¶
-	//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************
@@ -166,7 +166,7 @@ void CTutorial::Update(void)
 	// “ü—Í‚³‚ê‚½‚çPUSH STARTŽÀs
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::KEY_DECIDE, 0)){
-
+		CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 		m_pManager->SetNextPhase(MODE_PHASE_TITLE);
 	}
@@ -177,6 +177,7 @@ void CTutorial::Update(void)
 		for (int i = 0; i < PLAYER_MAX; i++){
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_A) ||
 				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_RIGHT, i)){
+				CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 				// ŠG‚ÌˆÚ“®—Ê‚ð“ü‚ê‚é
 				m_vVelo = TUTORIAL_PICT_VELO;
 				// ƒtƒ‰ƒOØ‚è‘Ö‚¦
@@ -193,7 +194,7 @@ void CTutorial::Update(void)
 			}
 			else if (CInputKeyboard::GetKeyboardTrigger(DIK_D) ||
 				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_LEFT, i)){
-
+				CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 				// ŠG‚ÌˆÚ“®—Ê‚ð“ü‚ê‚é
 				m_vVelo = -TUTORIAL_PICT_VELO;
 				// ƒtƒ‰ƒOØ‚è‘Ö‚¦

@@ -758,6 +758,7 @@ void CPlayer::Metamorphose(void)
 //-----------------------------------------------------------------------------
 void CPlayer::MetamorphoseAnimation(void)
 {
+	CManager::PlaySoundA(SOUND_LABEL_SE_TRANSREATION);
 	// アニメーションの時間の増加
 	m_sAnimTime++;
 
@@ -1211,6 +1212,7 @@ void CPlayer::AddHp(float fPoint){
 			m_nCoolTime = HIT_STOP_TIME;
 			CEffectManager::CreateEffect(m_vPos, EFFECT_ATTACK_HIT, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		}
+		CManager::PlaySoundA(SOUND_LABEL_SE_DAMAGE);
 	}
 
 	// HP残り状態を更新
@@ -1302,6 +1304,7 @@ void CPlayer::AddMp(float fPoint){
 	if (fPoint < 0)
 	{
 		CEffectManager::CreateEffect(m_vPos, EFFECT_MP_ATTACK, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		CManager::PlaySoundA(SOUND_LABEL_SE_GAGE_DOWN);
 	}
 }
 	// EOF

@@ -8,6 +8,7 @@
 #define __CPLAYER_H__
 
 #include "../../CSCENE/CSceneAnime.h"
+#include "../../../MANAGER/CManager.h"
 
 //-----------------------------------------------------------------------------
 // マクロ定義
@@ -254,7 +255,7 @@ public:
 	D3DXVECTOR3 GetOldPos(void) { return m_vPosOld; }
 
 	// 鈍足セット
-	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed; }
+	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed; CManager::PlaySoundA(SOUND_LABEL_SE_SPEED_DOWN); }
 
 	// プレイヤーマネージャーゲッター
 	CPlayerManager* GetPlayerManager(void){ return m_pPlayerManager; };

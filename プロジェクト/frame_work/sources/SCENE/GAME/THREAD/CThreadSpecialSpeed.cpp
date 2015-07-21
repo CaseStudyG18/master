@@ -69,10 +69,11 @@ HRESULT CThreadSpecialSpeed::Init(short nPlayerNum, D3DXVECTOR3 pos, DIRECTION_P
 	{
 		Rot90_UV();
 	}
-	m_fJudgeWidth = m_fWidth;
+	m_fJudgeWidth = m_fWidth * 0.9f;
 	m_fJudgeHeight = m_fHeight;
 	m_vJudgePos = m_vPos;
 
+	CManager::PlaySoundA(SOUND_LABEL_SE_CREATE_ROAD);
 	return S_OK;
 }
 

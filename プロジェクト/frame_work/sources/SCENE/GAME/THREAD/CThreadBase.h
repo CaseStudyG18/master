@@ -16,6 +16,7 @@
 #include "../PLAYER/CPlayerManager.h"
 #include "CThreadManager.h"
 #include "../PLAYER/CPlayer.h"
+#include "../../../MANAGER/CManager.h"
 
 //*****************************************************************************
 // ƒNƒ‰ƒX’è‹`

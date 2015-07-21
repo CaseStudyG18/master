@@ -97,7 +97,7 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ＢＧＭ再生
-	//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_ZINGLE_TITLE);
 }
 
 //*****************************************************************************
@@ -164,6 +164,7 @@ void CTitle::Update(void)
 				m_bPushed = true;
 				PushStart();
 				SAFE_RELEASE(m_pPushStart);
+				CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 			}
 		}
 	}
@@ -181,6 +182,7 @@ void CTitle::Update(void)
 			}
 			// メニューが出ている状態
 			else {
+				CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 				// げーむ
 				if (m_nCursol == 0){
 					// フェードアウトしてキャラ選択ヘ
@@ -207,6 +209,7 @@ void CTitle::Update(void)
 				m_nCursol = 0;
 			}
 			m_pCursol->SetPos(TITLE_CURSOL_POS[m_nCursol]);
+			CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 		}
 		else if (CInputKeyboard::GetKeyboardTrigger(DIK_W) ||
 			CControllerManager::GetReleaseKey(CInputGamePad::LEFT_STICK_UP, 0)){
@@ -215,6 +218,7 @@ void CTitle::Update(void)
 				m_nCursol = TITLE_MENU_MAX - 1;
 			}
 			m_pCursol->SetPos(TITLE_CURSOL_POS[m_nCursol]);
+			CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 		}
 	}
 

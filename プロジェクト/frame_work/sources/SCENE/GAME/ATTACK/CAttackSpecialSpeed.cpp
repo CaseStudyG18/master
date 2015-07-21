@@ -66,6 +66,7 @@ CAttackSpecialSpeed ::~CAttackSpecialSpeed(void)
 HRESULT CAttackSpecialSpeed::Init()
 {
 	CAttackBase::Init();
+	CManager::PlaySoundA(SOUND_LABEL_SE_TACKLE);
 	return S_OK;
 }
 

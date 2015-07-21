@@ -36,7 +36,7 @@ static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 	{ "data/SE/CursolMove.wav", false },	// カーソル移動　　　// 追加
 	{ "data/SE/InWors.wav", false },	// 参戦　　　　　　　// 追加
 	{ "data/SE/StartOK.wav", false },	// 準備完了　　　　　// 追加
-	{ "data/SE/TitleZingle.wav", false },	// タイトルのジングル// 追加
+	{ "data/SE/TitleZingle.wav", true },	// タイトルのジングル// 追加
 	{ "data/SE/ResultZingle.wav", false },	// リザルトのジングル// 追加
 	{ "data/SE/GageDown.wav", false },	// ゲージ減少　　　　// 追加
 	{ "data/SE/SpeedDown.wav", false },	// スピード減少　　　// 追加
