@@ -259,14 +259,17 @@ void CCharaSelect::Update(void)
 
 	// 全員が準備完了だったらステージセレクトに移動
 	if (!m_bNextPhaseOnece){
-		// 参加したプレイヤ人数が全員準備完了を押したら
-		if (m_nPlayerReadyNum == m_nPlayerManualNum){
-			// 一回のみ実行
-			m_bNextPhaseOnece = true;
-			// プレイヤの人数を送る
-			CManager::SetPlayerNum(m_nPlayerManualNum);
+		// 1Pが準備完了していない場合は進まない
+		if (m_bReady[0]){
+			// 参加したプレイヤ人数が全員準備完了を押したら
+			if (m_nPlayerReadyNum == m_nPlayerManualNum){
+				// 一回のみ実行
+				m_bNextPhaseOnece = true;
+				// プレイヤの人数を送る
+				CManager::SetPlayerNum(m_nPlayerManualNum);
+			}
+			CManager::PlaySoundA(SOUND_LABEL_SE_START);
 		}
-		CManager::PlaySoundA(SOUND_LABEL_SE_START);
 	}
 	// 一回全員準備完了したから一定カウントしたらシーン遷移
 	else{
