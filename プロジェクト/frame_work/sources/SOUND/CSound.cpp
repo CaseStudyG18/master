@@ -33,16 +33,19 @@ static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 	{ "data/SE/Trap.wav", false },		// 妨害形態の罠設置音
 	{ "data/SE/JummerAttack.wav", false },	// 妨害形態の攻撃音
 	{ "data/SE/GetTreasure.wav", false },	// 宝物を拾った音
-	{ "data/SE/CursolMove.wav", false },	// カーソル移動　　　// 追加
-	{ "data/SE/InWors.wav", false },	// 参戦　　　　　　　// 追加
-	{ "data/SE/StartOK.wav", false },	// 準備完了　　　　　// 追加
-	{ "data/SE/TitleZingle.wav", true },	// タイトルのジングル// 追加
-	{ "data/SE/ResultZingle.wav", false },	// リザルトのジングル// 追加
-	{ "data/SE/GageDown.wav", false },	// ゲージ減少　　　　// 追加
-	{ "data/SE/SpeedDown.wav", false },	// スピード減少　　　// 追加
-	{ "data/SE/ModeChange.wav", false },	// 変形　　　　　    // 追加
-	{ "data/SE/Damage.wav", false },	// ダメージ          // 追加
-	{ "data/SE/DestTreasure.wav", false },	// 宝物を失った音    // 追加
+	{ "data/SE/CursolMove.wav", false },	// カーソル移動
+	{ "data/SE/InWors.wav", false },	// 参戦
+	{ "data/SE/StartOK.wav", false },	// 準備完了
+	{ "data/SE/TitleZingle.wav", false },	// タイトルのジングル
+	{ "data/SE/ResultZingle.wav", false },	// リザルトのジングル
+	{ "data/SE/GageDown.wav", false },	// ゲージ減少
+	{ "data/SE/SpeedDown.wav", false },	// スピード減少
+	{ "data/SE/ModeChange.wav", false },	// 変形
+	{ "data/SE/Damage.wav", false },	// ダメージ
+	{ "data/SE/DestTreasure.wav", false },	// 宝物を失った音
+//	{ "data/BGM/StageSelect.wav", true },	// ステージセレクトＢＧＭ
+	{ "data/SE/CountDown.wav", false },	// カウントダウン
+	{ "data/SE/GameStart.wav", false },	// ゲームスタート
 };
 
 //*****************************************************************************
