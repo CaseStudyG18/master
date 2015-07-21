@@ -123,6 +123,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_pTreasure = NULL;										// 宝物ポインタ
 	m_pAI = NULL;
 	
+	m_nTextureActionNum = 0;								// プレイヤのテクスチャインデックス設定用番号
+
 	// 鈍足状態の2D　基本描画なしで、鈍足になったら座標セットして描画
 	m_pSlow2D = CSceneAnime::Create(pDevice,
 		m_vPos, PLAYER_SLOW_ICON_WIDTH, PLAYER_SLOW_ICON_HEIGHT,
@@ -372,6 +374,7 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_UP);
+				m_nTextureActionNum = 0;
 			}
 			// Sで画面下方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_S) ||
@@ -396,6 +399,7 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_DOWN);
+				m_nTextureActionNum = 0;
 			}
 			// Aで画面左方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
@@ -420,6 +424,7 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_LEFT);
+				m_nTextureActionNum = 0;
 			}
 			// Dで画面右方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_D) ||
@@ -444,6 +449,7 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_RIGHT);
+				m_nTextureActionNum = 0;
 			}
 
 			/*----------------------------------------------------------*/
@@ -455,6 +461,7 @@ void CPlayer::Update(void)
 			{
 				// アクションの状態を攻撃に変える
 				m_Action = PLAYER_ACTION_ATTACK;
+				m_nTextureActionNum = 1;
 			}
 
 			/*----------------------------------------------------------*/
@@ -466,6 +473,7 @@ void CPlayer::Update(void)
 			{
 				// アクションの状態を糸発射状態に変える
 				m_Action = PLAYER_ACTION_THREAD;
+				m_nTextureActionNum = 2;
 			}
 
 			/*----------------------------------------------------------*/
@@ -1104,7 +1112,7 @@ void CPlayer::SetFace(DIRECTION_PLAYER_FACING value){
 	m_PlayerFacing = value;
 
 	// プレイヤの向きに対応したテクスチャをセット
-	m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[value];
+	m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][value];
 
 	// プレイヤのテクスチャアニメーション用カウントをリセット
 	m_nTextureCount = 0;
@@ -1122,8 +1130,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_UP]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_UP];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_UP]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_UP];
 			}
 		}
 		SetIndex(m_nTextureIndex);
@@ -1134,8 +1142,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_DOWN]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_DOWN];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_DOWN]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_DOWN];
 			}
 		}
 		SetIndex(m_nTextureIndex);
@@ -1146,8 +1154,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_RIGHT]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_RIGHT];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_RIGHT]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_RIGHT];
 			}
 		}
 		SetIndex(m_nTextureIndex, true);
@@ -1158,8 +1166,8 @@ void CPlayer::UpdatePlayerAnimation(void){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_LEFT]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_LEFT];
+			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_LEFT]){
+				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_LEFT];
 			}
 		}
 		SetIndex(m_nTextureIndex, false);

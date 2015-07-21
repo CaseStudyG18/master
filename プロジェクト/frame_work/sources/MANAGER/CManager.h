@@ -28,6 +28,13 @@ static const D3DXCOLOR PLAYER_COLOR[] = {
 	D3DCOLOR(0xbb1987e5),
 	D3DCOLOR(0xbb00ff41),
 };
+// プレイヤ番号に応じてテクスチャ
+static TEXTURE_TYPE PLAYER_TEXTURE[] = {
+	TEXTURE_PLAYER_YELLOW,
+	TEXTURE_PLAYER_RED,
+	TEXTURE_PLAYER_BLUE,
+	TEXTURE_PLAYER_GREEN,
+};
 
 //*****************************************************************************
 // 前方宣言

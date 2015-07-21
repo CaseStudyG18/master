@@ -81,28 +81,111 @@ static const D3DXVECTOR3 PLAYER_DIRECTION_VECTOR[] = {
 	D3DXVECTOR3(-0.5f, +0.5f, 0)
 };
 
+// プレイヤのテクスチャ分け数
+static const int PLAYER_WALK_TEXTURE_SEP_X = 6;
+static const int PLAYER_WALK_TEXTURE_SEP_Y = 6;
+
+// プレイヤの正面テクスチャインデックス キャラセレクトとかでもつかう
+static const int PLAYER_STOP_TEXTURE_MIN = 5;
+static const int PLAYER_STOP_TEXTURE_MAX = 5;
+
+static const int PLAYER_TEXTURE_WALK_FRONT_MIN = 6;
+static const int PLAYER_TEXTURE_WALK_FRONT_MAX = 9;
+static const int PLAYER_TEXTURE_WALK_BACK_MIN = 10;
+static const int PLAYER_TEXTURE_WALK_BACK_MAX = 13;
+static const int PLAYER_TEXTURE_WALK_LEFT_MIN = 1;
+static const int PLAYER_TEXTURE_WALK_LEFT_MAX = 4;
+
+static const int PLAYER_TEXTURE_ATTACK_FRONT_MIN = 14;
+static const int PLAYER_TEXTURE_ATTACK_FRONT_MAX = 17;
+static const int PLAYER_TEXTURE_ATTACK_BACK_MIN = 18;
+static const int PLAYER_TEXTURE_ATTACK_BACK_MAX = 21;
+static const int PLAYER_TEXTURE_ATTACK_LEFT_MIN = 22;
+static const int PLAYER_TEXTURE_ATTACK_LEFT_MAX = 25;
+
+static const int PLAYER_TEXTURE_THREAD_FRONT_MIN = 26;
+static const int PLAYER_TEXTURE_THREAD_FRONT_MAX = 28;
+static const int PLAYER_TEXTURE_THREAD_BACK_MIN = 29;
+static const int PLAYER_TEXTURE_THREAD_BACK_MAX = 31;
+static const int PLAYER_TEXTURE_THREAD_LEFT_MIN = 32;
+static const int PLAYER_TEXTURE_THREAD_LEFT_MAX = 34;
+
 // プレイヤの向きに対してのテクスチャインデックスの最小と最大
-static const short PLAYER_TEXTURE_INDEX_MIN[] = {
-	0,	// なし
-	10,	// 上
-	6,	// 下
-	1,	// 右
-	1,	// 左
-	10,	// 右上
-	10,	// 左上
-	6,	// 右下
-	6	// 左下
+static const short PLAYER_TEXTURE_INDEX_MIN[3][PLAYER_DIRECTION_MAX] = {
+		// 歩き
+		{
+			0,	// なし
+			PLAYER_TEXTURE_WALK_BACK_MIN,		// 上
+			PLAYER_TEXTURE_WALK_FRONT_MIN,		// 下
+			PLAYER_TEXTURE_WALK_LEFT_MIN,		// 右
+			PLAYER_TEXTURE_WALK_LEFT_MIN,		// 左
+			PLAYER_TEXTURE_WALK_BACK_MIN,		// 右上
+			PLAYER_TEXTURE_WALK_BACK_MIN,		// 左上
+			PLAYER_TEXTURE_WALK_FRONT_MIN,		// 右下
+			PLAYER_TEXTURE_WALK_FRONT_MIN,		// 左下
+		},
+		// 攻撃
+		{
+			0,	// なし
+			PLAYER_TEXTURE_ATTACK_BACK_MIN,		// 上
+			PLAYER_TEXTURE_ATTACK_FRONT_MIN,	// 下
+			PLAYER_TEXTURE_ATTACK_LEFT_MIN,		// 右
+			PLAYER_TEXTURE_ATTACK_LEFT_MIN,		// 左
+			PLAYER_TEXTURE_ATTACK_BACK_MIN,		// 右上
+			PLAYER_TEXTURE_ATTACK_BACK_MIN,		// 左上
+			PLAYER_TEXTURE_ATTACK_FRONT_MIN,	// 右下
+			PLAYER_TEXTURE_ATTACK_FRONT_MIN,	// 左下
+		},
+		// 糸
+		{
+			0,	// なし
+			PLAYER_TEXTURE_THREAD_BACK_MIN,		// 上
+			PLAYER_TEXTURE_THREAD_FRONT_MIN,	// 下
+			PLAYER_TEXTURE_THREAD_LEFT_MIN,		// 右
+			PLAYER_TEXTURE_THREAD_LEFT_MIN,		// 左
+			PLAYER_TEXTURE_THREAD_BACK_MIN,		// 右上
+			PLAYER_TEXTURE_THREAD_BACK_MIN,		// 左上
+			PLAYER_TEXTURE_THREAD_FRONT_MIN,	// 右下
+			PLAYER_TEXTURE_THREAD_FRONT_MIN,	// 左下
+		},
 };
-static const short PLAYER_TEXTURE_INDEX_MAX[] = {
-	0,	// なし
-	13,	// 上
-	9,	// 下
-	4,	// 右
-	4,	// 左
-	13,	// 右上
-	13,	// 左上
-	9,	// 右下
-	9,	// 左下
+static const short PLAYER_TEXTURE_INDEX_MAX[3][PLAYER_DIRECTION_MAX] = {
+		// 歩き
+		{
+			0,	// なし
+			PLAYER_TEXTURE_WALK_BACK_MAX,		// 上
+			PLAYER_TEXTURE_WALK_FRONT_MAX,		// 下
+			PLAYER_TEXTURE_WALK_LEFT_MAX,		// 右
+			PLAYER_TEXTURE_WALK_LEFT_MAX,		// 左
+			PLAYER_TEXTURE_WALK_BACK_MAX,		// 右上
+			PLAYER_TEXTURE_WALK_BACK_MAX,		// 左上
+			PLAYER_TEXTURE_WALK_FRONT_MAX,		// 右下
+			PLAYER_TEXTURE_WALK_FRONT_MAX,		// 左下
+		},
+		// 攻撃
+		{
+			0,	// なし
+			PLAYER_TEXTURE_ATTACK_BACK_MAX,		// 上
+			PLAYER_TEXTURE_ATTACK_FRONT_MAX,	// 下
+			PLAYER_TEXTURE_ATTACK_LEFT_MAX,		// 右
+			PLAYER_TEXTURE_ATTACK_LEFT_MAX,		// 左
+			PLAYER_TEXTURE_ATTACK_BACK_MAX,		// 右上
+			PLAYER_TEXTURE_ATTACK_BACK_MAX,		// 左上
+			PLAYER_TEXTURE_ATTACK_FRONT_MAX,	// 右下
+			PLAYER_TEXTURE_ATTACK_FRONT_MAX,	// 左下
+		},
+		// 糸
+		{
+			0,	// なし
+			PLAYER_TEXTURE_THREAD_BACK_MAX,		// 上
+			PLAYER_TEXTURE_THREAD_FRONT_MAX,	// 下
+			PLAYER_TEXTURE_THREAD_LEFT_MAX,		// 右
+			PLAYER_TEXTURE_THREAD_LEFT_MAX,		// 左
+			PLAYER_TEXTURE_THREAD_BACK_MAX,		// 右上
+			PLAYER_TEXTURE_THREAD_BACK_MAX,		// 左上
+			PLAYER_TEXTURE_THREAD_FRONT_MAX,	// 右下
+			PLAYER_TEXTURE_THREAD_FRONT_MAX,	// 左下
+		},
 };
 
 // プレイヤのHPの残り状態
@@ -127,20 +210,6 @@ static const short PLAYER_HP_STATE_FLASH_INTERVAL[] = {
 	12,	// PLAYER_VERY_LOW
 	-1	// PLAYER_DIE
 };
-// プレイヤのテクスチャ分け数
-static const int PLAYER_WALK_TEXTURE_SEP_X = 6;
-static const int PLAYER_WALK_TEXTURE_SEP_Y = 3;
-static const int PLAYER_ATTACK_TEXTURE_SEP_X = 6;
-static const int PLAYER_ATTACK_TEXTURE_SEP_Y = 4;
-// プレイヤの正面テクスチャインデックス キャラセレクトとかでもつかう
-static const int PLAYER_STOP_TEXTURE_MIN = 5;
-static const int PLAYER_STOP_TEXTURE_MAX = 5;
-static const int PLAYER_WALK_TEXTURE_MIN = 6;
-static const int PLAYER_WALK_TEXTURE_MAX = 9;
-static const int PLAYER_ATTACK_TEXTURE_MIN = 0;
-static const int PLAYER_ATTACK_TEXTURE_MAX = 3;
-static const int PLAYER_THREAD_TEXTURE_MIN = 12;
-static const int PLAYER_THREAD_TEXTURE_MAX = 14;
 
 // プレイヤのアニメスピード
 static const int PLAYER_ANIME_SPEED = 10;
@@ -163,7 +232,7 @@ class CPlayer : public CSceneAnime
 public:
 	// コンストラクタ
 	// 引数　デバイス、番号、オブジェタイプ
-	CPlayer(LPDIRECT3DDEVICE9 *pDevice , int nPriority = TYPE_PRIORITY_PLAYER , OBJTYPE objType = OBJTYPE_PLAYER);
+	CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_PLAYER, OBJTYPE objType = OBJTYPE_PLAYER);
 
 	// デストラクタ
 	~CPlayer();
@@ -351,6 +420,8 @@ private:
 	IDirect3DPixelShader9 *m_pPS;
 	LPD3DXCONSTANTTABLE m_pPSC;
 
+	// プレイヤのテクスチャにあるアクション　毎フレーム確認して更新する　テクスチャのインデックスを更新するため
+	int m_nTextureActionNum;
 };
 
 #endif // __CPLAYER_H__

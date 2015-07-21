@@ -341,16 +341,16 @@ void CCharaSelect::Join(int playerNum){
 	m_pRimo[playerNum] = CSceneAnime::Create(m_pD3DDevice,
 		CHARASELECT_RIMO_POS[playerNum],
 		CHARASELECT_RIMO_SIZE.x, CHARASELECT_RIMO_SIZE.y,
-		TEXTURE_PLAYER, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
+		PLAYER_TEXTURE[playerNum], PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
 		PLAYER_ANIME_SPEED, -1, TYPE_PRIORITY_PLAYER);
 
 	// 自動でテクスチャアニメーションしない
 	m_pRimo[playerNum]->SetAutoUpdate(false);
 	// 正面の歩きモーション
-	m_nRimoTextureIndex[playerNum] = PLAYER_WALK_TEXTURE_MIN;
+	m_nRimoTextureIndex[playerNum] = PLAYER_STOP_TEXTURE_MIN;
 	m_pRimo[playerNum]->SetIndex(m_nRimoTextureIndex[playerNum]);
-	m_nRimoTextureMin[playerNum] = PLAYER_WALK_TEXTURE_MIN;
-	m_nRimoTextureMax[playerNum] = PLAYER_WALK_TEXTURE_MAX;
+	m_nRimoTextureMin[playerNum] = PLAYER_STOP_TEXTURE_MIN;
+	m_nRimoTextureMax[playerNum] = PLAYER_STOP_TEXTURE_MAX;
 	// やっぱり正面向いて静止
 	m_nRimoTextureIndex[playerNum] = PLAYER_STOP_TEXTURE_MIN;
 	m_pRimo[playerNum]->SetIndex(m_nRimoTextureIndex[playerNum]);
@@ -664,23 +664,19 @@ void CCharaSelect::UpdateInput(void){
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_L, i)){
 			// 通常
 			if (m_PlayerMode[i] == PLAYER_MODE_NONE){
-				SetRimoTextureIndex(i, PLAYER_THREAD_TEXTURE_MIN, PLAYER_THREAD_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_THREAD_FRONT_MIN, PLAYER_TEXTURE_THREAD_FRONT_MAX);
 			}
 			// 攻撃
 			else if (m_PlayerMode[i] == PLAYER_MODE_ATTACK){
-				SetRimoTextureIndex(i, PLAYER_THREAD_TEXTURE_MIN, PLAYER_THREAD_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_THREAD_FRONT_MIN, PLAYER_TEXTURE_THREAD_FRONT_MAX);
 			}
 			// 移動
 			else if (m_PlayerMode[i] == PLAYER_MODE_SPEED){
-				SetRimoTextureIndex(i, PLAYER_THREAD_TEXTURE_MIN, PLAYER_THREAD_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_THREAD_FRONT_MIN, PLAYER_TEXTURE_THREAD_FRONT_MAX);
 			}
 			// 罠
 			else if (m_PlayerMode[i] == PLAYER_MODE_TRAP){
-				SetRimoTextureIndex(i, PLAYER_THREAD_TEXTURE_MIN, PLAYER_THREAD_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_THREAD_FRONT_MIN, PLAYER_TEXTURE_THREAD_FRONT_MAX);
 			}
 			m_nRimoTextureIndex[i] = m_nRimoTextureMin[i];
 			m_nRimoTextureCount[i] = 0;
@@ -690,23 +686,19 @@ void CCharaSelect::UpdateInput(void){
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_R, i)){
 			// 通常
 			if (m_PlayerMode[i] == PLAYER_MODE_NONE){
-				SetRimoTextureIndex(i, PLAYER_ATTACK_TEXTURE_MIN, PLAYER_ATTACK_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_ATTACK_FRONT_MIN, PLAYER_TEXTURE_ATTACK_FRONT_MAX);
 			}
 			// 攻撃
 			else if (m_PlayerMode[i] == PLAYER_MODE_ATTACK){
-				SetRimoTextureIndex(i, PLAYER_ATTACK_TEXTURE_MIN, PLAYER_ATTACK_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_ATTACK_FRONT_MIN, PLAYER_TEXTURE_ATTACK_FRONT_MAX);
 			}
 			// 移動
 			else if (m_PlayerMode[i] == PLAYER_MODE_SPEED){
-				SetRimoTextureIndex(i, PLAYER_ATTACK_TEXTURE_MIN, PLAYER_ATTACK_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_ATTACK_FRONT_MIN, PLAYER_TEXTURE_ATTACK_FRONT_MAX);
 			}
 			// 罠
 			else if (m_PlayerMode[i] == PLAYER_MODE_TRAP){
-				SetRimoTextureIndex(i, PLAYER_ATTACK_TEXTURE_MIN, PLAYER_ATTACK_TEXTURE_MAX);
-				m_pRimo[i]->SetTexture(TEXTURE_PLAYER_ATTACK, PLAYER_ATTACK_TEXTURE_SEP_X, PLAYER_ATTACK_TEXTURE_SEP_Y);
+				SetRimoTextureIndex(i, PLAYER_TEXTURE_ATTACK_FRONT_MIN, PLAYER_TEXTURE_ATTACK_FRONT_MAX);
 			}
 			m_nRimoTextureIndex[i] = m_nRimoTextureMin[i];
 			m_nRimoTextureCount[i] = 0;

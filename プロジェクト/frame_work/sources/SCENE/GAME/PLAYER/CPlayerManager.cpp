@@ -14,7 +14,6 @@
 //-----------------------------------------------------------------------------
 //	定数定義
 //-----------------------------------------------------------------------------
-static const TEXTURE_TYPE PLAYER_TEXTURE = TEXTURE_PLAYER;		// デバッグ時のプレイヤーのテクスチャ
 
 static const D3DXVECTOR3 PLAYER_START_POS[] = {
 	D3DXVECTOR3(50, 50, 0),
@@ -61,7 +60,7 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer, bool *bPlayerContro
 			PLAYER_START_POS[nManual],
 			50.0f,
 			80.0f,
-			PLAYER_TEXTURE,
+			PLAYER_TEXTURE[nManual],
 			PLAYER_MANUAL,
 			m_pAttackManager,
 			m_pThreadManager,
@@ -77,7 +76,7 @@ void CPlayerManager::Init(int nNumPlayer, int nManualPlayer, bool *bPlayerContro
 			PLAYER_START_POS[nCPU],
 			50.0f,
 			80.0f,
-			PLAYER_TEXTURE,
+			PLAYER_TEXTURE[nCPU],
 			PLAYER_COMPUTER,
 			m_pAttackManager,
 			m_pThreadManager,
