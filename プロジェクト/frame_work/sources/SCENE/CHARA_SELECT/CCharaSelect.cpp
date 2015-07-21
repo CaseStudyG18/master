@@ -312,8 +312,8 @@ void CCharaSelect::InitializeBG(void){
 	// 全体の背景
 	m_pBG = CScene2D::Create(m_pD3DDevice,
 		//		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
-		D3DXVECTOR3(SCREEN_WIDTH, SCREEN_HEIGHT, 0),
-		static_cast<float>(SCREEN_WIDTH)* 2 , static_cast<float>(SCREEN_HEIGHT) * 2,
+		D3DXVECTOR3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0),
+		static_cast<float>(SCREEN_WIDTH)* 2.1f, static_cast<float>(SCREEN_HEIGHT)* 2.1f,
 		TEXTURE_BG_CHARA_SELECT, TYPE_PRIORITY_BG);
 
 	// キャラ選択っていうロゴ表示
