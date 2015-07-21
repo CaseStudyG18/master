@@ -37,7 +37,7 @@ typedef enum
 	SOUND_LABEL_SE_TRAP_FOUNDATION,		// 妨害形態の罠設置音
 	SOUND_LABEL_SE_TRAP_ATTACK,		// 妨害形態の攻撃音
 	SOUND_LABEL_SE_GET_TREASURE,		// 宝物を拾った音
-	SOUND_LABEL_SE_CURSOL_MOVE,		// カーソル移動　　　// 追加
+	SOUND_LABEL_SE_CURSOL_MOVE,		// カーソル移動　　　// 追加7-20
 	SOUND_LABEL_SE_CURSOL_SANSEN,		// 参戦　　　　　　　// 追加
 	SOUND_LABEL_SE_CURSOL_ZYUNBIKANRYOU,	// 準備完了　　　　　// 追加
 	SOUND_LABEL_ZINGLE_TITLE,		// タイトルのジングル// 追加	
@@ -47,6 +47,7 @@ typedef enum
 	SOUND_LABEL_SE_TRANSREATION,		// 変形              // 追加
 	SOUND_LABEL_SE_DAMAGE,			// ダメージ          // 追加
 	SOUND_LABEL_SE_DEST_TREASURE,		// 宝物を失った音    // 追加
+	SOUND_LABEL_BGM_STAGE_SELECT,		// ステージセレクトのＢＧＭ// 追加7-21
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 

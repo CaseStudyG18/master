@@ -43,6 +43,7 @@ static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 	{ "data/SE/ModeChange.wav", false },	// 変形　　　　　    // 追加
 	{ "data/SE/Damage.wav", false },	// ダメージ          // 追加
 	{ "data/SE/DestTreasure.wav", false },	// 宝物を失った音    // 追加
+	{ "data/BGM/StageSelect., true }	// ステージセレクトＢＧＭ // 追加7-21
 };
 
 //*****************************************************************************
