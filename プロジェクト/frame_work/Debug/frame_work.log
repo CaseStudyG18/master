@@ -1,12 +1,14 @@
-﻿2015/07/22 3:43:33 にビルドを開始しました。
+﻿2015/07/22 4:00:18 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\g18\プロジェクト\frame_work\frame_work.vcxproj" (Build ターゲット)。
      1>InitializeBuildStatus:
          "AlwaysCreate" が指定されたため "Debug\frame_work.tlog\unsuccessfulbuild" を作成しています。
        FxCompile:
          すべての出力が最新のものです。
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt sources\SCENE\STAGE_SELECT\CStageSelect.cpp
-         CStageSelect.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt sources\MANAGER\CManager.cpp sources\SCENE\CHARA_SELECT\CCharaSelect.cpp
+         CCharaSelect.cpp
+         CManager.cpp
+         コードを生成中...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\g18\プロジェクト\frame_work\\frame_work_debug.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\g18\プロジェクト\frame_work\\frame_work_debug.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\g18\プロジェクト\frame_work\\frame_work_debug.lib" /MACHINE:X86 Debug\CBackGroundManager.obj
          Debug\CController.obj
@@ -100,4 +102,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:01.41
+経過時間 00:00:01.90

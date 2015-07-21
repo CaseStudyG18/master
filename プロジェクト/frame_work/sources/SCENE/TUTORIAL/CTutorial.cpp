@@ -176,7 +176,7 @@ void CTutorial::Update(void)
 		// 左右キーで次のページへ移動
 		for (int i = 0; i < PLAYER_MAX; i++){
 			if (CInputKeyboard::GetKeyboardTrigger(DIK_A) ||
-				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_RIGHT, i)){
+				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_LEFT, i)){
 				CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 				// 絵の移動量を入れる
 				m_vVelo = TUTORIAL_PICT_VELO;
@@ -193,7 +193,7 @@ void CTutorial::Update(void)
 				break;
 			}
 			else if (CInputKeyboard::GetKeyboardTrigger(DIK_D) ||
-				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_LEFT, i)){
+				CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_RIGHT, i)){
 				CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 				// 絵の移動量を入れる
 				m_vVelo = -TUTORIAL_PICT_VELO;

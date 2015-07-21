@@ -273,8 +273,8 @@ void CCharaSelect::Update(void)
 				m_bNextPhaseOnece = true;
 				// プレイヤの人数を送る
 				CManager::SetPlayerNum(m_nPlayerManualNum);
+				CManager::PlaySoundA(SOUND_LABEL_SE_START);
 			}
-			CManager::PlaySoundA(SOUND_LABEL_SE_START);
 		}
 	}
 	// 一回全員準備完了したから一定カウントしたらシーン遷移
@@ -569,7 +569,6 @@ void CCharaSelect::UpdateCursol(void){
 
 	for (int i = 0; i < PLAYER_MAX; i++){
 		if (m_pCursol2D[i]){
-
 			// 角度更新
 			if (m_bCursolFlg[i]){
 				m_fCursolRad[i] += CHARASELECT_CURSOL_ADDRAD;
@@ -659,6 +658,7 @@ void CCharaSelect::UpdateCursol(void){
 						else{
 							Ready(i);
 							CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_ZYUNBIKANRYOU);
+							continue;
 						}
 					}
 				}
