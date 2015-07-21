@@ -275,6 +275,9 @@ void COption::KeyConfig(int padID, CInputGamePad::PAD_BUTTON button)
 			CuclDigit(&ten, &one, keyCord);
 			m_KeyNumber[padID][button].DigitTen->SetNumber(ten);
 			m_KeyNumber[padID][button].DigitOne->SetNumber(one);
+
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
+
 		}
 	}
 }
@@ -304,6 +307,10 @@ void COption::UpdateCursol(void)
 {
 	for (int i = 0; i < CControllerManager::MAX_CONTROLLER_NUM; ++i)
 	{
+		if (!CInputGamePad::CheckConectPad(i))
+		{
+			continue;
+		}
 		if (CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_UP, i))
 		{
 			m_nSelectCounter[i]--;
@@ -330,15 +337,14 @@ void COption::UpdateCursol(void)
 			m_pCursol[i]->SetPos(pos);
 			m_pCursol[i]->SetWidth(RETURN_LOGO_WIDTH);
 			int pCord = -1;
-			if (CInputGamePad::CheckConectPad(i))
+			
+			if (CInputGamePad::CheckTriggerAnyKey(i, &pCord))
 			{
-				if (CInputGamePad::CheckTriggerAnyKey(i, &pCord))
-				{
-					// 戻る押したら
-					m_mode = OPTION_MODE_NEXT_SCENE;
-				}
+				// 戻る押したら
+				m_mode = OPTION_MODE_NEXT_SCENE;
+				CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 			}
-			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
+			
 		}
 
 		// それ以外なら
@@ -352,7 +358,6 @@ void COption::UpdateCursol(void)
 
 			// キーコンフィグ
 			KeyConfig(i, (CInputGamePad::PAD_BUTTON)m_nSelectCounter[i]);
-			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 	}
 }
