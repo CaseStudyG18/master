@@ -64,13 +64,13 @@ typedef enum
 static const int COOL_TIME_TABALE[COOL_TIME_MAX]
 {
 	ATTACK_NORMAL_END_TIME,						// COOL_TIME_NORMAL_ATK
-	THREAD_NORMAL_END_TIME,						// COOL_TIME_NORMAL_THREAD
-	ATTACK_ATTACK_END_TIME,						// COOL_TIME_ATTACK_ATK
-	THREAD_ATTACK_END_TIME,						// COOL_TIME_ATTACK_THREAD
-	(int)(ATTACK_SPEED_END_TIME * 3.5),			// COOL_TIME_SPEED_ATK
-	GROW_THREAD_TIME,							// COOL_TIME_SPEED_THREAD
-	(int)(ATTACK_TRAP_END_TIME * 0.5f),			// COOL_TIME_JAMMER_ATK
-	THREAD_TRAP_HIT_START_TIME					// COOL_TIME_JAMMER_THREAD
+		THREAD_NORMAL_END_TIME,						// COOL_TIME_NORMAL_THREAD
+		ATTACK_ATTACK_END_TIME,						// COOL_TIME_ATTACK_ATK
+		THREAD_ATTACK_END_TIME,						// COOL_TIME_ATTACK_THREAD
+		(int)(ATTACK_SPEED_END_TIME * 3.5),			// COOL_TIME_SPEED_ATK
+		GROW_THREAD_TIME,							// COOL_TIME_SPEED_THREAD
+		(int)(ATTACK_TRAP_END_TIME * 0.5f),			// COOL_TIME_JAMMER_ATK
+		THREAD_TRAP_HIT_START_TIME					// COOL_TIME_JAMMER_THREAD
 };
 
 // ヒットストップの時間
@@ -122,8 +122,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 
 	m_pTreasure = NULL;										// 宝物ポインタ
 	m_pAI = NULL;
-	
-	m_nTextureActionNum = 0;								// プレイヤのテクスチャインデックス設定用番号
+
+	m_TextureAnimationType = TEXTURE_ANIMATION_TYPE_WALK;	// アニメーションタイプ
 
 	// 鈍足状態の2D　基本描画なしで、鈍足になったら座標セットして描画
 	m_pSlow2D = CSceneAnime::Create(pDevice,
@@ -299,7 +299,7 @@ void CPlayer::Update(void)
 			m_pSlow2D->SetPos(m_vPos + PLAYER_SLOW_ICON_POS_L);
 		m_pSlow2D->SetDrawFlag(true);
 	}
-	
+
 	CScene2D::Update();
 
 	// クールタイム更新
@@ -374,7 +374,6 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_UP);
-				m_nTextureActionNum = 0;
 			}
 			// Sで画面下方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_S) ||
@@ -399,7 +398,6 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_DOWN);
-				m_nTextureActionNum = 0;
 			}
 			// Aで画面左方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
@@ -424,7 +422,6 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_LEFT);
-				m_nTextureActionNum = 0;
 			}
 			// Dで画面右方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_D) ||
@@ -449,7 +446,6 @@ void CPlayer::Update(void)
 
 				// プレイヤーの向いている方向を変える
 				SetFace(PLAYER_DIRECTION_RIGHT);
-				m_nTextureActionNum = 0;
 			}
 
 			/*----------------------------------------------------------*/
@@ -461,7 +457,7 @@ void CPlayer::Update(void)
 			{
 				// アクションの状態を攻撃に変える
 				m_Action = PLAYER_ACTION_ATTACK;
-				m_nTextureActionNum = 1;
+				SetTextureAnimeAttack();
 			}
 
 			/*----------------------------------------------------------*/
@@ -473,13 +469,13 @@ void CPlayer::Update(void)
 			{
 				// アクションの状態を糸発射状態に変える
 				m_Action = PLAYER_ACTION_THREAD;
-				m_nTextureActionNum = 2;
+				SetTextureAnimeThread();
 			}
 
 			/*----------------------------------------------------------*/
 			/*6キーでプレイヤー変形開始	(Attack)						*/
 			/*----------------------------------------------------------*/
-			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) || 
+			if (CInputKeyboard::GetKeyboardTrigger(DIK_6) ||
 				CControllerManager::GetTriggerKey(CInputGamePad::KEY_A, m_sNumber)
 				|| m_pAI->GetAIInputChangeAtk())
 			{
@@ -538,7 +534,7 @@ void CPlayer::Update(void)
 				FallTreasure();
 			}
 		}
-		
+
 	}
 
 	// 無敵状態での処理
@@ -1112,7 +1108,7 @@ void CPlayer::SetFace(DIRECTION_PLAYER_FACING value){
 	m_PlayerFacing = value;
 
 	// プレイヤの向きに対応したテクスチャをセット
-	m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][value];
+	m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[value];
 
 	// プレイヤのテクスチャアニメーション用カウントをリセット
 	m_nTextureCount = 0;
@@ -1124,55 +1120,89 @@ void CPlayer::SetFace(DIRECTION_PLAYER_FACING value){
 //-----------------------------------------------------------------------------
 void CPlayer::UpdatePlayerAnimation(void){
 
-	if (m_PlayerFacing == PLAYER_DIRECTION_UP){
+	// テクスチャアニメが歩きタイプなら
+	if (m_TextureAnimationType == TEXTURE_ANIMATION_TYPE_WALK){
+		if (m_PlayerFacing == PLAYER_DIRECTION_UP){
+			m_nTextureCount++;
+			if (m_nTextureCount > PLAYER_ANIME_SPEED){
+				m_nTextureCount = 0;
+
+				m_nTextureIndex++;
+				if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_UP]){
+					m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_UP];
+				}
+			}
+			SetIndex(m_nTextureIndex);
+		}
+		else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
+			m_nTextureCount++;
+			if (m_nTextureCount > PLAYER_ANIME_SPEED){
+				m_nTextureCount = 0;
+
+				m_nTextureIndex++;
+				if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_DOWN]){
+					m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_DOWN];
+				}
+			}
+			SetIndex(m_nTextureIndex);
+		}
+		else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
+			m_nTextureCount++;
+			if (m_nTextureCount > PLAYER_ANIME_SPEED){
+				m_nTextureCount = 0;
+
+				m_nTextureIndex++;
+				if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_RIGHT]){
+					m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_RIGHT];
+				}
+			}
+			SetIndex(m_nTextureIndex, true);
+		}
+		else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
+			m_nTextureCount++;
+			if (m_nTextureCount > PLAYER_ANIME_SPEED){
+				m_nTextureCount = 0;
+
+				m_nTextureIndex++;
+				if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[PLAYER_DIRECTION_LEFT]){
+					m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[PLAYER_DIRECTION_LEFT];
+				}
+			}
+			SetIndex(m_nTextureIndex, false);
+		}
+	}
+	// 攻撃か糸のアニメーション一回終われば歩きのモーションに行く
+	else{
 		m_nTextureCount++;
 		if (m_nTextureCount > PLAYER_ANIME_SPEED){
 			m_nTextureCount = 0;
 
 			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_UP]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_UP];
+			if (m_nTextureIndex > m_nTextureIndexMax){
+				// 歩きに行く
+				m_TextureAnimationType = TEXTURE_ANIMATION_TYPE_WALK;
+				// 歩きの最初にインデックスセット
+				for (int i = 0; i < PLAYER_DIRECTION_MAX; i++){
+					if (m_PlayerFacing == i){
+						m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[i];
+						break;
+					}
+				}
 			}
 		}
-		SetIndex(m_nTextureIndex);
-	}
-	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
-		m_nTextureCount++;
-		if (m_nTextureCount > PLAYER_ANIME_SPEED){
-			m_nTextureCount = 0;
-
-			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_DOWN]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_DOWN];
-			}
+		if (
+			(m_PlayerFacing == PLAYER_DIRECTION_DOWNER_RIGHT) ||
+			(m_PlayerFacing == PLAYER_DIRECTION_UPPER_RIGHT) ||
+			(m_PlayerFacing == PLAYER_DIRECTION_RIGHT) )
+		{
+			// 右向きの反転が必要な場合
+			SetIndex(m_nTextureIndex, true);
 		}
-		SetIndex(m_nTextureIndex);
-	}
-	else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
-		m_nTextureCount++;
-		if (m_nTextureCount > PLAYER_ANIME_SPEED){
-			m_nTextureCount = 0;
-
-			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_RIGHT]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_RIGHT];
-			}
+		else{
+			// その他そのままUV値を使う
+			SetIndex(m_nTextureIndex, false);
 		}
-		SetIndex(m_nTextureIndex, true);
 	}
-	else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
-		m_nTextureCount++;
-		if (m_nTextureCount > PLAYER_ANIME_SPEED){
-			m_nTextureCount = 0;
-
-			m_nTextureIndex++;
-			if (m_nTextureIndex > PLAYER_TEXTURE_INDEX_MAX[m_nTextureActionNum][PLAYER_DIRECTION_LEFT]){
-				m_nTextureIndex = PLAYER_TEXTURE_INDEX_MIN[m_nTextureActionNum][PLAYER_DIRECTION_LEFT];
-			}
-		}
-		SetIndex(m_nTextureIndex, false);
-	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -1275,7 +1305,7 @@ void CPlayer::UpdatePlayerRed(void){
 // プレイヤの鈍足状態管理
 //-----------------------------------------------------------------------------
 void CPlayer::UpdateSlow(void){
-	
+
 	// カウント
 	if (m_bSlowSpeed){
 		m_nSlowCount++;
@@ -1315,4 +1345,87 @@ void CPlayer::AddMp(float fPoint){
 		CManager::PlaySoundA(SOUND_LABEL_SE_GAGE_DOWN);
 	}
 }
-	// EOF
+
+//-----------------------------------------------------------------------------
+// 一回のみ攻撃のアニメーションさせる
+//-----------------------------------------------------------------------------
+void CPlayer::SetTextureAnimeAttack(void){
+	// タイプ
+	m_TextureAnimationType = TEXTURE_ANIMATION_TYPE_ATTACK;
+	m_nTextureCount = 0;
+
+	if (m_PlayerFacing == PLAYER_DIRECTION_UP){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_BACK_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_BACK_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_FRONT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_FRONT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_LEFT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_LEFT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_LEFT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_LEFT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_UPPER_RIGHT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_BACK_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_BACK_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_UPPER_LEFT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_BACK_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_BACK_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWNER_RIGHT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_FRONT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_FRONT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWNER_LEFT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_ATTACK_FRONT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_ATTACK_FRONT_MIN;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// 一回のみ糸のアニメーションさせる
+//-----------------------------------------------------------------------------
+void CPlayer::SetTextureAnimeThread(void){
+	// タイプ
+	m_TextureAnimationType = TEXTURE_ANIMATION_TYPE_THREAD;
+	m_nTextureCount = 0;
+	if (m_PlayerFacing == PLAYER_DIRECTION_UP){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_BACK_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_BACK_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWN){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_FRONT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_FRONT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_RIGHT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_LEFT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_LEFT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_LEFT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_LEFT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_LEFT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_UPPER_RIGHT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_BACK_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_BACK_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_UPPER_LEFT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_BACK_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_BACK_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWNER_RIGHT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_FRONT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_FRONT_MIN;
+	}
+	else if (m_PlayerFacing == PLAYER_DIRECTION_DOWNER_LEFT){
+		m_nTextureIndexMax = PLAYER_TEXTURE_THREAD_FRONT_MAX;
+		m_nTextureIndex = PLAYER_TEXTURE_THREAD_FRONT_MIN;
+	}
+}
+// EOF

@@ -240,7 +240,6 @@ void CSound::UninitSound(void)
 //=============================================================================
 HRESULT CSound::PlaySound(SOUND_LABEL label)
 {
-	return S_OK;
 	XAUDIO2_VOICE_STATE xa2state;
 	XAUDIO2_BUFFER buffer;
 
