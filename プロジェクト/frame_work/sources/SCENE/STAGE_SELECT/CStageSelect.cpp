@@ -116,7 +116,7 @@ void CStageSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_bFrameAlphaAdd = true;
 
 	// ＢＧＭ再生
-//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************
@@ -145,6 +145,8 @@ void CStageSelect::Update(void)
 	// 決定ボタンを押したら
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0)){
+
+		CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 
 		// 選択したステージ番号をセット
 		CManager::SetStageNum(m_nSelectNum);
@@ -223,6 +225,7 @@ void CStageSelect::UpdateSelect(){
 		// なんか不自然だったから色も初期化
 		m_bFrameAlphaAdd = true;
 		m_FrameColor.a = 0.0f;
+		CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 	}
 
 	// 選択枠の色変更

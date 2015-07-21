@@ -6,7 +6,7 @@
 //
 //=============================================================================
 #include "CEffectSpecialAttackThread.h"
-
+#include "../../../MANAGER/CManager.h"
 #include "../../CSCENE/CSceneAnime.h"
 
 // デバッグしてみよう
@@ -70,6 +70,7 @@ void CEffectSpecialAttackThread::Uninit(void)
 void CEffectSpecialAttackThread::Update(void)
 {
 	if (m_nCount == 0){
+		CManager::PlaySoundA(SOUND_LABEL_SE_THUNDERBOLT);
 		m_pAnim[0] = CSceneAnime::Create(
 			m_pD3DDevice,
 			m_vPos,
@@ -98,6 +99,7 @@ void CEffectSpecialAttackThread::Update(void)
 	}
 	else if (m_nCount == 50)
 	{
+		CManager::PlaySoundA(SOUND_LABEL_SE_THUNDERBOLT_2);
 		//m_vPos += m_vVelocity * 50.0f;
 		m_pAnim[0] = CSceneAnime::Create(
 			m_pD3DDevice,

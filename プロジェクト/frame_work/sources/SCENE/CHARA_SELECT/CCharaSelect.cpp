@@ -212,12 +212,11 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		Join(i);
 	}
 
-
 	// フェードイン開始
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ＢＧＭ再生
-	//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************
@@ -267,6 +266,7 @@ void CCharaSelect::Update(void)
 			// プレイヤの人数を送る
 			CManager::SetPlayerNum(m_nPlayerManualNum);
 		}
+		CManager::PlaySoundA(SOUND_LABEL_SE_START);
 	}
 	// 一回全員準備完了したから一定カウントしたらシーン遷移
 	else{
@@ -321,6 +321,8 @@ void CCharaSelect::Join(int playerNum){
 	if (m_bPush[playerNum]){
 		return;
 	}
+
+	CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_SANSEN);
 
 	// 押したフラグ
 	m_bPush[playerNum] = true;
@@ -600,6 +602,7 @@ void CCharaSelect::UpdateCursol(void){
 						}
 						else{
 							Ready(i);
+							CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_ZYUNBIKANRYOU);
 						}
 					}
 				}
@@ -613,6 +616,8 @@ void CCharaSelect::UpdateCursol(void){
 						m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 						// コンフィグヘ
 						m_pManager->SetNextPhase(MODE_PHASE_OPTION);
+
+						CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 					}
 				}
 				// キャラクタを選択ボタン

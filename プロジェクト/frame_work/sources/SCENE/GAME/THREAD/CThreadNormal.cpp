@@ -66,6 +66,7 @@ HRESULT CThreadNormal::Init()
 {
 	CThreadBase::Init(m_vPos, THREAD_NORMAL_HIT_WIDTH, THREAD_NORMAL_HIT_HEIGHT, TEXTURE_THREAD);
 
+	CManager::PlaySoundA(SOUND_LABEL_SE_NORMAL_THREAD);
 	return S_OK;
 }
 

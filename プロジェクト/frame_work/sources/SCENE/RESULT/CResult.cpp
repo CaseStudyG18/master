@@ -161,7 +161,7 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ‚a‚f‚lÄ¶
-	//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_ZINGLE_RESULT);
 }
 
 //*****************************************************************************
@@ -228,18 +228,22 @@ void CResult::Update(void)
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0)){
 			m_bPush[0] = true;
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 1)){
 			m_bPush[1] = true;
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 2)){
 			m_bPush[2] = true;
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 3)){
 			m_bPush[3] = true;
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 
 		// ‚·‚×‚Ä‚o‚t‚r‚g‚³‚ê‚½ + ƒƒjƒ…[‚ªo‚Ä‚¢‚È‚¢ó‘Ôiˆê‰ñ‚¾‚¯’Ê‚é‚æ‚¤‚Éj
@@ -286,6 +290,7 @@ void CResult::Update(void)
 			if (m_nMenuCursol < 0){
 				m_nMenuCursol = RESULT_MENU_MAX - 1;
 			}
+			CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 		}
 		else if (CInputKeyboard::GetKeyboardTrigger(DIK_S) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::LEFT_STICK_DOWN, 0)){
@@ -293,6 +298,7 @@ void CResult::Update(void)
 			if (m_nMenuCursol >= RESULT_MENU_MAX){
 				m_nMenuCursol = 0;
 			}
+			CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 		}
 		// –îˆó‚Ì“ü—Í‚ª‚ ‚Á‚½‚ç
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_W) ||
@@ -321,6 +327,7 @@ void CResult::Update(void)
 			}
 			else
 				m_pManager->SetNextPhase(MODE_PHASE_STAGE_SELECT);
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 	}
 	// ‚­‚é‚­‚éƒ‰ƒCƒg‚Ì‚¤‚²‚«

@@ -153,7 +153,7 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pBackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
 
 	// 音再生
-//	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM000);
 
 	// ジャッジ作成
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
@@ -239,26 +239,6 @@ void CGame::Update(void)
 	// 背景の更新
 	m_pBackGroundManager->Update();
 
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_G))
-	{
-		m_pWinDrawLogo->CreateWinLogo();
-	}
-
-	// Ｐが押されたら
-	if (CInputKeyboard::GetKeyboardTrigger(DIK_P))
-	{
-		// ポーズフラグ反転
-		m_pPause->ReverceFlag();
-		m_pPause->SetCursolDrawFlag(false);
-
-		// ポーズ終了なら
-		if (!m_pPause->GetPauseFlag())
-		{
-			// カーソル位置を戻るに
-			m_pPause->SetChoiceMenu(m_pPause->PAUSE_RETURN);
-		}
-	}
-
 	if (!m_pPause->GetPauseFlag())
 	{
 		CPhase::Update();
@@ -275,6 +255,7 @@ void CGame::Update(void)
 		// 残り時間が0になったらDraw
 		if (m_pTimeManager->GetRemaining() == 0){
 			SetDraw();
+			CManager::PlaySoundA(SOUND_LABEL_SE_END);
 		}
 
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN))
@@ -291,23 +272,6 @@ void CGame::Update(void)
 		{
 			Result();
 		}
-	}
-
-	// タイトルに戻る選択なら
-	if (m_pPause->GetReturnTitleFlag())
-	{
-		// フェードアウト開始
-		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-
-		// タイトルへ
-		m_pManager->SetNextPhase(MODE_PHASE_TITLE);
-	}
-
-	// リトライに戻る選択なら
-	if (m_pPause->GetRetryFlag())
-	{
-		// フェードアウト開始
-		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 	}
 }
 
@@ -343,6 +307,7 @@ void CGame::SetWinPlayer(short num){
 
 	m_pWinDrawLogo->CreateWinLogo();
 
+	CManager::PlaySoundA(SOUND_LABEL_SE_END);
 }
 //*****************************************************************************
 // 引き分けにする 一回だけ呼ばれる

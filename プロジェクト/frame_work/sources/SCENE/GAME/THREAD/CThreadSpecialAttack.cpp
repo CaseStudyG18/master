@@ -94,7 +94,6 @@ HRESULT CThreadSpecialAttack::Init(D3DXVECTOR3 pos, short playerNumber , D3DXVEC
 
 	// エフェクト生成
 	CEffectManager::CreateEffect(m_vPos, EFFECT_SPECIAL_THREAD_ATTACK, velocity);
-
 	return S_OK;
 }
 

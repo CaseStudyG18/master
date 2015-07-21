@@ -74,6 +74,7 @@ HRESULT CThreadSpecialTrap::Init()
 	}
 	m_pBulletAnime->SetColorPolygon(PLAYER_COLOR[m_nPlayerNum]);
 
+	CManager::PlaySoundA(SOUND_LABEL_SE_TRAP_FOUNDATION);
 	return S_OK;  
 }
 

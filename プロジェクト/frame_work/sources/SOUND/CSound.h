@@ -26,17 +26,27 @@ typedef enum
 	SOUND_LABEL_BGM000 = 0,			// OP
 	SOUND_LABEL_SE_ENTER,			// 決定音
 	SOUND_LABEL_SE_START,			// スタート音
-	SOUND_LABEL_SE_END,				// 終了音
-	SOUND_LABEL_SE_NORMAL_ATTACK,	// 通常攻撃音
-	SOUND_LABEL_SE_NORMAL_THREAD,	// 通常糸攻撃音
+	SOUND_LABEL_SE_END,			// 終了音
+	SOUND_LABEL_SE_NORMAL_ATTACK,		// 通常攻撃音
+	SOUND_LABEL_SE_NORMAL_THREAD,		// 通常糸攻撃音
 	SOUND_LABEL_SE_THUNDERBOLT,		// 攻撃形態の糸攻撃の初弾の音
-	SOUND_LABEL_SE_THUNDERBOLT_2,	// 攻撃形態の糸攻撃の二弾の音
-	SOUND_LABEL_SE_AROUND_ATTACK,	// 攻撃形態の周囲攻撃の音
+	SOUND_LABEL_SE_THUNDERBOLT_2,		// 攻撃形態の糸攻撃の二弾の音
+	SOUND_LABEL_SE_AROUND_ATTACK,		// 攻撃形態の周囲攻撃の音
 	SOUND_LABEL_SE_CREATE_ROAD,		// 移動形態の道作成音
 	SOUND_LABEL_SE_TACKLE,			// 移動形態のタックルの音
-	SOUND_LABEL_SE_TRAP_FOUNDATION,	// 妨害形態の罠設置音
+	SOUND_LABEL_SE_TRAP_FOUNDATION,		// 妨害形態の罠設置音
 	SOUND_LABEL_SE_TRAP_ATTACK,		// 妨害形態の攻撃音
-	SOUND_LABEL_SE_GET_TREASURE,	// 宝物を拾った音
+	SOUND_LABEL_SE_GET_TREASURE,		// 宝物を拾った音
+	SOUND_LABEL_SE_CURSOL_MOVE,		// カーソル移動　　　// 追加
+	SOUND_LABEL_SE_CURSOL_SANSEN,		// 参戦　　　　　　　// 追加
+	SOUND_LABEL_SE_CURSOL_ZYUNBIKANRYOU,	// 準備完了　　　　　// 追加
+	SOUND_LABEL_ZINGLE_TITLE,		// タイトルのジングル// 追加	
+	SOUND_LABEL_ZINGLE_RESULT,		// リザルトのジングル// 追加	
+	SOUND_LABEL_SE_GAGE_DOWN,		// ゲージ減少        // 追加
+	SOUND_LABEL_SE_SPEED_DOWN,		// スピード減少      // 追加
+	SOUND_LABEL_SE_TRANSREATION,		// 変形              // 追加
+	SOUND_LABEL_SE_DAMAGE,			// ダメージ          // 追加
+	SOUND_LABEL_SE_DEST_TREASURE,		// 宝物を失った音    // 追加
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 

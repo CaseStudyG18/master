@@ -61,6 +61,7 @@ CAttackNormal ::~CAttackNormal(void)
 HRESULT CAttackNormal::Init()
 {
 	CAttackBase::Init();
+	CManager::PlaySoundA(SOUND_LABEL_SE_NORMAL_ATTACK);
 	return S_OK;
 }
 

@@ -65,6 +65,7 @@ CAttackSpecialTrap ::~CAttackSpecialTrap(void)
 HRESULT CAttackSpecialTrap::Init()
 {
 	CAttackBase::Init();
+	CManager::PlaySoundA(SOUND_LABEL_SE_TRAP_ATTACK);
 	return S_OK;
 }
 

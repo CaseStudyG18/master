@@ -128,7 +128,7 @@ void CField::SetJudgeParam(D3DXVECTOR3 pos, float width, float height, TEXTURE_T
 
 		// スタート兼ゴール
 	case TEXTURE_FIELD_03:
-		m_fJudgeWidth = width * 0.9f;
+		m_fJudgeWidth = width;
 		m_fJudgeHeight = height * 0.8f;
 		m_vJudgePos = pos;
 		m_vJudgePos.y -= m_fJudgeHeight * 0.2f;

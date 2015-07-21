@@ -180,9 +180,6 @@ void COption::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		UV_INDEX uv = DEFAULT_PLAYER_NUMBER_UV[i];
 		p->SetUV(&uv);
 	}
-
-	// ＢＧＭ再生
-	//CManager::PlaySoundA(SOUND_LABEL_BGM000);
 }
 
 //*****************************************************************************
@@ -305,13 +302,8 @@ void COption::CuclDigit(int* ten, int* one, int org)
 //=================================================================
 void COption::UpdateCursol(void)
 {
-	//m_fCursolAlfaRad += MOV_POW_CURSOL_ALFA;
-	//NormalizeRotation(&m_fCursolAlfaRad);
-
 	for (int i = 0; i < CControllerManager::MAX_CONTROLLER_NUM; ++i)
 	{
-	//	m_pCursol[i]->SetColorPolygon(D3DXCOLOR(1.f, 1.f, 1.f, sinf(m_fCursolAlfaRad)));
-
 		if (CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_UP, i))
 		{
 			m_nSelectCounter[i]--;
@@ -319,6 +311,7 @@ void COption::UpdateCursol(void)
 			{
 				m_nSelectCounter[i] = (int)CInputGamePad::PAD_KEY_START;
 			}
+			CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 		}
 		else if (CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_DOWN, i))
 		{
@@ -327,6 +320,7 @@ void COption::UpdateCursol(void)
 			{
 				m_nSelectCounter[i] = (int)CInputGamePad::PAD_KEY_CHANGE_NORMAL;
 			}
+			CManager::PlaySoundA(SOUND_LABEL_SE_CURSOL_MOVE);
 		}
 
 		// 戻る選択中なら
@@ -344,6 +338,7 @@ void COption::UpdateCursol(void)
 					m_mode = OPTION_MODE_NEXT_SCENE;
 				}
 			}
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 
 		// それ以外なら
@@ -357,6 +352,7 @@ void COption::UpdateCursol(void)
 
 			// キーコンフィグ
 			KeyConfig(i, (CInputGamePad::PAD_BUTTON)m_nSelectCounter[i]);
+			CManager::PlaySoundA(SOUND_LABEL_SE_ENTER);
 		}
 	}
 }

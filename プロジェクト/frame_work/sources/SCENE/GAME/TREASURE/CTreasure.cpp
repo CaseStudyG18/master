@@ -9,6 +9,7 @@
 //*****************************************************************************
 #include "CTreasure.h"
 #include "../PLAYER/AI/mersenne_twister.h"
+#include "../../../MANAGER/CManager.h"
 
 //*****************************************************************************
 // É}ÉNÉç
@@ -176,6 +177,7 @@ void CTreasure::Reset(D3DXVECTOR3 pos){
 
 	// óéÇ∆Ç∑èàóù
 	SetFall();
+	CManager::PlaySoundA(SOUND_LABEL_SE_DEST_TREASURE);
 }
 
 //*****************************************************************************

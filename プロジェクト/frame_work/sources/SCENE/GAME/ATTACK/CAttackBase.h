@@ -13,6 +13,7 @@
 #include "../../CSCENE/CScene2D.h"
 #include "../PLAYER/CPlayerManager.h"
 #include "CAttackManager.h"
+#include "../../../MANAGER/CManager.h"
 
 //=============================================================================
 //	‘O•ûéŒ¾
