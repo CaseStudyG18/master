@@ -96,6 +96,8 @@ static const D3DXVECTOR3 CHARASELECT_READY_POS[PLAYER_MAX] = {
 static const D3DXCOLOR CHARASELECT_READY_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
 // 全員が準備完了してから次のシーンに移行するまでの時間 なんんとなく入れたよ
 static const int CHARASELECT_NEXT_PHASE_INTERVAL = 60;
+// BGのアニメーション移動量
+static const float CHARASELECT_BG_VELO = 1;
 
 //*****************************************************************************
 // コンストラクタ
@@ -152,6 +154,7 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_nNextPhaseCount = 0;
 	m_nPlayerManualNum = 0;
 	m_nPlayerReadyNum = 0;
+	m_nBgDirection = 0;
 
 	// 参戦していた数を取得する
 	m_nPlayerJoinedNum = CManager::GetJoinNum();
@@ -239,6 +242,9 @@ void CCharaSelect::Update(void)
 	// フェイズの更新
 	CPhase::Update();
 
+	// BGのアニメーション
+	UpdateBG();
+
 	// PUSHの点滅アニメーション
 	UpdatePushAnimation();
 
@@ -305,14 +311,61 @@ CCharaSelect* CCharaSelect::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 void CCharaSelect::InitializeBG(void){
 	// 全体の背景
 	m_pBG = CScene2D::Create(m_pD3DDevice,
-		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
-		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
+		//		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
+		D3DXVECTOR3(SCREEN_WIDTH, SCREEN_HEIGHT, 0),
+		static_cast<float>(SCREEN_WIDTH)* 2 , static_cast<float>(SCREEN_HEIGHT) * 2,
 		TEXTURE_BG_CHARA_SELECT, TYPE_PRIORITY_BG);
+
 	// キャラ選択っていうロゴ表示
 	m_pLogo = CScene2D::Create(m_pD3DDevice,
 		CHARASELECT_LOGO_POS,
 		CHARASELECT_LOGO_SIZE.x, CHARASELECT_LOGO_SIZE.y,
 		TEXTURE_CHARA_SELECT_LOGO, TYPE_PRIORITY_FIELD);
+}
+
+//-----------------------------------------------------------------------------
+// BGの更新
+//-----------------------------------------------------------------------------
+void CCharaSelect::UpdateBG(){
+
+	D3DXVECTOR3 pos = m_pBG->GetPos();
+
+	if (m_nBgDirection == 3){
+		if (pos.y > SCREEN_HEIGHT){
+			m_nBgDirection = 0;
+			pos.y = SCREEN_HEIGHT;
+		}
+	}
+	if (m_nBgDirection == 2){
+		if (pos.x > SCREEN_WIDTH){
+			m_nBgDirection = 3;
+			pos.x = SCREEN_WIDTH;
+		}
+	}
+	if (m_nBgDirection == 1){
+		if (pos.y < 0){
+			m_nBgDirection = 2;
+			pos.y = 0;
+		}
+	}
+	if (m_nBgDirection == 0){
+		if (pos.x < 0){
+			m_nBgDirection = 1;
+			pos.x = 0;
+		}
+	}
+
+	// 左へ
+	if (m_nBgDirection == 0) m_vBgVelo = D3DXVECTOR3(-CHARASELECT_BG_VELO, 0, 0);
+	// 上へ
+	if (m_nBgDirection == 1) m_vBgVelo = D3DXVECTOR3(0, -CHARASELECT_BG_VELO, 0);
+	// 右へ
+	if (m_nBgDirection == 2) m_vBgVelo = D3DXVECTOR3(CHARASELECT_BG_VELO, 0, 0);
+	// 下へ
+	if (m_nBgDirection == 3) m_vBgVelo = D3DXVECTOR3(0, CHARASELECT_BG_VELO, 0);
+
+	// 移動量加算
+	m_pBG->AddPos(m_vBgVelo);
 }
 
 //-----------------------------------------------------------------------------
@@ -764,4 +817,5 @@ void CCharaSelect::UnReady(int playerNum){
 	m_bReady[playerNum] = false;
 	m_nPlayerReadyNum--;
 }
+
 //----EOF----

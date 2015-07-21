@@ -66,6 +66,8 @@ private:
 
 	// BGの初期化　ロゴも初期化してる
 	void InitializeBG();
+	// BGの更新 アニメーションをする
+	void UpdateBG();
 	// 参戦
 	void Join(int playerNum);
 	// 不参戦
@@ -96,6 +98,10 @@ private:
 
 	// 背景
 	CScene2D* m_pBG;
+	// 背景の移動量
+	D3DXVECTOR3 m_vBgVelo;
+	// 背景が移動している方向(0:左 1:上 2:右 3:下)
+	short m_nBgDirection;
 	// キャラクター選択って表示する
 	CScene2D* m_pLogo;
 	// プレイヤ背景
