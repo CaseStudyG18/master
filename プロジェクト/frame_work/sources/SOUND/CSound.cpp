@@ -19,20 +19,30 @@ static const int FFIR_CHUNK_DATA_SIZE = 4;							// エラー時のチャンクデータサイ
 // 各音素材のパラメータ
 static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 {
-	{ "data/BGM/bgm01.wav", true },			// BGM0
-	{ "data/SE/Enter.wav", false },			// 決定音	
-	{ "data/SE/Start.wav", false },			// スタート音
-	{ "data/SE/Finish.wav", false },		// 終了音
+	{ "data/BGM/bgm01.wav", true },		// BGM0
+	{ "data/SE/Enter.wav", false },		// 決定音	
+	{ "data/SE/Start.wav", false },		// スタート音
+	{ "data/SE/Finish.wav", false },	// 終了音
 	{ "data/SE/NormalAttack.wav", false },	// 通常攻撃音
 	{ "data/SE/NormalThread.wav", false },	// 通常糸攻撃音
 	{ "data/SE/ThunderBolt1.wav", false },	// 攻撃形態の糸攻撃の初弾の音
 	{ "data/SE/ThunderBolt2.wav", false },	// 攻撃形態の糸攻撃の二弾の音
 	{ "data/SE/AroundAttack.wav", false },	// 攻撃形態の周囲攻撃の音
-	{ "data/SE/MakeRoad.wav", false },		// 移動形態の道作成音
-	{ "data/SE/Tackle.wav", false },		// 移動形態のタックルの音
-	{ "data/SE/Trap.wav", false },			// 妨害形態の罠設置音
+	{ "data/SE/MakeRoad.wav", false },	// 移動形態の道作成音
+	{ "data/SE/Tackle.wav", false },	// 移動形態のタックルの音
+	{ "data/SE/Trap.wav", false },		// 妨害形態の罠設置音
 	{ "data/SE/JummerAttack.wav", false },	// 妨害形態の攻撃音
 	{ "data/SE/GetTreasure.wav", false },	// 宝物を拾った音
+	{ "data/SE/CursolMove.wav", false },	// カーソル移動　　　// 追加
+	{ "data/SE/InWors.wav", false },	// 参戦　　　　　　　// 追加
+	{ "data/SE/StartOK.wav", false },	// 準備完了　　　　　// 追加
+	{ "data/SE/TitleZingle.wav", false },	// タイトルのジングル// 追加
+	{ "data/SE/ResultZingle.wav", false },	// リザルトのジングル// 追加
+	{ "data/SE/GageDown.wav", false },	// ゲージ減少　　　　// 追加
+	{ "data/SE/SpeedDown.wav", false },	// スピード減少　　　// 追加
+	{ "data/SE/ModeChange.wav", false },	// 変形　　　　　    // 追加
+	{ "data/SE/Damage.wav", false },	// ダメージ          // 追加
+	{ "data/SE/DestTreasure.wav", false },	// 宝物を失った音    // 追加
 };
 
 //*****************************************************************************
