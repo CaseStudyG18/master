@@ -22,7 +22,7 @@ static const float MP_ATTACK_WIDTH = 30;
 static const float MP_ATTACK_HEIGHT = 30;
 static const TEXTURE_TYPE MP_ATTACK_TEXTURE = TEXTURE_THREAD_POISON;
 static const int MP_ATTACK_TEXTURE_X = 2;
-static const int MP_ATTACK_TEXTURE_Y = 4;
+static const int MP_ATTACK_TEXTURE_Y = 5;
 static const int MP_ATTACK_END_TIME = 30;
 // ‘¬“x
 static const float ATTACK_JAMMER_SPD = 10;
@@ -98,6 +98,11 @@ void CEffectMPAttack::Uninit(void)
 void CEffectMPAttack::Update(void)
 {
 	m_pAnim->SetPos(m_vPos);
+
+	if (m_nCount > MP_ATTACK_COUNT_MAX / (MP_ATTACK_TEXTURE_X*MP_ATTACK_TEXTURE_Y) * 7)
+	{
+		m_pAnim->SetRot(D3DXVECTOR3(0.0f,0.0f,0.0f));
+	}
 
 	// ©E‚ÌXV
 	CEffectBase::Update();
