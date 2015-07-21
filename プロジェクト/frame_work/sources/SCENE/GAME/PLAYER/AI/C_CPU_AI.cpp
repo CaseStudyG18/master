@@ -24,7 +24,7 @@ static const int FREE_MOVE_THINK = 30;					// 自由移動の考える間隔時間
 static const int MAX_PERCENT = 100;						// 確率の最大
 static const int HALF_PERCENT = 50;						// 50%
 static const int MAX_MOVE_TIME_FOR_ATTACK = 600;		// 攻撃のための移動時間
-static const int THINK_CHANGE_MODE_TIME = 60;			// 形態変更を考える間隔
+static const int THINK_CHANGE_MODE_TIME = 300;			// 形態変更を考える間隔
 
 //=============================================================================
 // コンストラクタ
@@ -119,7 +119,11 @@ void C_CPU_AI::Uninit(void)
 {
 	for (int i = 0; i < m_nYBlockNum; ++i)
 	{
-		delete[] m_apTile[i];
+		if (m_apTile[i])
+		{
+			delete[] m_apTile[i];
+			m_apTile[i] = NULL;
+		}
 	}
 	delete[] m_apTile;
 }
@@ -572,9 +576,9 @@ void C_CPU_AI::MoveToTreasure(void)
 
 	if (m_nSarchTimer > RETRY_SERCH_PATH_TIME)
 	{
-		// 1/4で無視して自由移動
+		// 1/10で無視して自由移動
 		int ans = mersenne_twister_int(0, MAX_PERCENT);
-		if (ans < (int)(HALF_PERCENT * 0.5))
+		if ((float)ans < 0.1f)
 		{
 			ChangeAIState(AI_STATE_MOVE_FREE);
 			return;
@@ -790,32 +794,25 @@ void C_CPU_AI::MoveGoal(void)
 			if (ans < HALF_PERCENT)
 			{
 				m_AIInput.changeJammer = true;
-				return;
+				//return;
 			}
 		}
 		else
 		{
 			int ans = mersenne_twister_int(0, MAX_PERCENT);
-			if (ans < HALF_PERCENT)
+			if ((float)ans < 0.1f)
 			{
 				if (!m_AIInputOld.pushThread)
 				{
 					m_AIInput.pushThread = true;
 				}
-				return;
+				//return;
 			}
 		}
 	}
 
 	if (m_nSarchTimer > RETRY_SERCH_PATH_TIME)
 	{
-		int ans = mersenne_twister_int(0, MAX_PERCENT);
-		if (ans < (int)(HALF_PERCENT * 0.5))
-		{
-			ChangeAIState(AI_STATE_MOVE_FREE);
-			return;
-		}
-
 		TileIndex start, goal;
 		start = GetOpenListIndex(&m_pOwner->GetPos());
 		goal = GetOpenListIndex(&m_pGoal->GetPos());
@@ -823,25 +820,23 @@ void C_CPU_AI::MoveGoal(void)
 		// 道がなければ
 		if (!SarchPath(&start, &goal))
 		{
-			ans = mersenne_twister_int(0, MAX_PERCENT);
-			if (ans < HALF_PERCENT)
-			{
-				ChangeAIState(AI_STATE_MOVE_FREE);
-				return;
-			}
-			else
-			{
-				ChangeAIState(AI_STATE_MAKE_FOOT_STEP);
-				return;
-			}
+			ChangeAIState(AI_STATE_MAKE_FOOT_STEP);
 		}
 	}
 
 	// 目標地点に向かう
 	if (Move())
 	{
+		D3DXVECTOR3 playerPos = m_pOwner->GetPos();
+		float playerHeight = m_pOwner->GetHeight();
+		float playerWidth = m_pOwner->GetWidth();
+		// ゴールと判断する距離
+		float judgeSize = playerHeight * 0.25f + playerWidth * 0.5f;// +m_pGoal->GetWidth() * 0.5f + m_pGoal->GetHeight() * 0.5f;
+		// 判定を足元に
+		playerPos.y += playerHeight * 0.5f;
+
 		float length = MagnitudeVector(m_pOwner->GetPos() - m_pGoal->GetPos());
-		float judgeLength = (m_pOwner->GetWidth() + m_pGoal->GetWidth());
+		float judgeLength = judgeSize;
 		judgeLength *= judgeLength;
 		if (length < judgeLength)
 		{
@@ -997,13 +992,13 @@ bool C_CPU_AI::Move(void)
 	float culc = m_vDestPos.x - playerPos.x;
 
 	// 丸める値計算
-	float judgeLine = playerWidth * 0.1f;
+	float judgeLine = playerWidth * 0.01f;
 	if (fabs(culc) < judgeLine)
 	{
 		culc = 0.f;
 	}
 
-	if (m_nTimer % 2 == 0)
+//	if (m_nTimer % 2 == 0)
 	{
 		// 目的地のX方向判断
 		if (culc > 0.f)
@@ -1016,13 +1011,13 @@ bool C_CPU_AI::Move(void)
 		}
 	}
 
-	else
+//	else
 	{
 		// 差を計算
 		culc = m_vDestPos.y - playerPos.y;
 
 		// 丸める値計算
-		judgeLine = playerHeight * 0.1f;
+		judgeLine = playerHeight * 0.01f;
 		if (fabs(culc) < judgeLine)
 		{
 			culc = 0.f;
@@ -1047,7 +1042,7 @@ bool C_CPU_AI::Move(void)
 					+ (playerPos.y - m_vDestPos.y) * (playerPos.y - m_vDestPos.y);
 
 	// ゴールと判断する距離
-	float judgeSize = playerHeight * 0.5f * playerHeight * 0.5f
+	float judgeSize = playerHeight * 0.25f * playerHeight * 0.25f
 					+ playerWidth * 0.5f * playerWidth * 0.5f;
 
 	// 目的地の範囲内なら

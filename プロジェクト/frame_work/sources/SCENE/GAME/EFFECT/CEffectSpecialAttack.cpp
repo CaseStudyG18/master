@@ -18,8 +18,8 @@
 // íËêî
 //*****************************************************************************
 static const int ATTACK_ATTACK_COUNT_MAX = 30;
-static const float ATTACK_ATTACK_WIDTH = 50;
-static const float ATTACK_ATTACK_HEIGHT = 50;
+static const float ATTACK_ATTACK_WIDTH = 100;
+static const float ATTACK_ATTACK_HEIGHT = 100;
 static const TEXTURE_TYPE ATTACK_ATTACK_TEXTURE = TEXTURE_FIRE_1;
 static const int ATTACK_ATTACK_TEXTURE_X = 10;
 static const int ATTACK_ATTACK_TEXTURE_Y = 1;
@@ -69,8 +69,8 @@ void CEffectSpecialAttack::Update(void)
 {
 	if (m_nCount % 3 == 0){
 		D3DXVECTOR3 pos = m_vPos;
-		pos.x += ATTACK_ATTACK_RADIUS * 0.5f - ATTACK_ATTACK_WIDTH * 0.5f;
-		pos.y += ATTACK_ATTACK_RADIUS * 0.5f + ATTACK_ATTACK_HEIGHT * 0.5f;
+		pos.x += ATTACK_ATTACK_WIDTH * 0.5f * cosf(m_vRot.z * D3DX_PI);
+		pos.y -= ATTACK_ATTACK_WIDTH * 0.5f * sinf(m_vRot.z * D3DX_PI);
 		CSceneAnime::Create(
 			m_pD3DDevice,
 			pos,
@@ -80,9 +80,6 @@ void CEffectSpecialAttack::Update(void)
 	}
 
 	m_vRot.z += 0.2831853f;
-
-	m_vPos.x += ATTACK_ATTACK_RADIUS * cosf(m_vRot.z * D3DX_PI);
-	m_vPos.y -= ATTACK_ATTACK_RADIUS * sinf(m_vRot.z * D3DX_PI);
 
 	// é©éEÇÃçXêV
 	CEffectBase::Update();

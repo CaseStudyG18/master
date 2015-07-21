@@ -21,8 +21,8 @@ static const short ATTACK_ATTACK_HIT_START_TIME = 10;
 static const short ATTACK_ATTACK_HIT_END_TIME = 30;
 
 // 当たり判 定幅,高さ
-static const float ATTACK_ATTACK_HIT_WIDTH = 75;
-static const float ATTACK_ATTACK_HIT_HEIGHT = 75;
+static const float ATTACK_ATTACK_HIT_WIDTH = 100;
+static const float ATTACK_ATTACK_HIT_HEIGHT = 100;
 
 // プレイヤと攻撃エフェクトの距離
 static const float ATTACK_ATTACK_RANGE = 50;
