@@ -116,6 +116,8 @@ private:
 	bool m_bGameOver;
 	// 勝ったプレイヤー番号
 	short m_nWinPlayerNum;
+	// 一回だけBGMを鳴らすためのフラグ 一回通ったらtrue
+	bool m_bPlaySoundOnece;
 
 	// ゲーム上の簡易リザルトを出してからシーン遷移するまでのカウント
 	int m_nResultCount;

@@ -10,6 +10,7 @@
 #include <Windows.h>
 #include "CCountDown.h"
 #include "../ANIMATION/CAnimation.h"
+#include "../../../MANAGER/CManager.h"
 
 //*****************************************************************************
 // 定数
@@ -26,6 +27,16 @@ static const int COUNTDOWN_FIGURE_TEXTURE_SEPALATE_Y = 1;
 static const float COUNTDOWN_FIGURE_FALL_POSY = SCREEN_HEIGHT * 0.5f;
 // 数字のフェードスピード
 static const float COUNTDOWN_FIGURE_FADE_SPEED = 0.03f;
+
+// ゲームが始まってからカウントダウンが始まるまでのカウント数
+static const short TIME_START = 20;
+// 数字が落ちてからフェードアウトをし始める間のカウント数
+static const short TIME_START_TO_FADE = 60;
+// フェードアウトし始めてから次の数字が落ちる間のカウント数
+static const short TIME_NEXT_COUNT = 20;
+static const short COUNT_MAX = 5;
+// 数字が落ちてからその音を鳴らすまでのカウント数
+static const short TIME_START_TO_SOUND = 30;
 
 //*****************************************************************************
 // コンストラクタ
@@ -59,6 +70,10 @@ void CCountDown::Init()
 		COUNTDOWN_FIGURE_TEXTURE,
 		COUNTDOWN_FIGURE_TEXTURE_SEPALATE_X,
 		COUNTDOWN_FIGURE_TEXTURE_SEPALATE_Y);
+
+	for (int i = COUNT_MAX - 1; i >= 0; i--){
+		TIME[i] = TIME_START + (TIME_START + TIME_START_TO_FADE + TIME_NEXT_COUNT) * (3 - i);
+	}
 }
 
 //*****************************************************************************
@@ -71,24 +86,14 @@ void CCountDown::Uninit(void)
 //*****************************************************************************
 // 更新
 //*****************************************************************************
-void CCountDown::Update(void){
+bool CCountDown::Update(void){
+
+	// プレイヤがコントロールできる（カウントダウンが終了していたら何もしない）
+	if (*m_bPlayerControl){
+		return true;
+	}
 
 	m_nCount++;
-
-	// ゲームが始まってからカウントダウンが始まるまでのカウント数
-	short TIME_START = 20;
-	// 数字が落ちてからフェードアウトをし始める間のカウント数
-	short TIME_START_TO_FADE = 60;
-	// フェードアウトし始めてから次の数字が落ちる間のカウント数
-	short TIME_NEXT_COUNT = 20;
-
-#define COUNT_MAX 5
-
-	short TIME[COUNT_MAX] = { 0 };
-
-	for (int i = COUNT_MAX - 1; i >= 0; i--){
-		TIME[i] = TIME_START + (TIME_START + TIME_START_TO_FADE + TIME_NEXT_COUNT) * (3 - i);
-	}
 
 	for (int i = COUNT_MAX - 1; i >= 0; i--){
 		if (m_nCount == TIME[i]){
@@ -97,14 +102,23 @@ void CCountDown::Update(void){
 			m_pFigure->SetNonFadeOut();
 			m_pFigure->SetFall(COUNTDOWN_FIGURE_APPEAR_POS, COUNTDOWN_FIGURE_FALL_POSY);
 		}
-		if (m_nCount == TIME[i] + TIME_START_TO_FADE){
+		else if (m_nCount == TIME[i] + TIME_START_TO_SOUND){
+			if (i == 0){
+				CManager::PlaySoundA(SOUND_LABEL_SE_GAME_START);
+			}
+			else{
+				CManager::PlaySoundA(SOUND_LABEL_SE_COUNTDOUN);
+			}
+		}
+		else if (m_nCount == TIME[i] + TIME_START_TO_FADE){
 			m_pFigure->SetFadeOut(1.0f, COUNTDOWN_FIGURE_FADE_SPEED);
-			
 			if (i == 0){
 				*m_bPlayerControl = true;
 			}
 		}
+
 	}
+	return false;
 }
 
 //----EOF-------

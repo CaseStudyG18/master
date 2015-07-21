@@ -35,7 +35,8 @@ public:
 
 	void Init(void);
 	void Uninit(void);
-	void Update(void);
+	// カウントダウンが終了していたらtrue
+	bool Update(void);
 
 	// 非公開メンバ
 private:
@@ -47,6 +48,9 @@ private:
 	short m_nCount;
 	// ゲーム開始するフラグ ゲームシーンから生成時にもらう
 	bool *m_bPlayerControl;
+	
+	short TIME[5];
+
 };
 
 #endif

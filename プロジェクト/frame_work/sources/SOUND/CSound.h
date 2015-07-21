@@ -47,7 +47,7 @@ typedef enum
 	SOUND_LABEL_SE_TRANSREATION,			// 変形
 	SOUND_LABEL_SE_DAMAGE,					// ダメージ
 	SOUND_LABEL_SE_DEST_TREASURE,			// 宝物を失った音
-//	SOUND_LABEL_BGM_STAGE_SELECT,			// ステージセレクトのＢＧＭ
+	SOUND_LABEL_BGM_STAGE_SELECT,			// ステージセレクトのＢＧＭ
 	SOUND_LABEL_SE_COUNTDOUN,				// カウントダウン
 	SOUND_LABEL_SE_GAME_START,				// ゲームスタート
 	SOUND_LABEL_MAX,

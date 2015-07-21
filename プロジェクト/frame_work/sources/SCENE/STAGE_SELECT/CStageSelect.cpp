@@ -116,7 +116,7 @@ void CStageSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_bFrameAlphaAdd = true;
 
 	// ÇaÇfÇlçƒê∂
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM_STAGE_SELECT);
 }
 
 //*****************************************************************************

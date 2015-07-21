@@ -29,7 +29,7 @@
 //*****************************************************************************
 
 // ゲームの制限時間
-static const short GAME_TIME = 150;
+static const short GAME_TIME = 200;
 
 // 宝物の場所
 static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(647, 315, 0);
@@ -69,6 +69,8 @@ CGame::CGame(void)
 	m_pJudgeManager = NULL;
 	m_pFieldManager = NULL;
 	m_pCountDown = NULL;
+	// 一回BGMを鳴らしたか
+	m_bPlaySoundOnece = false;
 
 	// 簡易リザルトから次のシーン遷移までのカウンター
 	m_nResultCount = 0;
@@ -152,9 +154,6 @@ void CGame::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pBackGroundManager->CreateBG(TEXTURE_BG_0);
 	m_pBackGroundManager->CreateBG(TEXTURE_BG_1, BG_SPEED);
 
-	// 音再生
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
-
 	// ジャッジ作成
 	m_pJudgeManager = CJudgeManager::Create(m_pPlayerManager);
 
@@ -235,7 +234,13 @@ void CGame::Uninit(void)
 void CGame::Update(void)
 {
 	// カウントダウンの更新
-	m_pCountDown->Update();
+	if (m_pCountDown->Update() && !m_bPlaySoundOnece){
+		// カウントダウンが終了したのでBGMを流す
+		CManager::PlaySoundA(SOUND_LABEL_BGM000);
+		// 一回しか通らない
+		m_bPlaySoundOnece = true;
+	}
+
 	// 背景の更新
 	m_pBackGroundManager->Update();
 
