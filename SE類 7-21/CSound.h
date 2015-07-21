@@ -48,6 +48,8 @@ typedef enum
 	SOUND_LABEL_SE_DAMAGE,			// ダメージ          // 追加
 	SOUND_LABEL_SE_DEST_TREASURE,		// 宝物を失った音    // 追加
 	SOUND_LABEL_BGM_STAGE_SELECT,		// ステージセレクトのＢＧＭ// 追加7-21
+	SOUND_LABEL_SE_COUNTDOUN,		// カウントダウン          // 追加
+	SOUND_LABEL_SE_GAME_START,		// ゲームスタート  	   // 追加
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 
