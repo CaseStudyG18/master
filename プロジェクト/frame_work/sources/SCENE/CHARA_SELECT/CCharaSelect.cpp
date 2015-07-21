@@ -219,7 +219,7 @@ void CCharaSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ÇaÇfÇlçƒê∂
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM_STAGE_SELECT);
 }
 
 //*****************************************************************************
@@ -311,7 +311,6 @@ CCharaSelect* CCharaSelect::Create(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 void CCharaSelect::InitializeBG(void){
 	// ëSëÃÇÃîwåi
 	m_pBG = CScene2D::Create(m_pD3DDevice,
-		//		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
 		D3DXVECTOR3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0),
 		static_cast<float>(SCREEN_WIDTH)* 2.1f, static_cast<float>(SCREEN_HEIGHT)* 2.1f,
 		TEXTURE_BG_CHARA_SELECT, TYPE_PRIORITY_BG);

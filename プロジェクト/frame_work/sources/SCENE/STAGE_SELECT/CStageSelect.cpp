@@ -51,6 +51,8 @@ static const float STAGE_SELECT_FRAME_HEIGHT = STAGE_SELECT_HEIGHT + 20;
 static const D3DXCOLOR STAGE_SELECT_FRAME_COLOR = D3DXCOLOR(0.9f, 0.1f, 0.0f, 0.0f);
 // 選択枠のアルファ変更スピード
 static const float STAGE_SELECT_FRAME_AALPHA_SPEED = 0.05f;
+// BGのアニメーション移動量
+static const float STAGE_SELECT_BG_VELO = 1;
 
 //*****************************************************************************
 // コンストラクタ
@@ -75,6 +77,8 @@ void CStageSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	// フェーズの初期化
 	CPhase::Init(pDevice, mode);
 
+	m_nBgDirection = 0;
+
 	// フェード作成
 	m_pFade = new CFade(pDevice);
 	m_pFade->Init(DEFFAULT_FADE_POS, DEFFAULT_FADE_WIDTH, DEFFAULT_FADE_HEIGHT, TEXTURE_NULL);
@@ -83,9 +87,9 @@ void CStageSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 
 	// 背景
 	m_pBG = CScene2D::Create(m_pD3DDevice,
-		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
-		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
-		TEXTURE_BG_STAGE_SELECT, TYPE_PRIORITY_BG);
+		D3DXVECTOR3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0),
+		static_cast<float>(SCREEN_WIDTH)* 2.1f, static_cast<float>(SCREEN_HEIGHT)* 2.1f,
+		TEXTURE_BG_CHARA_SELECT, TYPE_PRIORITY_BG);
 
 	// ロゴ
 	m_pLogo = CScene2D::Create(m_pD3DDevice,
@@ -138,6 +142,9 @@ void CStageSelect::Update(void)
 {
 	// フェイズの更新
 	CPhase::Update();
+	
+	// 背景のアニメーション
+	UpdateBG();
 
 	// 選択の更新
 	UpdateSelect();
@@ -244,5 +251,50 @@ void CStageSelect::UpdateSelect(){
 		}
 	}
 	m_pFrame2D->SetColorPolygon(m_FrameColor);
+}
+
+//-----------------------------------------------------------------------------
+// BGの更新
+//-----------------------------------------------------------------------------
+void CStageSelect::UpdateBG(){
+
+	D3DXVECTOR3 pos = m_pBG->GetPos();
+
+	if (m_nBgDirection == 3){
+		if (pos.y > SCREEN_HEIGHT){
+			m_nBgDirection = 0;
+			pos.y = SCREEN_HEIGHT;
+		}
+	}
+	if (m_nBgDirection == 2){
+		if (pos.x > SCREEN_WIDTH){
+			m_nBgDirection = 3;
+			pos.x = SCREEN_WIDTH;
+		}
+	}
+	if (m_nBgDirection == 1){
+		if (pos.y < 0){
+			m_nBgDirection = 2;
+			pos.y = 0;
+		}
+	}
+	if (m_nBgDirection == 0){
+		if (pos.x < 0){
+			m_nBgDirection = 1;
+			pos.x = 0;
+		}
+	}
+
+	// 左へ
+	if (m_nBgDirection == 0) m_vBgVelo = D3DXVECTOR3(-STAGE_SELECT_BG_VELO, 0, 0);
+	// 上へ
+	if (m_nBgDirection == 1) m_vBgVelo = D3DXVECTOR3(0, -STAGE_SELECT_BG_VELO, 0);
+	// 右へ
+	if (m_nBgDirection == 2) m_vBgVelo = D3DXVECTOR3(STAGE_SELECT_BG_VELO, 0, 0);
+	// 下へ
+	if (m_nBgDirection == 3) m_vBgVelo = D3DXVECTOR3(0, STAGE_SELECT_BG_VELO, 0);
+
+	// 移動量加算
+	m_pBG->AddPos(m_vBgVelo);
 }
 //----EOF----

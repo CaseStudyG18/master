@@ -20,9 +20,9 @@
 static const int MP_ATTACK_COUNT_MAX = 29;
 static const float MP_ATTACK_WIDTH = 30;
 static const float MP_ATTACK_HEIGHT = 30;
-static const TEXTURE_TYPE MP_ATTACK_TEXTURE = TEXTURE_FIRE_1;
-static const int MP_ATTACK_TEXTURE_X = 10;
-static const int MP_ATTACK_TEXTURE_Y = 1;
+static const TEXTURE_TYPE MP_ATTACK_TEXTURE = TEXTURE_THREAD_POISON;
+static const int MP_ATTACK_TEXTURE_X = 2;
+static const int MP_ATTACK_TEXTURE_Y = 4;
 static const int MP_ATTACK_END_TIME = 30;
 // ‘¬“x
 static const float ATTACK_JAMMER_SPD = 10;
@@ -54,6 +54,7 @@ void CEffectMPAttack::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 	m_vPos = pos;
 	m_vPos.y = pos.y - 30.0f;
 	m_vVelocity = velocity;
+	m_vRot.z = 0.0f;
 
 	m_pAnim = CSceneAnime::Create(
 		m_pD3DDevice,
@@ -61,6 +62,26 @@ void CEffectMPAttack::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 		MP_ATTACK_WIDTH, MP_ATTACK_HEIGHT,
 		MP_ATTACK_TEXTURE, MP_ATTACK_TEXTURE_X, MP_ATTACK_TEXTURE_Y,
 		MP_ATTACK_END_TIME);
+
+	if (m_vVelocity.y == 1)
+	{
+		m_vRot.z = D3DX_PI*0.5f;
+		m_pAnim->SetRot(m_vRot);
+	}
+	if (m_vVelocity.y == -1)
+	{
+		m_vRot.z = D3DX_PI*1.5f;
+		m_pAnim->SetRot(m_vRot);
+	}
+	if (m_vVelocity.x == -1)
+	{
+		m_vRot.z = 0.0f;
+	}
+	if (m_vVelocity.x == 1)
+	{
+		m_vRot.z = D3DX_PI;
+		m_pAnim->SetRot(m_vRot);
+	}
 }
 
 //*****************************************************************************
@@ -77,6 +98,7 @@ void CEffectMPAttack::Uninit(void)
 void CEffectMPAttack::Update(void)
 {
 	m_pAnim->SetPos(m_vPos);
+
 	// ©E‚ÌXV
 	CEffectBase::Update();
 

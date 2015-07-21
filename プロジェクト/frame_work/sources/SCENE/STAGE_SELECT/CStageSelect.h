@@ -57,9 +57,15 @@ private:
 
 	// 選択をする更新
 	void UpdateSelect();
+	// BGの更新 アニメーションをする
+	void UpdateBG();
 
 	// 背景
 	CScene2D* m_pBG;
+	// 背景の移動量
+	D3DXVECTOR3 m_vBgVelo;
+	// 背景が移動している方向(0:左 1:上 2:右 3:下)
+	short m_nBgDirection;
 	// ロゴ
 	CScene2D* m_pLogo;
 	// 表示するステージ
