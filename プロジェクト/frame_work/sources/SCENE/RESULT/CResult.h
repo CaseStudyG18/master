@@ -25,7 +25,7 @@ enum RESULT_MENU{
 };
 
 // ‚­‚é‚­‚éƒ‰ƒCƒg‚Ì”
-static const int RESULT_CIRCLE_LIGHT_MAX = 50;
+static const int RESULT_CIRCLE_LIGHT_MAX = 100;
 
 //*****************************************************************************
 // ‘O•ûéŒ¾

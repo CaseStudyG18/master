@@ -29,7 +29,7 @@
 //*****************************************************************************
 
 // ƒQ[ƒ€‚Ì§ŒÀŠÔ
-static const short GAME_TIME = 200;
+static const short GAME_TIME = 150;
 
 // •ó•¨‚ÌêŠ
 static const D3DXVECTOR3 TREASURE_POS = D3DXVECTOR3(647, 315, 0);

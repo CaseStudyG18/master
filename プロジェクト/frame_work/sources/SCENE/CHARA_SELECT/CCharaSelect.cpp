@@ -439,7 +439,8 @@ void CCharaSelect::UpdateRimoAnimation(void){
 
 			m_nRimoTextureIndex[i]++;
 			if (m_nRimoTextureIndex[i] > m_nRimoTextureMax[i]){
-				m_nRimoTextureIndex[i] = m_nRimoTextureMin[i];
+				m_nRimoTextureIndex[i] = PLAYER_STOP_TEXTURE_MIN;
+				m_nRimoTextureMax[i] = PLAYER_STOP_TEXTURE_MAX;
 			}
 			m_pRimo[i]->SetIndex(m_nRimoTextureIndex[i]);
 		}
@@ -702,26 +703,6 @@ void CCharaSelect::UpdateInput(void){
 			}
 			m_nRimoTextureIndex[i] = m_nRimoTextureMin[i];
 			m_nRimoTextureCount[i] = 0;
-		}
-		// 変形　攻撃
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_6) ||
-			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_B, i)){
-			m_PlayerMode[i] = PLAYER_MODE_ATTACK;
-		}
-		// 変形　移動
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_7) ||
-			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_A, i)){
-			m_PlayerMode[i] = PLAYER_MODE_SPEED;
-		}
-		// 変形　罠
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_8) ||
-			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_Y, i)){
-			m_PlayerMode[i] = PLAYER_MODE_TRAP;
-		}
-		// 変形　通常へ
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_9) ||
-			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_X, i)){
-			m_PlayerMode[i] = PLAYER_MODE_NONE;
 		}
 	}
 }

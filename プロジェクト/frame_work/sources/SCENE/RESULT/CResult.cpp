@@ -52,8 +52,8 @@ static const D3DXVECTOR3 RESULT_PUSH_ADDPOS = D3DXVECTOR3(0, 250, 0);
 // プレイヤのアニメーションのスピード
 static const int RESULT_RIMO_ANIME_SPEED = 10;
 // プレイヤの負けアニメーションのインデックス
-static const int RESULT_RIMO_LOSE_INDEX_MAX = 13;
-static const int RESULT_RIMO_LOSE_INDEX_MIN = 10;
+static const int RESULT_RIMO_LOSE_INDEX_MAX = PLAYER_TEXTURE_THREAD_FRONT_MAX;
+static const int RESULT_RIMO_LOSE_INDEX_MIN = PLAYER_TEXTURE_THREAD_FRONT_MAX;
 // プレイヤの勝ちアニメーションの最小インデックス
 static const int RESULT_RIMO_WIN_INDEX_MAX = 9;
 static const int RESULT_RIMO_WIN_INDEX_MIN = 6;
@@ -463,12 +463,6 @@ void CResult::InitializeBG(void){
 		RESULT_LOGO_SIZE.x, RESULT_LOGO_SIZE.y,
 		TEXTURE_RESULT_LOGO, TYPE_PRIORITY_GOAL);
 
-	// 勝者に当てるライト
-	m_pLight = CScene2D::Create(m_pD3DDevice,
-		RESULT_LIGHT_POS[m_nWinPlayerNum],
-		RESULT_LIGHT_SIZE.x, RESULT_LIGHT_SIZE.y,
-		TEXTURE_RESULT_LIGHT, TYPE_PRIORITY_FIELD);
-
 	// くるくるライトの作成
 	for (int i = 0; i < RESULT_CIRCLE_LIGHT_MAX; i++){
 		// サイズ決定
@@ -483,8 +477,8 @@ void CResult::InitializeBG(void){
 		m_vCircleVelo[i].x = mersenne_twister_float(RESULT_CIRCLE_LIGHT_VELO_MIN, RESULT_CIRCLE_LIGHT_VELO_MAX);
 		m_vCircleVelo[i].y = mersenne_twister_float(RESULT_CIRCLE_LIGHT_VELO_MIN, RESULT_CIRCLE_LIGHT_VELO_MAX);
 		// 遅すぎる奴をなくす
-		(m_vCircleVelo[i].x < 0) ? m_vCircleVelo[i].x -= 1.5f : m_vCircleVelo[i].x += 1.5f;
-		(m_vCircleVelo[i].y < 0) ? m_vCircleVelo[i].y -= 1.5f : m_vCircleVelo[i].y += 1.5f;
+		(m_vCircleVelo[i].x < 0) ? m_vCircleVelo[i].x -= 1.0f : m_vCircleVelo[i].x += 1.0f;
+		(m_vCircleVelo[i].y < 0) ? m_vCircleVelo[i].y -= 1.0f : m_vCircleVelo[i].y += 1.0f;
 		// 色を付ける
 		m_pCircleLight[i]->SetColorPolygon(
 			PLAYER_COLOR[m_nWinPlayerNum] + D3DXCOLOR(
@@ -493,6 +487,18 @@ void CResult::InitializeBG(void){
 			mersenne_twister_float(0.2f, 0.7f),
 			mersenne_twister_float(0.2f, 0.7f)));
 	}
+
+	// このさき引き分けならいらない
+	if (m_nWinPlayerNum == -1){
+		return;
+	}
+
+	// 勝者に当てるライト
+	m_pLight = CScene2D::Create(m_pD3DDevice,
+		RESULT_LIGHT_POS[m_nWinPlayerNum],
+		RESULT_LIGHT_SIZE.x, RESULT_LIGHT_SIZE.y,
+		TEXTURE_RESULT_LIGHT, TYPE_PRIORITY_FIELD);
+
 }
 
 //----EOF----
