@@ -12,6 +12,7 @@
 #include "../CSCENE/CScene2D.h"
 #include "../CSCENE/CSceneAnime.h"
 #include "../GAME/PLAYER/CPlayer.h"
+#include "../GAME/PLAYER/AI/mersenne_twister.h"
 
 //*****************************************************************************
 // 定数
@@ -26,18 +27,18 @@ enum PlayerResult{
 // リモアニメーションの大きさ
 static const D3DXVECTOR2 RESULT_RIMO_SIZE[PLAYER_RESULT_MAX] = {
 	// 勝者のサイズ
-	D3DXVECTOR2(150, 150),
+	D3DXVECTOR2(150, 300),
 	// 敗者のサイズ
-	D3DXVECTOR2(100, 100),
+	D3DXVECTOR2(100, 200),
 	// 引き分けのサイズ
-	D3DXVECTOR2(125, 125),
+	D3DXVECTOR2(75, 150),
 };
 // リモアニメーションの座標
 static const D3DXVECTOR3 RESULT_RIMO_POS[PLAYER_MAX] = {
 	// 勝者の位置
-	D3DXVECTOR3( 250, 400, 0),
-	D3DXVECTOR3( 500, 400, 0),
-	D3DXVECTOR3( 750, 400, 0),
+	D3DXVECTOR3(250, 400, 0),
+	D3DXVECTOR3(500, 400, 0),
+	D3DXVECTOR3(750, 400, 0),
 	D3DXVECTOR3(1000, 400, 0),
 };
 // メニューの座標
@@ -47,7 +48,7 @@ static const D3DXVECTOR2 RESULT_MENU_SIZE = D3DXVECTOR2(500, 600);
 // PUSH2Dの大きさ
 static const D3DXVECTOR2 RESULT_PUSH_SIZE = D3DXVECTOR2(180, 80);
 // PUSH2Dの調整位置
-static const D3DXVECTOR3 RESULT_PUSH_ADDPOS = D3DXVECTOR3(0, 100, 0);
+static const D3DXVECTOR3 RESULT_PUSH_ADDPOS = D3DXVECTOR3(0, 250, 0);
 // プレイヤのアニメーションのスピード
 static const int RESULT_RIMO_ANIME_SPEED = 10;
 // プレイヤの負けアニメーションのインデックス
@@ -77,6 +78,27 @@ static const D3DXVECTOR3 RESULT_MENU_MOJI_POS[RESULT_MENU_MAX] = {
 	D3DXVECTOR2(SCREEN_WIDTH * 0.5f, 360),	// キャラセレクト
 	D3DXVECTOR2(SCREEN_WIDTH * 0.5f, 550),	// ステージセレクト
 };
+
+// ロゴの大きさ
+static const D3DXVECTOR2 RESULT_LOGO_SIZE = D3DXVECTOR2(800, 150);
+// ロゴの座標
+static const D3DXVECTOR3 RESULT_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 75, 0);
+// 勝者に当てるライトの大きさ
+static const D3DXVECTOR2 RESULT_LIGHT_SIZE = D3DXVECTOR2(320, 640);
+// 勝者に当てるライトの座標
+static const D3DXVECTOR3 RESULT_LIGHT_POS[PLAYER_MAX] = {
+	D3DXVECTOR3(250, 350, 0),
+	D3DXVECTOR3(500, 350, 0),
+	D3DXVECTOR3(750, 350, 0),
+	D3DXVECTOR3(1000, 350, 0),
+};
+// くるくるライトの大きさ
+static const float RESULT_CIRCLE_LIGHT_SIZE_MIN = 25;
+static const float RESULT_CIRCLE_LIGHT_SIZE_MAX = 50;
+// くるくるライトの速さ
+static const float RESULT_CIRCLE_LIGHT_VELO_MIN = -3;
+static const float RESULT_CIRCLE_LIGHT_VELO_MAX = 3;
+
 //*****************************************************************************
 // コンストラクタ
 //*****************************************************************************
@@ -104,7 +126,7 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Init(DEFFAULT_FADE_POS, DEFFAULT_FADE_WIDTH, DEFFAULT_FADE_HEIGHT, TEXTURE_NULL);
 
 	// 変数の初期化
-	m_nWinPlayerNum = 2;
+	m_nWinPlayerNum = 0;
 	m_nCount = 0;
 	m_pMenuBack = NULL;
 	m_nMenuCursol = 0;
@@ -123,8 +145,15 @@ void CResult::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 		m_pMenuMoji[i] = NULL;
 	}
 
+	// 勝ったプレイヤ番号取得
+	m_nWinPlayerNum = CManager::GetWinPlayerNum();
+
+	// CPU人数を取得
+	m_nCpuNum = PLAYER_MAX - CManager::GetPlayerManualNum();
+
 	// 背景
 	InitializeBG();
+
 	// リモの勝者アニメーション初期化
 	InitializeWinAnimation();
 
@@ -171,11 +200,16 @@ void CResult::Update(void)
 			m_pPush2D[i] = CScene2D::Create(m_pD3DDevice,
 				RESULT_RIMO_POS[i] + RESULT_PUSH_ADDPOS,
 				RESULT_PUSH_SIZE.x, RESULT_PUSH_SIZE.y,
-				TEXTURE_RESULT_PUSH, TYPE_PRIORITY_GOAL);
+				TEXTURE_RESULT_PUSH, TYPE_PRIORITY_THREAD_OF_FOOTHOLD);
 			// プレイヤの色に合わせる
 			m_pPush2D[i]->SetColorPolygon(PLAYER_COLOR[i]);
 		}
-
+		// CPUがいた時はPUSHを押す
+		if (m_nCpuNum > 0){
+			for (int i = 0; i < m_nCpuNum; i++){
+				m_bPush[PLAYER_MAX - 1 - i] = true;
+			}
+		}
 	}
 	// プッシュがでてる
 	else{
@@ -193,19 +227,19 @@ void CResult::Update(void)
 		// 入力受け受け
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0)){
-			m_bPush[0] = !m_bPush[0];
+			m_bPush[0] = true;
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 1)){
-			m_bPush[1] = !m_bPush[1];
+			m_bPush[1] = true;
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 2)){
-			m_bPush[2] = !m_bPush[2];
+			m_bPush[2] = true;
 		}
 		if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
 			CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 3)){
-			m_bPush[3] = !m_bPush[3];
+			m_bPush[3] = true;
 		}
 
 		// すべてＰＵＳＨされた + メニューが出ていない状態（一回だけ通るように）
@@ -213,13 +247,13 @@ void CResult::Update(void)
 			m_pMenuBack = CScene2D::Create(m_pD3DDevice,
 				RESULT_MENU_POS,
 				RESULT_MENU_SIZE.x, RESULT_MENU_SIZE.y,
-				RESULT_MENU_TEXTURE[m_nMenuCursol], TYPE_PRIORITY_THREAD_OF_FOOTHOLD);
+				RESULT_MENU_TEXTURE[m_nMenuCursol], TYPE_PRIORITY_UI);
 			// メニューの文字
 			for (int n = 0; n < RESULT_MENU_MAX; n++){
 				m_pMenuMoji[n] = CScene2D::Create(m_pD3DDevice,
 					RESULT_MENU_MOJI_POS[n],
 					RESULT_MENU_SIZE.x, RESULT_MENU_SIZE.y,
-					RESULT_MENU_MOJI_TEXTURE[n], TYPE_PRIORITY_PLAYER + n);
+					RESULT_MENU_MOJI_TEXTURE[n], TYPE_PRIORITY_PAUSE);
 			}
 
 			// つぎの選択メニューが出ている状態の分岐に連続フレームで通らないように脱出
@@ -289,6 +323,23 @@ void CResult::Update(void)
 				m_pManager->SetNextPhase(MODE_PHASE_STAGE_SELECT);
 		}
 	}
+	// くるくるライトのうごき
+	for (int i = 0; i < RESULT_CIRCLE_LIGHT_MAX; i++){
+		// 移動
+		D3DXVECTOR3 pos = m_pCircleLight[i]->GetPos();
+		pos.x += m_vCircleVelo[i].x;
+		pos.y += m_vCircleVelo[i].y;
+		m_pCircleLight[i]->SetPos(pos);
+		// 移動量反転
+		if ((pos.y - m_vCircleSizeHalf[i] < 0) ||
+			(pos.y + m_vCircleSizeHalf[i] > SCREEN_HEIGHT)){
+			m_vCircleVelo[i].y *= -1.0f;
+		}
+		if ((pos.x - m_vCircleSizeHalf[i] < 0) ||
+			(pos.x + m_vCircleSizeHalf[i] > SCREEN_WIDTH)){
+			m_vCircleVelo[i].x *= -1.0f;
+		}
+	}
 }
 
 //*****************************************************************************
@@ -318,8 +369,8 @@ void CResult::InitializeWinAnimation(void){
 			m_pPlayerAnime[i] = CSceneAnime::Create(m_pD3DDevice,
 				RESULT_RIMO_POS[i],
 				RESULT_RIMO_SIZE[DRAW].x, RESULT_RIMO_SIZE[DRAW].y,
-				TEXTURE_PLAYER, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y,
-				RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_BG);
+				TEXTURE_PLAYER, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
+				RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_PLAYER);
 		}
 
 	}
@@ -331,16 +382,16 @@ void CResult::InitializeWinAnimation(void){
 				m_pPlayerAnime[i] = CSceneAnime::Create(m_pD3DDevice,
 					RESULT_RIMO_POS[i],
 					RESULT_RIMO_SIZE[WIN].x, RESULT_RIMO_SIZE[WIN].y,
-					TEXTURE_PLAYER, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y,
-					RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_BG);
+					TEXTURE_PLAYER, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
+					RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_PLAYER);
 			}
 			// 負けた人のアニメ
 			else{
 				m_pPlayerAnime[i] = CSceneAnime::Create(m_pD3DDevice,
 					RESULT_RIMO_POS[i],
 					RESULT_RIMO_SIZE[LOSE].x, RESULT_RIMO_SIZE[LOSE].y,
-					TEXTURE_PLAYER, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y,
-					RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_BG);
+					TEXTURE_PLAYER, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y,
+					RESULT_RIMO_ANIME_SPEED, -1, TYPE_PRIORITY_PLAYER);
 			}
 		}
 	}
@@ -393,10 +444,48 @@ void CResult::UpdateWinAnimation(void){
 // 背景初期化
 //-----------------------------------------------------------------------------
 void CResult::InitializeBG(void){
+	// 背景
 	m_pBG = CScene2D::Create(m_pD3DDevice,
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
 		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
 		TEXTURE_BG_RESULT, TYPE_PRIORITY_BG);
+
+	// キャラ選択っていうロゴ表示
+	m_pLogo = CScene2D::Create(m_pD3DDevice,
+		RESULT_LOGO_POS,
+		RESULT_LOGO_SIZE.x, RESULT_LOGO_SIZE.y,
+		TEXTURE_RESULT_LOGO, TYPE_PRIORITY_GOAL);
+
+	// 勝者に当てるライト
+	m_pLight = CScene2D::Create(m_pD3DDevice,
+		RESULT_LIGHT_POS[m_nWinPlayerNum],
+		RESULT_LIGHT_SIZE.x, RESULT_LIGHT_SIZE.y,
+		TEXTURE_RESULT_LIGHT, TYPE_PRIORITY_FIELD);
+
+	// くるくるライトの作成
+	for (int i = 0; i < RESULT_CIRCLE_LIGHT_MAX; i++){
+		// サイズ決定
+		float size = mersenne_twister_float(RESULT_CIRCLE_LIGHT_SIZE_MIN, RESULT_CIRCLE_LIGHT_SIZE_MAX);
+		m_pCircleLight[i] = CScene2D::Create(m_pD3DDevice,
+			D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
+			size, size,
+			TEXTURE_RESULT_CIRCLE_LIGHT, TYPE_PRIORITY_EFFECT);
+		// 当たり判定用に半分の大きさを保存
+		m_vCircleSizeHalf[i] = size * 0.5f;
+		// 移動量決定
+		m_vCircleVelo[i].x = mersenne_twister_float(RESULT_CIRCLE_LIGHT_VELO_MIN, RESULT_CIRCLE_LIGHT_VELO_MAX);
+		m_vCircleVelo[i].y = mersenne_twister_float(RESULT_CIRCLE_LIGHT_VELO_MIN, RESULT_CIRCLE_LIGHT_VELO_MAX);
+		// 遅すぎる奴をなくす
+		(m_vCircleVelo[i].x < 0) ? m_vCircleVelo[i].x -= 1.5f : m_vCircleVelo[i].x += 1.5f;
+		(m_vCircleVelo[i].y < 0) ? m_vCircleVelo[i].y -= 1.5f : m_vCircleVelo[i].y += 1.5f;
+		// 色を付ける
+		m_pCircleLight[i]->SetColorPolygon(
+			PLAYER_COLOR[m_nWinPlayerNum] + D3DXCOLOR(
+			mersenne_twister_float(0.2f, 0.7f),
+			mersenne_twister_float(0.2f, 0.7f),
+			mersenne_twister_float(0.2f, 0.7f),
+			mersenne_twister_float(0.2f, 0.7f)));
+	}
 }
 
 //----EOF----

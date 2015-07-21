@@ -16,7 +16,7 @@
 // ’è”
 //*****************************************************************************
 // ƒQ[ƒ€ƒƒS
-static const float TITLE_LOGO_WIDTH = 1200;
+static const float TITLE_LOGO_WIDTH = 1000;
 static const float TITLE_LOGO_HEIGHT = 370;
 static const D3DXVECTOR3 TITLE_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 180, 0);
 static const short TITLE_YURE = 10;
@@ -200,7 +200,7 @@ void CTitle::Update(void)
 
 	// ƒƒjƒ…[‚ªo‚Ä‚¢‚éó‘Ô
 	if (m_bPushed){
-		if (CInputKeyboard::GetKeyboardTrigger(DIK_DOWN) ||
+		if (CInputKeyboard::GetKeyboardTrigger(DIK_S) ||
 			CControllerManager::GetReleaseKey(CInputGamePad::LEFT_STICK_DOWN, 0)){
 			m_nCursol++;
 			if (m_nCursol == TITLE_MENU_MAX){
@@ -208,7 +208,7 @@ void CTitle::Update(void)
 			}
 			m_pCursol->SetPos(TITLE_CURSOL_POS[m_nCursol]);
 		}
-		else if (CInputKeyboard::GetKeyboardTrigger(DIK_UP) ||
+		else if (CInputKeyboard::GetKeyboardTrigger(DIK_W) ||
 			CControllerManager::GetReleaseKey(CInputGamePad::LEFT_STICK_UP, 0)){
 			m_nCursol--;
 			if (m_nCursol < 0){

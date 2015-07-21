@@ -18,7 +18,7 @@
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
-static const MODE_PHASE INIT_MODE = MODE_PHASE_RESULT;	// 最初のフェイズ
+static const MODE_PHASE INIT_MODE = MODE_PHASE_CHARA_SELECT;	// 最初のフェイズ
 
 //*****************************************************************************
 // スタティックメンバ変数
@@ -29,6 +29,12 @@ CSound*			CManager::m_pSound = NULL;
 MODE_PHASE		CManager::m_CurPhase = MODE_PHASE_NULL;
 MODE_PHASE		CManager::m_NextPhase = MODE_PHASE_NULL;
 volatile bool	CManager::m_bEndload = false;
+int				CManager::m_nWinPlayerNum = -1;
+short			CManager::m_nPlayerNumManual;
+short			CManager::m_nPlayerNumCpu;
+short			CManager::m_nJoinNum;
+int				CManager::m_nStageNum;
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -44,6 +50,7 @@ CManager ::CManager(void)
 	#endif
 	m_pNowLoading = NULL;
 	m_bEndload = false;
+	m_nWinPlayerNum = 1;
 }
 
 //=============================================================================
@@ -62,6 +69,10 @@ HRESULT CManager ::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	m_sendParam.hInstance = hInstance;
 	m_sendParam.hWnd = hWnd;
 	m_sendParam.bWindow = bWindow;
+	m_nWinPlayerNum = 0;
+	m_nPlayerNumManual = 0;
+	m_nPlayerNumCpu = 0;
+	m_nJoinNum = 0;
 
 	m_pRenderer = new CRenderer;
 	if(m_pRenderer->Init(hWnd, bWindow) == E_FAIL)

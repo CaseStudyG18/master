@@ -16,6 +16,12 @@ static const float PLAYER_DEFAULT_HP = 500.0f; 	// プレイヤーのデフォルトの体力
 static const float PLAYER_DEFAULT_MP = 300.0f;	// プレイヤーのデフォルトの変形用ポイント
 static const bool PLAYER_MANUAL = TRUE;		  	// プレイヤー操作マニュアル
 static const bool PLAYER_COMPUTER = FALSE;	  	// プレイヤー操作AUTO
+// プレイヤーの移動速度(仮)
+static const float PLAYER_SPEED = 6.0f;
+
+// プレイヤーが移動特化状態になった時の係数(仮)
+static const float PLAYER_MODE_SPEED_COEFFICIENT = 1.5f;
+
 
 #define PLAYER_OPERATION	BOOL				// プレイヤーの操作フラグ
 
@@ -120,9 +126,23 @@ static const short PLAYER_HP_STATE_FLASH_INTERVAL[] = {
 	12,	// PLAYER_VERY_LOW
 	-1	// PLAYER_DIE
 };
-static const int PLAYER_TEXTURE_SEP_X = 6;
-static const int PLAYER_TEXTURE_SEP_Y = 3;
+// プレイヤのテクスチャ分け数
+static const int PLAYER_WALK_TEXTURE_SEP_X = 6;
+static const int PLAYER_WALK_TEXTURE_SEP_Y = 3;
+static const int PLAYER_ATTACK_TEXTURE_SEP_X = 6;
+static const int PLAYER_ATTACK_TEXTURE_SEP_Y = 4;
+// プレイヤの正面テクスチャインデックス キャラセレクトとかでもつかう
+static const int PLAYER_STOP_TEXTURE_MIN = 5;
+static const int PLAYER_STOP_TEXTURE_MAX = 5;
+static const int PLAYER_WALK_TEXTURE_MIN = 6;
+static const int PLAYER_WALK_TEXTURE_MAX = 9;
+static const int PLAYER_ATTACK_TEXTURE_MIN = 0;
+static const int PLAYER_ATTACK_TEXTURE_MAX = 3;
+static const int PLAYER_THREAD_TEXTURE_MIN = 12;
+static const int PLAYER_THREAD_TEXTURE_MAX = 14;
 
+// プレイヤのアニメスピード
+static const int PLAYER_ANIME_SPEED = 10;
 //-----------------------------------------------------------------------------
 // 前方宣言
 //-----------------------------------------------------------------------------
@@ -213,6 +233,9 @@ public:
 
 	// 体力セッター
 	void AddHp(float fPoint);
+
+	// MPセッター
+	void AddMp(float fPoint);
 
 	// MP減少用関数
 	void MPReduce(void);
@@ -317,6 +340,7 @@ private:
 	CMp*					m_pMp;				// MPゲージ
 	C_CPU_AI*				m_pAI;				// AI
 	CPlayerManager*			m_pPlayerManager;	// プレイヤーマネージャー
+	int						m_nCoolTime;		// 攻撃などのクールタイム（動けない）
 
 	// 赤くする系
 	short					m_nRedCount;		// 赤くするためにカウント

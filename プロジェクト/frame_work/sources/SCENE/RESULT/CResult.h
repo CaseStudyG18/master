@@ -24,6 +24,9 @@ enum RESULT_MENU{
 	RESULT_MENU_MAX
 };
 
+// くるくるライトの数
+static const int RESULT_CIRCLE_LIGHT_MAX = 50;
+
 //*****************************************************************************
 // 前方宣言
 //*****************************************************************************
@@ -70,9 +73,11 @@ private:
 	void InitializeWinAnimation();
 	// リモの勝者アニメーション更新
 	void UpdateWinAnimation();
-	
+
 	// 背景
 	CScene2D* m_pBG;
+	// ロゴ
+	CScene2D* m_pLogo;
 	// プッシュ文字
 	CScene2D *m_pPush2D[PLAYER_MAX];
 	// メニュー文字
@@ -85,7 +90,7 @@ private:
 	int m_nWinPlayerNum;
 	// プレイヤーアニメーションのテクスチャ番号
 	int m_nTextureIndex[PLAYER_MAX];
-	// プレイヤアニメーションの手k数茶変更するためのカウント
+	// プレイヤアニメーションのテクスチャ変更するためのカウント
 	int m_nTextureCount[PLAYER_MAX];
 	// アニメーションから自動で遷移するカウント
 	int m_nCount;
@@ -101,6 +106,16 @@ private:
 	D3DXVECTOR2 m_vMojiSize;
 	// そのフラグ
 	bool m_bMojiScale;
+	// CPUの数
+	short m_nCpuNum;
+	// 勝者に当てるライト
+	CScene2D* m_pLight;
+	// くるくるライト
+	CScene2D* m_pCircleLight[RESULT_CIRCLE_LIGHT_MAX];
+	// くるくるらいとの移動量
+	D3DXVECTOR2 m_vCircleVelo[RESULT_CIRCLE_LIGHT_MAX];
+	// くるくるライトの大きさ
+	float m_vCircleSizeHalf[RESULT_CIRCLE_LIGHT_MAX];
 
 };
 

@@ -78,8 +78,8 @@ void CJudge::ColiFieldxPlayer(void)
 		D3DXVECTOR2 pos(pPlayer[playerCount]->GetPos().x, pPlayer[playerCount]->GetPos().y);
 		pos.y += pPlayer[playerCount]->GetHeight() * 0.25f;
 		float rot = pPlayer[playerCount]->GetRot().z;
-		float width = pPlayer[playerCount]->GetWidth() * 0.5f;
-		float height = pPlayer[playerCount]->GetHeight() * 0.25f;
+		float width = pPlayer[playerCount]->GetWidth() * 0.25f;
+		float height = pPlayer[playerCount]->GetHeight() * 0.15f;
 
 		// OBB情報作成
 		CreateOBBInfo(&playerOBB[playerCount], &pos, &rot, &width, &height);
@@ -227,45 +227,28 @@ void CJudge::ColiFieldxPlayer(void)
 				}
 			}
 		}
-		D3DXVECTOR3 setPlayerPos = pPlayer[idx]->GetOldPos();
-		//D3DXVECTOR3 vecPlayer(0.f, 0.f, 0.f);
-		//D3DXVec2Normalize(&vertexSegment.v, &vertexSegment.v);
-		//D3DXVECTOR3 culcVec(fabs(vertexSegment.v.x)
-		//					, fabs(vertexSegment.v.y)
-		//					, 0.f);
-		//if (CInputGamePad::CheckConectPad(idx))
-		//{
-		//	if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_UP, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(-0.5f, -0.5f, 0.f);
-		//	}
-		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_DOWN, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(-0.5f, 0.5f, 0.f);
-		//	}
-		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_UP, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(0.5f, -0.5f, 0.f);
-		//	}
-		//	else if (CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_DOWN, idx))
-		//	{
-		//		vecPlayer = D3DXVECTOR3(0.5f, 0.5f, 0.f);
-		//	}
-		//}
-		//
-		//float ans = vecPlayer.x * culcVec.x;
-		//if (fabs(ans) < 1.0f)
-		//{
-		//	ans = 0.f;
-		//}
-		//setPlayerPos.x += ans * 3.f;
-		//ans = vecPlayer.y * culcVec.y;
-		//if (fabs(ans) < 1.0f)
-		//{
-		//	ans = 0.f;
-		//}
-		//setPlayerPos.y += ans * 3.f;
-		//setPlayerPos.y += vecPlayer.y * culcVec.y;
+
+		D3DXVECTOR3 oldPlayerPos = pPlayer[idx]->GetOldPos();
+		D3DXVECTOR3 setPlayerPos = oldPlayerPos;
+		D3DXVECTOR3 currentPlayerPos = pPlayer[idx]->GetPos();
+		D3DXVECTOR2 playerVec = (D3DXVECTOR2)(currentPlayerPos - oldPlayerPos);
+		D3DXVec2Normalize(&playerVec, &playerVec);
+		playerVec.x = fabs(playerVec.x);
+		playerVec.y = fabs(playerVec.y);
+		D3DXVECTOR2 vertexVec = vertexSegment.v;
+		D3DXVec2Normalize(&vertexVec, &vertexVec);
+		vertexVec.x = fabs(vertexVec.x);
+		vertexVec.y = fabs(vertexVec.y);
+
+		if (D3DXVec2Dot(&playerVec, &vertexVec) >= 0.5f)
+		{
+			playerSegment.s = (D3DXVECTOR2)oldPlayerPos;
+			playerSegment.v = (D3DXVECTOR2)(currentPlayerPos - oldPlayerPos);
+			ColiRayxRay(playerSegment, vertexSegment, &hitPos);
+			setPlayerPos.x = hitPos.x;
+			setPlayerPos.y = hitPos.y - pPlayer[idx]->GetHeight() * 0.25f;
+			pPlayer[idx]->SetPos(setPlayerPos);
+		}
 
 		pPlayer[idx]->SetPos(setPlayerPos);
 	}
@@ -282,7 +265,6 @@ void CJudge::ColiAttackxPlayer(void){
 	CScene2D *pAttack;
 	CJudge::OBB_INFO playerOBB[MAXIMUM_NUMBER_OF_PLAYER];
 	int playerNum = 0;
-	bool coli[MAXIMUM_NUMBER_OF_PLAYER] = { false };
 
 	// プレイヤー情報入れる
 	CPlayerManager* playerManager = m_pJudgeManager->GetPlayerManager();
@@ -338,8 +320,9 @@ void CJudge::ColiAttackxPlayer(void){
 			// 当たり判定
 			for (int idx = 0; idx < playerNum; ++idx)
 			{
-				// すでにあたってるなら判定しない
-				if (coli[idx])
+				// 既にそのプレイヤーにあったてるならやらない
+				bool hit = pAttackBase->GetHitFlag(idx);
+				if (hit == true)
 				{
 					continue;
 				}
@@ -352,16 +335,8 @@ void CJudge::ColiAttackxPlayer(void){
 
 				if (IsOBB(playerOBB[idx], attackOBB))
 				{
-					// ヒットフラグオン
-					coli[idx] = true;
-
 					// 当たった時の処理
-					// これでいいのかな？
-					pPlayer[idx]->SetPlyerKnockBack();
-
-#ifdef _DEBUG
-					CDebugProc::Print("攻撃ヒット\n");
-#endif
+					pAttackBase->HitPlayer(pPlayer[idx]);
 				}
 			}
 
@@ -501,8 +476,8 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 			pThread = (CScene2D*)pSceneThread;
 			D3DXVECTOR2 pos(pThread->GetPos().x, pThread->GetPos().y);
 			float rot = pThread->GetRot().z;
-			float width = pThread->GetWidth();
-			float height = pThread->GetHeight();
+			float width = pThread->GetWidth() * 0.8f;
+			float height = pThread->GetHeight() * 0.8f;
 			CThreadBase* threadBase = (CThreadBase*)pSceneThread;
 			int playerNum = threadBase->GetPlayerNum();
 			lastCheckField = m_LastFieldColiPlayer[playerNum];
@@ -572,7 +547,7 @@ void CJudge::ColiFieldxThreadOfFoothold(void)
 							pThread->SetObjType(CScene::OBJTYPE_FIELD);
 
 							// 道作成エフェクト生成
-							CEffectManager::CreateEffect(pThread->GetPos(), EFFECT_CREATE_ROAD , D3DXVECTOR3(0.0f,0.0f,0.0f));
+							CEffectManager::CreateEffect(pThread->GetPos(), EFFECT_CREATE_ROAD, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 							hit = true;
 							break;
@@ -669,6 +644,8 @@ void CJudge::ColiTreasurexPlayer(void)
 			}
 
 			// OBB情報作成
+			pos.y += pTreasure->GetHeight() * 0.25f;
+			height *= 0.5f;
 			CreateOBBInfo(&treasureOBB, &pos, &rot, &width, &height);
 
 			// 当たり判定
@@ -703,7 +680,7 @@ void CJudge::ColiTreasurexPlayer(void)
 				// プレイヤにお宝を渡す
 				pPlayer[idx]->SetTreasure(pTreasure);
 				pTreasure->SetTreasureState(TREASURE_STATE_OWNED);
-				CEffectManager::CreateEffect(pPlayer[idx]->GetPos(), EFFECT_FLAG_GET,D3DXVECTOR3(0.0f,0.0f,0.0f));
+				CEffectManager::CreateEffect(pPlayer[idx]->GetPos(), EFFECT_FLAG_GET, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 				break;
 			}
 		}
@@ -932,8 +909,6 @@ void CJudge::ColiFieldxTreasure(void)
 	// 全フィールドと当たり判定をして当たらなかったら宝をはねさせる
 	if (!coli){
 		pTreasure->SetFall();
-	
-//		pTreasure->SetPos(pTreasure->GetPos() + D3DXVECTOR3(0, 1, 0));
 	}
 
 	// 次のインスタンスを対象のインスタンスにする

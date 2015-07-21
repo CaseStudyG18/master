@@ -57,6 +57,7 @@ void CEffectNormalAttackThread::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectNormalAttackThread::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

@@ -232,8 +232,13 @@ void COption::Update(void)
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
 
-		// ゲームヘ
-		m_pManager->SetNextPhase(MODE_PHASE_GAME);
+		// キャラ選択へ戻る
+		m_pManager->SetNextPhase(MODE_PHASE_CHARA_SELECT);
+	}
+
+	// デバッグでENTERでキャラ選択へ
+	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN)){
+		m_mode = OPTION_MODE_NEXT_SCENE;
 	}
 }
 

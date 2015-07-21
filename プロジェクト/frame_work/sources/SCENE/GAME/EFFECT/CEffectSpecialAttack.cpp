@@ -17,14 +17,14 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-static const int ATTACK_ATTACK_COUNT_MAX = 360;
+static const int ATTACK_ATTACK_COUNT_MAX = 30;
 static const float ATTACK_ATTACK_WIDTH = 50;
 static const float ATTACK_ATTACK_HEIGHT = 50;
-static const TEXTURE_TYPE ATTACK_ATTACK_TEXTURE = TEXTURE_ATTACK_AROUND;
-static const int ATTACK_ATTACK_TEXTURE_X = 5;
+static const TEXTURE_TYPE ATTACK_ATTACK_TEXTURE = TEXTURE_FIRE_1;
+static const int ATTACK_ATTACK_TEXTURE_X = 10;
 static const int ATTACK_ATTACK_TEXTURE_Y = 1;
 static const int ATTACK_ATTACK_TEXTURE_LOOP = 10;
-static const float ATTACK_ATTACK_RADIUS = 50;
+static const float ATTACK_ATTACK_RADIUS = 75;
 
 //*****************************************************************************
 // コンストラクタ
@@ -59,6 +59,7 @@ void CEffectSpecialAttack::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 //*****************************************************************************
 void CEffectSpecialAttack::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************
@@ -67,9 +68,12 @@ void CEffectSpecialAttack::Uninit(void)
 void CEffectSpecialAttack::Update(void)
 {
 	if (m_nCount % 3 == 0){
+		D3DXVECTOR3 pos = m_vPos;
+		pos.x += ATTACK_ATTACK_RADIUS * 0.5f - ATTACK_ATTACK_WIDTH * 0.5f;
+		pos.y += ATTACK_ATTACK_RADIUS * 0.5f + ATTACK_ATTACK_HEIGHT * 0.5f;
 		CSceneAnime::Create(
 			m_pD3DDevice,
-			m_vPos,
+			pos,
 			ATTACK_ATTACK_WIDTH, ATTACK_ATTACK_HEIGHT,
 			ATTACK_ATTACK_TEXTURE, ATTACK_ATTACK_TEXTURE_X, ATTACK_ATTACK_TEXTURE_Y,
 			ATTACK_ATTACK_TEXTURE_LOOP);

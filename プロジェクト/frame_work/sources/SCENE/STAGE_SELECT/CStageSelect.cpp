@@ -15,27 +15,39 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
+// ロゴの大きさ
+static const D3DXVECTOR2 STAGE_SELECT_LOGO_SIZE = D3DXVECTOR2(800, 150);
+// ロゴの座標
+static const D3DXVECTOR3 STAGE_SELECT_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 75, 0);
 // ステージ絵の大きさ
-static const float STAGE_SELECT_WIDTH = 400;
-static const float STAGE_SELECT_HEIGHT = 250;
+static const float STAGE_SELECT_WIDTH = 200;
+static const float STAGE_SELECT_HEIGHT = 200;
 // ステージ絵の座標（左上、右上、左下、右下）
-static const float STAGE_SELECT_WIDTH_ONE = SCREEN_WIDTH / 4;
+static const float STAGE_SELECT_WIDTH_ONE = SCREEN_WIDTH / 5;
 static const D3DXVECTOR3 STAGE_SELECT_POS[] = {
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 200, 0),
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 200, 0),
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 500, 0),
-	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 500, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 2, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 4, 300, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 1, 550, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 2, 550, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 3, 550, 0),
+	D3DXVECTOR3(STAGE_SELECT_WIDTH_ONE * 4, 550, 0),
 };
 // ステージ絵のテクスチャ（左上、右上、左下、右下）
 static const TEXTURE_TYPE STAGE_SELECT_TEX[] = {
-	TEXTURE_STAGE_0,
 	TEXTURE_STAGE_1,
 	TEXTURE_STAGE_2,
 	TEXTURE_STAGE_3,
+	TEXTURE_STAGE_4,
+	TEXTURE_STAGE_5,
+	TEXTURE_STAGE_6,
+	TEXTURE_STAGE_7,
+	TEXTURE_STAGE_8,
 };
 // 選択枠の大きさ、色
-static const float STAGE_SELECT_FRAME_WIDTH = 420;
-static const float STAGE_SELECT_FRAME_HEIGHT = 270;
+static const float STAGE_SELECT_FRAME_WIDTH = STAGE_SELECT_WIDTH + 20;
+static const float STAGE_SELECT_FRAME_HEIGHT = STAGE_SELECT_HEIGHT + 20;
 static const D3DXCOLOR STAGE_SELECT_FRAME_COLOR = D3DXCOLOR(0.9f, 0.1f, 0.0f, 0.0f);
 // 選択枠のアルファ変更スピード
 static const float STAGE_SELECT_FRAME_AALPHA_SPEED = 0.05f;
@@ -70,27 +82,30 @@ void CStageSelect::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// 背景
-	m_pBG = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_BG);
-	m_pBG->Init(
+	m_pBG = CScene2D::Create(m_pD3DDevice,
 		D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0),
 		static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT),
-		TEXTURE_BG_STAGE_SELECT);
+		TEXTURE_BG_STAGE_SELECT, TYPE_PRIORITY_BG);
+
+	// ロゴ
+	m_pLogo = CScene2D::Create(m_pD3DDevice,
+		STAGE_SELECT_LOGO_POS,
+		STAGE_SELECT_LOGO_SIZE.x, STAGE_SELECT_LOGO_SIZE.y,
+		TEXTURE_STAGE_SELECT_LOGO, TYPE_PRIORITY_FIELD);
 
 	// 各ステージの絵
 	for (int i = 0; i < STAGE_MAX; i++){
-		m_pStage2D[i] = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_UI);
-		m_pStage2D[i]->Init(
+		m_pStage2D[i] = CScene2D::Create(m_pD3DDevice,
 			STAGE_SELECT_POS[i],
 			STAGE_SELECT_WIDTH, STAGE_SELECT_HEIGHT,
-			STAGE_SELECT_TEX[i]);
+			STAGE_SELECT_TEX[i], TYPE_PRIORITY_UI);
 	}
 
 	// 選択中の枠 PRIORITY_UIよりも前に表示したいからEFFECTにした
-	m_pFrame2D = new CScene2D(m_pD3DDevice, TYPE_PRIORITY_EFFECT);
-	m_pFrame2D->Init(
+	m_pFrame2D = CScene2D::Create(m_pD3DDevice,
 		STAGE_SELECT_POS[0],
 		STAGE_SELECT_FRAME_WIDTH, STAGE_SELECT_FRAME_HEIGHT,
-		TEXTURE_NULL);
+		TEXTURE_NULL, TYPE_PRIORITY_EFFECT);
 
 	// 選択中の枠に色設定
 	m_FrameColor = STAGE_SELECT_FRAME_COLOR;
@@ -124,18 +139,21 @@ void CStageSelect::Update(void)
 	// フェイズの更新
 	CPhase::Update();
 
+	// 選択の更新
+	UpdateSelect();
+
+	// 決定ボタンを押したら
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_RETURN) ||
-		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0))
-	{
+		CInputGamePad::GetGamePadTrigger(CInputGamePad::KEY_DECIDE, 0)){
+
+		// 選択したステージ番号をセット
+		CManager::SetStageNum(m_nSelectNum);
+
 		// フェードアウト開始
 		m_pFade->Start(MODE_FADE_OUT, DEFFAULT_FADE_OUT_COLOR, DEFFAULT_FADE_TIME);
-
 		// ゲームヘ
 		m_pManager->SetNextPhase(MODE_PHASE_GAME);
 	}
-
-	// 選択の更新
-	UpdateSelect();
 }
 
 //*****************************************************************************
@@ -163,38 +181,32 @@ void CStageSelect::UpdateSelect(){
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_A) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_LEFT, 0)){
 		if (m_nSelectNum == 0)
-			m_nSelectNum = 1;
-		else if (m_nSelectNum == 2)
 			m_nSelectNum = 3;
+		else if (m_nSelectNum == 4)
+			m_nSelectNum = 7;
 		else
 			m_nSelectNum--;
 	}
 	else if (CInputKeyboard::GetKeyboardTrigger(DIK_D) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_RIGHT, 0)){
-		if (m_nSelectNum == 1)
+		if (m_nSelectNum == 3)
 			m_nSelectNum = 0;
-		else if (m_nSelectNum == 3)
-			m_nSelectNum = 2;
+		else if (m_nSelectNum == 7)
+			m_nSelectNum = 4;
 		else
 			m_nSelectNum++;
 	}
 	if (CInputKeyboard::GetKeyboardTrigger(DIK_W) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_UP, 0)){
-		if (m_nSelectNum == 0)
-			m_nSelectNum = 2;
-		else if (m_nSelectNum == 1)
-			m_nSelectNum = 3;
-		else
-			m_nSelectNum -= 2;
+			m_nSelectNum -= 4;
+			if (m_nSelectNum < 0)
+				m_nSelectNum += STAGE_MAX;
 	}
 	else if (CInputKeyboard::GetKeyboardTrigger(DIK_S) ||
 		CControllerManager::GetTriggerKey(CInputGamePad::LEFT_STICK_DOWN, 0)){
-		if (m_nSelectNum == 2)
-			m_nSelectNum = 0;
-		else if (m_nSelectNum == 3)
-			m_nSelectNum = 1;
-		else
-			m_nSelectNum += 2;
+		m_nSelectNum += 4;
+		if (m_nSelectNum >= STAGE_MAX)
+			m_nSelectNum -= STAGE_MAX;
 	}
 
 	// 移動の入力があったら

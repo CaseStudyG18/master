@@ -8,25 +8,20 @@
 // インクルード
 //*****************************************************************************
 #include "CThreadSpecialTrap.h"
-#include "../../CSCENE/CSceneAnime.h"
-#include "../../../MANAGER/CManager.h"
 #include "../EFFECT/CEffectManager.h"
+#include "../../../MANAGER/CManager.h"
 
 //*****************************************************************************
 // マクロ
 //*****************************************************************************
 // 寿命
-static const short THREAD_TRAP_END_TIME = 80;
-// 当たり判定の始まる時間
-static const short THREAD_TRAP_HIT_START_TIME = 60;
-// 当たり判定の終わる時間
-static const short THREAD_TRAP_HIT_END_TIME = 120;
-// 当たり判 定幅,高さ
-static const float THREAD_TRAP_HIT_WIDTH = 50;
-static const float THREAD_TRAP_HIT_HEIGHT = 50;
+static const short THREAD_TRAP_END_TIME = 300;
 
-// 弾の移動量
-static const float THREAD_TRAP_VEL = 1;
+// 当たり判定の終わる時間
+static const short THREAD_TRAP_HIT_END_TIME = 300;
+// 当たり判 定幅,高さ
+static const float THREAD_TRAP_HIT_WIDTH = 150;
+static const float THREAD_TRAP_HIT_HEIGHT = 150;
 
 
 //*****************************************************************************
@@ -119,7 +114,7 @@ CThreadSpecialTrap* CThreadSpecialTrap::Create(
 	// 初期化
 	p->Init();
 
-	CEffectManager::CreateEffect(pos, EFFECT_TRAP_FOUNDATION,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	CEffectManager::CreateEffect(pos, EFFECT_TRAP_FOUNDATION, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	return p;
 }
@@ -138,14 +133,8 @@ void CThreadSpecialTrap::Draw(void)
 //*****************************************************************************
 void CThreadSpecialTrap::HitPlayer(CPlayer* pPlayer)
 {
-#ifdef _DEBUG
-	CDebugProc::Print("罠形態の糸がプレイヤにヒット\n");
-#endif
 	// 鈍足
-	pPlayer->MPReduce();
-
-	// MP消費エフェクト生成
-	CEffectManager::CreateEffect(pPlayer->GetPos(), EFFECT_MP_ATTACK, D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pPlayer->SetSlowSpeed(true);
 }
 
 //----EOF-------

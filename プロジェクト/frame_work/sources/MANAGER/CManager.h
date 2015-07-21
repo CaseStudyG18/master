@@ -1,13 +1,13 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// CManagerƒNƒ‰ƒX [CManager.h]
-// Author : –ìK@®Šó
+// CManagerã‚¯ãƒ©ã‚¹ [CManager.h]
+// Author : é‡å°»ã€€å°šå¸Œ
 //
 //=============================================================================
 #ifndef _CMANAGER_H_
 #define _CMANAGER_H_
 //*****************************************************************************
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //*****************************************************************************
 #include "../MAIN/main.h"
 #include "../RENDERER/CRenderer.h"
@@ -16,12 +16,12 @@
 #include "../INPUT/CInputGamePad.h"
 
 //*****************************************************************************
-// ’è”
+// å®šæ•°
 //*****************************************************************************
-//ƒvƒŒƒC‚·‚él”
+//ãƒ—ãƒ¬ã‚¤ã™ã‚‹äººæ•°
 static const int PLAYER_MAX = 4;
 
-// ƒvƒŒƒCƒ„”Ô†‚É‰‚¶‚Ä…ƒgƒ‰ƒbƒv‚ÌF‚ğ•Ï‚¦‚éF
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ç•ªå·ã«å¿œã˜ã¦ç³¸ãƒˆãƒ©ãƒƒãƒ—ã®è‰²ã‚’å¤‰ãˆã‚‹è‰²
 static const D3DXCOLOR PLAYER_COLOR[] = {
 	D3DCOLOR(0xbbfbec35),
 	D3DCOLOR(0xbbf92500),
@@ -30,7 +30,7 @@ static const D3DXCOLOR PLAYER_COLOR[] = {
 };
 
 //*****************************************************************************
-// ‘O•ûéŒ¾
+// å‰æ–¹å®£è¨€
 //*****************************************************************************
 class CRenderer;
 class CNowLoading;
@@ -42,96 +42,129 @@ class CDebugProc;
 #endif
 
 //*****************************************************************************
-// ƒNƒ‰ƒX’è‹`
+// ã‚¯ãƒ©ã‚¹å®šç¾©
 //*****************************************************************************
 class CManager
 {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CManager(void);
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~CManager(void);
 
 	//=======================================================
-	// ‰Šú‰»
-	// ˆø”: ƒCƒ“ƒXƒ^ƒ“ƒXAƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹AƒEƒCƒ“ƒhƒEƒ‚[ƒh‚Å•\¦‚·‚é‚©
-	// –ß‚è’l: ¬”Û
+	// åˆæœŸåŒ–
+	// å¼•æ•°: ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ã€ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã§è¡¨ç¤ºã™ã‚‹ã‹
+	// æˆ»ã‚Šå€¤: æˆå¦
 	//=======================================================
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd, bool bWindow);
 
-	// I—¹
+	// çµ‚äº†
 	void Uninit(void);
 
-	// XV
+	// æ›´æ–°
 	void Update(void);
 
-	// •`‰æ
+	// æç”»
 	void Draw(void);
 
 	//=======================================================
-	// ƒŒƒ“ƒ_ƒ‰[ƒQƒbƒg
-	// –ß‚è’l: ƒŒƒ“ƒ_ƒ‰[‚ÌƒAƒhƒŒƒX
+	// ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚²ãƒƒãƒˆ
+	// æˆ»ã‚Šå€¤: ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
 	//=======================================================
 	static CRenderer* GetRenderer(void){return m_pRenderer;};
 
 	//=======================================================
-	// ‰¹Ä¶
-	// ˆø”: ƒTƒEƒ“ƒh‚Ìí—Ş
+	// éŸ³å†ç”Ÿ
+	// å¼•æ•°: ã‚µã‚¦ãƒ³ãƒ‰ã®ç¨®é¡
 	//=======================================================
 	static void PlaySound(SOUND_LABEL label){m_pSound->PlaySound(label);};
 
 	//=======================================================
-	// w’è‚µ‚½‰¹’â~
-	// ˆø”: ƒTƒEƒ“ƒh‚Ìí—Ş
+	// æŒ‡å®šã—ãŸéŸ³åœæ­¢
+	// å¼•æ•°: ã‚µã‚¦ãƒ³ãƒ‰ã®ç¨®é¡
 	//=======================================================
 	static void StopSound(SOUND_LABEL label){m_pSound->StopSound(label);};
 	
-	// ‰¹‘S‚Ä’â~
+	// éŸ³å…¨ã¦åœæ­¢
 	static void StopSound(void){m_pSound->StopSound();};
 
-	// ƒtƒF[ƒYØ‚è‘Ö‚¦
+	// ãƒ•ã‚§ãƒ¼ã‚ºåˆ‡ã‚Šæ›¿ãˆ
 	void ChangePhase(void);
 
-	// ƒtƒF[ƒY‚â‚è’¼‚µ
+	// ãƒ•ã‚§ãƒ¼ã‚ºã‚„ã‚Šç›´ã—
 	void RetryPhase(void);
 
-	// Œ»İ‚ÌƒtƒF[ƒYæ“¾
+	// ç¾åœ¨ã®ãƒ•ã‚§ãƒ¼ã‚ºå–å¾—
 	MODE_PHASE GetCurPhase(void){return m_CurPhase;};
 
-	// Ÿ‚ÌƒtƒF[ƒYƒZƒbƒg
+	// æ¬¡ã®ãƒ•ã‚§ãƒ¼ã‚ºã‚»ãƒƒãƒˆ
 	void SetNextPhase(MODE_PHASE phase){m_NextPhase = phase;};
 
+	// å‹ã£ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ã‚¢ã‚¯ã‚»ã‚µ
+	static void SetWinPlayerNum(int num){ m_nWinPlayerNum = num; }
+	static int GetWinPlayerNum(){ return m_nWinPlayerNum; }
+
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤äººæ•°ã®ã‚»ãƒƒã‚¿ã‚²ãƒƒã‚¿
+	static void SetPlayerNum(short manual){
+		m_nPlayerNumManual = manual;
+		m_nPlayerNumCpu = PLAYER_MAX - m_nPlayerNumManual;
+	}
+	static short GetPlayerManualNum(){
+		return m_nPlayerNumManual;
+	}
+
+	// é¸æŠã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠç•ªå·
+	static void SetStageNum(int num){
+		m_nStageNum = num;
+	}
+	static int GetStageNum(){
+		return m_nStageNum;
+	}
+	// ã‚­ãƒ£ãƒ©é¸æŠã§å‚åŠ ã—ãŸäººæ•°
+	static void SetJoinNum(short num){
+		m_nJoinNum = num;
+	}
+	static short GetJoinNum(){
+		return m_nJoinNum;
+	}
+
 private:
-	// NOW LOADING‚ÌƒXƒŒƒbƒh‚É“n‚·î•ñ\‘¢‘Ì
+	// NOW LOADINGã®ã‚¹ãƒ¬ãƒƒãƒ‰ã«æ¸¡ã™æƒ…å ±æ§‹é€ ä½“
 	typedef struct
 	{
-		CManager* pMyAddr;		// CManager‚ÌƒAƒhƒŒƒX
-		HINSTANCE hInstance;	// ƒCƒ“ƒXƒ^ƒ“ƒX
-		HWND hWnd;				// ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
-		bool bWindow;			// ƒEƒCƒ“ƒhƒEƒ‚[ƒh‚Å•\¦‚·‚é‚©
+		CManager* pMyAddr;		// CManagerã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+		HINSTANCE hInstance;	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+		HWND hWnd;				// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+		bool bWindow;			// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã§è¡¨ç¤ºã™ã‚‹ã‹
 	}SEND_LOAD_THRED_PARAM;
 
 	//===============================================
-	// ƒ[ƒhƒXƒŒƒbƒh
-	// ˆø”: NOW LOADING‚ÌƒXƒŒƒbƒh‚É“n‚·î•ñ\‘¢‘Ìƒ|ƒCƒ“ƒ^
+	// ãƒ­ãƒ¼ãƒ‰ã‚¹ãƒ¬ãƒƒãƒ‰
+	// å¼•æ•°: NOW LOADINGã®ã‚¹ãƒ¬ãƒƒãƒ‰ã«æ¸¡ã™æƒ…å ±æ§‹é€ ä½“ãƒã‚¤ãƒ³ã‚¿
 	//===============================================
 	static unsigned __stdcall LoadThred(LPVOID Param);
 
-	static CRenderer		*m_pRenderer;				// ƒŒƒ“ƒ_ƒ‰[
-	static CPhase			*m_pPhase;					// ƒtƒFƒCƒY
-	static MODE_PHASE		m_CurPhase;					// Œ»İ‚ÌƒtƒF[ƒY
-	static MODE_PHASE		m_NextPhase;				// Ÿ‚ÌƒtƒF[ƒY
-	static volatile bool	m_bEndload;					// ƒ[ƒhI—¹ƒtƒ‰ƒO
-	static CSound			*m_pSound;					// ƒTƒEƒ“ƒh
-	CInputKeyboard			*m_pInputKeyboard;			// ƒL[ƒ{[ƒh
-	CInputGamePad			*m_pInputGamePad;			// ƒQ[ƒ€ƒpƒbƒh
-	CControllerManager		*m_pControllerManager;		// ƒRƒ“ƒgƒ[ƒ‰[ƒ}ƒl[ƒWƒƒ[
-	SEND_LOAD_THRED_PARAM	m_sendParam;				// ƒ[ƒhƒXƒŒƒbƒh‚É“n‚·î•ñ
-	HANDLE					m_ThreadHandle;				// ƒXƒŒƒbƒh‚Ìƒnƒ“ƒhƒ‹
+	static CRenderer		*m_pRenderer;				// ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
+	static CPhase			*m_pPhase;					// ãƒ•ã‚§ã‚¤ã‚º
+	static MODE_PHASE		m_CurPhase;					// ç¾åœ¨ã®ãƒ•ã‚§ãƒ¼ã‚º
+	static MODE_PHASE		m_NextPhase;				// æ¬¡ã®ãƒ•ã‚§ãƒ¼ã‚º
+	static volatile bool	m_bEndload;					// ãƒ­ãƒ¼ãƒ‰çµ‚äº†ãƒ•ãƒ©ã‚°
+	static CSound			*m_pSound;					// ã‚µã‚¦ãƒ³ãƒ‰
+	CInputKeyboard			*m_pInputKeyboard;			// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰
+	CInputGamePad			*m_pInputGamePad;			// ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰
+	CControllerManager		*m_pControllerManager;		// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+	SEND_LOAD_THRED_PARAM	m_sendParam;				// ãƒ­ãƒ¼ãƒ‰ã‚¹ãƒ¬ãƒƒãƒ‰ã«æ¸¡ã™æƒ…å ±
+	HANDLE					m_ThreadHandle;				// ã‚¹ãƒ¬ãƒƒãƒ‰ã®ãƒãƒ³ãƒ‰ãƒ«
 	CNowLoading				*m_pNowLoading;				// NowLoading
-	#ifdef _DEBUG
-	CDebugProc				*m_pDebugProc;				// ƒfƒoƒbƒOƒvƒƒbƒN
+	static int				m_nWinPlayerNum;			// å‹ã£ãŸãƒ—ãƒ¬ã‚¤ãƒ¤bç•ªå·
+	static short			m_nPlayerNumManual;			// æ“ä½œã™ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤æ•°
+	static short			m_nPlayerNumCpu;			// ï¼£ï¼°ï¼µãƒ—ãƒ¬ã‚¤ãƒ¤æ•°
+	static int				m_nStageNum;				// é¸æŠã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸ç•ªå·
+	static short			m_nJoinNum;					// ã‚­ãƒ£ãƒ©é¸æŠã§å‚æˆ¦ã—ãŸäººæ•°
+#ifdef _DEBUG
+	CDebugProc				*m_pDebugProc;				// ãƒ‡ãƒãƒƒã‚°ãƒ—ãƒ­ãƒƒã‚¯
 	#endif
 };
 #endif

@@ -970,7 +970,7 @@ void C_CPU_AI::MakeFootStep(void)
 		}
 	}
 	// •ÏŒ`
-	else if (m_nTimer == BEFORE_MOVE_MAKE_FOOT_STEP_TIME)
+	else if (m_nTimer < BEFORE_MOVE_MAKE_FOOT_STEP_TIME + 5)
 	{
 		m_AIInput.changeSpeed = true;
 	}
@@ -1150,7 +1150,7 @@ void C_CPU_AI::Printstate(void)
 		break;
 
 	case AI_STATE_ATTACK_WHO:
-		CDebugProc::Print("AI_STATE:ATACK_WHO\n");
+		CDebugProc::Print("AI_STATE:ATTACK_WHO\n");
 		break;
 
 	case AI_STATE_ATTACK_HAVE_TREASURE_PLAYER:

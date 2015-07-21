@@ -56,6 +56,7 @@ void CEffectExplosion::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectExplosion::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

@@ -31,6 +31,11 @@ CAttackBase::CAttackBase(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objT
 	
 	// •Ï”‰Šú‰»
 	m_nCount = 0;
+
+	for (int i = 0; i < MAXIMUM_NUMBER_OF_PLAYER; ++i)
+	{
+		m_bHitPlayer[i] = false;
+	}
 }
 
 //*****************************************************************************
@@ -84,5 +89,12 @@ void CAttackBase::Update(void)
 //*****************************************************************************
 void CAttackBase::HitPlayer(CPlayer* pPlayer)
 {
+	int i = pPlayer->GetPlayerNum();
+	m_bHitPlayer[i] = true;
 }
+
+bool CAttackBase::GetHitFlag(int playerID)
+{
+	return m_bHitPlayer[playerID];
+};
 //----EOF-------

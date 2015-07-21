@@ -48,6 +48,7 @@ public:
 	D3DXVECTOR3 GetPos(void){ return m_vPos; };
 	void		SetPos(D3DXVECTOR3 pos);
 	void		SetPos(float x, float y, float z){ m_vPos.x = x; m_vPos.y = y; m_vPos.z = z; };
+	void		AddPos(D3DXVECTOR3 pos){ m_vPos += pos; };
 
 	// ロットアクセサ
 	D3DXVECTOR3 GetRot(void){ return m_vRot; };

@@ -55,6 +55,7 @@ void CEffectAttackHit::Init(D3DXVECTOR3 pos)
 //*****************************************************************************
 void CEffectAttackHit::Uninit(void)
 {
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************

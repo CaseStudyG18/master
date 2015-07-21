@@ -60,6 +60,7 @@ void CEffectSpecialSpeedAttack::Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity)
 void CEffectSpecialSpeedAttack::Uninit(void)
 {
 	m_pAnim = NULL;
+	CEffectBase::Uninit();
 }
 
 //*****************************************************************************
@@ -102,10 +103,6 @@ void CEffectSpecialSpeedAttack::Update(void)
 
 	// 自殺の更新
 	CEffectBase::Update();
-
-#ifdef _DEBUG
-	CDebugProc::Print("移動特化状態の攻撃のエフェクトなう\n");
-#endif
 }
 
 //*****************************************************************************

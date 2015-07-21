@@ -19,7 +19,7 @@ class CEffectManager;
 // マクロ定義
 //-----------------------------------------------------------------------------
 // プレイヤーの最大数
-static const short MAXIMUM_NUMBER_OF_PLAYER = 5;
+static const short MAXIMUM_NUMBER_OF_PLAYER = 4;
 
 //-----------------------------------------------------------------------------
 // プレイヤーマネージャクラス定義
@@ -49,7 +49,7 @@ public:
 	// プレイヤーポインタのゲッター
 	//	引数　　呼び出すプレイヤーをセットしている配列番号
 	//	戻り値　プレイヤーのポインタ
-	CPlayer* GetPlayer(int nNumber){ return m_apPlayer[nNumber]; }
+	static CPlayer* GetPlayer(int nNumber){ return m_apPlayer[nNumber]; }
 
 	// プレイヤーポインタのセッター
 	//	引数　　プレイヤーポインタ、セットする先の配列番号
@@ -57,7 +57,7 @@ public:
 
 private:
 	// プレイヤーのポインタ格納用配列
-	CPlayer* m_apPlayer[MAXIMUM_NUMBER_OF_PLAYER];
+	static CPlayer* m_apPlayer[MAXIMUM_NUMBER_OF_PLAYER];
 	// テスト用のタイマー
 	int	m_nTimer;
 

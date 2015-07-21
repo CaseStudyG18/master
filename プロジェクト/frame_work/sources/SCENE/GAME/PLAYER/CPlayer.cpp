@@ -9,23 +9,26 @@
 #include "../../../INPUT/CInputKeyboard.h"
 #include "../../../TEXTURE/CTexture.h"
 #include "../ATTACK/CAttackManager.h"
+#include "../ATTACK/CAttackSpecialAttack.h"
+#include "../ATTACK/CAttackNormal.h"
+#include "../ATTACK/CAttackSpecialSpeed.h"
+#include "../ATTACK/CAttackSpecialTrap.h"
 #include "../THREAD/CThreadManager.h"
-#include "../EFFECT/CEffectManager.h"
+#include "../THREAD/CThreadNormal.h"
+#include "../THREAD/CThreadSpecialAttack.h"
+#include "../THREAD/CThreadSpecialSpeed.h"
+#include "../THREAD/CThreadSpecialTrap.h"
 #include "../TREASURE/CTreasure.h"
 #include "../UI/CMp.h"
 #include "../../../CONTROLLER/CControllerManager.h"
 #include "../../CSCENE/CSceneAnime.h"
-#include "AI/C_CPU_AI.h"
 #include "../FIELD/CFieldManager.h"
 #include "../EFFECT/CEffectManager.h"
+#include "AI/C_CPU_AI.h"
 
 //-----------------------------------------------------------------------------
 // 定数定義
 //-----------------------------------------------------------------------------
-// プレイヤーの移動速度(仮)
-static const float PLAYER_SPEED = 8.0f;
-// プレイヤのアニメスピード
-static const int PLAYER_ANIME_SPEED = 10;
 // プレイヤーが鈍足状態になった時の係数(仮)
 static const float PLAYER_SLOW_SPEED_COEFFICIENT = 0.4f;
 // 鈍足時間 鈍足効果が一定じゃなく攻撃によって違うなら攻撃側から取得するべき
@@ -45,6 +48,33 @@ static const D3DXVECTOR3 TREASURE_ICON_POS_BUFF = D3DXVECTOR3(0, -50, 0);
 static const float MP_COST = 0.5f;
 // 1フレーム当たりのMP回復量
 static const float MP_REGAIN = 3.0f;
+
+typedef enum
+{
+	COOL_TIME_NORMAL_ATK = 0,
+	COOL_TIME_NORMAL_THREAD,
+	COOL_TIME_ATTACK_ATK,
+	COOL_TIME_ATTACK_THREAD,
+	COOL_TIME_SPEED_ATK,
+	COOL_TIME_SPEED_THREAD,
+	COOL_TIME_JAMMER_ATK,
+	COOL_TIME_JAMMER_THREAD,
+	COOL_TIME_MAX
+}COOL_TIME_TYPE;
+static const int COOL_TIME_TABALE[COOL_TIME_MAX]
+{
+	ATTACK_NORMAL_END_TIME,						// COOL_TIME_NORMAL_ATK
+	THREAD_NORMAL_END_TIME,						// COOL_TIME_NORMAL_THREAD
+	ATTACK_ATTACK_END_TIME,						// COOL_TIME_ATTACK_ATK
+	THREAD_ATTACK_END_TIME,						// COOL_TIME_ATTACK_THREAD
+	(int)(ATTACK_SPEED_END_TIME * 3.5),			// COOL_TIME_SPEED_ATK
+	GROW_THREAD_TIME,							// COOL_TIME_SPEED_THREAD
+	(int)(ATTACK_TRAP_END_TIME * 0.5f),			// COOL_TIME_JAMMER_ATK
+	THREAD_TRAP_HIT_START_TIME					// COOL_TIME_JAMMER_THREAD
+};
+
+// ヒットストップの時間
+static const int HIT_STOP_TIME = 30;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -83,6 +113,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 *pDevice, int nPriority, OBJTYPE objType) :CS
 	m_sMatchlessTime = 0;									// 無敵状態の時間
 	m_sKnockBackCount = 0;									// やられ状態になった回数
 	m_sRushTime = 0;
+	m_nCoolTime = 0;
 
 	m_bMatchless = false;									// 無敵状態かどうか判定
 	m_bMetamorphose = false;								// 変形中判定
@@ -172,7 +203,7 @@ void CPlayer::Init(D3DXVECTOR3 pos,
 	CPlayerManager* pPlayerMnager)
 {
 	// テクスチャアニメーションの初期化
-	CSceneAnime::Init(pos, fWidth, fHeight, texture, PLAYER_TEXTURE_SEP_X, PLAYER_TEXTURE_SEP_Y, PLAYER_ANIME_SPEED, -1);
+	CSceneAnime::Init(pos, fWidth, fHeight, texture, PLAYER_WALK_TEXTURE_SEP_X, PLAYER_WALK_TEXTURE_SEP_Y, PLAYER_ANIME_SPEED, -1);
 
 	// カウントダン中にどっか向かないように
 	CSceneAnime::SetAutoUpdate(false);
@@ -207,6 +238,7 @@ void CPlayer::Init(D3DXVECTOR3 pos,
 #endif
 	m_pAI = C_CPU_AI::Create(navi, this);
 	m_pPlayerManager = pPlayerMnager;
+	m_fHP = PLAYER_DEFAULT_HP;
 }
 
 
@@ -254,7 +286,7 @@ void CPlayer::Update(void)
 	if (m_pTreasure){
 		m_pTreasure->SetPos(m_vPos + TREASURE_ICON_POS_BUFF);
 		// 宝物所持時のエフェクト
-		CEffectManager::CreateEffect(m_vPos, EFFECT_FLAG_HOLD,D3DXVECTOR3(0.0f,0.0f,0.0f));
+		CEffectManager::CreateEffect(m_vPos, EFFECT_FLAG_HOLD, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 	// 鈍足状態だったら描画して座標をセット
 	if (m_bSlowSpeed){
@@ -267,6 +299,13 @@ void CPlayer::Update(void)
 	}
 	
 	CScene2D::Update();
+
+	// クールタイム更新
+	m_nCoolTime--;
+	if (m_nCoolTime < 0)
+	{
+		m_nCoolTime = 0;
+	}
 
 	// MP更新
 	m_pMp->Update(m_vPos, m_fMP);
@@ -288,11 +327,13 @@ void CPlayer::Update(void)
 	/*----------------------------------------------------------*/
 	/*プレイヤーのアクションが変形中で無かった場合のみ他の行動を*/
 	/*行うことができる											*/
+	/*さらにクールタイム消費してるなら							*/
 	/*----------------------------------------------------------*/
 	if (m_Action != PLAYER_ACTION_METAMORPHOSE &&
 		m_Action != PLAYER_ACTION_KNOCK_BACK &&
 		m_Action != PLAYER_ACTION_DOWN &&
-		m_Action != PLAYER_ACTION_ATTACK)
+		m_Action != PLAYER_ACTION_ATTACK &&
+		m_nCoolTime <= 0)
 	{
 
 		/*----------------------------------------------------------*/
@@ -311,13 +352,15 @@ void CPlayer::Update(void)
 			// Wで画面上方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_W) ||
 				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_UP, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_UP, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_UP, m_sNumber)
 				|| m_pAI->GetAIInputUp())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
 				if (m_Mode == PLAYER_MODE_SPEED)
 				{
-					m_fMoveSpeedY = -PLAYER_SPEED * 1.5f;
+					m_fMoveSpeedY = -PLAYER_SPEED * PLAYER_MODE_SPEED_COEFFICIENT;
 				}
 				else
 				{
@@ -333,13 +376,15 @@ void CPlayer::Update(void)
 			// Sで画面下方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_S) ||
 				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_DOWN, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_DOWN, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_DOWN, m_sNumber)
 				|| m_pAI->GetAIInputDown())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
 				if (m_Mode == PLAYER_MODE_SPEED)
 				{
-					m_fMoveSpeedY = PLAYER_SPEED * 1.5f;
+					m_fMoveSpeedY = PLAYER_SPEED * PLAYER_MODE_SPEED_COEFFICIENT;
 				}
 				else
 				{
@@ -355,13 +400,15 @@ void CPlayer::Update(void)
 			// Aで画面左方向への移動
 			if (CInputKeyboard::GetKeyboardPress(DIK_A) ||
 				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_UP, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_LEFT_DOWN, m_sNumber)
 				|| m_pAI->GetAIInputLeft())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
 				if (m_Mode == PLAYER_MODE_SPEED)
 				{
-					m_fMoveSpeedX = -PLAYER_SPEED * 1.5f;
+					m_fMoveSpeedX = -PLAYER_SPEED * PLAYER_MODE_SPEED_COEFFICIENT;
 				}
 				else
 				{
@@ -377,13 +424,15 @@ void CPlayer::Update(void)
 			// Dで画面右方向への移動
 			else if (CInputKeyboard::GetKeyboardPress(DIK_D) ||
 				CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_UP, m_sNumber)
+				|| CControllerManager::GetPressKey(CInputGamePad::LEFT_STICK_RIGHT_DOWN, m_sNumber)
 				|| m_pAI->GetAIInputRight())
 			{
 				// 移動速度の変更
 				// プレイヤーの形態が速度重視だった場合速く移動する
 				if (m_Mode == PLAYER_MODE_SPEED)
 				{
-					m_fMoveSpeedX = PLAYER_SPEED * 1.5f;
+					m_fMoveSpeedX = PLAYER_SPEED * PLAYER_MODE_SPEED_COEFFICIENT;
 				}
 				else
 				{
@@ -482,13 +531,7 @@ void CPlayer::Update(void)
 			}
 		}
 		
-		}
-
-
-		/*----------------------------------------------------------*/
-		/*ここまでのものを最終的にはコントローラーで操作			*/
-		/*----------------------------------------------------------*/
-	//}
+	}
 
 	// 無敵状態での処理
 	if (m_bMatchless)
@@ -651,6 +694,9 @@ void CPlayer::Attack(void)
 			m_sNumber,
 			m_vPos,
 			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_NORMAL_ATK];
 		break;
 		// 攻撃特化の攻撃
 	case PLAYER_MODE_ATTACK:
@@ -659,6 +705,9 @@ void CPlayer::Attack(void)
 			m_sNumber,
 			m_vPos,
 			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_ATTACK_ATK];
 		break;
 		// 移動特化の攻撃
 	case PLAYER_MODE_SPEED:
@@ -667,6 +716,9 @@ void CPlayer::Attack(void)
 			m_sNumber,
 			m_vPos,
 			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_SPEED_ATK];
 		m_bSpeedAttack = true;
 		break;
 		// 罠型の攻撃
@@ -676,6 +728,9 @@ void CPlayer::Attack(void)
 			m_sNumber,
 			m_vPos,
 			PLAYER_DIRECTION_VECTOR[m_PlayerFacing]);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_JAMMER_ATK];
 		break;
 	default:
 		break;
@@ -706,9 +761,9 @@ void CPlayer::MetamorphoseAnimation(void)
 	// アニメーションの時間の増加
 	m_sAnimTime++;
 
-	CEffectManager::CreateEffectMeta(m_vPos,m_sNumber);
+	CEffectManager::CreateEffectMeta(m_vPos, m_sNumber);
 
-//	if (m_sAnimTime > 60)
+	//	if (m_sAnimTime > 60)
 	{
 		switch (m_ModeDest)
 		{
@@ -783,6 +838,9 @@ void CPlayer::SpidersThread(void)
 			m_vPos,
 			m_PlayerFacing,
 			m_pEffectManager);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_NORMAL_THREAD];
 		break;
 		// 攻撃特化形態の糸
 	case PLAYER_MODE_ATTACK:
@@ -792,6 +850,9 @@ void CPlayer::SpidersThread(void)
 			m_vPos,
 			m_PlayerFacing,
 			m_pEffectManager);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_ATTACK_THREAD];
 		break;
 		// 移動特化形態の糸
 	case PLAYER_MODE_SPEED:
@@ -804,6 +865,9 @@ void CPlayer::SpidersThread(void)
 			pos,
 			m_PlayerFacing,
 			m_pEffectManager);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_SPEED_THREAD];
 		break;
 	}
 		// 罠特化形態の糸
@@ -814,6 +878,9 @@ void CPlayer::SpidersThread(void)
 			m_vPos,
 			m_PlayerFacing,
 			m_pEffectManager);
+
+		// クールタイム設定
+		m_nCoolTime = COOL_TIME_TABALE[COOL_TIME_JAMMER_THREAD];
 		break;
 	default:
 		break;
@@ -865,7 +932,7 @@ void CPlayer::PlayerDown(void)
 {
 	m_sDownTime++;
 
-	if (m_sDownTime > 300)
+	if (m_sDownTime > 180)
 	{
 		m_Action = PLAYER_ACTION_NONE;
 
@@ -874,6 +941,8 @@ void CPlayer::PlayerDown(void)
 		m_bMatchless = true;
 
 		m_sDownTime = 0;
+
+		m_fHP = PLAYER_DEFAULT_HP;
 
 		// プレイヤー復活エフェクト生成
 		CEffectManager::CreateEffect(m_vPos, EFFECT_PLAYER_REVIAVE, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -929,6 +998,9 @@ void CPlayer::SetPlyerKnockBack(void)
 			// 色変更
 			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 0.6f, 0.6f, 1.0f));
 
+			// 体力０エフェクト生成
+			CEffectManager::CreateEffect(m_vPos, EFFECT_PLAYER_DEAD, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 			// 宝を持っていたら落とす
 			if (m_pTreasure)
 			{
@@ -953,9 +1025,6 @@ void CPlayer::SetPlayerDown(void)
 			m_Action = PLAYER_ACTION_DOWN;
 
 			CScene2D::SetColorPolygon(D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f));
-
-			// 体力０エフェクト生成
-			CEffectManager::CreateEffect(m_vPos, EFFECT_PLAYER_DEAD, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 			// 宝を持っていたら落とす
 			if (m_pTreasure)
@@ -1102,11 +1171,11 @@ void CPlayer::UpdatePlayerAnimation(void){
 //-----------------------------------------------------------------------------
 void CPlayer::Rush(void)
 {
-	m_vPos += PLAYER_DIRECTION_VECTOR[m_PlayerFacing] * 4.0f;
+	m_vPos += PLAYER_DIRECTION_VECTOR[m_PlayerFacing] * PLAYER_MODE_SPEED_COEFFICIENT * PLAYER_SPEED * PLAYER_MODE_SPEED_COEFFICIENT;
 
 	m_sRushTime++;
 
-	if (m_sRushTime > 50)
+	if (m_sRushTime > ATTACK_SPEED_END_TIME)
 	{
 		m_bSpeedAttack = false;
 		m_sRushTime = 0;
@@ -1118,6 +1187,10 @@ void CPlayer::Rush(void)
 //-----------------------------------------------------------------------------
 void CPlayer::AddHp(float fPoint){
 
+	if (m_bMatchless)
+	{
+		return;
+	}
 	// HP合計
 	m_fHP += fPoint;
 
@@ -1125,8 +1198,19 @@ void CPlayer::AddHp(float fPoint){
 	if (m_fHP > PLAYER_DEFAULT_HP){
 		m_fHP = PLAYER_DEFAULT_HP;
 	}
-	else if (m_fHP < 0.0f){
+	else if (m_fHP <= 0.0f){
 		m_fHP = 0.0f;
+		SetPlayerDown();
+	}
+
+	// ダメージなら
+	if (fPoint < 0)
+	{
+		if (m_nCoolTime < HIT_STOP_TIME && fPoint < -30)
+		{
+			m_nCoolTime = HIT_STOP_TIME;
+			CEffectManager::CreateEffect(m_vPos, EFFECT_ATTACK_HIT, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		}
 	}
 
 	// HP残り状態を更新
@@ -1142,8 +1226,10 @@ void CPlayer::UpdatePlayerHpState(void){
 	float ratio = m_fHP / PLAYER_DEFAULT_HP;
 
 	// 割合に応じてステートを変更
-	for (int i = 0; i < PLAYER_HP_STATE_MAX; i++){
-		if (ratio >= PLAYER_HP_STATE_RATIO[i]){
+	for (int i = (int)PLAYER_HP_STATE_MAX - 1; i >= 0; i--)
+	{
+		if (ratio <= PLAYER_HP_STATE_RATIO[i])
+		{
 			m_HpState = (PLAYER_HP_STATE)i;
 			break;
 		}
@@ -1156,7 +1242,7 @@ void CPlayer::UpdatePlayerHpState(void){
 void CPlayer::UpdatePlayerRed(void){
 
 #ifdef _DEBUG
-	CDebugProc::Print("%d:HP = %d\n", m_sNumber, m_fHP);
+	CDebugProc::Print("%d:HP = %f\n", m_sNumber, m_fHP);
 #endif
 
 	// 死んでいる or HPが十分あるなら更新しない
@@ -1189,6 +1275,33 @@ void CPlayer::UpdateSlow(void){
 			m_bSlowSpeed = false;
 			m_pSlow2D->SetDrawFlag(false);
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// MPセッター
+//-----------------------------------------------------------------------------
+void CPlayer::AddMp(float fPoint){
+
+	if (m_bMatchless)
+	{
+		return;
+	}
+	// MP合計
+	m_fMP += fPoint;
+
+	// クランプ
+	if (m_fMP > PLAYER_DEFAULT_MP){
+		m_fMP = PLAYER_DEFAULT_MP;
+	}
+	else if (m_fMP <= 0.0f){
+		m_fMP = 0.0f;
+	}
+
+	// MPダメージなら
+	if (fPoint < 0)
+	{
+		CEffectManager::CreateEffect(m_vPos, EFFECT_MP_ATTACK, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 }
 	// EOF
