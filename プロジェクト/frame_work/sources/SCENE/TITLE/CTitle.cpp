@@ -18,16 +18,16 @@
 // ゲームロゴ
 static const float TITLE_LOGO_WIDTH = 1000;
 static const float TITLE_LOGO_HEIGHT = 370;
-static const D3DXVECTOR3 TITLE_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 180, 0);
+static const D3DXVECTOR3 TITLE_LOGO_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 20, 180, 0);
 static const short TITLE_YURE = 10;
 // PUSH START
 static const float TITLE_PUSHSTART_WIDTH = 500;
 static const float TITLE_PUSHSTART_HEIGHT = 200;
 static const D3DXVECTOR3 TITLE_PUSHSTART_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 500, 0);
 // MENU
-static const float TITLE_MENU_WIDTH = 300;
+static const float TITLE_MENU_WIDTH = 200;
 static const float TITLE_MENU_HEIGHT = 200;
-static const D3DXVECTOR3 TITLE_MENU_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 600, 0);
+static const D3DXVECTOR3 TITLE_MENU_POS = D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 550, 0);
 // MENUのカーソル 基本メニューの定数を変えれば変わるようにした
 static const int TITLE_MENU_MAX = 2;
 static const float TITLE_CURSOL_WIDTH = TITLE_MENU_WIDTH;

@@ -46,6 +46,7 @@ static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 	{ "data/BGM/StageSelect.wav", true },	// ステージセレクトＢＧＭ
 	{ "data/SE/CountDown.wav", false },	// カウントダウン
 	{ "data/SE/GameStart.wav", false },	// ゲームスタート
+	{ "data/BGM/Tutorial.wav", true },	// チュートリアル
 };
 
 //*****************************************************************************

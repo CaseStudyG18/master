@@ -136,7 +136,7 @@ void CTutorial::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_pFade->Start(MODE_FADE_IN, DEFFAULT_FADE_IN_COLOR, DEFFAULT_FADE_TIME);
 
 	// ÇaÇfÇlçƒê∂
-	CManager::PlaySoundA(SOUND_LABEL_BGM000);
+	CManager::PlaySoundA(SOUND_LABEL_BGM_TUTORIAL);
 }
 
 //*****************************************************************************

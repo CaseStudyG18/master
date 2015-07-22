@@ -1,87 +1,12 @@
-﻿2015/07/22 11:32:28 にビルドを開始しました。
+﻿2015/07/22 12:39:32 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\g18\プロジェクト\frame_work\frame_work.vcxproj" (Build ターゲット)。
      1>InitializeBuildStatus:
-         "Debug\frame_work.tlog\unsuccessfulbuild" のタッチ タスクを実行しています。
+         "AlwaysCreate" が指定されたため "Debug\frame_work.tlog\unsuccessfulbuild" を作成しています。
        FxCompile:
          すべての出力が最新のものです。
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt sources\BACKGROUND\CBackGroundManager.cpp sources\FADE\CFade.cpp sources\JUDGE\CJudge.cpp sources\MAIN\main.cpp sources\MANAGER\CManager.cpp sources\PHASE\CPhase.cpp sources\RENDERER\CRenderer.cpp sources\SCENE\CHARA_SELECT\CCharaSelect.cpp sources\SCENE\CSCENE\CScene.cpp sources\SCENE\CSCENE\CScene2D.cpp sources\SCENE\CSCENE\CSceneAnime.cpp sources\SCENE\CSCENE\CSceneCircle.cpp sources\SCENE\CSCENE\CSceneNumber.cpp sources\SCENE\CSCENE\CSceneScore.cpp sources\SCENE\CSCENE\CSceneTime.cpp sources\SCENE\GAME\ANIMATION\CAnimation.cpp sources\SCENE\GAME\ATTACK\CAttackBase.cpp sources\SCENE\GAME\ATTACK\CAttackManager.cpp sources\SCENE\GAME\ATTACK\CAttackNormal.cpp sources\SCENE\GAME\ATTACK\CAttackSpecialAttack.cpp sources\SCENE\GAME\ATTACK\CAttackSpecialSpeed.cpp sources\SCENE\GAME\ATTACK\CAttackSpecialTrap.cpp sources\SCENE\GAME\CGame.cpp sources\SCENE\GAME\CTimeManager.cpp sources\SCENE\GAME\EFFECT\CEffectAttackHit.cpp sources\SCENE\GAME\EFFECT\CEffectBase.cpp sources\SCENE\GAME\EFFECT\CEffectCaughtTrap.cpp sources\SCENE\GAME\EFFECT\CEffectCreateRoad.cpp sources\SCENE\GAME\EFFECT\CEffectDead.cpp sources\SCENE\GAME\EFFECT\CEffectExplosion.cpp sources\SCENE\GAME\EFFECT\CEffectFlagGet.cpp sources\SCENE\GAME\EFFECT\CEffectFlagHold.cpp sources\SCENE\GAME\EFFECT\CEffectMPAttack.cpp sources\SCENE\GAME\EFFECT\CEffectManager.cpp sources\SCENE\GAME\EFFECT\CEffectMetamorphose.cpp sources\SCENE\GAME\EFFECT\CEffectNormalAttackCap.cpp sources\SCENE\GAME\EFFECT\CEffectNormalAttackThread.cpp sources\SCENE\GAME\EFFECT\CEffectPlayerRevive.cpp sources\SCENE\GAME\EFFECT\CEffectSpecialAttack.cpp sources\SCENE\GAME\EFFECT\CEffectSpecialAttackThread.cpp sources\SCENE\GAME\EFFECT\CEffectSpecialSpeedAttack.cpp sources\SCENE\GAME\EFFECT\CEffectTrapFoundation.cpp sources\SCENE\GAME\FIELD\CField.cpp sources\SCENE\GAME\FIELD\CFieldManager.cpp sources\SCENE\GAME\GOAL\CGoal.cpp sources\SCENE\GAME\GOAL\CGoalManager.cpp sources\SCENE\GAME\PLAYER\AI\C_CPU_AI.cpp sources\SCENE\GAME\PLAYER\CPlayer.cpp sources\SCENE\GAME\PLAYER\CPlayerManager.cpp sources\SCENE\GAME\THREAD\CThreadBase.cpp sources\SCENE\GAME\THREAD\CThreadManager.cpp sources\SCENE\GAME\THREAD\CThreadNormal.cpp sources\SCENE\GAME\THREAD\CThreadSpecialAttack.cpp sources\SCENE\GAME\THREAD\CThreadSpecialSpeed.cpp sources\SCENE\GAME\THREAD\CThreadSpecialTrap.cpp sources\SCENE\GAME\TREASURE\CTreasure.cpp sources\SCENE\GAME\TREASURE\CTreasureManager.cpp sources\SCENE\GAME\UI\CCountDown.cpp sources\SCENE\GAME\UI\CMp.cpp sources\SCENE\GAME\UI\CWinDraw.cpp sources\SCENE\OPTION\COption.cpp sources\SCENE\PAUSE\CPause.cpp sources\SCENE\RESULT\CResult.cpp sources\SCENE\STAGE_SELECT\CStageSelect.cpp sources\SCENE\TITLE\CTitle.cpp sources\SCENE\TUTORIAL\CTutorial.cpp sources\SCENE\UI\CCursol.cpp sources\SCENE\UI\CNumber.cpp sources\TEXTURE\CTexture.cpp
-         CTexture.cpp
-         CNumber.cpp
-         CCursol.cpp
-         CTutorial.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt sources\SCENE\TITLE\CTitle.cpp
          CTitle.cpp
-         CStageSelect.cpp
-         CResult.cpp
-         CPause.cpp
-         COption.cpp
-         CWinDraw.cpp
-         CMp.cpp
-         CCountDown.cpp
-         CTreasureManager.cpp
-         CTreasure.cpp
-         CThreadSpecialTrap.cpp
-         CThreadSpecialSpeed.cpp
-         CThreadSpecialAttack.cpp
-         CThreadNormal.cpp
-         CThreadManager.cpp
-         CThreadBase.cpp
-         コードを生成中...
-         コンパイル中...
-         CPlayerManager.cpp
-         CPlayer.cpp
-         C_CPU_AI.cpp
-         CGoalManager.cpp
-         CGoal.cpp
-         CFieldManager.cpp
-         CField.cpp
-         CEffectTrapFoundation.cpp
-         CEffectSpecialSpeedAttack.cpp
-         CEffectSpecialAttackThread.cpp
-         CEffectSpecialAttack.cpp
-         CEffectPlayerRevive.cpp
-         CEffectNormalAttackThread.cpp
-         CEffectNormalAttackCap.cpp
-         CEffectMetamorphose.cpp
-         CEffectManager.cpp
-         CEffectMPAttack.cpp
-         CEffectFlagHold.cpp
-         CEffectFlagGet.cpp
-         CEffectExplosion.cpp
-         コードを生成中...
-         コンパイル中...
-         CEffectDead.cpp
-         CEffectCreateRoad.cpp
-         CEffectCaughtTrap.cpp
-         CEffectBase.cpp
-         CEffectAttackHit.cpp
-         CTimeManager.cpp
-         CGame.cpp
-         CAttackSpecialTrap.cpp
-         CAttackSpecialSpeed.cpp
-         CAttackSpecialAttack.cpp
-         CAttackNormal.cpp
-         CAttackManager.cpp
-         CAttackBase.cpp
-         CAnimation.cpp
-         CSceneTime.cpp
-         CSceneScore.cpp
-         CSceneNumber.cpp
-         CSceneCircle.cpp
-         CSceneAnime.cpp
-         CScene2D.cpp
-         コードを生成中...
-         コンパイル中...
-         CScene.cpp
-         CCharaSelect.cpp
-         CRenderer.cpp
-         CPhase.cpp
-         CManager.cpp
-         main.cpp
-         CJudge.cpp
-         CFade.cpp
-         CBackGroundManager.cpp
-         コードを生成中...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\g18\プロジェクト\frame_work\\frame_work_debug.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\g18\プロジェクト\frame_work\\frame_work_debug.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\g18\プロジェクト\frame_work\\frame_work_debug.lib" /MACHINE:X86 Debug\CBackGroundManager.obj
          Debug\CController.obj
@@ -167,7 +92,6 @@
          Debug\CNumber.obj
          Debug\CSound.obj
          Debug\CTexture.obj
-         LINK : 前回のインクリメンタル リンクで C:\g18\プロジェクト\frame_work\\frame_work_debug.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
          frame_work.vcxproj -> C:\g18\プロジェクト\frame_work\\frame_work_debug.exe
        FinalizeBuildStatus:
          ファイル "Debug\frame_work.tlog\unsuccessfulbuild" を削除しています。
@@ -176,4 +100,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:35.93
+経過時間 00:00:01.36

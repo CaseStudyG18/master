@@ -50,6 +50,7 @@ typedef enum
 	SOUND_LABEL_BGM_STAGE_SELECT,			// ステージセレクトのＢＧＭ
 	SOUND_LABEL_SE_COUNTDOUN,				// カウントダウン
 	SOUND_LABEL_SE_GAME_START,				// ゲームスタート
+	SOUND_LABEL_BGM_TUTORIAL,				// チュートリアルののＢＧＭ
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 
