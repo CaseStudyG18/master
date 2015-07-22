@@ -12,7 +12,7 @@
 // マクロ定義
 //*****************************************************************************
 static const char*	CLASS_NAME	= "AppClass";		// ウインドウのクラス名
-static const char*	WINDOW_NAME	= "TEST";			// ウインドウのキャプション名
+static const char*	WINDOW_NAME	= "トレジャーハンターリモ";			// ウインドウのキャプション名
 static const int	TIME_INTERVAL = 500;			// 実行間隔
 static const int	FPS_COEFFICIENT = 1000;			// FPSの係数
 static const int	BASE_FPS = 1000 / 60;			// FPSの基準速度
@@ -117,16 +117,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	UpdateWindow(hWnd);
 
 	bool modeWindow = false;
-	if (MessageBox(NULL, "フルスクリーンで起動しますか？", "ウィンドウモード", MB_YESNO) == IDYES)
-	{
-		//フルスクリーンで初期化処理(ウィンドウを作成してから行う)
-		modeWindow = false;
-	}
-	else
-	{
-		//通常の 初期化処理(ウィンドウを作成してから行う)
-		modeWindow = true;
-	}
+//	if (MessageBox(NULL, "フルスクリーンで起動しますか？", "ウィンドウモード", MB_YESNO) == IDYES)
+//	{
+//		//フルスクリーンで初期化処理(ウィンドウを作成してから行う)
+//		modeWindow = false;
+//	}
+//	else
+//	{
+//		//通常の 初期化処理(ウィンドウを作成してから行う)
+//		modeWindow = true;
+//	}
 
 	// 初期化処理(ウィンドウを作成してから行う)
 	if (FAILED(g_pManager->Init(hInstance, hWnd, modeWindow)))
