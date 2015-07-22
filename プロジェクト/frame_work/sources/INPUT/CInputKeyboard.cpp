@@ -166,6 +166,7 @@ void CInputKeyboard::Update(void)
 //=============================================================================
 bool CInputKeyboard::GetKeyboardPress(BYTE key)
 {
+	return false;
 	for(int nKey = 0; nKey < KEY_NUM; nKey++)
 	{
 		if(m_aKeyState[(int)key])
@@ -181,6 +182,7 @@ bool CInputKeyboard::GetKeyboardPress(BYTE key)
 //=============================================================================
 bool CInputKeyboard::GetKeyboardTrigger(BYTE key)
 {
+	return false;
 	int nKey;
 	for(nKey = 0; nKey < KEY_NUM; nKey++)
 	{
@@ -197,6 +199,7 @@ bool CInputKeyboard::GetKeyboardTrigger(BYTE key)
 //=============================================================================
 bool CInputKeyboard::GetKeyboardRepeat(BYTE key)
 {
+	return false;
 	if(m_RepeatKeyState[(int)key])
 	{
 		return true;
@@ -209,6 +212,7 @@ bool CInputKeyboard::GetKeyboardRepeat(BYTE key)
 //=============================================================================
 bool CInputKeyboard::GetKeyboardRelease(BYTE key)
 {
+	return false;
 	for(int nKey = 0; nKey < KEY_NUM; nKey++)
 	{
 		if(m_ReleaseKeyState[(int)key])

@@ -133,6 +133,8 @@ void CThreadSpecialTrap::Draw(void)
 //*****************************************************************************
 void CThreadSpecialTrap::HitPlayer(CPlayer* pPlayer)
 {
+	pPlayer->AddMp(-4.f);
+	pPlayer->AddHp(-1.f);
 	// “Ý‘«
 	pPlayer->SetSlowSpeed(true);
 }

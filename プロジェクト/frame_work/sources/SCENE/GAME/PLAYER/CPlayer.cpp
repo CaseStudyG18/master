@@ -1249,8 +1249,8 @@ void CPlayer::AddHp(float fPoint){
 		{
 			m_nCoolTime = HIT_STOP_TIME;
 			CEffectManager::CreateEffect(m_vPos, EFFECT_ATTACK_HIT, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			CManager::PlaySoundA(SOUND_LABEL_SE_DAMAGE);
 		}
-		CManager::PlaySoundA(SOUND_LABEL_SE_DAMAGE);
 	}
 
 	// HP残り状態を更新
@@ -1341,8 +1341,11 @@ void CPlayer::AddMp(float fPoint){
 	// MPダメージなら
 	if (fPoint < 0)
 	{
-		CEffectManager::CreateEffect(m_vPos, EFFECT_MP_ATTACK, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		CManager::PlaySoundA(SOUND_LABEL_SE_GAGE_DOWN);
+		if (fPoint < -10)
+		{
+			CEffectManager::CreateEffect(m_vPos, EFFECT_MP_ATTACK, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			CManager::PlaySoundA(SOUND_LABEL_SE_GAGE_DOWN);
+		}
 	}
 }
 

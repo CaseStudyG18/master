@@ -833,7 +833,7 @@ void C_CPU_AI::MoveGoal(void)
 		// ƒS[ƒ‹‚Æ”»’f‚·‚é‹——£
 		float judgeSize = playerHeight * 0.25f + playerWidth * 0.5f;// +m_pGoal->GetWidth() * 0.5f + m_pGoal->GetHeight() * 0.5f;
 		// ”»’è‚ð‘«Œ³‚É
-		playerPos.y += playerHeight * 0.5f;
+		playerPos.y += playerHeight * 0.25f;
 
 		float length = MagnitudeVector(m_pOwner->GetPos() - m_pGoal->GetPos());
 		float judgeLength = judgeSize;

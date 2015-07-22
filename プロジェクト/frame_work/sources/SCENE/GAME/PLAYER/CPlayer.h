@@ -270,7 +270,7 @@ public:
 	D3DXVECTOR3 GetOldPos(void) { return m_vPosOld; }
 
 	// 鈍足セット
-	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed; CManager::PlaySoundA(SOUND_LABEL_SE_SPEED_DOWN); }
+	void SetSlowSpeed(bool bSlowSpeed){ m_bSlowSpeed = bSlowSpeed;}
 
 	// プレイヤーマネージャーゲッター
 	CPlayerManager* GetPlayerManager(void){ return m_pPlayerManager; };

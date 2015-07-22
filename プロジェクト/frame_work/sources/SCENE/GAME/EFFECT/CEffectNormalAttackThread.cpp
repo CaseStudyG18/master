@@ -18,8 +18,8 @@
 // íËêî
 //*****************************************************************************
 static const int NORMAL_ATTACK_THREAD_COUNT_MAX = 99;
-static const float NORMAL_ATTACK_THREAD_WIDTH = 100;
-static const float NORMAL_ATTACK_THREAD_HEIGHT = 100;
+static const float NORMAL_ATTACK_THREAD_WIDTH = 30;
+static const float NORMAL_ATTACK_THREAD_HEIGHT = 30;
 static const TEXTURE_TYPE NORMAL_ATTACK_THREAD_TEXTURE = TEXTURE_THREAD_DROP;
 static const int NORMAL_ATTACK_THREAD_TEXTURE_X = 2;
 static const int NORMAL_ATTACK_THREAD_TEXTURE_Y = 5;
