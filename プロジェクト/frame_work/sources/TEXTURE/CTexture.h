@@ -56,7 +56,6 @@ typedef enum
 	TEXTURE_SPAWN_BLUE,
 	TEXTURE_SPAWN_GREEN,
 	TEXTURE_ATTACK_THUNDERBOLT,	// 電撃
-	TEXTURE_THREAD_POISON,	// 妨害攻撃の緑のやつ
 	TEXTURE_HIT_SMALL,
 	TEXTURE_HIT_BIG,
 	TEXTURE_ATTACK_AROUND,
@@ -105,6 +104,9 @@ typedef enum
 	TEXTURE_TUTORIAL_PAGE_3_4,		// チュートリアルのページテクスチャ
 	TEXTURE_TUTORIAL_PAGE_4_4,		// チュートリアルのページテクスチャ
 	TEXTURE_GAME_START,				// ゲームスタートのカウントテクスチャ（4,1）
+	TEXTURE_THREAD_POISON,			// 妨害形態の攻撃(緑の糸)
+	TEXTURE_THREAD_DROP,			// 通常形態の糸攻撃
+	TEXTURE_TRAP,					// 罠のテクスチャ
 	TEXTURE_MAX				// テクスチャタイプ総数
 }TEXTURE_TYPE;
 

@@ -35,7 +35,7 @@ static const PARAM SOUND_TYPE[SOUND_LABEL_MAX] =
 	{ "data/SE/GetTreasure.wav", false },	// 宝物を拾った音
 	{ "data/SE/CursolMove.wav", false },	// カーソル移動
 	{ "data/SE/InWors.wav", false },	// 参戦
-	{ "data/SE/StartOK.wav", false },	// 準備完了
+	{ "data/SE/StartOK.wav", false },	// 準備完了d
 	{ "data/SE/TitleZingle.wav", true },	// タイトルのジングル
 	{ "data/SE/ResultZingle.wav", false },	// リザルトのジングル
 	{ "data/SE/GageDown.wav", false },	// ゲージ減少

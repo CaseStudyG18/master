@@ -53,7 +53,6 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/SpawnBlue.png",
 	"data/TEXTURE/SpawnGreen.png",
 	"data/TEXTURE/dengeki.png",				// ìdåÇ
-	"data/TEXTURE/thread_drop_poison.png",	// // ñWäQçUåÇÇÃóŒÇÃÇ‚Ç¬
 	"data/TEXTURE/hit_effect_small.png",
 	"data/TEXTURE/hit_effect_big.png",
 	"data/TEXTURE/attack_around.png",
@@ -102,6 +101,9 @@ static const char *TEXTURE_PATH[TEXTURE_MAX] =
 	"data/TEXTURE/tutorial_page_3_4.png",
 	"data/TEXTURE/tutorial_page_4_4.png",
 	"data/TEXTURE/game_start.png",
+	"data/TEXTURE/thread_drop_poison.png",
+	"data/TEXTURE/normal_thread.png",
+	"data/TEXTURE/trap.png",
 };
 
 //*****************************************************************************
