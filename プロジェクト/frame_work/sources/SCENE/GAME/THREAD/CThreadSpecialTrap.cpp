@@ -44,11 +44,11 @@ CThreadSpecialTrap::CThreadSpecialTrap(LPDIRECT3DDEVICE9 *pDevice, int priority,
 	m_nHitStartTime = THREAD_TRAP_HIT_START_TIME;
 	m_nHitEndTime = THREAD_TRAP_HIT_END_TIME;
 
-	// 糸を作る
-	m_pBulletAnime = CSceneAnime::Create(
-		pDevice,
-		m_vPos, THREAD_TRAP_HIT_WIDTH, THREAD_TRAP_HIT_HEIGHT,
-		TEXTURE_THREAD, 1, 1, THREAD_TRAP_END_TIME);
+	//// 糸を作る
+	//m_pBulletAnime = CSceneAnime::Create(
+	//	pDevice,
+	//	m_vPos, THREAD_TRAP_HIT_WIDTH, THREAD_TRAP_HIT_HEIGHT,
+	//	TEXTURE_THREAD, 1, 1, THREAD_TRAP_END_TIME);
 }
 
 //*****************************************************************************
@@ -65,14 +65,14 @@ HRESULT CThreadSpecialTrap::Init()
 {
 	CThreadBase::Init(m_vPos, THREAD_TRAP_HIT_WIDTH, THREAD_TRAP_HIT_HEIGHT, TEXTURE_THREAD);
 
-	// 糸の位置をセット
-	m_pBulletAnime->SetPos(m_vPos);
+	//// 糸の位置をセット
+	//m_pBulletAnime->SetPos(m_vPos);
 
-	// 糸の色を変える
-	if (m_nPlayerNum < 0 || m_nPlayerNum > 3){
-		return E_FAIL;
-	}
-	m_pBulletAnime->SetColorPolygon(PLAYER_COLOR[m_nPlayerNum]);
+	//// 糸の色を変える
+	//if (m_nPlayerNum < 0 || m_nPlayerNum > 3){
+	//	return E_FAIL;
+	//}
+	//m_pBulletAnime->SetColorPolygon(PLAYER_COLOR[m_nPlayerNum]);
 
 	return S_OK;  
 }
@@ -114,7 +114,7 @@ CThreadSpecialTrap* CThreadSpecialTrap::Create(
 	// 初期化
 	p->Init();
 
-	CEffectManager::CreateEffect(pos, EFFECT_TRAP_FOUNDATION, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	CEffectManager::CreateEffectTrap(pos, nPlayerNum);
 
 	return p;
 }

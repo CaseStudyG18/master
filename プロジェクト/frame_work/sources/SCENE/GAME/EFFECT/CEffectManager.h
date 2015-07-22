@@ -57,8 +57,12 @@ public:
 	static void CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3 velocity);
 
 	// エフェクト生成関数
-	// 座標とタイプとプレイヤーナンバーを設定
+	// 座標とプレイヤーナンバーを設定
 	static void CreateEffectMeta(D3DXVECTOR3 pos, short playerNum);
+
+	// エフェクト生成関数(罠)
+	// 座標とプレイヤーナンバーをセット
+	static void CreateEffectTrap(D3DXVECTOR3 pos, short playerNum);
 
 	// 非公開メンバ
 private:

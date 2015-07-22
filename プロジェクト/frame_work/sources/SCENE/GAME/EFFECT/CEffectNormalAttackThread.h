@@ -18,6 +18,8 @@
 // 定数
 //=============================================================================
 
+class CSceneAnime;
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -29,18 +31,19 @@ public:
 	CEffectNormalAttackThread(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT);
 	~CEffectNormalAttackThread(void);
 
-	void Init(D3DXVECTOR3 pos);
+	void Init(D3DXVECTOR3 pos, D3DXVECTOR3 velocity);
 	void Uninit(void);
 	void Update(void);
 
 	// クリエイト関数
 	static CEffectNormalAttackThread *Create(
 		LPDIRECT3DDEVICE9 *pDevice,
-		D3DXVECTOR3 pos);
+		D3DXVECTOR3 pos,
+		D3DXVECTOR3 velocity);
 
 	// 非公開メンバ
 private:
-
+	CSceneAnime* m_pAnim;
 };
 
 #endif // __EXPLOSION_H__

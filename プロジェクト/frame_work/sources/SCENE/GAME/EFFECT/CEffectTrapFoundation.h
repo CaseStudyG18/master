@@ -17,6 +17,8 @@
 // 定数
 //=============================================================================
 
+class CSceneAnime;
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -28,18 +30,19 @@ public:
 	CEffectTrapFoundation(LPDIRECT3DDEVICE9 *pDevice, int nPriority = TYPE_PRIORITY_EFFECT);
 	~CEffectTrapFoundation(void);
 
-	void Init(D3DXVECTOR3 pos);
+	void Init(D3DXVECTOR3 pos , short playerNum);
 	void Uninit(void);
 	void Update(void);
 
 	// クリエイト関数
 	static CEffectTrapFoundation *Create(
 		LPDIRECT3DDEVICE9 *pDevice,
-		D3DXVECTOR3 pos);
+		D3DXVECTOR3 pos,
+		short playerNum);
 
 	// 非公開メンバ
 private:
-
+	CSceneAnime* m_pAnim;
 };
 
 #endif

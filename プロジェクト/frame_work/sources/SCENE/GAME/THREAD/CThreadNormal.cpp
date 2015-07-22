@@ -46,10 +46,6 @@ CThreadNormal::CThreadNormal(LPDIRECT3DDEVICE9 *pDevice, int priority, OBJTYPE t
 	m_nHitEndTime = THREAD_NORMAL_HIT_END_TIME;
 
 	// 弾を作る
-	m_pBulletAnime = CSceneAnime::Create(
-		pDevice,
-		m_vPos, THREAD_NORMAL_HIT_WIDTH, THREAD_NORMAL_HIT_HEIGHT,
-		TEXTURE_TREASURE, 13, 1, THREAD_NORMAL_END_TIME);
 }
 
 //*****************************************************************************
@@ -64,8 +60,6 @@ CThreadNormal ::~CThreadNormal(void)
 //*****************************************************************************
 HRESULT CThreadNormal::Init()
 {
-	CThreadBase::Init(m_vPos, THREAD_NORMAL_HIT_WIDTH, THREAD_NORMAL_HIT_HEIGHT, TEXTURE_THREAD);
-
 	return S_OK;
 }
 
@@ -82,13 +76,9 @@ void CThreadNormal::Uninit(void)
 //*****************************************************************************
 void CThreadNormal::Update(void)
 {
-	CThreadBase::Update();
 
 	// 弾の移動
 	m_vPos += m_vPlayerDirection * THREAD_NORMAL_VEL;
-
-	// 弾の座標を当たり判定用座標でセット
-	m_pBulletAnime->SetPos(m_vPos);
 
 	// カウントで消す
 	if (m_nCount == THREAD_NORMAL_END_TIME){
@@ -124,7 +114,6 @@ CThreadNormal* CThreadNormal::Create(
 //*****************************************************************************
 void CThreadNormal::Draw(void)
 {
-	CThreadBase::Draw();
 }
 
 //*****************************************************************************

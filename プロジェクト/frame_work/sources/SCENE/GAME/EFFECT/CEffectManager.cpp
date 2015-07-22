@@ -129,15 +129,11 @@ void CEffectManager::CreateEffect(D3DXVECTOR3 pos, EFFECT_TYPE type, D3DXVECTOR3
 		break;
 		// 通常形態の糸発射エフェクト
 	case EFFECT_NORMAL_ATTACK_THREAD:
-		CEffectNormalAttackThread::Create(m_pDevice, pos);
+		CEffectNormalAttackThread::Create(m_pDevice, pos, velocity);
 		break;
 		// プレイヤー復活エフェクト
 	case EFFECT_PLAYER_REVIAVE:
 		CEffectPlayerRevive::Create(m_pDevice, pos);
-		break;
-		// 罠設置エフェクト
-	case EFFECT_TRAP_FOUNDATION:
-		CEffectTrapFoundation::Create(m_pDevice, pos);
 		break;
 	default:
 		break;
@@ -151,5 +147,14 @@ void CEffectManager::CreateEffectMeta(D3DXVECTOR3 pos, short playerNum)
 {
 	// 変身エフェクト
 	CEffectMetamorphose::Create(m_pDevice,pos,playerNum);
+}
+
+//*****************************************************************************
+// エフェクト生成
+//*****************************************************************************
+void CEffectManager::CreateEffectTrap(D3DXVECTOR3 pos, short playerNum)
+{
+	// トラップエフェクト
+	CEffectTrapFoundation::Create(m_pDevice, pos, playerNum);
 }
 //----EOF-------
