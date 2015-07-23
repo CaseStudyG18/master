@@ -85,7 +85,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	rc.right = SCREEN_WIDTH;
 
 	// アジャストウィンドウ
-	AdjustWindowRect(&rc, style, FALSE);
+//	AdjustWindowRect(&rc, style, FALSE);
 
 	long WidthWindow = rc.right - rc.left;
 	long HeightWindow = rc.bottom - rc.top;
@@ -97,8 +97,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 						style,
 						CW_USEDEFAULT,
 						CW_USEDEFAULT,
-						WidthWindow,
-						HeightWindow,
+						SCREEN_WIDTH,
+						SCREEN_HEIGHT,
 						NULL,
 						NULL,
 						hInstance,

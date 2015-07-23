@@ -80,6 +80,13 @@ HRESULT CManager ::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 		return E_FAIL;
 	}
 
+	// ロードスレッド開始
+	m_ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, LoadThred, &m_sendParam, 0, NULL);
+
+	// NowLoading作成
+	m_pNowLoading = new CNowLoading;
+	m_pNowLoading->Init(m_pRenderer->GetDevice());
+
 	// キーボードの初期化
 	m_pInputKeyboard = new CInputKeyboard;
 	if(m_pInputKeyboard->Init(hInstance, hWnd) == E_FAIL)
@@ -105,13 +112,6 @@ HRESULT CManager ::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	// 音の初期化
 	m_pSound = new CSound;
 	m_pSound->InitSound(hWnd);
-
-	// ロードスレッド開始
-	m_ThreadHandle = (HANDLE)_beginthreadex( NULL, 0, LoadThred, &m_sendParam, 0, NULL );
-
-	// NowLoading作成
-	m_pNowLoading = new CNowLoading;
-	m_pNowLoading->Init(m_pRenderer->GetDevice());
 
 	return S_OK;
 }

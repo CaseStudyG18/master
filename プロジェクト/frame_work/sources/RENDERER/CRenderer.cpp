@@ -69,12 +69,15 @@ HRESULT CRenderer :: Init(HWND hWnd, BOOL bWindow)
 	d3dpp.BackBufferCount			= NUM_BACK_BUFFER;			// バックバッファの数
 	d3dpp.BackBufferWidth			= SCREEN_WIDTH;				// ゲーム画面サイズ(幅)
 	d3dpp.BackBufferHeight			= SCREEN_HEIGHT;			// ゲーム画面サイズ(高さ)
-	d3dpp.BackBufferFormat			= d3ddm.Format;				// バックバッファフォーマットはディスプレイモードに合わせて使う
+	d3dpp.BackBufferFormat			= D3DFMT_A2R10G10B10;		// バックバッファフォーマットはディスプレイモードに合わせて使う
 	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;	// 映像信号に同期してフリップする
 	d3dpp.Windowed					= bWindow;					// ウィンドウモード
 	d3dpp.EnableAutoDepthStencil	= TRUE;						// デプスバッファ（Ｚバッファ）とステンシルバッファを作成
 	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;				// デプスバッファとして16bitを使う
-
+	d3dpp.MultiSampleType			= D3DMULTISAMPLE_NONE;
+	d3dpp.MultiSampleQuality		= 0;
+	d3dpp.hDeviceWindow				= hWnd;
+	
 	// ウィンドウモード
 	if(bWindow)
 	{
@@ -84,7 +87,7 @@ HRESULT CRenderer :: Init(HWND hWnd, BOOL bWindow)
 	// フルスクリーンモード
 	else
 	{
-		d3dpp.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;			// リフレッシュレート
+		d3dpp.FullScreen_RefreshRateInHz	= 60;			// リフレッシュレート
 		d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_DEFAULT;		// インターバル
 	}
 
@@ -127,6 +130,7 @@ HRESULT CRenderer :: Init(HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// αソースカラーの指定
 	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
+	m_pD3DDevice->SetRenderState(D3DRS_VERTEXBLEND, 0);
 
 	// サンプラーステートパラメータの設定
 	m_pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);	// テクスチャアドレッシング方法(U値)を設定
