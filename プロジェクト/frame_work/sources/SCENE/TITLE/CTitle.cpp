@@ -69,6 +69,7 @@ void CTitle::Init(MODE_PHASE mode, LPDIRECT3DDEVICE9* pDevice)
 	m_bPushed = false;
 	m_bPushStartFlg = true;
 	m_nPushStartCount = 0;
+	m_nPuruCount = 0;
 
 	m_pPushStart = NULL;
 	m_pBackGround = NULL;

@@ -69,7 +69,7 @@ HRESULT CRenderer :: Init(HWND hWnd, BOOL bWindow)
 	d3dpp.BackBufferCount			= NUM_BACK_BUFFER;			// バックバッファの数
 	d3dpp.BackBufferWidth			= SCREEN_WIDTH;				// ゲーム画面サイズ(幅)
 	d3dpp.BackBufferHeight			= SCREEN_HEIGHT;			// ゲーム画面サイズ(高さ)
-	d3dpp.BackBufferFormat			= D3DFMT_A2R10G10B10;		// バックバッファフォーマットはディスプレイモードに合わせて使う
+	d3dpp.BackBufferFormat			= d3ddm.Format;		// バックバッファフォーマットはディスプレイモードに合わせて使う
 	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;	// 映像信号に同期してフリップする
 	d3dpp.Windowed					= bWindow;					// ウィンドウモード
 	d3dpp.EnableAutoDepthStencil	= TRUE;						// デプスバッファ（Ｚバッファ）とステンシルバッファを作成

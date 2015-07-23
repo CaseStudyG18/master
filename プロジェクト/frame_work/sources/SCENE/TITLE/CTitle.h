@@ -70,7 +70,7 @@ private:
 	// PUSHSTART点滅フラグ
 	bool m_bPushStartFlg;
 	// ぷるぷるカウント
-	int m_nPuruCount = 0;
+	int m_nPuruCount;
 };
 
 #endif
